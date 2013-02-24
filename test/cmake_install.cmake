@@ -1,4 +1,4 @@
-# Install script for directory: /home/alberto/code/chessac/test
+# Install script for directory: /home/alberto/code/slach/test
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)

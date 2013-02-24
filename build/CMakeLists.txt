@@ -9,7 +9,7 @@ ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64
                 -I/usr/include/wx-2.8 
                  -O0 -g3 -Wall -fmessage-length=0 -finstrument-functions)
 
-ADD_EXECUTABLE(chessac ${srcdir}/ChessBoard.cpp
+ADD_EXECUTABLE(slach ${srcdir}/ChessBoard.cpp
                        ${srcdir}/Square.cpp
                        ${srcdir}/GUI/SquarePanel.cpp 
                        ${srcdir}/GUI/RightPanel.cpp 
@@ -17,12 +17,12 @@ ADD_EXECUTABLE(chessac ${srcdir}/ChessBoard.cpp
                        ${srcdir}/GUI/MainFrame.cpp 
                        ${srcdir}/GUI/ChessboardPanel.cpp 
                        ${srcdir}/GUI/BottomPanel.cpp 
-                       ${srcdir}/GUI/ChessAC.cpp)
+                       ${srcdir}/GUI/slach.cpp)
 
 link_directories (/usr/lib/i386-linux-gnu) 
 
 #most of this from the wx widgets documentation
-TARGET_LINK_LIBRARIES(chessac -lwx_gtk2u_richtext-2.8 
+TARGET_LINK_LIBRARIES(slach -lwx_gtk2u_richtext-2.8 
                               -lwx_gtk2u_aui-2.8 
                               -lwx_gtk2u_xrc-2.8 
                               -lwx_gtk2u_qa-2.8 

@@ -1,7 +1,7 @@
-#include "slac.hpp"
+#include "slach.hpp"
 
 
-bool slac::OnInit()
+bool slach::OnInit()
 {
     MainFrame *frame = new MainFrame( wxT("slac"),
                                       wxPoint(250, 50),

@@ -36,10 +36,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/alberto/code/chessac
+CMAKE_SOURCE_DIR = /home/alberto/code/slach
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/alberto/code/chessac
+CMAKE_BINARY_DIR = /home/alberto/code/slach
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -66,14 +66,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/alberto/code/chessac && $(CMAKE_COMMAND) -E cmake_progress_start /home/alberto/code/chessac/CMakeFiles /home/alberto/code/chessac/test/CMakeFiles/progress.marks
-	cd /home/alberto/code/chessac && $(MAKE) -f CMakeFiles/Makefile2 test/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alberto/code/chessac/CMakeFiles 0
+	cd /home/alberto/code/slach && $(CMAKE_COMMAND) -E cmake_progress_start /home/alberto/code/slach/CMakeFiles /home/alberto/code/slach/test/CMakeFiles/progress.marks
+	cd /home/alberto/code/slach && $(MAKE) -f CMakeFiles/Makefile2 test/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alberto/code/slach/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/alberto/code/chessac && $(MAKE) -f CMakeFiles/Makefile2 test/clean
+	cd /home/alberto/code/slach && $(MAKE) -f CMakeFiles/Makefile2 test/clean
 .PHONY : clean
 
 # The main clean target
@@ -82,22 +82,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/alberto/code/chessac && $(MAKE) -f CMakeFiles/Makefile2 test/preinstall
+	cd /home/alberto/code/slach && $(MAKE) -f CMakeFiles/Makefile2 test/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/alberto/code/chessac && $(MAKE) -f CMakeFiles/Makefile2 test/preinstall
+	cd /home/alberto/code/slach && $(MAKE) -f CMakeFiles/Makefile2 test/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/alberto/code/chessac && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/alberto/code/slach && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 test/CMakeFiles/TESTRUNNER.dir/rule:
-	cd /home/alberto/code/chessac && $(MAKE) -f CMakeFiles/Makefile2 test/CMakeFiles/TESTRUNNER.dir/rule
+	cd /home/alberto/code/slach && $(MAKE) -f CMakeFiles/Makefile2 test/CMakeFiles/TESTRUNNER.dir/rule
 .PHONY : test/CMakeFiles/TESTRUNNER.dir/rule
 
 # Convenience name for target.
@@ -106,7 +106,7 @@ TESTRUNNER: test/CMakeFiles/TESTRUNNER.dir/rule
 
 # fast build rule for target.
 TESTRUNNER/fast:
-	cd /home/alberto/code/chessac && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/build
+	cd /home/alberto/code/slach && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/build
 .PHONY : TESTRUNNER/fast
 
 __/src/ChessBoard.o: __/src/ChessBoard.cpp.o
@@ -114,7 +114,7 @@ __/src/ChessBoard.o: __/src/ChessBoard.cpp.o
 
 # target to build an object file
 __/src/ChessBoard.cpp.o:
-	cd /home/alberto/code/chessac && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/__/src/ChessBoard.cpp.o
+	cd /home/alberto/code/slach && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/__/src/ChessBoard.cpp.o
 .PHONY : __/src/ChessBoard.cpp.o
 
 __/src/ChessBoard.i: __/src/ChessBoard.cpp.i
@@ -122,7 +122,7 @@ __/src/ChessBoard.i: __/src/ChessBoard.cpp.i
 
 # target to preprocess a source file
 __/src/ChessBoard.cpp.i:
-	cd /home/alberto/code/chessac && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/__/src/ChessBoard.cpp.i
+	cd /home/alberto/code/slach && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/__/src/ChessBoard.cpp.i
 .PHONY : __/src/ChessBoard.cpp.i
 
 __/src/ChessBoard.s: __/src/ChessBoard.cpp.s
@@ -130,7 +130,7 @@ __/src/ChessBoard.s: __/src/ChessBoard.cpp.s
 
 # target to generate assembly for a file
 __/src/ChessBoard.cpp.s:
-	cd /home/alberto/code/chessac && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/__/src/ChessBoard.cpp.s
+	cd /home/alberto/code/slach && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/__/src/ChessBoard.cpp.s
 .PHONY : __/src/ChessBoard.cpp.s
 
 __/src/Square.o: __/src/Square.cpp.o
@@ -138,7 +138,7 @@ __/src/Square.o: __/src/Square.cpp.o
 
 # target to build an object file
 __/src/Square.cpp.o:
-	cd /home/alberto/code/chessac && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/__/src/Square.cpp.o
+	cd /home/alberto/code/slach && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/__/src/Square.cpp.o
 .PHONY : __/src/Square.cpp.o
 
 __/src/Square.i: __/src/Square.cpp.i
@@ -146,7 +146,7 @@ __/src/Square.i: __/src/Square.cpp.i
 
 # target to preprocess a source file
 __/src/Square.cpp.i:
-	cd /home/alberto/code/chessac && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/__/src/Square.cpp.i
+	cd /home/alberto/code/slach && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/__/src/Square.cpp.i
 .PHONY : __/src/Square.cpp.i
 
 __/src/Square.s: __/src/Square.cpp.s
@@ -154,7 +154,7 @@ __/src/Square.s: __/src/Square.cpp.s
 
 # target to generate assembly for a file
 __/src/Square.cpp.s:
-	cd /home/alberto/code/chessac && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/__/src/Square.cpp.s
+	cd /home/alberto/code/slach && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/__/src/Square.cpp.s
 .PHONY : __/src/Square.cpp.s
 
 test_runner.o: test_runner.cpp.o
@@ -162,7 +162,7 @@ test_runner.o: test_runner.cpp.o
 
 # target to build an object file
 test_runner.cpp.o:
-	cd /home/alberto/code/chessac && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/test_runner.cpp.o
+	cd /home/alberto/code/slach && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/test_runner.cpp.o
 .PHONY : test_runner.cpp.o
 
 test_runner.i: test_runner.cpp.i
@@ -170,7 +170,7 @@ test_runner.i: test_runner.cpp.i
 
 # target to preprocess a source file
 test_runner.cpp.i:
-	cd /home/alberto/code/chessac && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/test_runner.cpp.i
+	cd /home/alberto/code/slach && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/test_runner.cpp.i
 .PHONY : test_runner.cpp.i
 
 test_runner.s: test_runner.cpp.s
@@ -178,7 +178,7 @@ test_runner.s: test_runner.cpp.s
 
 # target to generate assembly for a file
 test_runner.cpp.s:
-	cd /home/alberto/code/chessac && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/test_runner.cpp.s
+	cd /home/alberto/code/slach && $(MAKE) -f test/CMakeFiles/TESTRUNNER.dir/build.make test/CMakeFiles/TESTRUNNER.dir/test_runner.cpp.s
 .PHONY : test_runner.cpp.s
 
 # Help Target
@@ -210,6 +210,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/alberto/code/chessac && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/alberto/code/slach && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
