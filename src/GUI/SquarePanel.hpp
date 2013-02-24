@@ -4,18 +4,23 @@
 #include <wx/wx.h>
 #include <wx/sizer.h>
 #include <wx/panel.h>
+#include "../Square.hpp"
 
 class SquarePanel : public wxPanel
 {
 
 private:
-    wxString mFile;
-    wxString mRank;
+    std::string mFile;
+    std::string mRank;
 
     /**True if the square belongs to the border. False by  default*/
     bool mIsBorderSquarePanel;
+
+    bool mIsCornerSquarePanel;
+
+    Square* mpSquare;
 public:
-    SquarePanel(wxPanel* parent, const wxColour& colour, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
+    SquarePanel(wxPanel* parent, Square* pSquare,const wxColour& colour = wxT("red"), const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
     ~SquarePanel();
 
     /*
@@ -23,16 +28,6 @@ public:
      * So when the user resizes the image panel the image should be resized too.
      */
     void OnSize(wxSizeEvent& event);
-
-    void SetFile(wxString file);
-
-    void SetRank(wxString rank);
-
-    void SetAsBorderSquare(bool border=true);
-
-    wxString GetFile();
-
-    wxString GetRank();
 
     void PaintLetterOnBorder(wxPaintEvent & evt);
 

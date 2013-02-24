@@ -21,7 +21,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     SetMenuBar( menuBar );
     //creates status bar
     CreateStatusBar();
-    SetStatusText( wxT("Welcome to ACChess!") );
+    SetStatusText( wxT("Welcome to SLACH!") );
 
     this->SetBackgroundColour(wxT("red"));
 
@@ -50,7 +50,7 @@ void MainFrame::OnAbout(wxCommandEvent& event)
 {
     //first is content of the window, second string is title of the window.
     wxMessageBox( wxT("This is Alberto testing the widgets"),
-    wxT("About ACChess"), wxOK | wxICON_INFORMATION );
+    wxT("About Slach"), wxOK | wxICON_INFORMATION );
 }
 void MainFrame::OnHello(wxCommandEvent& event)
 {

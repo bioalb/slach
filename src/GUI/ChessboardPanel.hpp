@@ -13,12 +13,10 @@ class ChessboardPanel : public wxPanel
 
 private:
 
-    std::vector<SquarePanel* > mSquares;
-    std::vector<SquarePanel* > mBorderSquares;
-    std::vector<wxString> mFiles;
-    std::vector<wxString> mRanks;
+    std::vector<SquarePanel* > mSquarePanels;
     wxFlexGridSizer* mpGridSizer;
 
+    ChessBoard* mpChessBoard;
     /**panel with the actual chessboard (borders included)*/
     wxPanel* mpActualChessboard;
 

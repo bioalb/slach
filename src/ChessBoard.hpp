@@ -5,11 +5,6 @@
 #include <string>
 #include "Square.hpp"
 
-static const unsigned CHESSBOARD_SIZE = 64u;
-static const unsigned CHESSBOARD_SIZE_WB = 100u;//with border
-static const unsigned FILE_SIZE = 10u;
-static const unsigned RANK_SIZE = 10u;
-
 /**
  *
  * The class represents a chessboard. The data structure is one
@@ -50,6 +45,12 @@ static const unsigned RANK_SIZE = 10u;
  *
  *
  */
+
+
+static const unsigned CHESSBOARD_SIZE = 64u;
+static const unsigned CHESSBOARD_SIZE_WB = 100u;//with border
+static const unsigned FILE_SIZE = 10u;
+static const unsigned RANK_SIZE = 10u;
 class ChessBoard
 {
 
