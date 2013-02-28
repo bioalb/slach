@@ -19,6 +19,10 @@ private:
     bool mIsCornerSquarePanel;
 
     Square* mpSquare;
+
+    wxBitmap mResized;
+
+
 public:
     SquarePanel(wxPanel* parent, Square* pSquare,const wxColour& colour = wxT("red"), const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
     ~SquarePanel();

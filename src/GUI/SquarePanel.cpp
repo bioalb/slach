@@ -1,5 +1,5 @@
 #include "SquarePanel.hpp"
-#include "bitmaps/A.xpm"
+#include "bitmaps/letters/A.xpm"
 
 SquarePanel::SquarePanel(wxPanel* parent, Square* pSquare, const wxColour& colour, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size),
@@ -28,6 +28,7 @@ SquarePanel::SquarePanel(wxPanel* parent, Square* pSquare, const wxColour& colou
 
 SquarePanel::~SquarePanel()
 {
+
 }
 
 void SquarePanel::OnSize(wxSizeEvent& event)
@@ -45,7 +46,11 @@ void SquarePanel::PaintLetterOnBorder(wxPaintEvent & evt)
         wxPaintDC dc(this);
         dc.DrawBitmap(bmp,0,0,false);
     }
+//    wxBitmap bmp(wxBITMAP(dark_wood_ac));
+//    wxPaintDC dc(this);
+//    dc.DrawBitmap(bmp,0,0,false);
 }
+
 
 void SquarePanel::rightClick(wxMouseEvent& event)
 {

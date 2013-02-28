@@ -3,7 +3,7 @@
 
 bool slach::OnInit()
 {
-    MainFrame *frame = new MainFrame( wxT("slac"),
+    MainFrame *frame = new MainFrame( wxT("slach"),
                                       wxPoint(250, 50),
                                       wxSize(650, 440) );
 
