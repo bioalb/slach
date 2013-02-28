@@ -36,6 +36,8 @@ public:
     void PaintLetterOnBorder(wxPaintEvent & evt);
 
     void rightClick(wxMouseEvent& event);
+
+    void WriteLetter();
     DECLARE_EVENT_TABLE()
 };
 

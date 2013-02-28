@@ -40,7 +40,10 @@ ChessBoard::ChessBoard()
 
 ChessBoard::~ChessBoard()
 {
-
+    for (unsigned i = 0; i <mSquares.size(); ++i )
+    {
+        delete mSquares[i];
+    }
 }
 
 std::vector<Square* > ChessBoard::GetSquares()

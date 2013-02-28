@@ -24,9 +24,16 @@ SquarePanel::SquarePanel(wxPanel* parent, Square* pSquare, const wxColour& colou
     {
         this->SetBackgroundColour(wxT("red"));
     }
+    wxStaticText textOn (this, wxID_ANY, wxT("A"), wxDefaultPosition,wxSize(65, 44));
+
 }
 
 SquarePanel::~SquarePanel()
+{
+
+}
+
+void SquarePanel::WriteLetter()
 {
 
 }
@@ -42,13 +49,15 @@ void SquarePanel::PaintLetterOnBorder(wxPaintEvent & evt)
 {
     if ((mIsBorderSquarePanel==true)&&(mIsCornerSquarePanel==false))
     {
-        wxBitmap bmp(wxBITMAP(A));
-        wxPaintDC dc(this);
-        dc.DrawBitmap(bmp,0,0,false);
+        //wxBitmap bmp(wxBITMAP(A));
+        //wxPaintDC dc(this);
+        //dc.DrawBitmap(bmp,0,0,false);
     }
 //    wxBitmap bmp(wxBITMAP(dark_wood_ac));
 //    wxPaintDC dc(this);
 //    dc.DrawBitmap(bmp,0,0,false);
+
+
 }
 
 

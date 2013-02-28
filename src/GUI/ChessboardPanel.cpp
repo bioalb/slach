@@ -60,6 +60,7 @@ ChessboardPanel::~ChessboardPanel()
         delete mSquarePanels[i];
     }
     delete mpActualChessboard;
+    delete mpChessBoard;
 }
 
 void ChessboardPanel::OnSize(wxSizeEvent& event)
