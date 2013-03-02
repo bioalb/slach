@@ -164,17 +164,7 @@ void SquarePanel::PaintOnBorder()
         if( neww != mCurrentWidth || newh != mCurrentHeight )
         {
             assert(mpPrintedCoord!=NULL);
-            int letter_width = mpPrintedCoord->GetWidth();
-            int letter_height = mpPrintedCoord->GetHeight();
-            double scale_factor = 1.0;
             double fractional_occupancy_of_space= 0.7;
-
-            //apply a scale factor if the square is too small
-            if (letter_width>neww || letter_height>newh)
-            {
-                scale_factor = double( std::min(neww,newh) )/ double(std::max((letter_width), (letter_height)));
-            }
-
             mCurrentWidth = neww;
             mCurrentHeight = newh;
             int dim = 0;
@@ -182,18 +172,21 @@ void SquarePanel::PaintOnBorder()
             int ycoord = 0;
             if (mCurrentWidth<=mCurrentHeight)
             {
-                dim =  mCurrentWidth*fractional_occupancy_of_space*scale_factor;
-                xcoord = mCurrentWidth*(1-fractional_occupancy_of_space)/2.0;
+                dim =  mCurrentWidth*fractional_occupancy_of_space;
+                xcoord = 0.0;//for some reason it does not want to center itself when it is small
                 ycoord = (mCurrentHeight-dim)/2;
             }
             else
             {
-                dim = mCurrentHeight*fractional_occupancy_of_space*scale_factor;
+                dim = mCurrentHeight*fractional_occupancy_of_space;
                 xcoord = (mCurrentWidth-dim)/2;
-                ycoord = mCurrentHeight*(1-fractional_occupancy_of_space)/2.0;
+                ycoord = (mCurrentHeight-dim)/2;;
             }
+
             wxBitmap resized = wxBitmap( mpPrintedCoord->Scale(dim, dim) );
             dc.DrawBitmap( resized, xcoord, ycoord, false );
+
+
         }
     }
 }
