@@ -5,8 +5,10 @@ $file = $ARGV[0];
  
 # The name of the image is the body of the input path
 #$name  = ($file =~ m!(w+).w+$!);
-($name,$b)=split('\.',$file,2);
-print $name;
+($path,$middle,$filename)=split('\/',$file,3);
+print $path;
+($name, $a)=split('\.',$filename,2);
+
 # The output file name is the name of the file with the .h extension
 ($ofile = $file)  =~ s/.w+$//; $ofile .= ".h";
  

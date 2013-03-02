@@ -167,7 +167,7 @@ void SquarePanel::PaintOnBorder()
             int letter_width = mpPrintedCoord->GetWidth();
             int letter_height = mpPrintedCoord->GetHeight();
             double scale_factor = 1.0;
-            double fractional_occupancy_of_space= 0.8;
+            double fractional_occupancy_of_space= 0.7;
 
             //apply a scale factor if the square is too small
             if (letter_width>neww || letter_height>newh)
