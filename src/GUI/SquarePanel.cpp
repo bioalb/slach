@@ -70,81 +70,85 @@ void SquarePanel::DetermineCoordinateToPrint()
         wxMemoryInputStream istream(a_img, sizeof a_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    if (mFile=="B")
+    else if (mFile=="B")
     {
         wxMemoryInputStream istream(b_img, sizeof b_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    if (mFile=="C")
+    else if (mFile=="C")
     {
         wxMemoryInputStream istream(c_img, sizeof c_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    if (mFile=="D")
+    else if (mFile=="D")
     {
         wxMemoryInputStream istream(d_img, sizeof d_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    if (mFile=="E")
+    else if (mFile=="E")
     {
         wxMemoryInputStream istream(e_img, sizeof e_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    if (mFile=="F")
+    else if (mFile=="F")
     {
         wxMemoryInputStream istream(f_img, sizeof f_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    if (mFile=="G")
+    else if (mFile=="G")
     {
         wxMemoryInputStream istream(g_img, sizeof g_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    if (mFile=="H")
+    else if (mFile=="H")
     {
         wxMemoryInputStream istream(h_img, sizeof h_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
 
-    if (mRank=="1")
+    else if (mRank=="1")
     {
         wxMemoryInputStream istream(one_img, sizeof one_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    if (mRank=="2")
+    else if (mRank=="2")
     {
         wxMemoryInputStream istream(two_img, sizeof two_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    if (mRank=="3")
+    else if (mRank=="3")
     {
         wxMemoryInputStream istream(three_img, sizeof three_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    if (mRank=="4")
+    else if (mRank=="4")
     {
         wxMemoryInputStream istream(four_img, sizeof four_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    if (mRank=="5")
+    else if (mRank=="5")
     {
         wxMemoryInputStream istream(five_img, sizeof five_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    if (mRank=="6")
+    else if (mRank=="6")
     {
         wxMemoryInputStream istream(six_img, sizeof six_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    if (mRank=="7")
+    else if (mRank=="7")
     {
         wxMemoryInputStream istream(seven_img, sizeof seven_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    if (mRank=="8")
+    else if (mRank=="8")
     {
         wxMemoryInputStream istream(eight_img, sizeof eight_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
+    }
+    else
+    {
+        //we should never be here
     }
 }
 
