@@ -20,6 +20,8 @@ private:
 
     bool mIsDarkSquare;
 
+    bool mIsCoordinatePrintable;
+
 public:
     Square();
     ~Square();
@@ -40,6 +42,8 @@ public:
 
     void SetAsCornerSquare(bool border=true);
 
+    void SetAsPrintableCoordinates(bool print = true);
+
     bool IsBorderSquare();
 
     bool IsCornerSquare();
@@ -47,6 +51,8 @@ public:
     bool IsLightSquare();
 
     bool IsDarkSquare();
+
+    bool IsCoordinatePrintable();
 
 };
 

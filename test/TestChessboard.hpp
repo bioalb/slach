@@ -52,6 +52,7 @@ public:
         TS_ASSERT_EQUALS(squares[0]->IsBorderSquare(), true);
         TS_ASSERT_EQUALS(squares[0]->GetFile(), "0");
         TS_ASSERT_EQUALS(squares[0]->GetRank(), "0");
+        TS_ASSERT_EQUALS(squares[0]->IsCoordinatePrintable(), false);
 
         //check the top border
         for (unsigned i=1; i < 9; ++i)
@@ -60,6 +61,7 @@ public:
             TS_ASSERT_EQUALS(squares[i]->IsBorderSquare(), true);
             TS_ASSERT_EQUALS(squares[i]->GetFile(),my_cb.GetFiles()[i]);
             TS_ASSERT_EQUALS(squares[i]->GetRank(), "0");
+            TS_ASSERT_EQUALS(squares[i]->IsCoordinatePrintable(), false);
         }
 
         //check the top right corner
@@ -67,6 +69,7 @@ public:
         TS_ASSERT_EQUALS(squares[9]->IsBorderSquare(), true);
         TS_ASSERT_EQUALS(squares[9]->GetFile(), "0");
         TS_ASSERT_EQUALS(squares[9]->GetRank(), "0");
+        TS_ASSERT_EQUALS(squares[9]->IsCoordinatePrintable(), false);
 
         //////
         // 8th rank
@@ -77,6 +80,7 @@ public:
         TS_ASSERT_EQUALS(squares[10]->IsBorderSquare(), true);
         TS_ASSERT_EQUALS(squares[10]->GetFile(), "0");
         TS_ASSERT_EQUALS(squares[10]->GetRank(), "8");
+        TS_ASSERT_EQUALS(squares[10]->IsCoordinatePrintable(), true);
 
         //a8
         TS_ASSERT_EQUALS(squares[11]->IsCornerSquare(), false);
@@ -85,6 +89,7 @@ public:
         TS_ASSERT_EQUALS(squares[11]->IsLightSquare(), true);
         TS_ASSERT_EQUALS(squares[11]->GetFile(), "A");
         TS_ASSERT_EQUALS(squares[11]->GetRank(), "8");
+        TS_ASSERT_EQUALS(squares[11]->IsCoordinatePrintable(), false);
 
         //b8
         TS_ASSERT_EQUALS(squares[12]->IsCornerSquare(), false);
@@ -147,6 +152,7 @@ public:
         TS_ASSERT_EQUALS(squares[19]->IsBorderSquare(), true);
         TS_ASSERT_EQUALS(squares[19]->GetFile(), "0");
         TS_ASSERT_EQUALS(squares[19]->GetRank(), "8");
+        TS_ASSERT_EQUALS(squares[19]->IsCoordinatePrintable(), false);
 
         //////
         // 7th rank
@@ -157,6 +163,7 @@ public:
         TS_ASSERT_EQUALS(squares[20]->IsBorderSquare(), true);
         TS_ASSERT_EQUALS(squares[20]->GetFile(), "0");
         TS_ASSERT_EQUALS(squares[20]->GetRank(), "7");
+        TS_ASSERT_EQUALS(squares[20]->IsCoordinatePrintable(), true);
 
         //a7
         TS_ASSERT_EQUALS(squares[21]->IsCornerSquare(), false);
@@ -227,6 +234,7 @@ public:
         TS_ASSERT_EQUALS(squares[29]->IsBorderSquare(), true);
         TS_ASSERT_EQUALS(squares[29]->GetFile(), "0");
         TS_ASSERT_EQUALS(squares[29]->GetRank(), "7");
+        TS_ASSERT_EQUALS(squares[29]->IsCoordinatePrintable(), false);
 
         //////
         // 1st rank
@@ -237,6 +245,7 @@ public:
         TS_ASSERT_EQUALS(squares[80]->IsBorderSquare(), true);
         TS_ASSERT_EQUALS(squares[80]->GetFile(), "0");
         TS_ASSERT_EQUALS(squares[80]->GetRank(), "1");
+        TS_ASSERT_EQUALS(squares[80]->IsCoordinatePrintable(), true);
 
         //a1
         TS_ASSERT_EQUALS(squares[81]->IsCornerSquare(), false);
@@ -307,6 +316,7 @@ public:
         TS_ASSERT_EQUALS(squares[89]->IsBorderSquare(), true);
         TS_ASSERT_EQUALS(squares[89]->GetFile(), "0");
         TS_ASSERT_EQUALS(squares[89]->GetRank(), "1");
+        TS_ASSERT_EQUALS(squares[89]->IsCoordinatePrintable(), false);
 
         /////
         //Bottom border
@@ -317,8 +327,9 @@ public:
         TS_ASSERT_EQUALS(squares[90]->IsBorderSquare(), true);
         TS_ASSERT_EQUALS(squares[90]->GetFile(), "0");
         TS_ASSERT_EQUALS(squares[90]->GetRank(), "0");
+        TS_ASSERT_EQUALS(squares[90]->IsCoordinatePrintable(), false);
 
-        //check the top border
+        //check the bottom border
         unsigned file_index = 1;
         for (unsigned i=91; i < 99; ++i)
         {
@@ -327,14 +338,16 @@ public:
             TS_ASSERT_EQUALS(squares[i]->IsBorderSquare(), true);
             TS_ASSERT_EQUALS(squares[i]->GetFile(),my_cb.GetFiles()[file_index]);
             TS_ASSERT_EQUALS(squares[i]->GetRank(), "0");
+            TS_ASSERT_EQUALS(squares[i]->IsCoordinatePrintable(), true);
             file_index++;
         }
 
-        //check the top right corner
+        //check the bottom right corner
         TS_ASSERT_EQUALS(squares[99]->IsCornerSquare(), true);
         TS_ASSERT_EQUALS(squares[99]->IsBorderSquare(), true);
         TS_ASSERT_EQUALS(squares[99]->GetFile(), "0");
         TS_ASSERT_EQUALS(squares[99]->GetRank(), "0");
+        TS_ASSERT_EQUALS(squares[99]->IsCoordinatePrintable(), false);
 
     }
 };

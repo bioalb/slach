@@ -113,10 +113,17 @@ void ChessBoard::SetupChessBoard()
         //all the other rows (ranks) before we hit to bottom border
         else if (index < (CHESSBOARD_SIZE_WB - (RANK_SIZE)))
         {
-            //left border and right borders
-            if ( (index%(RANK_SIZE)==0) || ((index+1)%(RANK_SIZE)==0) )
+            //left border
+            if ( (index%(RANK_SIZE)==0)  )
             {
                 mSquares[index]->SetAsBorderSquare(true);
+                mSquares[index]->SetAsPrintableCoordinates(true);
+            }
+            //and right borders
+            if ( (index+1)%(RANK_SIZE)==0 )
+            {
+                mSquares[index]->SetAsBorderSquare(true);
+                mSquares[index]->SetAsPrintableCoordinates(false);
             }
         }
         //last row at the bottom, a border
@@ -133,6 +140,7 @@ void ChessBoard::SetupChessBoard()
                 //bottom row, put markers
                 mSquares[index]->SetAsBorderSquare(true);
                 mSquares[index]->SetAsCornerSquare(false);
+                mSquares[index]->SetAsPrintableCoordinates(true);
             }
         }
     }

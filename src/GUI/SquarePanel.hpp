@@ -18,6 +18,8 @@ private:
 
     bool mIsCornerSquarePanel;
 
+    bool mIsSquarePanelPrintable;
+
     Square* mpSquare;
 
     wxBitmap mResized;
@@ -26,6 +28,8 @@ private:
     int mCurrentHeight;
 
     void PaintOnBorder();
+    void DetermineCoordinateToPrint();
+    wxImage* mpPrintedCoord;
 public:
     SquarePanel(wxPanel* parent, Square* pSquare,const wxColour& colour = wxT("red"), const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
     ~SquarePanel();

@@ -6,6 +6,7 @@ Square::Square()
     mIsCornerSquare = false;
     mIsLightSquare = false;
     mIsDarkSquare = false;
+    mIsCoordinatePrintable = false;
     mFile = "UNDEFINED";
     mRank = "UNDEFINED";
 }
@@ -63,6 +64,16 @@ void Square::SetFile(std::string file)
 void Square::SetRank(std::string rank)
 {
     mRank = rank;
+}
+
+void Square::SetAsPrintableCoordinates(bool print)
+{
+    mIsCoordinatePrintable = print;
+}
+
+bool Square::IsCoordinatePrintable()
+{
+    return mIsCoordinatePrintable;
 }
 
 std::string Square::GetFile()
