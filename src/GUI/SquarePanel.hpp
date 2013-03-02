@@ -22,7 +22,10 @@ private:
 
     wxBitmap mResized;
 
+    int mCurrentWidth;
+    int mCurrentHeight;
 
+    void PaintOnBorder();
 public:
     SquarePanel(wxPanel* parent, Square* pSquare,const wxColour& colour = wxT("red"), const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
     ~SquarePanel();
@@ -33,11 +36,10 @@ public:
      */
     void OnSize(wxSizeEvent& event);
 
-    void PaintLetterOnBorder(wxPaintEvent & evt);
+    void RenderOnChessBoard(wxPaintEvent & evt);
 
     void rightClick(wxMouseEvent& event);
 
-    void WriteLetter();
     DECLARE_EVENT_TABLE()
 };
 

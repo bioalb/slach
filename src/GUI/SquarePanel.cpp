@@ -1,5 +1,7 @@
+#include <wx/mstream.h>
+#include <algorithm>
 #include "SquarePanel.hpp"
-#include "bitmaps/letters/A.xpm"
+#include "bitmaps/letters/png/A.png.h"
 
 SquarePanel::SquarePanel(wxPanel* parent, Square* pSquare, const wxColour& colour, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size),
@@ -9,6 +11,8 @@ SquarePanel::SquarePanel(wxPanel* parent, Square* pSquare, const wxColour& colou
     mRank = pSquare->GetRank();
     mIsBorderSquarePanel = pSquare->IsBorderSquare();
     mIsCornerSquarePanel = pSquare->IsCornerSquare();
+    mCurrentWidth = -1;
+    mCurrentHeight = -1;
 
     //this->SetBackgroundColour(colour);
 
@@ -24,7 +28,6 @@ SquarePanel::SquarePanel(wxPanel* parent, Square* pSquare, const wxColour& colou
     {
         this->SetBackgroundColour(wxT("red"));
     }
-    wxStaticText textOn (this, wxID_ANY, wxT("A"), wxDefaultPosition,wxSize(65, 44));
 
 }
 
@@ -33,10 +36,6 @@ SquarePanel::~SquarePanel()
 
 }
 
-void SquarePanel::WriteLetter()
-{
-
-}
 
 void SquarePanel::OnSize(wxSizeEvent& event)
 {
@@ -45,19 +44,58 @@ void SquarePanel::OnSize(wxSizeEvent& event)
     event.Skip();
 }
 
-void SquarePanel::PaintLetterOnBorder(wxPaintEvent & evt)
+void SquarePanel::PaintOnBorder()
 {
     if ((mIsBorderSquarePanel==true)&&(mIsCornerSquarePanel==false))
     {
         //wxBitmap bmp(wxBITMAP(A));
-        //wxPaintDC dc(this);
-        //dc.DrawBitmap(bmp,0,0,false);
+        //wxImage image = bmp.ConvertToImage();
+        wxPaintDC dc(this);
+
+        int neww, newh;
+        this->GetSize( &neww, &newh );
+
+        if( neww != mCurrentWidth || newh != mCurrentHeight )
+        {
+            wxMemoryInputStream istream(A_img, sizeof A_img);
+            wxImage letter(istream, wxBITMAP_TYPE_PNG);
+
+            int letter_width = letter.GetWidth();
+            int letter_height = letter.GetHeight();
+            double scale_factor = 1.0;
+            double fractional_occupancy_of_space= 0.8;
+
+            //apply a scale factor if the square is too small
+            if (letter_width>neww || letter_height>newh)
+            {
+                scale_factor = double( std::min(neww,newh) )/ double(std::max((letter_width), (letter_height)));
+            }
+
+            mCurrentWidth = neww;
+            mCurrentHeight = newh;
+            int dim = 0;
+            int xcoord = 0;
+            int ycoord = 0;
+            if (mCurrentWidth<=mCurrentHeight)
+            {
+                dim =  mCurrentWidth*fractional_occupancy_of_space;
+                xcoord = mCurrentWidth*(1-fractional_occupancy_of_space)/2.0;
+                ycoord = (mCurrentHeight-dim)/2;
+            }
+            else
+            {
+                dim = mCurrentHeight*fractional_occupancy_of_space;
+                xcoord = (mCurrentWidth-dim)/2;
+                ycoord = mCurrentHeight*(1-fractional_occupancy_of_space)/2.0;
+            }
+            wxBitmap resized = wxBitmap( letter.Scale(scale_factor*dim, scale_factor*dim /*, wxIMAGE_QUALITY_HIGH*/ ) );
+            dc.DrawBitmap( resized, xcoord, ycoord, false );
+        }
     }
-//    wxBitmap bmp(wxBITMAP(dark_wood_ac));
-//    wxPaintDC dc(this);
-//    dc.DrawBitmap(bmp,0,0,false);
-
-
+}
+void SquarePanel::RenderOnChessBoard(wxPaintEvent & evt)
+{
+    PaintOnBorder();
 }
 
 
@@ -68,5 +106,5 @@ void SquarePanel::rightClick(wxMouseEvent& event)
 BEGIN_EVENT_TABLE(SquarePanel, wxPanel)
     EVT_SIZE(SquarePanel::OnSize)
     EVT_RIGHT_DOWN(SquarePanel::rightClick)
-    EVT_PAINT(SquarePanel::PaintLetterOnBorder)
+    EVT_PAINT(SquarePanel::RenderOnChessBoard)
 END_EVENT_TABLE()
