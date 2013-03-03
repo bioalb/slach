@@ -6,6 +6,7 @@
 #include <wx/panel.h>
 #include "../Square.hpp"
 
+
 class SquarePanel : public wxPanel
 {
 
@@ -28,9 +29,11 @@ private:
     int mCurrentHeight;
 
     void PaintOnBorder();
-    void PaintAPiece();
+    void PaintPiece();
     void DetermineCoordinateToPrint();
     wxImage* mpPrintedCoord;
+
+
 public:
     SquarePanel(wxPanel* parent, Square* pSquare,const wxColour& colour = wxT("red"), const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
     ~SquarePanel();
@@ -44,6 +47,7 @@ public:
     void RenderOnChessBoard(wxPaintEvent & evt);
 
     void rightClick(wxMouseEvent& event);
+
 
     DECLARE_EVENT_TABLE()
 };

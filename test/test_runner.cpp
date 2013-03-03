@@ -24,11 +24,11 @@ bool suite_TestChessboard_init = false;
 static TestChessboard suite_TestChessboard;
 
 static CxxTest::List Tests_TestChessboard = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestChessboard( "TestChessboard.hpp", 9, "TestChessboard", suite_TestChessboard, Tests_TestChessboard );
+CxxTest::StaticSuiteDescription suiteDescription_TestChessboard( "TestChessboard.hpp", 10, "TestChessboard", suite_TestChessboard, Tests_TestChessboard );
 
 static class TestDescription_suite_TestChessboard_testBorderFlags : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessboard_testBorderFlags() : CxxTest::RealTestDescription( Tests_TestChessboard, suiteDescription_TestChessboard, 13, "testBorderFlags" ) {}
+ TestDescription_suite_TestChessboard_testBorderFlags() : CxxTest::RealTestDescription( Tests_TestChessboard, suiteDescription_TestChessboard, 14, "testBorderFlags" ) {}
  void runTest() { suite_TestChessboard.testBorderFlags(); }
 } testDescription_suite_TestChessboard_testBorderFlags;
 
@@ -37,6 +37,12 @@ public:
  TestDescription_suite_TestChessboard_testBoard() : CxxTest::RealTestDescription( Tests_TestChessboard, suiteDescription_TestChessboard, 41, "testBoard" ) {}
  void runTest() { suite_TestChessboard.testBoard(); }
 } testDescription_suite_TestChessboard_testBoard;
+
+static class TestDescription_suite_TestChessboard_testInitialPosition : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestChessboard_testInitialPosition() : CxxTest::RealTestDescription( Tests_TestChessboard, suiteDescription_TestChessboard, 353, "testInitialPosition" ) {}
+ void runTest() { suite_TestChessboard.testInitialPosition(); }
+} testDescription_suite_TestChessboard_testInitialPosition;
 
 #include <cxxtest/Root.cpp>
 const char* CxxTest::RealWorldDescription::_worldName = "cxxtest";

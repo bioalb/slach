@@ -2,6 +2,7 @@
 #define _SQUARE_HPP_
 
 #include <string>
+#include "PieceType.hpp"
 
 class Square
 {
@@ -21,6 +22,8 @@ private:
     bool mIsDarkSquare;
 
     bool mIsCoordinatePrintable;
+
+    PieceType mPieceOnThisSquare;
 
 public:
     Square();
@@ -53,6 +56,10 @@ public:
     bool IsDarkSquare();
 
     bool IsCoordinatePrintable();
+
+    void SetPieceOnThisSquare(PieceType piece);
+
+    PieceType GetPieceOnThisSquare();
 
 };
 

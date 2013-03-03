@@ -61,6 +61,99 @@ std::vector<std::string> ChessBoard::GetRanks()
     return mRanks;
 }
 
+void ChessBoard::SetupInitialChessPosition()
+{
+
+
+    for (unsigned i = 0; i < mSquares.size(); ++i)
+    {
+        //first rank
+        if ((mSquares[i]->GetFile()=="A")&&(mSquares[i]->GetRank()=="1"))
+        {
+            mSquares[i]->SetPieceOnThisSquare(WHITE_ROOK);
+        }
+        else if ((mSquares[i]->GetFile()=="H")&&(mSquares[i]->GetRank()=="1"))
+        {
+            mSquares[i]->SetPieceOnThisSquare(WHITE_ROOK);
+        }
+        else if ((mSquares[i]->GetFile()=="B")&&(mSquares[i]->GetRank()=="1"))
+        {
+            mSquares[i]->SetPieceOnThisSquare(WHITE_KNIGHT);
+        }
+        else if ((mSquares[i]->GetFile()=="G")&&(mSquares[i]->GetRank()=="1"))
+        {
+            mSquares[i]->SetPieceOnThisSquare(WHITE_KNIGHT);
+        }
+        else if ((mSquares[i]->GetFile()=="C")&&(mSquares[i]->GetRank()=="1"))
+        {
+            mSquares[i]->SetPieceOnThisSquare(WHITE_BISHOP);
+        }
+        else if ((mSquares[i]->GetFile()=="F")&&(mSquares[i]->GetRank()=="1"))
+        {
+            mSquares[i]->SetPieceOnThisSquare(WHITE_BISHOP);
+        }
+        else if ((mSquares[i]->GetFile()=="D")&&(mSquares[i]->GetRank()=="1"))
+        {
+            mSquares[i]->SetPieceOnThisSquare(WHITE_QUEEN);
+        }
+        else if ((mSquares[i]->GetFile()=="E")&&(mSquares[i]->GetRank()=="1"))
+        {
+            mSquares[i]->SetPieceOnThisSquare(WHITE_KING);
+        }
+        //second rank, all white pawns
+        else if ((mSquares[i]->GetRank()=="2")&&mSquares[i]->IsBorderSquare()==false)
+        {
+            mSquares[i]->SetPieceOnThisSquare(WHITE_PAWN);
+        }
+        //seventh rank, all black pawns
+        else if(mSquares[i]->GetRank()=="7"&&mSquares[i]->IsBorderSquare()==false)
+        {
+            mSquares[i]->SetPieceOnThisSquare(BLACK_PAWN);
+        }
+
+        //EIGTH rank
+        else if ((mSquares[i]->GetFile()=="A")&&(mSquares[i]->GetRank()=="8"))
+        {
+            mSquares[i]->SetPieceOnThisSquare(BLACK_ROOK);
+        }
+        else if ((mSquares[i]->GetFile()=="H")&&(mSquares[i]->GetRank()=="8"))
+        {
+            mSquares[i]->SetPieceOnThisSquare(BLACK_ROOK);
+        }
+        else if ((mSquares[i]->GetFile()=="B")&&(mSquares[i]->GetRank()=="8"))
+        {
+            mSquares[i]->SetPieceOnThisSquare(BLACK_KNIGHT);
+        }
+        else if ((mSquares[i]->GetFile()=="G")&&(mSquares[i]->GetRank()=="8"))
+        {
+            mSquares[i]->SetPieceOnThisSquare(BLACK_KNIGHT);
+        }
+        else if ((mSquares[i]->GetFile()=="C")&&(mSquares[i]->GetRank()=="8"))
+        {
+            mSquares[i]->SetPieceOnThisSquare(BLACK_BISHOP);
+        }
+        else if ((mSquares[i]->GetFile()=="F")&&(mSquares[i]->GetRank()=="8"))
+        {
+            mSquares[i]->SetPieceOnThisSquare(BLACK_BISHOP);
+        }
+        else if ((mSquares[i]->GetFile()=="D")&&(mSquares[i]->GetRank()=="8"))
+        {
+            mSquares[i]->SetPieceOnThisSquare(BLACK_QUEEN);
+        }
+        else if ((mSquares[i]->GetFile()=="E")&&(mSquares[i]->GetRank()=="8"))
+        {
+            mSquares[i]->SetPieceOnThisSquare(BLACK_KING);
+        }
+        else
+        {
+            mSquares[i]->SetPieceOnThisSquare(NO_PIECE);
+        }
+    }
+
+
+
+}
+
 void ChessBoard::SetupChessBoard()
 {
     unsigned row=RANK_SIZE-1;//row counter, start from the max as the loop starts from top left

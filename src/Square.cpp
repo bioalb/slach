@@ -1,4 +1,5 @@
 #include "Square.hpp"
+#include "Exception.hpp"
 
 Square::Square()
 {
@@ -9,6 +10,7 @@ Square::Square()
     mIsCoordinatePrintable = false;
     mFile = "UNDEFINED";
     mRank = "UNDEFINED";
+    mPieceOnThisSquare = NO_PIECE;
 }
 
 Square::~Square()
@@ -85,3 +87,14 @@ std::string Square::GetRank()
 {
     return mRank;
 }
+
+void Square::SetPieceOnThisSquare(PieceType piece)
+{
+    mPieceOnThisSquare = piece;
+}
+
+PieceType Square::GetPieceOnThisSquare()
+{
+    return mPieceOnThisSquare;
+}
+

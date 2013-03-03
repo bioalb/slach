@@ -38,6 +38,9 @@ ChessboardPanel::ChessboardPanel(wxFrame* parent, const wxPoint& pos, const wxSi
     mpGridSizer->AddGrowableRow(9,1);//border
 
     SetupChessboard();
+    mpChessBoard->SetupInitialChessPosition();
+
+
 }
 
 void ChessboardPanel::SetupChessboard()

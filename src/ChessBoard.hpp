@@ -67,6 +67,8 @@ public:
 
     void SetupChessBoard();
 
+    void SetupInitialChessPosition();
+
     std::vector<Square* > GetSquares();
 
     std::vector<std::string> GetFiles();

@@ -7,7 +7,8 @@ ADD_DEFINITIONS(-I${scrdir}
                 -I.
                 -O0 -std=c++0x -g3 -Wall -fmessage-length=0 -finstrument-functions)
 
-ADD_EXECUTABLE(TESTRUNNER test_runner.cpp 
+ADD_EXECUTABLE(TESTRUNNER test_runner.cpp
+                          ${srcdir}/Exception.cpp 
                           ${srcdir}/Square.cpp 
                           ${srcdir}/ChessBoard.cpp)
 

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include "../src/ChessBoard.hpp"
+#include "../src/PieceType.hpp"
 
 class TestChessboard : public CxxTest::TestSuite
 {
@@ -36,7 +37,6 @@ public:
             TS_ASSERT_EQUALS(squares[index]->IsBorderSquare(), true);
             TS_ASSERT_EQUALS(squares[index]->IsCornerSquare(), true);
         }
-
     }
     void testBoard(void)
     {
@@ -348,7 +348,103 @@ public:
         TS_ASSERT_EQUALS(squares[99]->GetFile(), "0");
         TS_ASSERT_EQUALS(squares[99]->GetRank(), "0");
         TS_ASSERT_EQUALS(squares[99]->IsCoordinatePrintable(), false);
+    }
+
+    void testInitialPosition(void)
+    {
+        ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        my_cb.SetupInitialChessPosition();
+
+        std::vector<Square* > squares = my_cb.GetSquares();
+        TS_ASSERT_EQUALS(squares.size(), CHESSBOARD_SIZE_WB);
+
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            //first rank
+            if ((squares[i]->GetFile()=="A")&&(squares[i]->GetRank()=="1"))
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_ROOK);
+            }
+            else if ((squares[i]->GetFile()=="H")&&(squares[i]->GetRank()=="1"))
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_ROOK);
+            }
+            else if ((squares[i]->GetFile()=="B")&&(squares[i]->GetRank()=="1"))
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_KNIGHT);
+            }
+            else if ((squares[i]->GetFile()=="G")&&(squares[i]->GetRank()=="1"))
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_KNIGHT);
+            }
+            else if ((squares[i]->GetFile()=="C")&&(squares[i]->GetRank()=="1"))
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_BISHOP);
+            }
+            else if ((squares[i]->GetFile()=="F")&&(squares[i]->GetRank()=="1"))
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_BISHOP);
+            }
+            else if ((squares[i]->GetFile()=="D")&&(squares[i]->GetRank()=="1"))
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_QUEEN);
+            }
+            else if ((squares[i]->GetFile()=="E")&&(squares[i]->GetRank()=="1"))
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_KING);
+            }
+            //second rank, all white pawns
+            else if(squares[i]->GetRank()=="2" && squares[i]->IsBorderSquare()==false)
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_PAWN);
+            }
+            //seventh rank, all black pawns
+            else if (squares[i]->GetRank()=="7" && squares[i]->IsBorderSquare()==false)
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_PAWN);
+            }
+
+            //EIGTH rank
+            else if ((squares[i]->GetFile()=="A")&&(squares[i]->GetRank()=="8"))
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_ROOK);
+            }
+            else if ((squares[i]->GetFile()=="H")&&(squares[i]->GetRank()=="8"))
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_ROOK);
+            }
+            else if ((squares[i]->GetFile()=="B")&&(squares[i]->GetRank()=="8"))
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_KNIGHT);
+            }
+            else if ((squares[i]->GetFile()=="G")&&(squares[i]->GetRank()=="8"))
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_KNIGHT);
+            }
+            else if ((squares[i]->GetFile()=="C")&&(squares[i]->GetRank()=="8"))
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_BISHOP);
+            }
+            else if ((squares[i]->GetFile()=="F")&&(squares[i]->GetRank()=="8"))
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_BISHOP);
+            }
+            else if ((squares[i]->GetFile()=="D")&&(squares[i]->GetRank()=="8"))
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_QUEEN);
+            }
+            else if ((squares[i]->GetFile()=="E")&&(squares[i]->GetRank()=="8"))
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_KING);
+            }
+            else
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),NO_PIECE);
+            }
+        }
 
     }
+
 };
 #endif

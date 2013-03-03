@@ -10,7 +10,8 @@ ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64
                 -I/usr/include/wxSVG 
                  -O0 -g3 -Wall -fmessage-length=0 -finstrument-functions)
 
-ADD_EXECUTABLE(slach ${srcdir}/ChessBoard.cpp
+ADD_EXECUTABLE(slach ${srcdir}/Exception.cpp
+                       ${srcdir}/ChessBoard.cpp
                        ${srcdir}/Square.cpp
                        ${srcdir}/GUI/SquarePanel.cpp 
                        ${srcdir}/GUI/RightPanel.cpp 

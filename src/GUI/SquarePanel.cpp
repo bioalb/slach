@@ -2,6 +2,8 @@
 #include <SVGDocument.h>
 #include <algorithm>
 #include "SquarePanel.hpp"
+#include "../Exception.hpp"
+#include "../PieceType.hpp"
 #include "bitmaps/letters/png/a.png.h"
 #include "bitmaps/letters/png/b.png.h"
 #include "bitmaps/letters/png/c.png.h"
@@ -184,104 +186,58 @@ void SquarePanel::PaintOnBorder()
     }
 }
 
-void SquarePanel::PaintAPiece()
+void SquarePanel::PaintPiece()
 {
-    if ((mFile=="A")&&(mRank=="2"))
+    PieceType piece = mpSquare->GetPieceOnThisSquare();
+
+    wxPaintDC dc(this);
+    wxSVGDocument* svgDoc = new wxSVGDocument;
+
+    switch(piece)
     {
-        wxPaintDC dc(this);
-        wxSVGDocument* svgDoc = new wxSVGDocument;
-        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_bishop.svg"));
-        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
-        dc.DrawBitmap( bishop, 0, 0, false );
+        case WHITE_KING:
+            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_king.svg"));
+            break;
+        case BLACK_KING:
+            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_king.svg"));
+            break;
+        case WHITE_QUEEN:
+            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_queen.svg"));
+            break;
+        case BLACK_QUEEN:
+            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_queen.svg"));
+            break;
+        case WHITE_ROOK:
+            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_rook.svg"));
+            break;
+        case BLACK_ROOK:
+            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_rook.svg"));
+            break;
+        case WHITE_BISHOP:
+            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_bishop.svg"));
+            break;
+        case BLACK_BISHOP:
+            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_bishop.svg"));
+            break;
+        case WHITE_KNIGHT:
+            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_knight.svg"));
+            break;
+        case BLACK_KNIGHT:
+            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_knight.svg"));
+            break;
+        case WHITE_PAWN:
+            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_pawn.svg"));
+            break;
+        case BLACK_PAWN:
+            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_pawn.svg"));
+            break;
+        default:
+            //NEVER_REACHED;
+            break;
     }
-    if ((mFile=="G")&&(mRank=="7"))
-    {
-        wxPaintDC dc(this);
-        wxSVGDocument* svgDoc = new wxSVGDocument;
-        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_king.svg"));
-        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
-        dc.DrawBitmap( bishop, 0, 0, false );
-    }
-    if ((mFile=="C")&&(mRank=="7"))
-    {
-        wxPaintDC dc(this);
-        wxSVGDocument* svgDoc = new wxSVGDocument;
-        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_queen.svg"));
-        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
-        dc.DrawBitmap( bishop, 0, 0, false );
-    }
-    if ((mFile=="B")&&(mRank=="6"))
-    {
-        wxPaintDC dc(this);
-        wxSVGDocument* svgDoc = new wxSVGDocument;
-        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_queen.svg"));
-        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
-        dc.DrawBitmap( bishop, 0, 0, false );
-    }
-    if ((mFile=="B")&&(mRank=="5"))
-    {
-        wxPaintDC dc(this);
-        wxSVGDocument* svgDoc = new wxSVGDocument;
-        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_pawn.svg"));
-        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
-        dc.DrawBitmap( bishop, 0, 0, false );
-    }
-    if ((mFile=="B")&&(mRank=="4"))
-    {
-        wxPaintDC dc(this);
-        wxSVGDocument* svgDoc = new wxSVGDocument;
-        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_pawn.svg"));
-        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
-        dc.DrawBitmap( bishop, 0, 0, false );
-    }
-    if ((mFile=="B")&&(mRank=="3"))
-    {
-        wxPaintDC dc(this);
-        wxSVGDocument* svgDoc = new wxSVGDocument;
-        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_knight.svg"));
-        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
-        dc.DrawBitmap( bishop, 0, 0, false );
-    }
-    if ((mFile=="H")&&(mRank=="4"))
-    {
-        wxPaintDC dc(this);
-        wxSVGDocument* svgDoc = new wxSVGDocument;
-        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_bishop.svg"));
-        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
-        dc.DrawBitmap( bishop, 0, 0, false );
-    }
-    if ((mFile=="H")&&(mRank=="3"))
-    {
-        wxPaintDC dc(this);
-        wxSVGDocument* svgDoc = new wxSVGDocument;
-        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_knight.svg"));
-        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
-        dc.DrawBitmap( bishop, 0, 0, false );
-    }
-    if ((mFile=="E")&&(mRank=="1"))
-    {
-        wxPaintDC dc(this);
-        wxSVGDocument* svgDoc = new wxSVGDocument;
-        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_rook.svg"));
-        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
-        dc.DrawBitmap( bishop, 0, 0, false );
-    }
-    if ((mFile=="G")&&(mRank=="1"))
-    {
-        wxPaintDC dc(this);
-        wxSVGDocument* svgDoc = new wxSVGDocument;
-        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_rook.svg"));
-        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
-        dc.DrawBitmap( bishop, 0, 0, false );
-    }
-    if ((mFile=="E")&&(mRank=="4"))
-    {
-        wxPaintDC dc(this);
-        wxSVGDocument* svgDoc = new wxSVGDocument;
-        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_king.svg"));
-        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
-        dc.DrawBitmap( bishop, 0, 0, false );
-    }
+    //last true is for transparency!
+    wxImage piece_to_print = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+    dc.DrawBitmap( piece_to_print, 0, 0, false );
 }
 
 void SquarePanel::RenderOnChessBoard(wxPaintEvent & evt)
@@ -294,7 +250,7 @@ void SquarePanel::RenderOnChessBoard(wxPaintEvent & evt)
         mCurrentWidth = neww;
         mCurrentHeight = newh;
         PaintOnBorder();
-        PaintAPiece();
+        PaintPiece();
     }
 }
 
