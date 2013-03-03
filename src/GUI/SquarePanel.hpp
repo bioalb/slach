@@ -28,6 +28,7 @@ private:
     int mCurrentHeight;
 
     void PaintOnBorder();
+    void PaintAPiece();
     void DetermineCoordinateToPrint();
     wxImage* mpPrintedCoord;
 public:

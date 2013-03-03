@@ -1,4 +1,5 @@
 #include <wx/mstream.h>
+#include <SVGDocument.h>
 #include <algorithm>
 #include "SquarePanel.hpp"
 #include "bitmaps/letters/png/a.png.h"
@@ -36,15 +37,15 @@ SquarePanel::SquarePanel(wxPanel* parent, Square* pSquare, const wxColour& colou
 
     if ( (pSquare->IsDarkSquare() == true) && (pSquare->IsBorderSquare() == false))
     {
-        this->SetBackgroundColour(wxT("black"));
+        this->SetBackgroundColour(wxColour(32,107,129));
     }
     if ( (pSquare->IsLightSquare() == true) && (pSquare->IsBorderSquare() == false))
     {
-        this->SetBackgroundColour(wxT("white"));
+        this->SetBackgroundColour(wxColour(235,241,246));
     }
     if (pSquare->IsBorderSquare())
     {
-        this->SetBackgroundColour(wxT("brown"));
+        this->SetBackgroundColour(wxColour(35,87,102));
     }
 }
 
@@ -158,45 +159,143 @@ void SquarePanel::PaintOnBorder()
           mIsCornerSquarePanel==false &&
           mIsSquarePanelPrintable==true))
     {
-        DetermineCoordinateToPrint();//this gets the right mpPrintedCoord
-
         wxPaintDC dc(this);
-
-        int neww, newh;
-        this->GetSize( &neww, &newh );
-
-        if( neww != mCurrentWidth || newh != mCurrentHeight )
+        DetermineCoordinateToPrint();//this gets the right mpPrintedCoord
+        assert(mpPrintedCoord!=NULL);
+        double fractional_occupancy_of_space= 0.7;
+        int dim = 0;
+        int xcoord = 0;
+        int ycoord = 0;
+        if (mCurrentWidth<=mCurrentHeight)
         {
-            assert(mpPrintedCoord!=NULL);
-            double fractional_occupancy_of_space= 0.7;
-            mCurrentWidth = neww;
-            mCurrentHeight = newh;
-            int dim = 0;
-            int xcoord = 0;
-            int ycoord = 0;
-            if (mCurrentWidth<=mCurrentHeight)
-            {
-                dim =  mCurrentWidth*fractional_occupancy_of_space;
-                xcoord = 0.0;//for some reason it does not want to center itself when it is small
-                ycoord = (mCurrentHeight-dim)/2;
-            }
-            else
-            {
-                dim = mCurrentHeight*fractional_occupancy_of_space;
-                xcoord = (mCurrentWidth-dim)/2;
-                ycoord = (mCurrentHeight-dim)/2;;
-            }
-
-            wxBitmap resized = wxBitmap( mpPrintedCoord->Scale(dim, dim) );
-            dc.DrawBitmap( resized, xcoord, ycoord, false );
-
-
+            dim =  mCurrentWidth*fractional_occupancy_of_space;
+            xcoord = 0.0;//for some reason it does not want to center itself when it is small
+            ycoord = (mCurrentHeight-dim)/2;
         }
+        else
+        {
+            dim = mCurrentHeight*fractional_occupancy_of_space;
+            xcoord = (mCurrentWidth-dim)/2;
+            ycoord = (mCurrentHeight-dim)/2;;
+        }
+
+        wxBitmap resized = wxBitmap( mpPrintedCoord->Scale(dim, dim) );
+        dc.DrawBitmap( resized, xcoord, ycoord, false );
     }
 }
+
+void SquarePanel::PaintAPiece()
+{
+    if ((mFile=="A")&&(mRank=="2"))
+    {
+        wxPaintDC dc(this);
+        wxSVGDocument* svgDoc = new wxSVGDocument;
+        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_bishop.svg"));
+        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+        dc.DrawBitmap( bishop, 0, 0, false );
+    }
+    if ((mFile=="G")&&(mRank=="7"))
+    {
+        wxPaintDC dc(this);
+        wxSVGDocument* svgDoc = new wxSVGDocument;
+        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_king.svg"));
+        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+        dc.DrawBitmap( bishop, 0, 0, false );
+    }
+    if ((mFile=="C")&&(mRank=="7"))
+    {
+        wxPaintDC dc(this);
+        wxSVGDocument* svgDoc = new wxSVGDocument;
+        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_queen.svg"));
+        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+        dc.DrawBitmap( bishop, 0, 0, false );
+    }
+    if ((mFile=="B")&&(mRank=="6"))
+    {
+        wxPaintDC dc(this);
+        wxSVGDocument* svgDoc = new wxSVGDocument;
+        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_queen.svg"));
+        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+        dc.DrawBitmap( bishop, 0, 0, false );
+    }
+    if ((mFile=="B")&&(mRank=="5"))
+    {
+        wxPaintDC dc(this);
+        wxSVGDocument* svgDoc = new wxSVGDocument;
+        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_pawn.svg"));
+        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+        dc.DrawBitmap( bishop, 0, 0, false );
+    }
+    if ((mFile=="B")&&(mRank=="4"))
+    {
+        wxPaintDC dc(this);
+        wxSVGDocument* svgDoc = new wxSVGDocument;
+        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_pawn.svg"));
+        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+        dc.DrawBitmap( bishop, 0, 0, false );
+    }
+    if ((mFile=="B")&&(mRank=="3"))
+    {
+        wxPaintDC dc(this);
+        wxSVGDocument* svgDoc = new wxSVGDocument;
+        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_knight.svg"));
+        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+        dc.DrawBitmap( bishop, 0, 0, false );
+    }
+    if ((mFile=="H")&&(mRank=="4"))
+    {
+        wxPaintDC dc(this);
+        wxSVGDocument* svgDoc = new wxSVGDocument;
+        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_bishop.svg"));
+        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+        dc.DrawBitmap( bishop, 0, 0, false );
+    }
+    if ((mFile=="H")&&(mRank=="3"))
+    {
+        wxPaintDC dc(this);
+        wxSVGDocument* svgDoc = new wxSVGDocument;
+        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_knight.svg"));
+        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+        dc.DrawBitmap( bishop, 0, 0, false );
+    }
+    if ((mFile=="E")&&(mRank=="1"))
+    {
+        wxPaintDC dc(this);
+        wxSVGDocument* svgDoc = new wxSVGDocument;
+        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_rook.svg"));
+        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+        dc.DrawBitmap( bishop, 0, 0, false );
+    }
+    if ((mFile=="G")&&(mRank=="1"))
+    {
+        wxPaintDC dc(this);
+        wxSVGDocument* svgDoc = new wxSVGDocument;
+        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_rook.svg"));
+        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+        dc.DrawBitmap( bishop, 0, 0, false );
+    }
+    if ((mFile=="E")&&(mRank=="4"))
+    {
+        wxPaintDC dc(this);
+        wxSVGDocument* svgDoc = new wxSVGDocument;
+        svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_king.svg"));
+        wxImage bishop = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+        dc.DrawBitmap( bishop, 0, 0, false );
+    }
+}
+
 void SquarePanel::RenderOnChessBoard(wxPaintEvent & evt)
 {
-    PaintOnBorder();
+    int neww, newh;
+    this->GetSize( &neww, &newh );
+
+    if( neww != mCurrentWidth || newh != mCurrentHeight )
+    {
+        mCurrentWidth = neww;
+        mCurrentHeight = newh;
+        PaintOnBorder();
+        PaintAPiece();
+    }
 }
 
 

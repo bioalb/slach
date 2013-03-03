@@ -6,7 +6,8 @@ ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64
                 -D_LARGE_FILES 
                 -D__WXGTK__ 
                 -I/usr/lib/i386-linux-gnu/wx/include/gtk2-unicode-release-2.8 
-                -I/usr/include/wx-2.8 
+                -I/usr/include/wx-2.8
+                -I/usr/include/wxSVG 
                  -O0 -g3 -Wall -fmessage-length=0 -finstrument-functions)
 
 ADD_EXECUTABLE(slach ${srcdir}/ChessBoard.cpp
@@ -31,7 +32,8 @@ TARGET_LINK_LIBRARIES(slach -lwx_gtk2u_richtext-2.8
                               -lwx_gtk2u_core-2.8 
                               -lwx_baseu_xml-2.8 
                               -lwx_baseu_net-2.8 
-                              -lwx_baseu-2.8)
+                              -lwx_baseu-2.8
+                              -lwxsvg)
 
 
 
