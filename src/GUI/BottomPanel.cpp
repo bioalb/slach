@@ -1,6 +1,6 @@
 #include "BottomPanel.hpp"
 
-BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const wxSize& size)
+BottomPanel::BottomPanel(wxPanel* parent, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,-1, pos,size)
 {
     this->SetBackgroundColour(wxT("green"));

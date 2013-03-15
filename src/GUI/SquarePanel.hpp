@@ -4,6 +4,7 @@
 #include <wx/wx.h>
 #include <wx/sizer.h>
 #include <wx/panel.h>
+#include <wx/dnd.h>
 #include "../Square.hpp"
 
 
@@ -11,6 +12,9 @@ class SquarePanel : public wxPanel
 {
 
 private:
+
+    wxPanel* mpParent;
+
     std::string mFile;
     std::string mRank;
 
@@ -32,7 +36,7 @@ private:
     void PaintPiece();
     void DetermineCoordinateToPrint();
     wxImage* mpPrintedCoord;
-
+    wxImage mImageOfPieceOnThisSquare;
 
 public:
     SquarePanel(wxPanel* parent, Square* pSquare,const wxColour& colour = wxT("red"), const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
@@ -47,7 +51,10 @@ public:
     void RenderOnChessBoard(wxPaintEvent & evt);
 
     void rightClick(wxMouseEvent& event);
+    void LeftMouseClick(wxMouseEvent& event);
+    virtual bool OnDrop(wxCoord x, wxCoord y, wxBitmapDataObject* pObject);
 
+    wxImage GetImageOfPieceOnThisSquare();
 
     DECLARE_EVENT_TABLE()
 };

@@ -14,6 +14,7 @@ ADD_EXECUTABLE(slach ${srcdir}/Exception.cpp
                        ${srcdir}/ChessBoard.cpp
                        ${srcdir}/Square.cpp
                        ${srcdir}/GUI/SquarePanel.cpp 
+                       ${srcdir}/GUI/DropTargetPanel.cpp 
                        ${srcdir}/GUI/RightPanel.cpp 
                        ${srcdir}/GUI/MainPanel.cpp 
                        ${srcdir}/GUI/MainFrame.cpp 

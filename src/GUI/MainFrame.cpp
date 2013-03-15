@@ -7,7 +7,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
 {
     //the File menu
     wxMenu *menuFile = new wxMenu;
-    menuFile->Append(ID_Hello, wxT("&Hello...\tCtrl-H"),
+    menuFile->Append(1, wxT("&Hello...\tCtrl-H"),
     wxT("Help string shown in status bar for this menu item"));
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
@@ -26,7 +26,6 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     this->SetBackgroundColour(wxT("red"));
 
     //creates the two main panels
-
     wxBoxSizer* h_sizer = new wxBoxSizer(wxHORIZONTAL);
     // then simply create like this
     right_panel = new RightPanel(this);
@@ -52,13 +51,8 @@ void MainFrame::OnAbout(wxCommandEvent& event)
     wxMessageBox( wxT("This is Alberto testing the widgets"),
     wxT("About Slach"), wxOK | wxICON_INFORMATION );
 }
-void MainFrame::OnHello(wxCommandEvent& event)
-{
-    wxLogMessage(wxT("Hello world from wxWidgets!"));
-}
 
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
-    EVT_MENU(ID_Hello,   MainFrame::OnHello)
     EVT_MENU(wxID_EXIT,  MainFrame::OnExit)
     EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
 END_EVENT_TABLE()

@@ -14,6 +14,7 @@ class ChessboardPanel : public wxPanel
 private:
 
     std::vector<SquarePanel* > mSquarePanels;
+    //std::vector<SquarePanelDropTarget* > mpDropTargets;
     wxFlexGridSizer* mpGridSizer;
 
     ChessBoard* mpChessBoard;
@@ -21,7 +22,7 @@ private:
     wxPanel* mpActualChessboard;
 
 public:
-    ChessboardPanel(wxFrame* parent, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
+    ChessboardPanel(wxPanel* parent, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
     ~ChessboardPanel();
 
     /**
@@ -32,6 +33,8 @@ public:
     void OnSize(wxSizeEvent& event);
 
     void SetupChessboard();
+
+    std::vector<SquarePanel* > GetSquarePanels();
 
     DECLARE_EVENT_TABLE()
 };

@@ -1,7 +1,9 @@
 #include <wx/mstream.h>
+#include <wx/dataobj.h>
 #include <SVGDocument.h>
 #include <algorithm>
 #include "SquarePanel.hpp"
+#include "DropTargetPanel.hpp"
 #include "../Exception.hpp"
 #include "../PieceType.hpp"
 #include "bitmaps/letters/png/a.png.h"
@@ -25,6 +27,7 @@
 
 SquarePanel::SquarePanel(wxPanel* parent, Square* pSquare, const wxColour& colour, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size),
+      mpParent(parent),
       mpSquare(pSquare)
 {
     mFile = pSquare->GetFile();
@@ -34,8 +37,6 @@ SquarePanel::SquarePanel(wxPanel* parent, Square* pSquare, const wxColour& colou
     mIsSquarePanelPrintable = pSquare->IsCoordinatePrintable();
     mCurrentWidth = -1;
     mCurrentHeight = -1;
-
-    //this->SetBackgroundColour(colour);
 
     if ( (pSquare->IsDarkSquare() == true) && (pSquare->IsBorderSquare() == false))
     {
@@ -49,13 +50,15 @@ SquarePanel::SquarePanel(wxPanel* parent, Square* pSquare, const wxColour& colou
     {
         this->SetBackgroundColour(wxColour(35,87,102));
     }
+
+    this->SetDropTarget(new DropTargetPanel(this));
+
 }
 
 SquarePanel::~SquarePanel()
 {
 
 }
-
 
 void SquarePanel::OnSize(wxSizeEvent& event)
 {
@@ -236,8 +239,8 @@ void SquarePanel::PaintPiece()
             break;
     }
     //last true is for transparency!
-    wxImage piece_to_print = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
-    dc.DrawBitmap( piece_to_print, 0, 0, false );
+    mImageOfPieceOnThisSquare = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+    dc.DrawBitmap( mImageOfPieceOnThisSquare, 0, 0, false );
 }
 
 void SquarePanel::RenderOnChessBoard(wxPaintEvent & evt)
@@ -259,8 +262,40 @@ void SquarePanel::rightClick(wxMouseEvent& event)
 {
     std::cout<<mFile<<mRank<<std::endl;
 }
+
+wxImage SquarePanel::GetImageOfPieceOnThisSquare()
+{
+    return mImageOfPieceOnThisSquare;
+}
+
+
+void SquarePanel::LeftMouseClick(wxMouseEvent& event)
+{
+    wxBitmapDataObject piece_to_be_moved(mImageOfPieceOnThisSquare);
+    wxDropSource dragSource( this );
+    dragSource.SetData( piece_to_be_moved );
+    wxDragResult result = dragSource.DoDragDrop( TRUE );
+
+    switch (result)
+    {
+        case wxDragCopy: std::cout<<"copy"<<std::endl; break;
+        case wxDragMove: std::cout<<"move"<<std::endl; break;
+        case wxDragCancel: std::cout<<"cancel"<<std::endl; break;
+        default: std::cout<<"no move, no copy"<<std::endl;/* do nothing */ break;
+    }
+
+}
+
+bool SquarePanel::OnDrop(wxCoord x, wxCoord y, wxBitmapDataObject* pObject)
+{
+    std::cout<<"On drop"<<std::endl;
+    return true;
+}
+
+
 BEGIN_EVENT_TABLE(SquarePanel, wxPanel)
     EVT_SIZE(SquarePanel::OnSize)
     EVT_RIGHT_DOWN(SquarePanel::rightClick)
     EVT_PAINT(SquarePanel::RenderOnChessBoard)
+    EVT_LEFT_DOWN(SquarePanel::LeftMouseClick)
 END_EVENT_TABLE()

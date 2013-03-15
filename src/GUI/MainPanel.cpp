@@ -6,8 +6,8 @@ MainPanel::MainPanel(wxFrame* parent, const wxPoint& pos, const wxSize& size)
 
     this->SetBackgroundColour(wxT("white"));
     wxBoxSizer* v_sizer = new wxBoxSizer(wxVERTICAL);
-    mpChessboardPanel = new ChessboardPanel(parent);
-    mpBottomPanel = new BottomPanel(parent);
+    mpChessboardPanel = new ChessboardPanel(this);
+    mpBottomPanel = new BottomPanel(this);
 
     v_sizer->Add(mpChessboardPanel, 4.0, wxGROW);
     v_sizer->Add(mpBottomPanel, 1.0, wxGROW);

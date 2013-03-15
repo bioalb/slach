@@ -2,13 +2,15 @@
 #include <iostream>
 #include <cassert>
 #include "ChessboardPanel.hpp"
+#include "DropTargetPanel.hpp"
 
-ChessboardPanel::ChessboardPanel(wxFrame* parent, const wxPoint& pos, const wxSize& size)
-    : wxPanel(parent,-1, pos,size)
+ChessboardPanel::ChessboardPanel(wxPanel* parent, const wxPoint& pos, const wxSize& size)
+    : wxPanel(parent,wxID_ANY, pos,size)
 {
     this->SetBackgroundColour(wxT("yellow"));
 
     mSquarePanels.resize(CHESSBOARD_SIZE_WB);
+    //mpDropTargets.resize(CHESSBOARD_SIZE_WB);
     mpChessBoard = new ChessBoard();
     mpActualChessboard = new wxPanel(this, wxID_ANY,wxDefaultPosition);
 
@@ -39,8 +41,6 @@ ChessboardPanel::ChessboardPanel(wxFrame* parent, const wxPoint& pos, const wxSi
 
     SetupChessboard();
     mpChessBoard->SetupInitialChessPosition();
-
-
 }
 
 void ChessboardPanel::SetupChessboard()
@@ -56,11 +56,17 @@ void ChessboardPanel::SetupChessboard()
     mpActualChessboard->SetSizer(mpGridSizer, false);
 }
 
+std::vector<SquarePanel* > ChessboardPanel::GetSquarePanels()
+{
+    return mSquarePanels;
+}
+
 ChessboardPanel::~ChessboardPanel()
 {
-    for (unsigned i = 0; i < 100; ++i)
+    for (unsigned i = 0; i < CHESSBOARD_SIZE_WB; ++i)
     {
         delete mSquarePanels[i];
+        //delete mpDropTargets[i];
     }
     delete mpActualChessboard;
     delete mpChessBoard;
@@ -100,6 +106,7 @@ void ChessboardPanel::OnSize(wxSizeEvent& event)
     //skip the event.
     event.Skip();
 }
+
 
 BEGIN_EVENT_TABLE(ChessboardPanel, wxPanel)
     EVT_SIZE(ChessboardPanel::OnSize)

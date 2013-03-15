@@ -9,7 +9,7 @@ class BottomPanel : public wxPanel
 {
 
 public:
-    BottomPanel(wxFrame* parent, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
+    BottomPanel(wxPanel* parent, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
     ~BottomPanel();
 
     /*

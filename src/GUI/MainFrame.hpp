@@ -28,9 +28,6 @@ public:
     MainPanel* main_panel;
 private:
 
-
-    void OnHello(wxCommandEvent& event);
-
     /**
      * Standard exit event (Quit)
      *
@@ -45,12 +42,6 @@ private:
 
     DECLARE_EVENT_TABLE()
 };
-
-enum
-{
-    ID_Hello = 1
-};
-
 
 
 #endif
