@@ -5,21 +5,24 @@
 #include <wx/sizer.h>
 #include <wx/panel.h>
 #include <vector>
+
 #include "SquarePanel.hpp"
 #include "../ChessBoard.hpp"
+#include "ActualBoardPanel.hpp"
 
 class ChessboardPanel : public wxPanel
 {
 
 private:
+    /**panel with the actual chessboard (borders included)*/
+    ActualBoardPanel* mpActualChessboard;
 
     std::vector<SquarePanel* > mSquarePanels;
     //std::vector<SquarePanelDropTarget* > mpDropTargets;
     wxFlexGridSizer* mpGridSizer;
 
     ChessBoard* mpChessBoard;
-    /**panel with the actual chessboard (borders included)*/
-    wxPanel* mpActualChessboard;
+
 
 public:
     ChessboardPanel(wxPanel* parent, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);

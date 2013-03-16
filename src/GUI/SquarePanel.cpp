@@ -25,7 +25,7 @@
 #include "bitmaps/numbers/png/eight.png.h"
 
 
-SquarePanel::SquarePanel(wxPanel* parent, Square* pSquare, const wxColour& colour, const wxPoint& pos, const wxSize& size)
+SquarePanel::SquarePanel(ActualBoardPanel* parent, Square* pSquare, const wxColour& colour, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size),
       mpParent(parent),
       mpSquare(pSquare)
@@ -65,6 +65,11 @@ void SquarePanel::OnSize(wxSizeEvent& event)
     Refresh();
     //skip the event.
     event.Skip();
+}
+
+Square* SquarePanel::GetSquare()
+{
+    return mpSquare;
 }
 
 void SquarePanel::DetermineCoordinateToPrint()
@@ -271,6 +276,8 @@ wxImage SquarePanel::GetImageOfPieceOnThisSquare()
 
 void SquarePanel::LeftMouseClick(wxMouseEvent& event)
 {
+    //first record source coordinates
+    mpParent->SetOriginSquare(mFile,mRank);
     wxBitmapDataObject piece_to_be_moved(mImageOfPieceOnThisSquare);
     wxDropSource dragSource( this );
     dragSource.SetData( piece_to_be_moved );
@@ -283,12 +290,13 @@ void SquarePanel::LeftMouseClick(wxMouseEvent& event)
         case wxDragCancel: std::cout<<"cancel"<<std::endl; break;
         default: std::cout<<"no move, no copy"<<std::endl;/* do nothing */ break;
     }
-
 }
 
-bool SquarePanel::OnDrop(wxCoord x, wxCoord y, wxBitmapDataObject* pObject)
+bool SquarePanel::OnDrop(wxCoord x, wxCoord y, std::string file, std::string rank)
 {
-    std::cout<<"On drop"<<std::endl;
+    mpParent->SetDestinationSquare(mFile,mRank);
+    std::cout<<"From "<<mpParent->GetOriginSquare().first<<mpParent->GetOriginSquare().second<<"  to  "<<
+            mpParent->GetDestinationSquare().first<<mpParent->GetDestinationSquare().second<<std::endl;
     return true;
 }
 

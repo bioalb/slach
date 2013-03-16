@@ -4,6 +4,7 @@
 #include "ChessboardPanel.hpp"
 #include "DropTargetPanel.hpp"
 
+
 ChessboardPanel::ChessboardPanel(wxPanel* parent, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size)
 {
@@ -12,7 +13,7 @@ ChessboardPanel::ChessboardPanel(wxPanel* parent, const wxPoint& pos, const wxSi
     mSquarePanels.resize(CHESSBOARD_SIZE_WB);
     //mpDropTargets.resize(CHESSBOARD_SIZE_WB);
     mpChessBoard = new ChessBoard();
-    mpActualChessboard = new wxPanel(this, wxID_ANY,wxDefaultPosition);
+    mpActualChessboard = new ActualBoardPanel(this, wxID_ANY,wxDefaultPosition);
 
     //now the grid sizer.
     int square_to_border_prop = 3;//proportion between border and square

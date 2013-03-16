@@ -6,14 +6,14 @@
 #include <wx/panel.h>
 #include <wx/dnd.h>
 #include "../Square.hpp"
-
+#include "ActualBoardPanel.hpp"
 
 class SquarePanel : public wxPanel
 {
 
 private:
 
-    wxPanel* mpParent;
+    ActualBoardPanel* mpParent;
 
     std::string mFile;
     std::string mRank;
@@ -39,7 +39,7 @@ private:
     wxImage mImageOfPieceOnThisSquare;
 
 public:
-    SquarePanel(wxPanel* parent, Square* pSquare,const wxColour& colour = wxT("red"), const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
+    SquarePanel(ActualBoardPanel* parent, Square* pSquare,const wxColour& colour = wxT("red"), const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
     ~SquarePanel();
 
     /*
@@ -52,9 +52,11 @@ public:
 
     void rightClick(wxMouseEvent& event);
     void LeftMouseClick(wxMouseEvent& event);
-    virtual bool OnDrop(wxCoord x, wxCoord y, wxBitmapDataObject* pObject);
+    virtual bool OnDrop(wxCoord x, wxCoord y, std::string file, std::string rank);
 
     wxImage GetImageOfPieceOnThisSquare();
+
+    Square* GetSquare();
 
     DECLARE_EVENT_TABLE()
 };
