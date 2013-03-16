@@ -14,6 +14,10 @@
 #include "ChessboardPanel.hpp"
 #include "BottomPanel.hpp"
 
+/**
+ * The first division is between Right and Main panel.
+ * The Main panel will be divided in bottom and chessboard panel
+ */
 class MainPanel : public wxPanel
 {
     ChessboardPanel* mpChessboardPanel;

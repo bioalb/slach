@@ -6,7 +6,8 @@
 #include <wx/panel.h>
 #include <wx/dnd.h>
 #include "../Square.hpp"
-#include "ActualBoardPanel.hpp"
+
+class ActualBoardPanel;//forward declaration of the parent
 
 class SquarePanel : public wxPanel
 {
