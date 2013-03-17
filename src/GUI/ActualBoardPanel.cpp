@@ -167,6 +167,6 @@ void ActualBoardPanel::OnSize(wxSizeEvent& event)
 
 
 BEGIN_EVENT_TABLE(ActualBoardPanel, wxPanel)
-EVT_SIZE(ActualBoardPanel::OnSize)
+    EVT_SIZE(ActualBoardPanel::OnSize)
 END_EVENT_TABLE()
 

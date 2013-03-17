@@ -39,6 +39,7 @@ private:
     wxImage* mpPrintedCoord;
     wxImage mImageOfPieceOnThisSquare;
     wxImage mBackgroundOnThisSquare;
+    wxIcon mIconNearTheMouse;
 
 public:
     SquarePanel(ActualBoardPanel* parent, Square* pSquare,const wxColour& colour = wxT("red"), const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize, long style =  wxBORDER_NONE);

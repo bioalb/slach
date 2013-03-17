@@ -24,6 +24,19 @@
 #include "bitmaps/numbers/png/seven.png.h"
 #include "bitmaps/numbers/png/eight.png.h"
 
+#include "bitmaps/pieces/xpm/black_rook.xpm"
+#include "bitmaps/pieces/xpm/black_king.xpm"
+#include "bitmaps/pieces/xpm/black_queen.xpm"
+#include "bitmaps/pieces/xpm/black_bishop.xpm"
+#include "bitmaps/pieces/xpm/black_knight.xpm"
+#include "bitmaps/pieces/xpm/black_pawn.xpm"
+#include "bitmaps/pieces/xpm/white_pawn.xpm"
+#include "bitmaps/pieces/xpm/white_knight.xpm"
+#include "bitmaps/pieces/xpm/white_bishop.xpm"
+#include "bitmaps/pieces/xpm/white_rook.xpm"
+#include "bitmaps/pieces/xpm/white_queen.xpm"
+#include "bitmaps/pieces/xpm/white_king.xpm"
+#include "bitmaps/pieces/xpm/no_piece.xpm"
 
 SquarePanel::SquarePanel(ActualBoardPanel* parent, Square* pSquare, const wxColour& colour, const wxPoint& pos, const wxSize& size, long style )
     : wxPanel(parent,wxID_ANY, pos,size, style),
@@ -219,42 +232,55 @@ void SquarePanel::PaintPiece()
         case WHITE_KING:
             //last true is for transparency!
             mImageOfPieceOnThisSquare = svgdocs[0]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mIconNearTheMouse = wxDROP_ICON(white_king);
             break;
         case BLACK_KING:
             mImageOfPieceOnThisSquare = svgdocs[1]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mIconNearTheMouse = wxDROP_ICON(black_king);
             break;
         case WHITE_QUEEN:
             mImageOfPieceOnThisSquare = svgdocs[2]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mIconNearTheMouse = wxDROP_ICON(white_queen);
             break;
         case BLACK_QUEEN:
             mImageOfPieceOnThisSquare = svgdocs[3]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mIconNearTheMouse = wxDROP_ICON(black_queen);
             break;
         case WHITE_ROOK:
             mImageOfPieceOnThisSquare = svgdocs[4]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mIconNearTheMouse = wxDROP_ICON(white_rook);
             break;
         case BLACK_ROOK:
             mImageOfPieceOnThisSquare = svgdocs[5]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mIconNearTheMouse = wxDROP_ICON(black_rook);
             break;
         case WHITE_BISHOP:
             mImageOfPieceOnThisSquare = svgdocs[6]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mIconNearTheMouse = wxDROP_ICON(white_bishop);
             break;
         case BLACK_BISHOP:
             mImageOfPieceOnThisSquare = svgdocs[7]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mIconNearTheMouse = wxDROP_ICON(black_bishop);
             break;
         case WHITE_KNIGHT:
             mImageOfPieceOnThisSquare = svgdocs[8]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mIconNearTheMouse = wxDROP_ICON(white_knight);
             break;
         case BLACK_KNIGHT:
             mImageOfPieceOnThisSquare = svgdocs[9]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mIconNearTheMouse = wxDROP_ICON(black_knight);
             break;
         case WHITE_PAWN:
             mImageOfPieceOnThisSquare = svgdocs[10]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mIconNearTheMouse = wxDROP_ICON(white_pawn);
             break;
         case BLACK_PAWN:
             mImageOfPieceOnThisSquare = svgdocs[11]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mIconNearTheMouse = wxDROP_ICON(black_pawn);
             break;
         case NO_PIECE:
             mImageOfPieceOnThisSquare = svgdocs[12]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mIconNearTheMouse = wxDROP_ICON(no_piece);
             break;
         default:
             //NEVER_REACHED;
@@ -273,7 +299,6 @@ void SquarePanel::RenderOnChessBoard(wxPaintEvent & evt)
 
     if( neww != mCurrentWidth || newh != mCurrentHeight )
     {
-
         mCurrentWidth = neww;
         mCurrentHeight = newh;
         PaintBackground();
@@ -299,7 +324,8 @@ void SquarePanel::LeftMouseClick(wxMouseEvent& event)
     //first record source coordinates
     mpParent->SetOriginSquare(this);
     wxBitmapDataObject piece_to_be_moved(mImageOfPieceOnThisSquare);
-    wxDropSource dragSource( this );
+    wxDropSource dragSource( this, mIconNearTheMouse, mIconNearTheMouse);
+
     dragSource.SetData( piece_to_be_moved );
     wxDragResult result = dragSource.DoDragDrop( TRUE );
 
