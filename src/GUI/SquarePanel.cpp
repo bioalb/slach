@@ -305,18 +305,16 @@ void SquarePanel::LeftMouseClick(wxMouseEvent& event)
 
     switch (result)
     {
-        case wxDragCopy: std::cout<<"copy"<<std::endl; break;
-        case wxDragMove: std::cout<<"move"<<std::endl; break;
-        case wxDragCancel: std::cout<<"cancel"<<std::endl; break;
-        default: std::cout<<"no move, no copy"<<std::endl;/* do nothing */ break;
+        case wxDragCopy: break;
+        case wxDragMove:  break;
+        case wxDragCancel: break;
+        default: break;
     }
 }
 
 bool SquarePanel::OnDrop(wxCoord x, wxCoord y, std::string file, std::string rank)
 {
     mpParent->SetDestinationSquare(this);
-    std::cout<<"From "<<mpParent->GetOriginSquare()->GetSquare()->GetFile()<<mpParent->GetOriginSquare()->GetSquare()->GetRank()<<"  to  "<<
-            mpParent->GetDestinationSquare()->GetSquare()->GetFile()<<mpParent->GetDestinationSquare()->GetSquare()->GetRank()<<std::endl;
     return true;
 }
 

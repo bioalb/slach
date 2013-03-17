@@ -73,9 +73,9 @@ void ActualBoardPanel::LoadSvgPieces()
     mPiecesSvgDocs[10]->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_pawn.svg"));
     mPiecesSvgDocs[11]->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_pawn.svg"));
     mPiecesSvgDocs[12]->Load(wxT("../src/GUI/bitmaps/pieces/svg/no_piece.svg"));
-    mPiecesSvgDocs[13]->Load(wxT("../src/GUI/bitmaps/squares/dark_square.svg"));
-    mPiecesSvgDocs[14]->Load(wxT("../src/GUI/bitmaps/squares/light_square.svg"));
-    mPiecesSvgDocs[15]->Load(wxT("../src/GUI/bitmaps/squares/border_square.svg"));
+    mPiecesSvgDocs[13]->Load(wxT("../src/GUI/bitmaps/squares/svg/dark_square.svg"));
+    mPiecesSvgDocs[14]->Load(wxT("../src/GUI/bitmaps/squares/svg/light_square.svg"));
+    mPiecesSvgDocs[15]->Load(wxT("../src/GUI/bitmaps/squares/svg/border_square.svg"));
 
 }
 
