@@ -1,14 +1,16 @@
 #include <algorithm>
 #include <iostream>
 #include <cassert>
+#include "../PieceType.hpp"
 #include "ActualBoardPanel.hpp"
 #include "DropTargetPanel.hpp"
 #include "ActualBoardPanel.hpp"
 
 ActualBoardPanel::ActualBoardPanel(wxPanel* parent, wxWindowID id, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size),
-      mpParent(parent)
-
+      mpParent(parent),
+      mpOriginSquarePanel(NULL),
+      mpDestinationSquarePanel(NULL)
 {
     mSquarePanels.resize(CHESSBOARD_SIZE_WB);
     mpChessBoard = new ChessBoard();
@@ -37,6 +39,7 @@ ActualBoardPanel::ActualBoardPanel(wxPanel* parent, wxWindowID id, const wxPoint
     mpGridSizer->AddGrowableRow(8,square_to_border_prop);
     mpGridSizer->AddGrowableRow(9,1);//border
 
+    LoadSvgPieces();
     SetupChessboard();
     mpChessBoard->SetupInitialChessPosition();
 }
@@ -50,9 +53,40 @@ ActualBoardPanel::~ActualBoardPanel()
     delete mpChessBoard;
 }
 
+void ActualBoardPanel::LoadSvgPieces()
+{
+    mPiecesSvgDocs.resize(16u);
+    for (unsigned i = 0; i < mPiecesSvgDocs.size(); ++i)
+    {
+        mPiecesSvgDocs[i] = new wxSVGDocument;
+    }
+    mPiecesSvgDocs[0]->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_king.svg"));
+    mPiecesSvgDocs[1]->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_king.svg"));
+    mPiecesSvgDocs[2]->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_queen.svg"));
+    mPiecesSvgDocs[3]->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_queen.svg"));
+    mPiecesSvgDocs[4]->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_rook.svg"));
+    mPiecesSvgDocs[5]->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_rook.svg"));
+    mPiecesSvgDocs[6]->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_bishop.svg"));
+    mPiecesSvgDocs[7]->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_bishop.svg"));
+    mPiecesSvgDocs[8]->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_knight.svg"));
+    mPiecesSvgDocs[9]->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_knight.svg"));
+    mPiecesSvgDocs[10]->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_pawn.svg"));
+    mPiecesSvgDocs[11]->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_pawn.svg"));
+    mPiecesSvgDocs[12]->Load(wxT("../src/GUI/bitmaps/pieces/svg/no_piece.svg"));
+    mPiecesSvgDocs[13]->Load(wxT("../src/GUI/bitmaps/squares/dark_square.svg"));
+    mPiecesSvgDocs[14]->Load(wxT("../src/GUI/bitmaps/squares/light_square.svg"));
+    mPiecesSvgDocs[15]->Load(wxT("../src/GUI/bitmaps/squares/border_square.svg"));
+
+}
+
 std::vector<SquarePanel* > ActualBoardPanel::GetSquarePanels()
 {
     return mSquarePanels;
+}
+
+std::vector<wxSVGDocument* > ActualBoardPanel::GetPiecesSvgDocs()
+{
+    return mPiecesSvgDocs;
 }
 
 void ActualBoardPanel::SetupChessboard()
@@ -68,25 +102,33 @@ void ActualBoardPanel::SetupChessboard()
     this->SetSizer(mpGridSizer, false);
 }
 
-void ActualBoardPanel::SetDestinationSquare(std::string file, std::string rank)
+void ActualBoardPanel::SetDestinationSquare(SquarePanel* pDestinationPanel)
 {
-    mDestinationFile = file;
-    mDestinationRank = rank;
+    mpDestinationSquarePanel = pDestinationPanel;
+
+    mpOriginSquarePanel->PaintBackground();
+    mpDestinationSquarePanel->PaintBackground();
+    //if (mpChessBoard->GetPosition()->IsLegalMove()==true)
+    //{
+        PieceType origin_piece  = mpOriginSquarePanel->GetSquare()->GetPieceOnThisSquare();
+        mpDestinationSquarePanel->GetSquare()->SetPieceOnThisSquare(origin_piece);
+        mpDestinationSquarePanel->PaintPiece();
+
+    //}
 }
-void ActualBoardPanel::SetOriginSquare(std::string file, std::string rank)
+void ActualBoardPanel::SetOriginSquare(SquarePanel* pOriginPanel)
 {
-    mOriginFile = file;
-    mOriginRank = rank;
+    mpOriginSquarePanel = pOriginPanel;
 }
 
-std::pair<std::string, std::string> ActualBoardPanel::GetDestinationSquare()
+SquarePanel* ActualBoardPanel::GetDestinationSquare()
 {
-    return std::make_pair(mDestinationFile,mDestinationRank);
+    return mpDestinationSquarePanel;
 
 }
-std::pair<std::string, std::string> ActualBoardPanel::GetOriginSquare()
+SquarePanel* ActualBoardPanel::GetOriginSquare()
 {
-    return std::make_pair(mOriginFile,mOriginRank);
+    return mpOriginSquarePanel;
 }
 
 void ActualBoardPanel::OnSize(wxSizeEvent& event)

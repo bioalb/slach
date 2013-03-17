@@ -25,8 +25,8 @@
 #include "bitmaps/numbers/png/eight.png.h"
 
 
-SquarePanel::SquarePanel(ActualBoardPanel* parent, Square* pSquare, const wxColour& colour, const wxPoint& pos, const wxSize& size)
-    : wxPanel(parent,wxID_ANY, pos,size),
+SquarePanel::SquarePanel(ActualBoardPanel* parent, Square* pSquare, const wxColour& colour, const wxPoint& pos, const wxSize& size, long style )
+    : wxPanel(parent,wxID_ANY, pos,size, style),
       mpParent(parent),
       mpSquare(pSquare)
 {
@@ -38,19 +38,7 @@ SquarePanel::SquarePanel(ActualBoardPanel* parent, Square* pSquare, const wxColo
     mCurrentWidth = -1;
     mCurrentHeight = -1;
 
-    if ( (pSquare->IsDarkSquare() == true) && (pSquare->IsBorderSquare() == false))
-    {
-        this->SetBackgroundColour(wxColour(32,107,129));
-    }
-    if ( (pSquare->IsLightSquare() == true) && (pSquare->IsBorderSquare() == false))
-    {
-        this->SetBackgroundColour(wxColour(235,241,246));
-    }
-    if (pSquare->IsBorderSquare())
-    {
-        this->SetBackgroundColour(wxColour(35,87,102));
-    }
-
+    PaintBackground();
     this->SetDropTarget(new DropTargetPanel(this));
 
 }
@@ -71,6 +59,33 @@ Square* SquarePanel::GetSquare()
 {
     return mpSquare;
 }
+
+void SquarePanel::PaintBackground()
+{
+    std::vector<wxSVGDocument*> svgdocs = mpParent->GetPiecesSvgDocs();
+    if ( (mpSquare->IsDarkSquare() == true) && (mpSquare->IsBorderSquare() == false))
+    {
+        this->SetBackgroundColour(wxColour(32,107,129));
+        mBackgroundOnThisSquare = svgdocs[13]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+    }
+    if ( (mpSquare->IsLightSquare() == true) && (mpSquare->IsBorderSquare() == false))
+    {
+        this->SetBackgroundColour(wxColour(235,241,246));
+        mBackgroundOnThisSquare = svgdocs[14]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+    }
+    if (mpSquare->IsBorderSquare())
+    {
+        //mBackgroundOnThisSquare = svgdocs[15]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+        this->SetBackgroundColour(wxColour(35,87,102));
+    }
+
+
+    //now really draw the rendered image
+    wxPaintDC dc(this);
+    dc.DrawBitmap( mBackgroundOnThisSquare, 0, 0, false );
+}
+
+
 
 void SquarePanel::DetermineCoordinateToPrint()
 {
@@ -197,54 +212,57 @@ void SquarePanel::PaintOnBorder()
 void SquarePanel::PaintPiece()
 {
     PieceType piece = mpSquare->GetPieceOnThisSquare();
-
-    wxPaintDC dc(this);
-    wxSVGDocument* svgDoc = new wxSVGDocument;
+    std::vector<wxSVGDocument*> svgdocs = mpParent->GetPiecesSvgDocs();
 
     switch(piece)
     {
         case WHITE_KING:
-            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_king.svg"));
+            //last true is for transparency!
+            mImageOfPieceOnThisSquare = svgdocs[0]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             break;
         case BLACK_KING:
-            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_king.svg"));
+            mImageOfPieceOnThisSquare = svgdocs[1]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             break;
         case WHITE_QUEEN:
-            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_queen.svg"));
+            mImageOfPieceOnThisSquare = svgdocs[2]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             break;
         case BLACK_QUEEN:
-            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_queen.svg"));
+            mImageOfPieceOnThisSquare = svgdocs[3]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             break;
         case WHITE_ROOK:
-            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_rook.svg"));
+            mImageOfPieceOnThisSquare = svgdocs[4]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             break;
         case BLACK_ROOK:
-            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_rook.svg"));
+            mImageOfPieceOnThisSquare = svgdocs[5]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             break;
         case WHITE_BISHOP:
-            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_bishop.svg"));
+            mImageOfPieceOnThisSquare = svgdocs[6]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             break;
         case BLACK_BISHOP:
-            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_bishop.svg"));
+            mImageOfPieceOnThisSquare = svgdocs[7]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             break;
         case WHITE_KNIGHT:
-            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_knight.svg"));
+            mImageOfPieceOnThisSquare = svgdocs[8]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             break;
         case BLACK_KNIGHT:
-            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_knight.svg"));
+            mImageOfPieceOnThisSquare = svgdocs[9]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             break;
         case WHITE_PAWN:
-            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_pawn.svg"));
+            mImageOfPieceOnThisSquare = svgdocs[10]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             break;
         case BLACK_PAWN:
-            svgDoc->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_pawn.svg"));
+            mImageOfPieceOnThisSquare = svgdocs[11]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            break;
+        case NO_PIECE:
+            mImageOfPieceOnThisSquare = svgdocs[12]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             break;
         default:
             //NEVER_REACHED;
             break;
     }
-    //last true is for transparency!
-    mImageOfPieceOnThisSquare = svgDoc->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+
+    //now really draw the rendered image
+    wxPaintDC dc(this);
     dc.DrawBitmap( mImageOfPieceOnThisSquare, 0, 0, false );
 }
 
@@ -255,8 +273,10 @@ void SquarePanel::RenderOnChessBoard(wxPaintEvent & evt)
 
     if( neww != mCurrentWidth || newh != mCurrentHeight )
     {
+
         mCurrentWidth = neww;
         mCurrentHeight = newh;
+        PaintBackground();
         PaintOnBorder();
         PaintPiece();
     }
@@ -277,7 +297,7 @@ wxImage SquarePanel::GetImageOfPieceOnThisSquare()
 void SquarePanel::LeftMouseClick(wxMouseEvent& event)
 {
     //first record source coordinates
-    mpParent->SetOriginSquare(mFile,mRank);
+    mpParent->SetOriginSquare(this);
     wxBitmapDataObject piece_to_be_moved(mImageOfPieceOnThisSquare);
     wxDropSource dragSource( this );
     dragSource.SetData( piece_to_be_moved );
@@ -294,9 +314,9 @@ void SquarePanel::LeftMouseClick(wxMouseEvent& event)
 
 bool SquarePanel::OnDrop(wxCoord x, wxCoord y, std::string file, std::string rank)
 {
-    mpParent->SetDestinationSquare(mFile,mRank);
-    std::cout<<"From "<<mpParent->GetOriginSquare().first<<mpParent->GetOriginSquare().second<<"  to  "<<
-            mpParent->GetDestinationSquare().first<<mpParent->GetDestinationSquare().second<<std::endl;
+    mpParent->SetDestinationSquare(this);
+    std::cout<<"From "<<mpParent->GetOriginSquare()->GetSquare()->GetFile()<<mpParent->GetOriginSquare()->GetSquare()->GetRank()<<"  to  "<<
+            mpParent->GetDestinationSquare()->GetSquare()->GetFile()<<mpParent->GetDestinationSquare()->GetSquare()->GetRank()<<std::endl;
     return true;
 }
 
