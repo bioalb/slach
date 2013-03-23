@@ -10,13 +10,6 @@ DropTargetPanel::~DropTargetPanel()
 
 wxDragResult DropTargetPanel::OnData(wxCoord x, wxCoord y, wxDragResult def)
 {
-    //std::cout<<mpPanel->GetSquare()->GetFile()<<std::endl;
-//    wxBitmap bmp  = ( (wxBitmapDataObject*)GetDataObject() )->GetBitmap();
-//    if (bmp.IsOk())
-//    {
-//        std::cout<<"OK"<<std::endl;
-//    }
-
     std::string drop_rank = mpPanel->GetSquare()->GetRank();
     std::string drop_file = mpPanel->GetSquare()->GetFile();
     mpPanel->OnDrop(x,y, drop_file, drop_rank);

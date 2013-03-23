@@ -238,3 +238,8 @@ void ChessBoard::SetupChessBoard()
         }
     }
 }
+
+bool ChessBoard::IsLegalMove()
+{
+    return true;
+}

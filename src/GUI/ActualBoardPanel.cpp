@@ -108,13 +108,17 @@ void ActualBoardPanel::SetDestinationSquare(SquarePanel* pDestinationPanel)
 
     mpOriginSquarePanel->PaintBackground();
     mpDestinationSquarePanel->PaintBackground();
-    //if (mpChessBoard->GetPosition()->IsLegalMove()==true)
-    //{
+    if (mpChessBoard->/*GetPosition()->*/IsLegalMove()==true)
+    {
         PieceType origin_piece  = mpOriginSquarePanel->GetSquare()->GetPieceOnThisSquare();
         mpDestinationSquarePanel->GetSquare()->SetPieceOnThisSquare(origin_piece);
         mpDestinationSquarePanel->PaintPiece();
 
-    //}
+    }
+    else
+    {
+        mpOriginSquarePanel->PaintPiece();
+    }
 }
 void ActualBoardPanel::SetOriginSquare(SquarePanel* pOriginPanel)
 {

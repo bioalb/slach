@@ -28,12 +28,12 @@ void Square::SetAsCornerSquare(bool corner)
     mIsCornerSquare = corner;
 }
 
-bool Square::IsBorderSquare()
+bool Square::IsBorderSquare() const
 {
     return mIsBorderSquare;
 }
 
-bool Square::IsCornerSquare()
+bool Square::IsCornerSquare() const
 {
     return mIsCornerSquare;
 }
@@ -48,12 +48,12 @@ void Square::SetAsDarkSquare(bool dark)
     mIsDarkSquare = dark;
 }
 
-bool Square::IsLightSquare()
+bool Square::IsLightSquare() const
 {
     return mIsLightSquare;
 }
 
-bool Square::IsDarkSquare()
+bool Square::IsDarkSquare() const
 {
     return mIsDarkSquare;
 }
@@ -73,17 +73,17 @@ void Square::SetAsPrintableCoordinates(bool print)
     mIsCoordinatePrintable = print;
 }
 
-bool Square::IsCoordinatePrintable()
+bool Square::IsCoordinatePrintable() const
 {
     return mIsCoordinatePrintable;
 }
 
-std::string Square::GetFile()
+std::string Square::GetFile() const
 {
     return mFile;
 }
 
-std::string Square::GetRank()
+std::string Square::GetRank() const
 {
     return mRank;
 }
@@ -93,7 +93,7 @@ void Square::SetPieceOnThisSquare(PieceType piece)
     mPieceOnThisSquare = piece;
 }
 
-PieceType Square::GetPieceOnThisSquare()
+PieceType Square::GetPieceOnThisSquare() const
 {
     return mPieceOnThisSquare;
 }

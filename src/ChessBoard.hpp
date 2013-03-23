@@ -74,6 +74,8 @@ public:
     std::vector<std::string> GetFiles();
 
     std::vector<std::string> GetRanks();
+
+    bool IsLegalMove();
 };
 
 #endif /* _CHESSBOARD_HPP_ */

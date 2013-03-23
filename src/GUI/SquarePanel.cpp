@@ -328,14 +328,14 @@ void SquarePanel::LeftMouseClick(wxMouseEvent& event)
 
     dragSource.SetData( piece_to_be_moved );
     this->Refresh();
-    wxDragResult result = dragSource.DoDragDrop( TRUE );
+    wxDragResult result = dragSource.DoDragDrop( wxDrag_DefaultMove );
 
     switch (result)
     {
         case wxDragCopy: break;
-        case wxDragMove:  break;
+        case wxDragMove: break;
         case wxDragCancel:
-            std::cout<<"cancel"<<std::endl;
+            //need to re-paint the piece as it was deleted upon initiation of dragging
             PaintPiece();
             break;
         default: break;
