@@ -1,6 +1,9 @@
 #ifndef _PIECETYPE_HPP_
 #define _PIECETYPE_HPP_
 
+/**
+ * Type for a piece on the chessboard
+ */
 enum PieceType
 {
     WHITE_KING=0,

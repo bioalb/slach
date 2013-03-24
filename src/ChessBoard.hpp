@@ -51,18 +51,53 @@ static const unsigned CHESSBOARD_SIZE = 64u;
 static const unsigned CHESSBOARD_SIZE_WB = 100u;//with border
 static const unsigned FILE_SIZE = 10u;
 static const unsigned RANK_SIZE = 10u;
+
+/**
+ * Typedef for a move as a pair of square objects
+ * the first is the origin square, the second is the destination square
+ */
+typedef std::pair<Square,Square> Move;
+
+/**
+ * Typedef for a position as a vector of (pointers to) square objects
+ * this is meant to be the list of squares occupied by any piece
+ */
+typedef std::vector<Square*> Position;
+
 class ChessBoard
 {
 
 private:
 
+    /**All the squares on this chessboard*/
     std::vector<Square* > mSquares;
+    /**The current position on this chessboard*/
+    Position mCurrentPosition;
+    /**The files (columns) on this chessboard*/
     std::vector<std::string> mFiles;
+    /**The ranks (rows) on this chessboard*/
     std::vector<std::string> mRanks;
+
+    std::vector<Square* > mFirstRank;
+    std::vector<Square* > mSecondRank;
+    std::vector<Square* > mThirdRank;
+    std::vector<Square* > mFourthRank;
+    std::vector<Square* > mFifthRank;
+    std::vector<Square* > mSixthRank;
+    std::vector<Square* > mSeventhRank;
+    std::vector<Square* > mEighthRank;
 
 
 public:
+
+    /**
+     * Constructor
+     */
     ChessBoard();
+
+    /**
+     * Destructor
+     */
     ~ChessBoard();
 
     void SetupChessBoard();
@@ -75,7 +110,16 @@ public:
 
     std::vector<std::string> GetRanks();
 
+    Position GetCurrentPosition() const;
+
     bool IsLegalMove();
+
+    /**
+     * Returns all the squares in a given rank
+     *
+     * @param rank the rank that we want the squares of
+     */
+    std::vector<Square* > GetOneRank(unsigned rank);
 };
 
 #endif /* _CHESSBOARD_HPP_ */

@@ -44,5 +44,18 @@ public:
  void runTest() { suite_TestChessboard.testInitialPosition(); }
 } testDescription_suite_TestChessboard_testInitialPosition;
 
+#include "TestPosition.hpp"
+
+static TestPosition suite_TestPosition;
+
+static CxxTest::List Tests_TestPosition = { 0, 0 };
+CxxTest::StaticSuiteDescription suiteDescription_TestPosition( "TestPosition.hpp", 10, "TestPosition", suite_TestPosition, Tests_TestPosition );
+
+static class TestDescription_suite_TestPosition_testPosition : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestPosition_testPosition() : CxxTest::RealTestDescription( Tests_TestPosition, suiteDescription_TestPosition, 14, "testPosition" ) {}
+ void runTest() { suite_TestPosition.testPosition(); }
+} testDescription_suite_TestPosition_testPosition;
+
 #include <cxxtest/Root.cpp>
 const char* CxxTest::RealWorldDescription::_worldName = "cxxtest";

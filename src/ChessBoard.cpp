@@ -1,4 +1,5 @@
 #include "ChessBoard.hpp"
+#include "Exception.hpp"
 #include <cassert>
 #include <cstdio>
 #include <iostream>
@@ -63,86 +64,102 @@ std::vector<std::string> ChessBoard::GetRanks()
 
 void ChessBoard::SetupInitialChessPosition()
 {
-
-
     for (unsigned i = 0; i < mSquares.size(); ++i)
     {
         //first rank
         if ((mSquares[i]->GetFile()=="A")&&(mSquares[i]->GetRank()=="1"))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_ROOK);
+            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="H")&&(mSquares[i]->GetRank()=="1"))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_ROOK);
+            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="B")&&(mSquares[i]->GetRank()=="1"))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_KNIGHT);
+            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="G")&&(mSquares[i]->GetRank()=="1"))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_KNIGHT);
+            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="C")&&(mSquares[i]->GetRank()=="1"))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_BISHOP);
+            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="F")&&(mSquares[i]->GetRank()=="1"))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_BISHOP);
+            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="D")&&(mSquares[i]->GetRank()=="1"))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_QUEEN);
+            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="E")&&(mSquares[i]->GetRank()=="1"))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_KING);
+            mCurrentPosition.push_back(mSquares[i]);
         }
         //second rank, all white pawns
         else if ((mSquares[i]->GetRank()=="2")&&mSquares[i]->IsBorderSquare()==false)
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_PAWN);
+            mCurrentPosition.push_back(mSquares[i]);
         }
         //seventh rank, all black pawns
         else if(mSquares[i]->GetRank()=="7"&&mSquares[i]->IsBorderSquare()==false)
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_PAWN);
+            mCurrentPosition.push_back(mSquares[i]);
         }
 
         //EIGTH rank
         else if ((mSquares[i]->GetFile()=="A")&&(mSquares[i]->GetRank()=="8"))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_ROOK);
+            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="H")&&(mSquares[i]->GetRank()=="8"))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_ROOK);
+            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="B")&&(mSquares[i]->GetRank()=="8"))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_KNIGHT);
+            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="G")&&(mSquares[i]->GetRank()=="8"))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_KNIGHT);
+            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="C")&&(mSquares[i]->GetRank()=="8"))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_BISHOP);
+            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="F")&&(mSquares[i]->GetRank()=="8"))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_BISHOP);
+            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="D")&&(mSquares[i]->GetRank()=="8"))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_QUEEN);
+            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="E")&&(mSquares[i]->GetRank()=="8"))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_KING);
+            mCurrentPosition.push_back(mSquares[i]);
         }
         else
         {
@@ -242,4 +259,45 @@ void ChessBoard::SetupChessBoard()
 bool ChessBoard::IsLegalMove()
 {
     return true;
+}
+
+Position ChessBoard::GetCurrentPosition() const
+{
+    return mCurrentPosition;
+}
+
+std::vector<Square* > ChessBoard::GetOneRank(unsigned rank)
+{
+    std::vector<Square* > ret;
+    switch (rank)
+    {
+        case 1:
+            ret =  mFirstRank;
+            break;
+        case 2:
+            ret =  mSecondRank;
+            break;
+        case 3:
+            ret =  mThirdRank;
+            break;
+        case 4:
+            ret =  mFourthRank;
+            break;
+        case 5:
+            ret =  mFifthRank;
+            break;
+        case 6:
+            ret =  mSixthRank;
+            break;
+        case 7:
+            ret =  mSeventhRank;
+            break;
+        case 8:
+            ret =  mEighthRank;
+            break;
+        default:
+            EXCEPTION("Requested ranks may go from 1 to 8");
+            break;
+    }
+    return ret;
 }

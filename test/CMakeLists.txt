@@ -13,7 +13,7 @@ ADD_EXECUTABLE(TESTRUNNER test_runner.cpp
                           ${srcdir}/ChessBoard.cpp)
 
 add_custom_command(OUTPUT test_runner.cpp
-                   COMMAND cxxtest/bin/cxxtestgen --error-printer -o test_runner.cpp TestChessboard.hpp
+                   COMMAND cxxtest/bin/cxxtestgen --error-printer -o test_runner.cpp TestChessboard.hpp TestPosition.hpp
                    DEPENDS 
                    COMMENT "running cxxtestgen now..."
                    VERBATIM)
