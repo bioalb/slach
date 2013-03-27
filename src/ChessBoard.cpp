@@ -47,6 +47,85 @@ ChessBoard::~ChessBoard()
     }
 }
 
+void ChessBoard::FillInRanksFilesAndDiagonals()
+{
+        for (unsigned i = 0; i < mSquares.size(); ++i)
+        {
+            //no border squares here
+            if (mSquares[i]->IsBorderSquare()==false)
+            {
+                std::string file =  mSquares[i]->GetFile();
+                std::string rank =  mSquares[i]->GetRank();
+
+                if (file=="A")
+                {
+                    mAFile.push_back(mSquares[i]);
+                }
+                if (file=="B")
+                {
+                    mBFile.push_back(mSquares[i]);
+                }
+                if (file=="C")
+                {
+                    mCFile.push_back(mSquares[i]);
+                }
+                if (file=="D")
+                {
+                    mDFile.push_back(mSquares[i]);
+                }
+                if (file=="E")
+                {
+                    mEFile.push_back(mSquares[i]);
+                }
+                if (file=="F")
+                {
+                    mFFile.push_back(mSquares[i]);
+                }
+                if (file=="G")
+                {
+                    mGFile.push_back(mSquares[i]);
+                }
+                if (file=="H")
+                {
+                    mHFile.push_back(mSquares[i]);
+                }
+
+                if (rank=="1")
+                {
+                    mFirstRank.push_back(mSquares[i]);
+                }
+                if (rank=="2")
+                {
+                    mSecondRank.push_back(mSquares[i]);
+                }
+                if (rank=="3")
+                {
+                    mThirdRank.push_back(mSquares[i]);
+                }
+                if (rank=="4")
+                {
+                    mFourthRank.push_back(mSquares[i]);
+                }
+                if (rank=="5")
+                {
+                    mFifthRank.push_back(mSquares[i]);
+                }
+                if (rank=="6")
+                {
+                    mSixthRank.push_back(mSquares[i]);
+                }
+                if (rank=="7")
+                {
+                    mSeventhRank.push_back(mSquares[i]);
+                }
+                if (rank=="8")
+                {
+                    mEighthRank.push_back(mSquares[i]);
+                }
+            }
+        }
+}
+
 std::vector<Square* > ChessBoard::GetSquares()
 {
     return mSquares;
@@ -166,9 +245,6 @@ void ChessBoard::SetupInitialChessPosition()
             mSquares[i]->SetPieceOnThisSquare(NO_PIECE);
         }
     }
-
-
-
 }
 
 void ChessBoard::SetupChessBoard()
@@ -254,6 +330,7 @@ void ChessBoard::SetupChessBoard()
             }
         }
     }
+    FillInRanksFilesAndDiagonals();
 }
 
 bool ChessBoard::IsLegalMove()
@@ -296,7 +373,43 @@ std::vector<Square* > ChessBoard::GetOneRank(unsigned rank)
             ret =  mEighthRank;
             break;
         default:
-            EXCEPTION("Requested ranks may go from 1 to 8");
+            EXCEPTION("Requested rank may go from 1 to 8");
+            break;
+    }
+    return ret;
+}
+
+std::vector<Square* > ChessBoard::GetOneFile(unsigned file)
+{
+    std::vector<Square* > ret;
+    switch (file)
+    {
+        case 1:
+            ret =  mAFile;
+            break;
+        case 2:
+            ret =  mBFile;
+            break;
+        case 3:
+            ret =  mCFile;
+            break;
+        case 4:
+            ret =  mDFile;
+            break;
+        case 5:
+            ret =  mEFile;
+            break;
+        case 6:
+            ret =  mFFile;
+            break;
+        case 7:
+            ret =  mGFile;
+            break;
+        case 8:
+            ret =  mHFile;
+            break;
+        default:
+            EXCEPTION("Requested file may go from 1 to 8");
             break;
     }
     return ret;

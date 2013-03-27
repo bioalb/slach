@@ -2,7 +2,7 @@
 SET(srcdir ${CMAKE_SOURCE_DIR}/src)
 
 
-ADD_DEFINITIONS(-I${scrdir}
+ADD_DEFINITIONS(-I${srcdir}
                 -I${CMAKE_SOURCE_DIR}/test/cxxtest
                 -I.
                 -O0 -std=c++0x -g3 -Wall -fmessage-length=0 -finstrument-functions)

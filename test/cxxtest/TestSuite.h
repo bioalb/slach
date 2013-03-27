@@ -24,6 +24,8 @@
 #include <cxxtest/ValueTraits.h>
 #include <sstream>
 
+#include "Exception.hpp"
+
 #if defined(_CXXTEST_HAVE_STD)
 #   include <stdexcept>
 #endif // _CXXTEST_HAVE_STD
@@ -468,6 +470,9 @@ namespace CxxTest
     // TS_ASSERT_THROWS_EQUALS
 #   define TS_ASSERT_THROWS_EQUALS(e,t,x,y) TS_ASSERT_THROWS_ASSERT(e,t,TS_ASSERT_EQUALS(x,y))
 #   define TSM_ASSERT_THROWS_EQUALS(m,e,t,x,y) TSM_ASSERT_THROWS_ASSERT(m,e,t,TSM_ASSERT_EQUALS(m,x,y))
+
+    //TS_ASSERRT_THROWS_THIS specific to slach (taken from chaste)
+#   define TS_ASSERT_THROWS_THIS(e,y) TS_ASSERT_THROWS_EQUALS(e,const Exception &err,err.CheckShortMessage(y),"")
 
     // TS_ASSERT_THROWS_DIFFERS
 #   define TS_ASSERT_THROWS_DIFFERS(e,t,x,y) TS_ASSERT_THROWS_ASSERT(e,t,TS_ASSERT_DIFFERS(x,y))

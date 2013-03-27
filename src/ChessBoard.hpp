@@ -87,6 +87,17 @@ private:
     std::vector<Square* > mSeventhRank;
     std::vector<Square* > mEighthRank;
 
+    std::vector<Square* > mAFile;
+    std::vector<Square* > mBFile;
+    std::vector<Square* > mCFile;
+    std::vector<Square* > mDFile;
+    std::vector<Square* > mEFile;
+    std::vector<Square* > mFFile;
+    std::vector<Square* > mGFile;
+    std::vector<Square* > mHFile;
+
+    void FillInRanksFilesAndDiagonals();
+
 
 public:
 
@@ -120,6 +131,13 @@ public:
      * @param rank the rank that we want the squares of
      */
     std::vector<Square* > GetOneRank(unsigned rank);
+
+    /**
+     * Returns all the squares in a given file
+     *
+     * @param file the file that we want the squares of (A==1 -->H==8)
+     */
+    std::vector<Square* > GetOneFile(unsigned file);
 };
 
 #endif /* _CHESSBOARD_HPP_ */

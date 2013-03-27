@@ -5,6 +5,7 @@
 #endif
 
 #define _CXXTEST_HAVE_STD
+#define _CXXTEST_HAVE_EH
 #include <cxxtest/TestListener.h>
 #include <cxxtest/TestTracker.h>
 #include <cxxtest/TestRunner.h>
@@ -51,11 +52,11 @@ static TestPosition suite_TestPosition;
 static CxxTest::List Tests_TestPosition = { 0, 0 };
 CxxTest::StaticSuiteDescription suiteDescription_TestPosition( "TestPosition.hpp", 10, "TestPosition", suite_TestPosition, Tests_TestPosition );
 
-static class TestDescription_suite_TestPosition_testPosition : public CxxTest::RealTestDescription {
+static class TestDescription_suite_TestPosition_testInitialPosition : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestPosition_testPosition() : CxxTest::RealTestDescription( Tests_TestPosition, suiteDescription_TestPosition, 14, "testPosition" ) {}
- void runTest() { suite_TestPosition.testPosition(); }
-} testDescription_suite_TestPosition_testPosition;
+ TestDescription_suite_TestPosition_testInitialPosition() : CxxTest::RealTestDescription( Tests_TestPosition, suiteDescription_TestPosition, 14, "testInitialPosition" ) {}
+ void runTest() { suite_TestPosition.testInitialPosition(); }
+} testDescription_suite_TestPosition_testInitialPosition;
 
 #include <cxxtest/Root.cpp>
 const char* CxxTest::RealWorldDescription::_worldName = "cxxtest";
