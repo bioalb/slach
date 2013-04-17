@@ -35,7 +35,7 @@ private:
     /**True if it is a light square*/
     bool mIsCoordinatePrintable;
 
-    /**The picee that occupies this square. Initialized to NO_PIECE*/
+    /**The piece that occupies this square. Initialized to NO_PIECE*/
     PieceType mPieceOnThisSquare;
 
 public:

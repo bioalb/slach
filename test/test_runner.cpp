@@ -50,11 +50,11 @@ public:
 static TestPosition suite_TestPosition;
 
 static CxxTest::List Tests_TestPosition = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestPosition( "TestPosition.hpp", 10, "TestPosition", suite_TestPosition, Tests_TestPosition );
+CxxTest::StaticSuiteDescription suiteDescription_TestPosition( "TestPosition.hpp", 13, "TestPosition", suite_TestPosition, Tests_TestPosition );
 
 static class TestDescription_suite_TestPosition_testInitialPosition : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestPosition_testInitialPosition() : CxxTest::RealTestDescription( Tests_TestPosition, suiteDescription_TestPosition, 14, "testInitialPosition" ) {}
+ TestDescription_suite_TestPosition_testInitialPosition() : CxxTest::RealTestDescription( Tests_TestPosition, suiteDescription_TestPosition, 17, "testInitialPosition" ) {}
  void runTest() { suite_TestPosition.testInitialPosition(); }
 } testDescription_suite_TestPosition_testInitialPosition;
 
