@@ -27,9 +27,13 @@ public:
             ss << i;
             std::string rank_string = ss.str();
             std::vector<Square* > rank = cb.GetOneRank(i);
-            TS_ASSERT_EQUALS(rank[i]->GetRank(),rank_string);
+            for (unsigned r = 0; r < 8; r++)
+            {
+                TS_ASSERT_EQUALS(rank[r]->GetRank(),rank_string);
+            }
             std::vector<Square* > file = cb.GetOneFile(i);
             std::string file_string;
+
             switch (i)
             {
                 case 1:
@@ -57,7 +61,10 @@ public:
                     file_string =  "H";
                     break;
             }
-            TS_ASSERT_EQUALS(file[i]->GetFile(),file_string);
+            for (unsigned f=0; f<8;f++)
+            {
+                TS_ASSERT_EQUALS(file[f]->GetFile(),file_string);
+            }
             TS_ASSERT_EQUALS(rank.size(),8u);
             TS_ASSERT_EQUALS(file.size(),8u);
         }
