@@ -12,6 +12,9 @@ ActualBoardPanel::ActualBoardPanel(wxPanel* parent, wxWindowID id, const wxPoint
       mpOriginSquarePanel(NULL),
       mpDestinationSquarePanel(NULL)
 {
+    mSvgPieceDirectory = "../../src/GUI/bitmaps/pieces/svg/";
+    mSvgBackgroundDirectory = "../../src/GUI/bitmaps/squares/svg/";
+
     mSquarePanels.resize(CHESSBOARD_SIZE_WB);
     mpChessBoard = new ChessBoard();
     //now the grid sizer.
@@ -60,22 +63,23 @@ void ActualBoardPanel::LoadSvgPieces()
     {
         mPiecesSvgDocs[i] = new wxSVGDocument;
     }
-    mPiecesSvgDocs[0]->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_king.svg"));
-    mPiecesSvgDocs[1]->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_king.svg"));
-    mPiecesSvgDocs[2]->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_queen.svg"));
-    mPiecesSvgDocs[3]->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_queen.svg"));
-    mPiecesSvgDocs[4]->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_rook.svg"));
-    mPiecesSvgDocs[5]->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_rook.svg"));
-    mPiecesSvgDocs[6]->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_bishop.svg"));
-    mPiecesSvgDocs[7]->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_bishop.svg"));
-    mPiecesSvgDocs[8]->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_knight.svg"));
-    mPiecesSvgDocs[9]->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_knight.svg"));
-    mPiecesSvgDocs[10]->Load(wxT("../src/GUI/bitmaps/pieces/svg/white_pawn.svg"));
-    mPiecesSvgDocs[11]->Load(wxT("../src/GUI/bitmaps/pieces/svg/black_pawn.svg"));
-    mPiecesSvgDocs[12]->Load(wxT("../src/GUI/bitmaps/pieces/svg/no_piece.svg"));
-    mPiecesSvgDocs[13]->Load(wxT("../src/GUI/bitmaps/squares/svg/dark_square.svg"));
-    mPiecesSvgDocs[14]->Load(wxT("../src/GUI/bitmaps/squares/svg/light_square.svg"));
-    mPiecesSvgDocs[15]->Load(wxT("../src/GUI/bitmaps/squares/svg/border_square.svg"));
+
+    mPiecesSvgDocs[0]->Load(wxString((mSvgPieceDirectory+"white_king.svg").c_str(), wxConvUTF8));
+    mPiecesSvgDocs[1]->Load(wxString((mSvgPieceDirectory+"black_king.svg").c_str(), wxConvUTF8));
+    mPiecesSvgDocs[2]->Load(wxString((mSvgPieceDirectory+"white_queen.svg").c_str(), wxConvUTF8));
+    mPiecesSvgDocs[3]->Load(wxString((mSvgPieceDirectory+"black_queen.svg").c_str(), wxConvUTF8));
+    mPiecesSvgDocs[4]->Load(wxString((mSvgPieceDirectory+"white_rook.svg").c_str(), wxConvUTF8));
+    mPiecesSvgDocs[5]->Load(wxString((mSvgPieceDirectory+"black_rook.svg").c_str(), wxConvUTF8));
+    mPiecesSvgDocs[6]->Load(wxString((mSvgPieceDirectory+"white_bishop.svg").c_str(), wxConvUTF8));
+    mPiecesSvgDocs[7]->Load(wxString((mSvgPieceDirectory+"black_bishop.svg").c_str(), wxConvUTF8));
+    mPiecesSvgDocs[8]->Load(wxString((mSvgPieceDirectory+"white_knight.svg").c_str(), wxConvUTF8));
+    mPiecesSvgDocs[9]->Load(wxString((mSvgPieceDirectory+"black_knight.svg").c_str(), wxConvUTF8));
+    mPiecesSvgDocs[10]->Load(wxString((mSvgPieceDirectory+"white_pawn.svg").c_str(), wxConvUTF8));
+    mPiecesSvgDocs[11]->Load(wxString((mSvgPieceDirectory+"black_pawn.svg").c_str(), wxConvUTF8));
+    mPiecesSvgDocs[12]->Load(wxString((mSvgPieceDirectory+"no_piece.svg").c_str(), wxConvUTF8));
+    mPiecesSvgDocs[13]->Load(wxString((mSvgBackgroundDirectory+"dark_square.svg").c_str(), wxConvUTF8));
+    mPiecesSvgDocs[14]->Load(wxString((mSvgBackgroundDirectory+"light_square.svg").c_str(), wxConvUTF8));
+    mPiecesSvgDocs[15]->Load(wxString((mSvgBackgroundDirectory+"border_square.svg").c_str(), wxConvUTF8));
 
 }
 

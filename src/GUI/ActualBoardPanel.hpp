@@ -9,6 +9,8 @@
 #include "SquarePanel.hpp"
 #include "../ChessBoard.hpp"
 
+
+
 class ActualBoardPanel : public wxPanel
 {
 
@@ -17,6 +19,9 @@ private:
     std::string mDestinationRank;
     std::string mOriginFile;
     std::string mOriginRank;
+
+    std::string mSvgPieceDirectory;
+    std::string mSvgBackgroundDirectory;
 
     /**
      * Stores pointers of svgdocs corresponding to

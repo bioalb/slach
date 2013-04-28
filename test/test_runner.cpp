@@ -20,12 +20,12 @@ int main( int argc, char *argv[] ) {
     return status;
 }
 bool suite_TestChessboard_init = false;
-#include "TestChessboard.hpp"
+#include "/home/alberto/code/slach/test/TestChessboard.hpp"
 
 static TestChessboard suite_TestChessboard;
 
 static CxxTest::List Tests_TestChessboard = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestChessboard( "TestChessboard.hpp", 10, "TestChessboard", suite_TestChessboard, Tests_TestChessboard );
+CxxTest::StaticSuiteDescription suiteDescription_TestChessboard( "/home/alberto/code/slach/test/TestChessboard.hpp", 10, "TestChessboard", suite_TestChessboard, Tests_TestChessboard );
 
 static class TestDescription_suite_TestChessboard_testBorderFlags : public CxxTest::RealTestDescription {
 public:
@@ -45,12 +45,12 @@ public:
  void runTest() { suite_TestChessboard.testInitialPosition(); }
 } testDescription_suite_TestChessboard_testInitialPosition;
 
-#include "TestPosition.hpp"
+#include "/home/alberto/code/slach/test/TestPosition.hpp"
 
 static TestPosition suite_TestPosition;
 
 static CxxTest::List Tests_TestPosition = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestPosition( "TestPosition.hpp", 13, "TestPosition", suite_TestPosition, Tests_TestPosition );
+CxxTest::StaticSuiteDescription suiteDescription_TestPosition( "/home/alberto/code/slach/test/TestPosition.hpp", 13, "TestPosition", suite_TestPosition, Tests_TestPosition );
 
 static class TestDescription_suite_TestPosition_testInitialPosition : public CxxTest::RealTestDescription {
 public:

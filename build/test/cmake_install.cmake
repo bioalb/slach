@@ -1,4 +1,4 @@
-# Install script for directory: /home/alberto/code/slach/build
+# Install script for directory: /home/alberto/code/slach/build/test
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
