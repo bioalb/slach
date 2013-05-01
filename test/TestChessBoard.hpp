@@ -207,7 +207,7 @@ public:
         ChessBoard my_cb;
         my_cb.SetupChessBoard();
         my_cb.SetupInitialChessPosition();
-
+        TS_ASSERT_EQUALS(my_cb.GetCurrentPosition().size(), 32u);
         std::vector<Square* > squares = my_cb.GetSquares();
         TS_ASSERT_EQUALS(squares.size(), 64u);
 
