@@ -69,16 +69,30 @@ public:
 
     /**
      * Constructor
+     *
+     * In the constructor, the vector mSquares is filled appropriately
+     * as described in the class documentation.
+     * This is done by creating and underlying ChessBoard object and initializing it.
+     * Then the playable squares are taken from there.
      */
     ChessBoardWithBorders();
 
     /**
      * Destructor
+     *
+     * The pointers to the squares we created are cleared here
      */
     ~ChessBoardWithBorders();
 
-    std::vector<Square* > GetSquares();
+    /**
+     * Access method for the vector of squares (mSquares)
+     */
+    std::vector<Square* > GetSquares() const;
 
+    /**
+     * Access method for the underlying playable (no border) square
+     * (mpChessBoard)
+     */
     ChessBoard* GetPlayableChessBoard() const;
 
 

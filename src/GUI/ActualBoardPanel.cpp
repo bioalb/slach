@@ -102,7 +102,6 @@ void ActualBoardPanel::SetupChessboard()
     for (unsigned i = 0; i < squares.size(); ++i)
     {
         mSquarePanels[i] = new SquarePanel( this, squares[i] );
-        std::cout<<squares[i]->GetFile()<<squares[i]->GetRank()<<std::endl;
         mpGridSizer->Add(mSquarePanels[i], 0, wxEXPAND);
     }
     this->SetSizer(mpGridSizer, false);

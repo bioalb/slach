@@ -110,7 +110,6 @@ ChessBoardWithBorders::ChessBoardWithBorders()
 
 ChessBoardWithBorders::~ChessBoardWithBorders()
 {
-
     for (unsigned i = 0; i <mSquares.size(); ++i )
     {
         if (mSquares[i]->IsBorderSquare()==true)
@@ -121,7 +120,7 @@ ChessBoardWithBorders::~ChessBoardWithBorders()
     delete mpChessBoard;
 }
 
-std::vector<Square* > ChessBoardWithBorders::GetSquares()
+std::vector<Square* > ChessBoardWithBorders::GetSquares() const
 {
     return mSquares;
 }
