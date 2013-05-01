@@ -80,6 +80,9 @@ ChessBoardWithBorders::ChessBoardWithBorders()
             else //playable square
             {
                 assert(playable_sq_counter<mPlayableSquares.size());
+                // delete the object we had created, here we will assign the value of pointer from
+                // the underlying playable chessboard
+                delete mSquares[index];
                 mSquares[index] = mPlayableSquares[playable_sq_counter];
                 playable_sq_counter++;
             }
@@ -108,11 +111,14 @@ ChessBoardWithBorders::ChessBoardWithBorders()
 ChessBoardWithBorders::~ChessBoardWithBorders()
 {
 
-//    for (unsigned i = 0; i <mSquares.size(); ++i )
-//    {
-//        delete mSquares[i];
-//    }
-//    delete mpChessBoard;
+    for (unsigned i = 0; i <mSquares.size(); ++i )
+    {
+        if (mSquares[i]->IsBorderSquare()==true)
+        {
+            delete mSquares[i];
+        }
+    }
+    delete mpChessBoard;
 }
 
 std::vector<Square* > ChessBoardWithBorders::GetSquares()
