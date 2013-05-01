@@ -14,7 +14,10 @@ ADD_EXECUTABLE(TESTRUNNER ${testfiledir}/test_runner.cpp
                           ${srcdir}/ChessBoardWithBorders.cpp)
 
 add_custom_command(OUTPUT ${testfiledir}/test_runner.cpp
-                   COMMAND ${testfiledir}/cxxtest/bin/cxxtestgen --error-printer -o ${testfiledir}/test_runner.cpp ${testfiledir}/TestChessboardWithBorders.hpp ${testfiledir}/TestChessBoard.hpp
+                   COMMAND ${testfiledir}/cxxtest/bin/cxxtestgen --error-printer -o ${testfiledir}/test_runner.cpp 
+                                                                                    ${testfiledir}/TestChessboardWithBorders.hpp 
+                                                                                    ${testfiledir}/TestChessBoard.hpp
+                                                                                    ${testfiledir}/TestSquare.hpp
                    DEPENDS 
                    COMMENT "running cxxtestgen now..."
                    VERBATIM)

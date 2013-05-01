@@ -155,6 +155,14 @@ public:
      */
     PieceType GetPieceOnThisSquare() const;
 
+    /**
+     * Return true if this square is the same as rSquare.
+     * Two squares are the same if they have the same coordinates.
+     *
+     * @param rSquare the square we want to compare with.
+     */
+    bool IsSameSquare(const Square &rSquare) const;
+
 };
 
 #endif /* _SQUARE_HPP_ */

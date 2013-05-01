@@ -57,5 +57,18 @@ public:
  void runTest() { suite_TestChessBoard.testInitialPosition(); }
 } testDescription_suite_TestChessBoard_testInitialPosition;
 
+#include "/home/alberto/code/slach/test/TestSquare.hpp"
+
+static TestSquare suite_TestSquare;
+
+static CxxTest::List Tests_TestSquare = { 0, 0 };
+CxxTest::StaticSuiteDescription suiteDescription_TestSquare( "/home/alberto/code/slach/test/TestSquare.hpp", 12, "TestSquare", suite_TestSquare, Tests_TestSquare );
+
+static class TestDescription_suite_TestSquare_testSameSquare : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestSquare_testSameSquare() : CxxTest::RealTestDescription( Tests_TestSquare, suiteDescription_TestSquare, 16, "testSameSquare" ) {}
+ void runTest() { suite_TestSquare.testSameSquare(); }
+} testDescription_suite_TestSquare_testSameSquare;
+
 #include <cxxtest/Root.cpp>
 const char* CxxTest::RealWorldDescription::_worldName = "cxxtest";

@@ -98,3 +98,14 @@ PieceType Square::GetPieceOnThisSquare() const
     return mPieceOnThisSquare;
 }
 
+bool Square::IsSameSquare(const Square &rSquare) const
+{
+    if (mRank == rSquare.GetRank() && mFile == rSquare.GetFile())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
