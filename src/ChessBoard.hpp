@@ -33,7 +33,6 @@
  *  A7  B7  C7  D7  E7  F7  G7  H7
  *  A8  B8  C8  D8  E8  F8  G8  H8
  *
- *
  */
 
 static const unsigned CHESSBOARD_SIZE_WB = 100u;
@@ -58,7 +57,7 @@ class ChessBoard
 
 private:
 
-    /**All the squares on this chessboard*/
+    /**All the squares on this chessboard. This is core variable of this class.*/
     std::vector<Square* > mSquares;
     /**The current position on this chessboard*/
     Position mCurrentPosition;
@@ -71,41 +70,33 @@ public:
 
     /**
      * Constructor
+     * It allocates memory for the vector of pointers to the squares (mSquares).
      */
     ChessBoard();
 
     /**
-     * Destructor
+     * Destructor.
+     * Clears up the pointers we newed here.
      */
     ~ChessBoard();
 
+    /**
+     * This method essentially stes up the squares in the chessboard.
+     * It assigns coordinate to each square according to class documentation
+     */
     void SetupChessBoard();
 
     void SetupInitialChessPosition();
 
-    std::vector<Square* > GetSquares();
-
-    std::vector<std::string> GetFiles();
-
-    std::vector<std::string> GetRanks();
+    /**
+     * Returns a vector of (pointers to) squares for this chessboard
+     * It is an access method for the variable mSquares
+     */
+    std::vector<Square* > GetSquares() const;
 
     Position GetCurrentPosition() const;
 
     bool IsLegalMove();
-
-    /**
-     * Returns all the squares in a given rank
-     *
-     * @param rank the rank that we want the squares of
-     */
-    std::vector<Square* > GetOneRank(unsigned rank);
-
-    /**
-     * Returns all the squares in a given file
-     *
-     * @param file the file that we want the squares of (A==1 -->H==8)
-     */
-    std::vector<Square* > GetOneFile(unsigned file);
 };
 
 #endif /* _CHESSBOARD_HPP_ */

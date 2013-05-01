@@ -26,19 +26,9 @@ ChessBoard::~ChessBoard()
     }
 }
 
-std::vector<Square* > ChessBoard::GetSquares()
+std::vector<Square* > ChessBoard::GetSquares() const
 {
     return mSquares;
-}
-
-std::vector<std::string> ChessBoard::GetFiles()
-{
-    return mFiles;
-}
-
-std::vector<std::string> ChessBoard::GetRanks()
-{
-    return mRanks;
 }
 
 void ChessBoard::SetupInitialChessPosition()
