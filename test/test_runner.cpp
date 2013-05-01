@@ -5,7 +5,6 @@
 #endif
 
 #define _CXXTEST_HAVE_STD
-#define _CXXTEST_HAVE_EH
 #include <cxxtest/TestListener.h>
 #include <cxxtest/TestTracker.h>
 #include <cxxtest/TestRunner.h>
@@ -19,44 +18,44 @@ int main( int argc, char *argv[] ) {
     status = CxxTest::Main<CxxTest::ErrorPrinter>( tmp, argc, argv );
     return status;
 }
-bool suite_TestChessboard_init = false;
-#include "/home/alberto/code/slach/test/TestChessboard.hpp"
+bool suite_TestChessboards_init = false;
+#include "/home/alberto/code/slach/test/TestChessboardWithBorders.hpp"
 
-static TestChessboard suite_TestChessboard;
+static TestChessboards suite_TestChessboards;
 
-static CxxTest::List Tests_TestChessboard = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestChessboard( "/home/alberto/code/slach/test/TestChessboard.hpp", 10, "TestChessboard", suite_TestChessboard, Tests_TestChessboard );
+static CxxTest::List Tests_TestChessboards = { 0, 0 };
+CxxTest::StaticSuiteDescription suiteDescription_TestChessboards( "/home/alberto/code/slach/test/TestChessboardWithBorders.hpp", 13, "TestChessboards", suite_TestChessboards, Tests_TestChessboards );
 
-static class TestDescription_suite_TestChessboard_testBorderFlags : public CxxTest::RealTestDescription {
+static class TestDescription_suite_TestChessboards_testBorderFlags : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessboard_testBorderFlags() : CxxTest::RealTestDescription( Tests_TestChessboard, suiteDescription_TestChessboard, 14, "testBorderFlags" ) {}
- void runTest() { suite_TestChessboard.testBorderFlags(); }
-} testDescription_suite_TestChessboard_testBorderFlags;
+ TestDescription_suite_TestChessboards_testBorderFlags() : CxxTest::RealTestDescription( Tests_TestChessboards, suiteDescription_TestChessboards, 17, "testBorderFlags" ) {}
+ void runTest() { suite_TestChessboards.testBorderFlags(); }
+} testDescription_suite_TestChessboards_testBorderFlags;
 
-static class TestDescription_suite_TestChessboard_testBoard : public CxxTest::RealTestDescription {
+static class TestDescription_suite_TestChessboards_testBoardWithBorders : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessboard_testBoard() : CxxTest::RealTestDescription( Tests_TestChessboard, suiteDescription_TestChessboard, 41, "testBoard" ) {}
- void runTest() { suite_TestChessboard.testBoard(); }
-} testDescription_suite_TestChessboard_testBoard;
+ TestDescription_suite_TestChessboards_testBoardWithBorders() : CxxTest::RealTestDescription( Tests_TestChessboards, suiteDescription_TestChessboards, 46, "testBoardWithBorders" ) {}
+ void runTest() { suite_TestChessboards.testBoardWithBorders(); }
+} testDescription_suite_TestChessboards_testBoardWithBorders;
 
-static class TestDescription_suite_TestChessboard_testInitialPosition : public CxxTest::RealTestDescription {
+#include "/home/alberto/code/slach/test/TestChessBoard.hpp"
+
+static TestChessBoard suite_TestChessBoard;
+
+static CxxTest::List Tests_TestChessBoard = { 0, 0 };
+CxxTest::StaticSuiteDescription suiteDescription_TestChessBoard( "/home/alberto/code/slach/test/TestChessBoard.hpp", 13, "TestChessBoard", suite_TestChessBoard, Tests_TestChessBoard );
+
+static class TestDescription_suite_TestChessBoard_testBasicBoard : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessboard_testInitialPosition() : CxxTest::RealTestDescription( Tests_TestChessboard, suiteDescription_TestChessboard, 353, "testInitialPosition" ) {}
- void runTest() { suite_TestChessboard.testInitialPosition(); }
-} testDescription_suite_TestChessboard_testInitialPosition;
+ TestDescription_suite_TestChessBoard_testBasicBoard() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 17, "testBasicBoard" ) {}
+ void runTest() { suite_TestChessBoard.testBasicBoard(); }
+} testDescription_suite_TestChessBoard_testBasicBoard;
 
-#include "/home/alberto/code/slach/test/TestPosition.hpp"
-
-static TestPosition suite_TestPosition;
-
-static CxxTest::List Tests_TestPosition = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestPosition( "/home/alberto/code/slach/test/TestPosition.hpp", 13, "TestPosition", suite_TestPosition, Tests_TestPosition );
-
-static class TestDescription_suite_TestPosition_testInitialPosition : public CxxTest::RealTestDescription {
+static class TestDescription_suite_TestChessBoard_testInitialPosition : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestPosition_testInitialPosition() : CxxTest::RealTestDescription( Tests_TestPosition, suiteDescription_TestPosition, 17, "testInitialPosition" ) {}
- void runTest() { suite_TestPosition.testInitialPosition(); }
-} testDescription_suite_TestPosition_testInitialPosition;
+ TestDescription_suite_TestChessBoard_testInitialPosition() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 205, "testInitialPosition" ) {}
+ void runTest() { suite_TestChessBoard.testInitialPosition(); }
+} testDescription_suite_TestChessBoard_testInitialPosition;
 
 #include <cxxtest/Root.cpp>
 const char* CxxTest::RealWorldDescription::_worldName = "cxxtest";

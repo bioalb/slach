@@ -7,7 +7,7 @@
 #include <SVGDocument.h>
 #include <vector>
 #include "SquarePanel.hpp"
-#include "../ChessBoard.hpp"
+#include "../ChessBoardWithBorders.hpp"
 
 
 
@@ -30,6 +30,7 @@ private:
     std::vector<wxSVGDocument*> mPiecesSvgDocs;
     std::vector<SquarePanel* > mSquarePanels;
     wxFlexGridSizer* mpGridSizer;
+    ChessBoardWithBorders* mpChessBoardWithBorders;
     ChessBoard* mpChessBoard;
     wxPanel* mpParent;
     SquarePanel* mpOriginSquarePanel;

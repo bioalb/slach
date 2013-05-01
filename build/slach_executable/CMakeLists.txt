@@ -8,10 +8,11 @@ ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64
                 -I/usr/lib/i386-linux-gnu/wx/include/gtk2-unicode-release-2.8 
                 -I/usr/include/wx-2.8
                 -I/usr/include/wxSVG 
-                 -O0 -g3 -Wall -fmessage-length=0 -finstrument-functions)
+                 -O0 -std=c++0x -g3 -Wall -fmessage-length=0 -finstrument-functions)
 
 ADD_EXECUTABLE(slach ${srcdir}/Exception.cpp
                        ${srcdir}/ChessBoard.cpp
+                       ${srcdir}/ChessBoardWithBorders.cpp
                        ${srcdir}/Square.cpp
                        ${srcdir}/GUI/SquarePanel.cpp 
                        ${srcdir}/GUI/DropTargetPanel.cpp 

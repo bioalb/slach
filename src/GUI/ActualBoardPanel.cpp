@@ -16,10 +16,12 @@ ActualBoardPanel::ActualBoardPanel(wxPanel* parent, wxWindowID id, const wxPoint
     mSvgBackgroundDirectory = "../../src/GUI/bitmaps/squares/svg/";
 
     mSquarePanels.resize(CHESSBOARD_SIZE_WB);
-    mpChessBoard = new ChessBoard();
+    mpChessBoardWithBorders = new ChessBoardWithBorders();
+
+
     //now the grid sizer.
     int square_to_border_prop = 3;//proportion between border and square
-    mpGridSizer = new wxFlexGridSizer(FILE_SIZE,RANK_SIZE,0,0);
+    mpGridSizer = new wxFlexGridSizer(BOARD_ROW_SIZE+2,BOARD_COLUMN_SIZE+2,0,0);
     mpGridSizer->AddGrowableCol(0,1);//border
     mpGridSizer->AddGrowableCol(1,square_to_border_prop);
     mpGridSizer->AddGrowableCol(2,square_to_border_prop);
@@ -44,7 +46,7 @@ ActualBoardPanel::ActualBoardPanel(wxPanel* parent, wxWindowID id, const wxPoint
 
     LoadSvgPieces();
     SetupChessboard();
-    mpChessBoard->SetupInitialChessPosition();
+
 }
 
 ActualBoardPanel::~ActualBoardPanel()
@@ -95,15 +97,17 @@ std::vector<wxSVGDocument* > ActualBoardPanel::GetPiecesSvgDocs()
 
 void ActualBoardPanel::SetupChessboard()
 {
-    mpChessBoard->SetupChessBoard();
-    std::vector<Square* > squares = mpChessBoard->GetSquares();
+    std::vector<Square* > squares = mpChessBoardWithBorders->GetSquares();
     assert(squares.size() == mSquarePanels.size());
     for (unsigned i = 0; i < squares.size(); ++i)
     {
         mSquarePanels[i] = new SquarePanel( this, squares[i] );
+        std::cout<<squares[i]->GetFile()<<squares[i]->GetRank()<<std::endl;
         mpGridSizer->Add(mSquarePanels[i], 0, wxEXPAND);
     }
     this->SetSizer(mpGridSizer, false);
+    mpChessBoard = mpChessBoardWithBorders->GetPlayableChessBoard();
+    mpChessBoard->SetupInitialChessPosition();
 }
 
 void ActualBoardPanel::SetDestinationSquare(SquarePanel* pDestinationPanel)

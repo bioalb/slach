@@ -7,31 +7,10 @@
 ChessBoard::ChessBoard()
 {
     //allocate memory for the vectors
-    mSquares.resize(CHESSBOARD_SIZE_WB);
-    mFiles.resize(FILE_SIZE);
-    mRanks.resize(RANK_SIZE);
+    mSquares.resize(CHESSBOARD_SIZE);
 
-    mFiles[0] = "0";
-    mFiles[1] = "A";
-    mFiles[2] = "B";
-    mFiles[3] = "C";
-    mFiles[4] = "D";
-    mFiles[5] = "E";
-    mFiles[6] = "F";
-    mFiles[7] = "G";
-    mFiles[8] = "H";
-    mFiles[9] = "0";
-
-    mRanks[0] = "0";
-    mRanks[1] = "1";
-    mRanks[2] = "2";
-    mRanks[3] = "3";
-    mRanks[4] = "4";
-    mRanks[5] = "5";
-    mRanks[6] = "6";
-    mRanks[7] = "7";
-    mRanks[8] = "8";
-    mRanks[9] = "0";
+    mFiles = {"A", "B", "C", "D", "E","F", "G",  "H"};
+    mRanks = {"1", "2", "3", "4", "5","6", "7",  "8"};
 
     for (unsigned i = 0; i <mSquares.size(); ++i )
     {
@@ -45,85 +24,6 @@ ChessBoard::~ChessBoard()
     {
         delete mSquares[i];
     }
-}
-
-void ChessBoard::FillInRanksFilesAndDiagonals()
-{
-        for (unsigned i = 0; i < mSquares.size(); ++i)
-        {
-            //no border squares here
-            if (mSquares[i]->IsBorderSquare()==false)
-            {
-                std::string file =  mSquares[i]->GetFile();
-                std::string rank =  mSquares[i]->GetRank();
-
-                if (file=="A")
-                {
-                    mAFile.push_back(mSquares[i]);
-                }
-                if (file=="B")
-                {
-                    mBFile.push_back(mSquares[i]);
-                }
-                if (file=="C")
-                {
-                    mCFile.push_back(mSquares[i]);
-                }
-                if (file=="D")
-                {
-                    mDFile.push_back(mSquares[i]);
-                }
-                if (file=="E")
-                {
-                    mEFile.push_back(mSquares[i]);
-                }
-                if (file=="F")
-                {
-                    mFFile.push_back(mSquares[i]);
-                }
-                if (file=="G")
-                {
-                    mGFile.push_back(mSquares[i]);
-                }
-                if (file=="H")
-                {
-                    mHFile.push_back(mSquares[i]);
-                }
-
-                if (rank=="1")
-                {
-                    mFirstRank.push_back(mSquares[i]);
-                }
-                if (rank=="2")
-                {
-                    mSecondRank.push_back(mSquares[i]);
-                }
-                if (rank=="3")
-                {
-                    mThirdRank.push_back(mSquares[i]);
-                }
-                if (rank=="4")
-                {
-                    mFourthRank.push_back(mSquares[i]);
-                }
-                if (rank=="5")
-                {
-                    mFifthRank.push_back(mSquares[i]);
-                }
-                if (rank=="6")
-                {
-                    mSixthRank.push_back(mSquares[i]);
-                }
-                if (rank=="7")
-                {
-                    mSeventhRank.push_back(mSquares[i]);
-                }
-                if (rank=="8")
-                {
-                    mEighthRank.push_back(mSquares[i]);
-                }
-            }
-        }
 }
 
 std::vector<Square* > ChessBoard::GetSquares()
@@ -249,27 +149,17 @@ void ChessBoard::SetupInitialChessPosition()
 
 void ChessBoard::SetupChessBoard()
 {
-    unsigned row=RANK_SIZE-1;//row counter, start from the max as the loop starts from top left
+    unsigned row=0;//row counter
     unsigned column=0;//column counter
-    unsigned bw_counter = 0; //at zero, it will start with white (square A8).
+    unsigned bw_counter = 0; //at zero, it will start with black (square A1).
 
-    //will create the squares row by row, starting from top left
-    for (unsigned index = 0; index < CHESSBOARD_SIZE_WB; ++index)
+    //will create the squares row by row, starting from bottom left (A1)
+    for (unsigned index = 0; index < CHESSBOARD_SIZE; ++index)
     {
         assert(row<mRanks.size());
         assert(column<mFiles.size());
         mSquares[index]->SetFile(mFiles[column]);
         mSquares[index]->SetRank(mRanks[row]);
-
-        column++;
-        bw_counter++;
-
-        if ( (column%FILE_SIZE==0) )
-        {
-            bw_counter++;//trick the counter, end of a row and beginning of new one have same colour
-            row--;
-            column=0;
-        }
 
         if (bw_counter%2==0)
         {
@@ -279,58 +169,16 @@ void ChessBoard::SetupChessBoard()
         {
             mSquares[index]->SetAsLightSquare();
         }
+        column++;
+        bw_counter++;
 
-        //first row at the top, a border
-        if (index < FILE_SIZE)
+        if ( (column%(BOARD_ROW_SIZE)==0) )
         {
-            if (index==0 || index == FILE_SIZE-1)
-            {
-                //corner square
-                mSquares[index]->SetAsCornerSquare(true);
-                mSquares[index]->SetAsBorderSquare(true);
-            }
-            else
-            {
-                //top row, put markers
-                mSquares[index]->SetAsBorderSquare(true);
-                mSquares[index]->SetAsCornerSquare(false);
-            }
-        }
-        //all the other rows (ranks) before we hit to bottom border
-        else if (index < (CHESSBOARD_SIZE_WB - (RANK_SIZE)))
-        {
-            //left border
-            if ( (index%(RANK_SIZE)==0)  )
-            {
-                mSquares[index]->SetAsBorderSquare(true);
-                mSquares[index]->SetAsPrintableCoordinates(true);
-            }
-            //and right borders
-            if ( (index+1)%(RANK_SIZE)==0 )
-            {
-                mSquares[index]->SetAsBorderSquare(true);
-                mSquares[index]->SetAsPrintableCoordinates(false);
-            }
-        }
-        //last row at the bottom, a border
-        else
-        {
-            if (index==CHESSBOARD_SIZE_WB-RANK_SIZE || index == CHESSBOARD_SIZE_WB-1)
-            {
-                //corner square
-                mSquares[index]->SetAsCornerSquare(true);
-                mSquares[index]->SetAsBorderSquare(true);
-            }
-            else
-            {
-                //bottom row, put markers
-                mSquares[index]->SetAsBorderSquare(true);
-                mSquares[index]->SetAsCornerSquare(false);
-                mSquares[index]->SetAsPrintableCoordinates(true);
-            }
+            bw_counter++;//trick the counter, end of a row and beginning of new one have same colour
+            row++;
+            column=0;
         }
     }
-    FillInRanksFilesAndDiagonals();
 }
 
 bool ChessBoard::IsLegalMove()
@@ -343,74 +191,3 @@ Position ChessBoard::GetCurrentPosition() const
     return mCurrentPosition;
 }
 
-std::vector<Square* > ChessBoard::GetOneRank(unsigned rank)
-{
-    std::vector<Square* > ret;
-    switch (rank)
-    {
-        case 1:
-            ret =  mFirstRank;
-            break;
-        case 2:
-            ret =  mSecondRank;
-            break;
-        case 3:
-            ret =  mThirdRank;
-            break;
-        case 4:
-            ret =  mFourthRank;
-            break;
-        case 5:
-            ret =  mFifthRank;
-            break;
-        case 6:
-            ret =  mSixthRank;
-            break;
-        case 7:
-            ret =  mSeventhRank;
-            break;
-        case 8:
-            ret =  mEighthRank;
-            break;
-        default:
-            EXCEPTION("Requested rank may go from 1 to 8");
-            break;
-    }
-    return ret;
-}
-
-std::vector<Square* > ChessBoard::GetOneFile(unsigned file)
-{
-    std::vector<Square* > ret;
-    switch (file)
-    {
-        case 1:
-            ret =  mAFile;
-            break;
-        case 2:
-            ret =  mBFile;
-            break;
-        case 3:
-            ret =  mCFile;
-            break;
-        case 4:
-            ret =  mDFile;
-            break;
-        case 5:
-            ret =  mEFile;
-            break;
-        case 6:
-            ret =  mFFile;
-            break;
-        case 7:
-            ret =  mGFile;
-            break;
-        case 8:
-            ret =  mHFile;
-            break;
-        default:
-            EXCEPTION("Requested file may go from 1 to 8");
-            break;
-    }
-    return ret;
-}

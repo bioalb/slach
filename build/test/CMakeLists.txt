@@ -10,10 +10,11 @@ ADD_DEFINITIONS(-I${srcdir}
 ADD_EXECUTABLE(TESTRUNNER ${testfiledir}/test_runner.cpp
                           ${srcdir}/Exception.cpp 
                           ${srcdir}/Square.cpp 
-                          ${srcdir}/ChessBoard.cpp)
+                          ${srcdir}/ChessBoard.cpp
+                          ${srcdir}/ChessBoardWithBorders.cpp)
 
 add_custom_command(OUTPUT ${testfiledir}/test_runner.cpp
-                   COMMAND ${testfiledir}/cxxtest/bin/cxxtestgen --error-printer -o ${testfiledir}/test_runner.cpp ${testfiledir}/TestChessboard.hpp ${testfiledir}/TestPosition.hpp
+                   COMMAND ${testfiledir}/cxxtest/bin/cxxtestgen --error-printer -o ${testfiledir}/test_runner.cpp ${testfiledir}/TestChessboardWithBorders.hpp ${testfiledir}/TestChessBoard.hpp
                    DEPENDS 
                    COMMENT "running cxxtestgen now..."
                    VERBATIM)
