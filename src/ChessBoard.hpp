@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "Square.hpp"
+#include "Game.hpp"
 
 /**
  *
@@ -40,18 +41,18 @@ static const unsigned CHESSBOARD_SIZE = 64u;
 static const unsigned BOARD_ROW_SIZE = 8u;
 static const unsigned BOARD_COLUMN_SIZE = 8u;
 
-/**
- * Typedef for a move as a pair of square objects
- * the first is the origin square, the second is the destination square
- */
-typedef std::pair<Square*,Square*> Move;
+
 
 class ChessBoard
 {
 
 private:
 
-    /**All the squares on this chessboard. This is core variable of this class.*/
+    /**
+     * All the squares on this chessboard. This is core variable of this class.
+     * Note that each square contains information about the piece it is occupied by
+     * Hence, this vector has all the info to assess a position.
+     * */
     std::vector<Square* > mSquares;
 
     /**The files (columns) on this chessboard*/
@@ -90,7 +91,8 @@ public:
     bool IsLegalMove();
 
     /**
-     * Updates the current position with the move that is passed in
+     * Updates the current position (vector mSquares) with the move that is passed in.
+     * Does NOT check for legality of the move.
      *
      * @param rMove reference to the move we wish to make
      */

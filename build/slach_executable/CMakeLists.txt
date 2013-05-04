@@ -11,6 +11,7 @@ ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64
                  -O0 -std=c++0x -g3 -Wall -fmessage-length=0 -finstrument-functions)
 
 ADD_EXECUTABLE(slach ${srcdir}/Exception.cpp
+                       ${srcdir}/Game.cpp
                        ${srcdir}/ChessBoard.cpp
                        ${srcdir}/ChessBoardWithBorders.cpp
                        ${srcdir}/Square.cpp

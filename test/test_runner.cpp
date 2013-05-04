@@ -59,7 +59,7 @@ public:
 
 static class TestDescription_suite_TestChessBoard_testMakeAMove : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessBoard_testMakeAMove() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 300, "testMakeAMove" ) {}
+ TestDescription_suite_TestChessBoard_testMakeAMove() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 299, "testMakeAMove" ) {}
  void runTest() { suite_TestChessBoard.testMakeAMove(); }
 } testDescription_suite_TestChessBoard_testMakeAMove;
 
@@ -81,6 +81,19 @@ public:
  TestDescription_suite_TestSquare_testSameSquare() : CxxTest::RealTestDescription( Tests_TestSquare, suiteDescription_TestSquare, 58, "testSameSquare" ) {}
  void runTest() { suite_TestSquare.testSameSquare(); }
 } testDescription_suite_TestSquare_testSameSquare;
+
+#include "/home/alberto/code/slach/test/TestGame.hpp"
+
+static TestGame suite_TestGame;
+
+static CxxTest::List Tests_TestGame = { 0, 0 };
+CxxTest::StaticSuiteDescription suiteDescription_TestGame( "/home/alberto/code/slach/test/TestGame.hpp", 12, "TestGame", suite_TestGame, Tests_TestGame );
+
+static class TestDescription_suite_TestGame_testBasic : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestGame_testBasic() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 16, "testBasic" ) {}
+ void runTest() { suite_TestGame.testBasic(); }
+} testDescription_suite_TestGame_testBasic;
 
 #include <cxxtest/Root.cpp>
 const char* CxxTest::RealWorldDescription::_worldName = "cxxtest";
