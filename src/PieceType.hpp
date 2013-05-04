@@ -20,4 +20,6 @@ enum PieceType
     BLACK_PAWN,
     NO_PIECE
 };
+
+
 #endif

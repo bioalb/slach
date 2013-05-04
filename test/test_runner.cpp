@@ -89,11 +89,17 @@ static TestGame suite_TestGame;
 static CxxTest::List Tests_TestGame = { 0, 0 };
 CxxTest::StaticSuiteDescription suiteDescription_TestGame( "/home/alberto/code/slach/test/TestGame.hpp", 12, "TestGame", suite_TestGame, Tests_TestGame );
 
-static class TestDescription_suite_TestGame_testBasic : public CxxTest::RealTestDescription {
+static class TestDescription_suite_TestGame_testBasicMove : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestGame_testBasic() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 16, "testBasic" ) {}
- void runTest() { suite_TestGame.testBasic(); }
-} testDescription_suite_TestGame_testBasic;
+ TestDescription_suite_TestGame_testBasicMove() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 16, "testBasicMove" ) {}
+ void runTest() { suite_TestGame.testBasicMove(); }
+} testDescription_suite_TestGame_testBasicMove;
+
+static class TestDescription_suite_TestGame_testPawnMove : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestGame_testPawnMove() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 47, "testPawnMove" ) {}
+ void runTest() { suite_TestGame.testPawnMove(); }
+} testDescription_suite_TestGame_testPawnMove;
 
 #include <cxxtest/Root.cpp>
 const char* CxxTest::RealWorldDescription::_worldName = "cxxtest";
