@@ -9,7 +9,7 @@ ChessBoard::ChessBoard()
     //allocate memory for the vectors
     mSquares.resize(CHESSBOARD_SIZE);
 
-    mFiles = {"A", "B", "C", "D", "E","F", "G",  "H"};
+    mFiles = {"a", "b", "c", "d", "e","f", "g",  "h"};
     mRanks = {"1", "2", "3", "4", "5","6", "7",  "8"};
 
     for (unsigned i = 0; i <mSquares.size(); ++i )
@@ -36,79 +36,79 @@ void ChessBoard::SetupInitialChessPosition()
     for (unsigned i = 0; i < mSquares.size(); ++i)
     {
         //first rank
-        if ((mSquares[i]->GetFile()=="A")&&(mSquares[i]->GetRank()=="1"))
+        if ((mSquares[i]->GetFile()==mFiles[0])&&(mSquares[i]->GetRank()==mRanks[0]))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_ROOK);
         }
-        else if ((mSquares[i]->GetFile()=="H")&&(mSquares[i]->GetRank()=="1"))
+        else if ((mSquares[i]->GetFile()==mFiles[7])&&(mSquares[i]->GetRank()==mRanks[0]))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_ROOK);
         }
-        else if ((mSquares[i]->GetFile()=="B")&&(mSquares[i]->GetRank()=="1"))
+        else if ((mSquares[i]->GetFile()==mFiles[1])&&(mSquares[i]->GetRank()==mRanks[0]))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_KNIGHT);
         }
-        else if ((mSquares[i]->GetFile()=="G")&&(mSquares[i]->GetRank()=="1"))
+        else if ((mSquares[i]->GetFile()==mFiles[6])&&(mSquares[i]->GetRank()==mRanks[0]))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_KNIGHT);
         }
-        else if ((mSquares[i]->GetFile()=="C")&&(mSquares[i]->GetRank()=="1"))
+        else if ((mSquares[i]->GetFile()==mFiles[2])&&(mSquares[i]->GetRank()==mRanks[0]))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_BISHOP);
         }
-        else if ((mSquares[i]->GetFile()=="F")&&(mSquares[i]->GetRank()=="1"))
+        else if ((mSquares[i]->GetFile()==mFiles[5])&&(mSquares[i]->GetRank()==mRanks[0]))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_BISHOP);
         }
-        else if ((mSquares[i]->GetFile()=="D")&&(mSquares[i]->GetRank()=="1"))
+        else if ((mSquares[i]->GetFile()==mFiles[3])&&(mSquares[i]->GetRank()==mRanks[0]))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_QUEEN);
         }
-        else if ((mSquares[i]->GetFile()=="E")&&(mSquares[i]->GetRank()=="1"))
+        else if ((mSquares[i]->GetFile()==mFiles[4])&&(mSquares[i]->GetRank()==mRanks[0]))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_KING);
         }
         //second rank, all white pawns
-        else if ((mSquares[i]->GetRank()=="2")&&mSquares[i]->IsBorderSquare()==false)
+        else if ((mSquares[i]->GetRank()==mRanks[1])&&mSquares[i]->IsBorderSquare()==false)
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_PAWN);
         }
         //seventh rank, all black pawns
-        else if(mSquares[i]->GetRank()=="7"&&mSquares[i]->IsBorderSquare()==false)
+        else if(mSquares[i]->GetRank()==mRanks[6]&&mSquares[i]->IsBorderSquare()==false)
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_PAWN);
         }
 
         //EIGTH rank
-        else if ((mSquares[i]->GetFile()=="A")&&(mSquares[i]->GetRank()=="8"))
+        else if ((mSquares[i]->GetFile()==mFiles[0])&&(mSquares[i]->GetRank()==mRanks[7]))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_ROOK);
         }
-        else if ((mSquares[i]->GetFile()=="H")&&(mSquares[i]->GetRank()=="8"))
+        else if ((mSquares[i]->GetFile()==mFiles[7])&&(mSquares[i]->GetRank()==mRanks[7]))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_ROOK);
         }
-        else if ((mSquares[i]->GetFile()=="B")&&(mSquares[i]->GetRank()=="8"))
+        else if ((mSquares[i]->GetFile()==mFiles[1])&&(mSquares[i]->GetRank()==mRanks[7]))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_KNIGHT);
         }
-        else if ((mSquares[i]->GetFile()=="G")&&(mSquares[i]->GetRank()=="8"))
+        else if ((mSquares[i]->GetFile()==mFiles[6])&&(mSquares[i]->GetRank()==mRanks[7]))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_KNIGHT);
         }
-        else if ((mSquares[i]->GetFile()=="C")&&(mSquares[i]->GetRank()=="8"))
+        else if ((mSquares[i]->GetFile()==mFiles[2])&&(mSquares[i]->GetRank()==mRanks[7]))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_BISHOP);
         }
-        else if ((mSquares[i]->GetFile()=="F")&&(mSquares[i]->GetRank()=="8"))
+        else if ((mSquares[i]->GetFile()==mFiles[5])&&(mSquares[i]->GetRank()==mRanks[7]))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_BISHOP);
         }
-        else if ((mSquares[i]->GetFile()=="D")&&(mSquares[i]->GetRank()=="8"))
+        else if ((mSquares[i]->GetFile()==mFiles[3])&&(mSquares[i]->GetRank()==mRanks[7]))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_QUEEN);
         }
-        else if ((mSquares[i]->GetFile()=="E")&&(mSquares[i]->GetRank()=="8"))
+        else if ((mSquares[i]->GetFile()==mFiles[4])&&(mSquares[i]->GetRank()==mRanks[7]))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_KING);
         }

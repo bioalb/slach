@@ -8,7 +8,7 @@
 ChessBoardWithBorders::ChessBoardWithBorders()
 {
     mChessBoardSizeWithBorders = 100u;//with border
-    std::vector<std::string > files = {"0" , "A", "B", "C", "D", "E","F", "G",  "H", "0"};
+    std::vector<std::string > files = {"0" , "a", "b", "c", "d", "e","f", "g",  "h", "0"};
     std::vector<std::string > ranks = {"0" , "1", "2", "3", "4", "5","6", "7",  "8", "0"};
     unsigned file_size = files.size();
     unsigned rank_size = ranks.size();

@@ -60,7 +60,7 @@ public:
         TS_ASSERT_EQUALS(squares[0]->IsCoordinatePrintable(), false);
 
         //check the top border
-        std::vector<std::string > files = {"0" , "A", "B", "C", "D", "E","F", "G",  "H", "0"};
+        std::vector<std::string > files = {"0" , "a", "b", "c", "d", "e","f", "g",  "h", "0"};
         std::vector<std::string > ranks = {"0" , "1", "2", "3", "4", "5","6", "7",  "8", "0"};
         for (unsigned i=1; i < 9; ++i)
         {
@@ -94,7 +94,7 @@ public:
         TS_ASSERT_EQUALS(squares[11]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[11]->IsDarkSquare(), false);
         TS_ASSERT_EQUALS(squares[11]->IsLightSquare(), true);
-        TS_ASSERT_EQUALS(squares[11]->GetFile(), "A");
+        TS_ASSERT_EQUALS(squares[11]->GetFile(), "a");
         TS_ASSERT_EQUALS(squares[11]->GetRank(), "8");
         TS_ASSERT_EQUALS(squares[11]->IsCoordinatePrintable(), false);
 
@@ -103,7 +103,7 @@ public:
         TS_ASSERT_EQUALS(squares[12]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[12]->IsDarkSquare(), true);
         TS_ASSERT_EQUALS(squares[12]->IsLightSquare(), false);
-        TS_ASSERT_EQUALS(squares[12]->GetFile(), "B");
+        TS_ASSERT_EQUALS(squares[12]->GetFile(), "b");
         TS_ASSERT_EQUALS(squares[12]->GetRank(), "8");
 
         //c8
@@ -111,7 +111,7 @@ public:
         TS_ASSERT_EQUALS(squares[13]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[13]->IsDarkSquare(), false);
         TS_ASSERT_EQUALS(squares[13]->IsLightSquare(), true);
-        TS_ASSERT_EQUALS(squares[13]->GetFile(), "C");
+        TS_ASSERT_EQUALS(squares[13]->GetFile(), "c");
         TS_ASSERT_EQUALS(squares[13]->GetRank(), "8");
 
         //d8
@@ -119,7 +119,7 @@ public:
         TS_ASSERT_EQUALS(squares[14]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[14]->IsDarkSquare(), true);
         TS_ASSERT_EQUALS(squares[14]->IsLightSquare(), false);
-        TS_ASSERT_EQUALS(squares[14]->GetFile(), "D");
+        TS_ASSERT_EQUALS(squares[14]->GetFile(), "d");
         TS_ASSERT_EQUALS(squares[14]->GetRank(), "8");
 
         //e8
@@ -127,7 +127,7 @@ public:
         TS_ASSERT_EQUALS(squares[15]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[15]->IsDarkSquare(), false);
         TS_ASSERT_EQUALS(squares[15]->IsLightSquare(), true);
-        TS_ASSERT_EQUALS(squares[15]->GetFile(), "E");
+        TS_ASSERT_EQUALS(squares[15]->GetFile(), "e");
         TS_ASSERT_EQUALS(squares[15]->GetRank(), "8");
 
         //f8
@@ -135,7 +135,7 @@ public:
         TS_ASSERT_EQUALS(squares[16]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[16]->IsDarkSquare(), true);
         TS_ASSERT_EQUALS(squares[16]->IsLightSquare(), false);
-        TS_ASSERT_EQUALS(squares[16]->GetFile(), "F");
+        TS_ASSERT_EQUALS(squares[16]->GetFile(), "f");
         TS_ASSERT_EQUALS(squares[16]->GetRank(), "8");
 
         //g8
@@ -143,7 +143,7 @@ public:
         TS_ASSERT_EQUALS(squares[17]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[17]->IsDarkSquare(), false);
         TS_ASSERT_EQUALS(squares[17]->IsLightSquare(), true);
-        TS_ASSERT_EQUALS(squares[17]->GetFile(), "G");
+        TS_ASSERT_EQUALS(squares[17]->GetFile(), "g");
         TS_ASSERT_EQUALS(squares[17]->GetRank(), "8");
 
         //h8
@@ -151,7 +151,7 @@ public:
         TS_ASSERT_EQUALS(squares[18]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[18]->IsDarkSquare(), true);
         TS_ASSERT_EQUALS(squares[18]->IsLightSquare(), false);
-        TS_ASSERT_EQUALS(squares[18]->GetFile(), "H");
+        TS_ASSERT_EQUALS(squares[18]->GetFile(), "h");
         TS_ASSERT_EQUALS(squares[18]->GetRank(), "8");
 
         //border square next to h8
@@ -177,7 +177,7 @@ public:
         TS_ASSERT_EQUALS(squares[21]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[21]->IsDarkSquare(), true);
         TS_ASSERT_EQUALS(squares[21]->IsLightSquare(), false);
-        TS_ASSERT_EQUALS(squares[21]->GetFile(), "A");
+        TS_ASSERT_EQUALS(squares[21]->GetFile(), "a");
         TS_ASSERT_EQUALS(squares[21]->GetRank(), "7");
 
         //b7
@@ -185,7 +185,7 @@ public:
         TS_ASSERT_EQUALS(squares[22]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[22]->IsDarkSquare(), false);
         TS_ASSERT_EQUALS(squares[22]->IsLightSquare(), true);
-        TS_ASSERT_EQUALS(squares[22]->GetFile(), "B");
+        TS_ASSERT_EQUALS(squares[22]->GetFile(), "b");
         TS_ASSERT_EQUALS(squares[22]->GetRank(), "7");
 
         //c7
@@ -193,7 +193,7 @@ public:
         TS_ASSERT_EQUALS(squares[23]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[23]->IsDarkSquare(), true);
         TS_ASSERT_EQUALS(squares[23]->IsLightSquare(), false);
-        TS_ASSERT_EQUALS(squares[23]->GetFile(), "C");
+        TS_ASSERT_EQUALS(squares[23]->GetFile(), "c");
         TS_ASSERT_EQUALS(squares[23]->GetRank(), "7");
 
         //d7
@@ -201,7 +201,7 @@ public:
         TS_ASSERT_EQUALS(squares[24]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[24]->IsDarkSquare(), false);
         TS_ASSERT_EQUALS(squares[24]->IsLightSquare(), true);
-        TS_ASSERT_EQUALS(squares[24]->GetFile(), "D");
+        TS_ASSERT_EQUALS(squares[24]->GetFile(), "d");
         TS_ASSERT_EQUALS(squares[24]->GetRank(), "7");
 
         //e7
@@ -209,7 +209,7 @@ public:
         TS_ASSERT_EQUALS(squares[25]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[25]->IsDarkSquare(), true);
         TS_ASSERT_EQUALS(squares[25]->IsLightSquare(), false);
-        TS_ASSERT_EQUALS(squares[25]->GetFile(), "E");
+        TS_ASSERT_EQUALS(squares[25]->GetFile(), "e");
         TS_ASSERT_EQUALS(squares[25]->GetRank(), "7");
 
         //f7
@@ -217,7 +217,7 @@ public:
         TS_ASSERT_EQUALS(squares[26]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[26]->IsDarkSquare(), false);
         TS_ASSERT_EQUALS(squares[26]->IsLightSquare(), true);
-        TS_ASSERT_EQUALS(squares[26]->GetFile(), "F");
+        TS_ASSERT_EQUALS(squares[26]->GetFile(), "f");
         TS_ASSERT_EQUALS(squares[26]->GetRank(), "7");
 
         //g7
@@ -225,7 +225,7 @@ public:
         TS_ASSERT_EQUALS(squares[27]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[27]->IsDarkSquare(), true);
         TS_ASSERT_EQUALS(squares[27]->IsLightSquare(), false);
-        TS_ASSERT_EQUALS(squares[27]->GetFile(), "G");
+        TS_ASSERT_EQUALS(squares[27]->GetFile(), "g");
         TS_ASSERT_EQUALS(squares[27]->GetRank(), "7");
 
         //h7
@@ -233,7 +233,7 @@ public:
         TS_ASSERT_EQUALS(squares[28]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[28]->IsDarkSquare(), false);
         TS_ASSERT_EQUALS(squares[28]->IsLightSquare(), true);
-        TS_ASSERT_EQUALS(squares[28]->GetFile(), "H");
+        TS_ASSERT_EQUALS(squares[28]->GetFile(), "h");
         TS_ASSERT_EQUALS(squares[28]->GetRank(), "7");
 
         //border square next to h7
@@ -259,7 +259,7 @@ public:
         TS_ASSERT_EQUALS(squares[81]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[81]->IsDarkSquare(), true);
         TS_ASSERT_EQUALS(squares[81]->IsLightSquare(), false);
-        TS_ASSERT_EQUALS(squares[81]->GetFile(), "A");
+        TS_ASSERT_EQUALS(squares[81]->GetFile(), "a");
         TS_ASSERT_EQUALS(squares[81]->GetRank(), "1");
 
         //a1
@@ -267,7 +267,7 @@ public:
         TS_ASSERT_EQUALS(squares[82]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[82]->IsDarkSquare(), false);
         TS_ASSERT_EQUALS(squares[82]->IsLightSquare(), true);
-        TS_ASSERT_EQUALS(squares[82]->GetFile(), "B");
+        TS_ASSERT_EQUALS(squares[82]->GetFile(), "b");
         TS_ASSERT_EQUALS(squares[82]->GetRank(), "1");
 
         //c1
@@ -275,7 +275,7 @@ public:
         TS_ASSERT_EQUALS(squares[83]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[83]->IsDarkSquare(), true);
         TS_ASSERT_EQUALS(squares[83]->IsLightSquare(), false);
-        TS_ASSERT_EQUALS(squares[83]->GetFile(), "C");
+        TS_ASSERT_EQUALS(squares[83]->GetFile(), "c");
         TS_ASSERT_EQUALS(squares[83]->GetRank(), "1");
 
         //d1
@@ -283,7 +283,7 @@ public:
         TS_ASSERT_EQUALS(squares[84]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[84]->IsDarkSquare(), false);
         TS_ASSERT_EQUALS(squares[84]->IsLightSquare(), true);
-        TS_ASSERT_EQUALS(squares[84]->GetFile(), "D");
+        TS_ASSERT_EQUALS(squares[84]->GetFile(), "d");
         TS_ASSERT_EQUALS(squares[84]->GetRank(), "1");
 
         //e1
@@ -291,7 +291,7 @@ public:
         TS_ASSERT_EQUALS(squares[85]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[85]->IsDarkSquare(), true);
         TS_ASSERT_EQUALS(squares[85]->IsLightSquare(), false);
-        TS_ASSERT_EQUALS(squares[85]->GetFile(), "E");
+        TS_ASSERT_EQUALS(squares[85]->GetFile(), "e");
         TS_ASSERT_EQUALS(squares[85]->GetRank(), "1");
 
         //f1
@@ -299,7 +299,7 @@ public:
         TS_ASSERT_EQUALS(squares[86]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[86]->IsDarkSquare(), false);
         TS_ASSERT_EQUALS(squares[86]->IsLightSquare(), true);
-        TS_ASSERT_EQUALS(squares[86]->GetFile(), "F");
+        TS_ASSERT_EQUALS(squares[86]->GetFile(), "f");
         TS_ASSERT_EQUALS(squares[86]->GetRank(), "1");
 
         //g1
@@ -307,7 +307,7 @@ public:
         TS_ASSERT_EQUALS(squares[87]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[87]->IsDarkSquare(), true);
         TS_ASSERT_EQUALS(squares[87]->IsLightSquare(), false);
-        TS_ASSERT_EQUALS(squares[87]->GetFile(), "G");
+        TS_ASSERT_EQUALS(squares[87]->GetFile(), "g");
         TS_ASSERT_EQUALS(squares[87]->GetRank(), "1");
 
         //h1
@@ -315,7 +315,7 @@ public:
         TS_ASSERT_EQUALS(squares[88]->IsBorderSquare(), false);
         TS_ASSERT_EQUALS(squares[88]->IsDarkSquare(), false);
         TS_ASSERT_EQUALS(squares[88]->IsLightSquare(), true);
-        TS_ASSERT_EQUALS(squares[88]->GetFile(), "H");
+        TS_ASSERT_EQUALS(squares[88]->GetFile(), "h");
         TS_ASSERT_EQUALS(squares[88]->GetRank(), "1");
 
         //border square next to h1

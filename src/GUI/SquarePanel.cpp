@@ -104,42 +104,42 @@ void SquarePanel::DetermineCoordinateToPrint()
 {
     assert(mIsSquarePanelPrintable);
     assert(mIsBorderSquarePanel);
-    if (mFile=="A")
+    if (mFile=="a")
     {
         wxMemoryInputStream istream(a_img, sizeof a_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mFile=="B")
+    else if (mFile=="b")
     {
         wxMemoryInputStream istream(b_img, sizeof b_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mFile=="C")
+    else if (mFile=="c")
     {
         wxMemoryInputStream istream(c_img, sizeof c_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mFile=="D")
+    else if (mFile=="d")
     {
         wxMemoryInputStream istream(d_img, sizeof d_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mFile=="E")
+    else if (mFile=="e")
     {
         wxMemoryInputStream istream(e_img, sizeof e_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mFile=="F")
+    else if (mFile=="f")
     {
         wxMemoryInputStream istream(f_img, sizeof f_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mFile=="G")
+    else if (mFile=="g")
     {
         wxMemoryInputStream istream(g_img, sizeof g_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mFile=="H")
+    else if (mFile=="h")
     {
         wxMemoryInputStream istream(h_img, sizeof h_img);
         mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
