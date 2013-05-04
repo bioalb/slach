@@ -41,11 +41,13 @@ bool Square::IsCornerSquare() const
 void Square::SetAsLightSquare(bool light)
 {
     mIsLightSquare = light;
+    mIsDarkSquare = !light;
 }
 
 void Square::SetAsDarkSquare(bool dark)
 {
     mIsDarkSquare = dark;
+    mIsLightSquare = !dark;
 }
 
 bool Square::IsLightSquare() const

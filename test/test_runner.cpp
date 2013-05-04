@@ -64,9 +64,15 @@ static TestSquare suite_TestSquare;
 static CxxTest::List Tests_TestSquare = { 0, 0 };
 CxxTest::StaticSuiteDescription suiteDescription_TestSquare( "/home/alberto/code/slach/test/TestSquare.hpp", 12, "TestSquare", suite_TestSquare, Tests_TestSquare );
 
+static class TestDescription_suite_TestSquare_testGetAndSetMethos : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestSquare_testGetAndSetMethos() : CxxTest::RealTestDescription( Tests_TestSquare, suiteDescription_TestSquare, 16, "testGetAndSetMethos" ) {}
+ void runTest() { suite_TestSquare.testGetAndSetMethos(); }
+} testDescription_suite_TestSquare_testGetAndSetMethos;
+
 static class TestDescription_suite_TestSquare_testSameSquare : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestSquare_testSameSquare() : CxxTest::RealTestDescription( Tests_TestSquare, suiteDescription_TestSquare, 16, "testSameSquare" ) {}
+ TestDescription_suite_TestSquare_testSameSquare() : CxxTest::RealTestDescription( Tests_TestSquare, suiteDescription_TestSquare, 58, "testSameSquare" ) {}
  void runTest() { suite_TestSquare.testSameSquare(); }
 } testDescription_suite_TestSquare_testSameSquare;
 

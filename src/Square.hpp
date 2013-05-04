@@ -71,14 +71,14 @@ public:
     std::string GetRank() const;
 
     /**
-     * Sets this square as light
+     * Sets this square as light (also puts the flag for dark square to false)
      *
      * @param light true if you want this square to be a light square
      */
     void SetAsLightSquare(bool light = true);
 
     /**
-     * Sets this square as dark
+     * Sets this square as dark (also puts the flag for light square to false)
      *
      * @param dark true if you want this square to be a dark square
      */

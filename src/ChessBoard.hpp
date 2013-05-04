@@ -44,7 +44,7 @@ static const unsigned BOARD_COLUMN_SIZE = 8u;
  * Typedef for a move as a pair of square objects
  * the first is the origin square, the second is the destination square
  */
-typedef std::pair<Square,Square> Move;
+typedef std::pair<Square*,Square*> Move;
 
 /**
  * Typedef for a position as a vector of (pointers to) square objects
