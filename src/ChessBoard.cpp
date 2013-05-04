@@ -39,96 +39,78 @@ void ChessBoard::SetupInitialChessPosition()
         if ((mSquares[i]->GetFile()=="A")&&(mSquares[i]->GetRank()=="1"))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_ROOK);
-            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="H")&&(mSquares[i]->GetRank()=="1"))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_ROOK);
-            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="B")&&(mSquares[i]->GetRank()=="1"))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_KNIGHT);
-            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="G")&&(mSquares[i]->GetRank()=="1"))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_KNIGHT);
-            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="C")&&(mSquares[i]->GetRank()=="1"))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_BISHOP);
-            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="F")&&(mSquares[i]->GetRank()=="1"))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_BISHOP);
-            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="D")&&(mSquares[i]->GetRank()=="1"))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_QUEEN);
-            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="E")&&(mSquares[i]->GetRank()=="1"))
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_KING);
-            mCurrentPosition.push_back(mSquares[i]);
         }
         //second rank, all white pawns
         else if ((mSquares[i]->GetRank()=="2")&&mSquares[i]->IsBorderSquare()==false)
         {
             mSquares[i]->SetPieceOnThisSquare(WHITE_PAWN);
-            mCurrentPosition.push_back(mSquares[i]);
         }
         //seventh rank, all black pawns
         else if(mSquares[i]->GetRank()=="7"&&mSquares[i]->IsBorderSquare()==false)
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_PAWN);
-            mCurrentPosition.push_back(mSquares[i]);
         }
 
         //EIGTH rank
         else if ((mSquares[i]->GetFile()=="A")&&(mSquares[i]->GetRank()=="8"))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_ROOK);
-            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="H")&&(mSquares[i]->GetRank()=="8"))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_ROOK);
-            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="B")&&(mSquares[i]->GetRank()=="8"))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_KNIGHT);
-            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="G")&&(mSquares[i]->GetRank()=="8"))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_KNIGHT);
-            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="C")&&(mSquares[i]->GetRank()=="8"))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_BISHOP);
-            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="F")&&(mSquares[i]->GetRank()=="8"))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_BISHOP);
-            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="D")&&(mSquares[i]->GetRank()=="8"))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_QUEEN);
-            mCurrentPosition.push_back(mSquares[i]);
         }
         else if ((mSquares[i]->GetFile()=="E")&&(mSquares[i]->GetRank()=="8"))
         {
             mSquares[i]->SetPieceOnThisSquare(BLACK_KING);
-            mCurrentPosition.push_back(mSquares[i]);
         }
         else
         {
@@ -176,8 +158,28 @@ bool ChessBoard::IsLegalMove()
     return true;
 }
 
-Position ChessBoard::GetCurrentPosition() const
+void ChessBoard::MakeThisMove(const Move& rMove)
 {
-    return mCurrentPosition;
-}
+    Square* origin = rMove.first;
+    Square* destination = rMove.second;
 
+    for (unsigned i = 0; i < mSquares.size(); ++i)
+    {
+        if (origin->IsSameSquare((*mSquares[i])))//if we found the origin square
+        {
+            PieceType origin_piece = mSquares[i]->GetPieceOnThisSquare();
+            mSquares[i]->SetPieceOnThisSquare(NO_PIECE);//no more piece here
+            //look for the destination
+            for (unsigned j = 0; j < mSquares.size(); ++j)
+            {
+                if (destination->IsSameSquare((*mSquares[j])))//if we found the destination square
+                {
+                    mSquares[j]->SetPieceOnThisSquare(origin_piece);
+                    break;
+                }
+            }
+            break;
+        }
+    }
+
+}

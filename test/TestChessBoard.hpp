@@ -207,7 +207,6 @@ public:
         ChessBoard my_cb;
         my_cb.SetupChessBoard();
         my_cb.SetupInitialChessPosition();
-        TS_ASSERT_EQUALS(my_cb.GetCurrentPosition().size(), 32u);
         std::vector<Square* > squares = my_cb.GetSquares();
         TS_ASSERT_EQUALS(squares.size(), 64u);
 
@@ -295,7 +294,61 @@ public:
                 TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),NO_PIECE);
             }
         }
+    }
 
+    void testMakeAMove()
+    {
+        ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        my_cb.SetupInitialChessPosition();
+
+        //non-capturing move
+        std::vector<Square*> squares = my_cb.GetSquares();
+        TS_ASSERT_EQUALS(squares[12]->GetFile(),"E");
+        TS_ASSERT_EQUALS(squares[20]->GetFile(),"E");
+        TS_ASSERT_EQUALS(squares[12]->GetRank(),"2");
+        TS_ASSERT_EQUALS(squares[20]->GetRank(),"3");
+
+        TS_ASSERT_EQUALS(squares[12]->GetPieceOnThisSquare(),WHITE_PAWN);
+        TS_ASSERT_EQUALS(squares[20]->GetPieceOnThisSquare(),NO_PIECE);
+
+        Move non_capturing_move;
+        non_capturing_move.first = squares[12];
+        non_capturing_move.second = squares[20];
+
+        //make the move e2-e3
+        my_cb.MakeThisMove(non_capturing_move);
+
+        //size is the same
+        std::vector<Square*> updated_squares = my_cb.GetSquares();
+        TS_ASSERT_EQUALS(updated_squares[12]->GetPieceOnThisSquare(),NO_PIECE);//e2 now empty
+        TS_ASSERT_EQUALS(updated_squares[20]->GetPieceOnThisSquare(),WHITE_PAWN);//e3 with white pawn
+
+        //make sure we do not screw up the coordinates
+        TS_ASSERT_EQUALS(updated_squares[12]->GetFile(),"E");
+        TS_ASSERT_EQUALS(updated_squares[20]->GetFile(),"E");
+        TS_ASSERT_EQUALS(updated_squares[12]->GetRank(),"2");
+        TS_ASSERT_EQUALS(updated_squares[20]->GetRank(),"3");
+
+        //capturing move a2 takes a7 (a fake one, but does not matter here)
+
+        Move capturing_move;
+        capturing_move.first = squares[8];//a2
+        capturing_move.second = squares[48];//a7
+
+        TS_ASSERT_EQUALS(squares[8]->GetPieceOnThisSquare(),WHITE_PAWN);//a2, white pawn
+        TS_ASSERT_EQUALS(squares[48]->GetPieceOnThisSquare(),BLACK_PAWN);//a7, black pawn
+
+        TS_ASSERT_EQUALS(squares[8]->GetFile(),"A");
+        TS_ASSERT_EQUALS(squares[48]->GetFile(),"A");
+        TS_ASSERT_EQUALS(squares[8]->GetRank(),"2");
+        TS_ASSERT_EQUALS(squares[48]->GetRank(),"7");
+
+        //make the move e2-e4
+        my_cb.MakeThisMove(capturing_move);
+
+        TS_ASSERT_EQUALS(squares[8]->GetPieceOnThisSquare(),NO_PIECE);//e2 now empty
+        TS_ASSERT_EQUALS(squares[48]->GetPieceOnThisSquare(),WHITE_PAWN);//e4 with white pawn
     }
 
 };

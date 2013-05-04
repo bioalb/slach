@@ -57,6 +57,12 @@ public:
  void runTest() { suite_TestChessBoard.testInitialPosition(); }
 } testDescription_suite_TestChessBoard_testInitialPosition;
 
+static class TestDescription_suite_TestChessBoard_testMakeAMove : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestChessBoard_testMakeAMove() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 300, "testMakeAMove" ) {}
+ void runTest() { suite_TestChessBoard.testMakeAMove(); }
+} testDescription_suite_TestChessBoard_testMakeAMove;
+
 #include "/home/alberto/code/slach/test/TestSquare.hpp"
 
 static TestSquare suite_TestSquare;

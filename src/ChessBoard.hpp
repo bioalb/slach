@@ -46,12 +46,6 @@ static const unsigned BOARD_COLUMN_SIZE = 8u;
  */
 typedef std::pair<Square*,Square*> Move;
 
-/**
- * Typedef for a position as a vector of (pointers to) square objects
- * this is meant to be the list of squares occupied by any piece
- */
-typedef std::vector<Square*> Position;
-
 class ChessBoard
 {
 
@@ -59,8 +53,7 @@ private:
 
     /**All the squares on this chessboard. This is core variable of this class.*/
     std::vector<Square* > mSquares;
-    /**The current position on this chessboard*/
-    Position mCurrentPosition;
+
     /**The files (columns) on this chessboard*/
     std::vector<std::string> mFiles;
     /**The ranks (rows) on this chessboard*/
@@ -81,7 +74,7 @@ public:
     ~ChessBoard();
 
     /**
-     * This method essentially stes up the squares in the chessboard.
+     * This method essentially sets up the squares in the chessboard.
      * It assigns coordinate to each square according to class documentation
      */
     void SetupChessBoard();
@@ -94,9 +87,14 @@ public:
      */
     std::vector<Square* > GetSquares() const;
 
-    Position GetCurrentPosition() const;
-
     bool IsLegalMove();
+
+    /**
+     * Updates the current position with the move that is passed in
+     *
+     * @param rMove reference to the move we wish to make
+     */
+    void MakeThisMove(const Move& rMove);
 };
 
 #endif /* _CHESSBOARD_HPP_ */
