@@ -91,15 +91,39 @@ CxxTest::StaticSuiteDescription suiteDescription_TestGame( "/home/alberto/code/s
 
 static class TestDescription_suite_TestGame_testBasicMove : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestGame_testBasicMove() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 16, "testBasicMove" ) {}
+ TestDescription_suite_TestGame_testBasicMove() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 17, "testBasicMove" ) {}
  void runTest() { suite_TestGame.testBasicMove(); }
 } testDescription_suite_TestGame_testBasicMove;
 
 static class TestDescription_suite_TestGame_testPawnMove : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestGame_testPawnMove() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 47, "testPawnMove" ) {}
+ TestDescription_suite_TestGame_testPawnMove() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 48, "testPawnMove" ) {}
  void runTest() { suite_TestGame.testPawnMove(); }
 } testDescription_suite_TestGame_testPawnMove;
+
+static class TestDescription_suite_TestGame_testCapture : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestGame_testCapture() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 79, "testCapture" ) {}
+ void runTest() { suite_TestGame.testCapture(); }
+} testDescription_suite_TestGame_testCapture;
+
+static class TestDescription_suite_TestGame_testPawnCapture : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestGame_testPawnCapture() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 111, "testPawnCapture" ) {}
+ void runTest() { suite_TestGame.testPawnCapture(); }
+} testDescription_suite_TestGame_testPawnCapture;
+
+static class TestDescription_suite_TestGame_testCastleKingSide : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestGame_testCastleKingSide() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 142, "testCastleKingSide" ) {}
+ void runTest() { suite_TestGame.testCastleKingSide(); }
+} testDescription_suite_TestGame_testCastleKingSide;
+
+static class TestDescription_suite_TestGame_testCastleQueenSide : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestGame_testCastleQueenSide() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 203, "testCastleQueenSide" ) {}
+ void runTest() { suite_TestGame.testCastleQueenSide(); }
+} testDescription_suite_TestGame_testCastleQueenSide;
 
 #include <cxxtest/Root.cpp>
 const char* CxxTest::RealWorldDescription::_worldName = "cxxtest";

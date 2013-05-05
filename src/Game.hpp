@@ -16,8 +16,22 @@
  */
 typedef std::pair<Square*,Square*> Move;
 
+enum SpecialMoveType
+{
+    WHITE_CASTLE_KINGSIDE = 0,
+    BLACK_CASTLE_KINGSIDE,
+    WHITE_CASTLE_QUEENSIDE,
+    BLACK_CASTLE_QUEENSIDE,
+    WHITEPAWN_PROMOTES_QUEEN,
+    BLACKPAWN_PROMOTES_QUEEN,
+    WHITEPAWN_PROMOTES_KNIGHT,
+    BLACKPAWN_PROMOTES_KNIGHT,
+    ORDINARY_MOVE
+};
+
 class Game
 {
+    friend class TestGame; //for testing
 private:
 
     /**
@@ -26,9 +40,24 @@ private:
     std::vector<Move> mMoveList;
 
     /**
-     * Stores the list of in algebraic format
+     * Stores the list of in algebraic format (for easy pgn output)
      */
     std::vector<std::string> mMoveListAlgFormat;
+
+    /**
+     * Stores the fact that a move is a special move, initialised to ORDINARY_MOVE in conmstructor
+     */
+    SpecialMoveType mSpecialMove;
+
+protected:
+
+    /**
+     * Helper method that figures out the type of special move we are dealing with.
+     *  It will assign the proper value to mSpecialMove
+     *
+     * @param rMove the move we wish to analyze
+     */
+    void DetermineSpecialMove(const Move& rMove);
 
 public:
     /**
@@ -65,6 +94,8 @@ public:
      * @param suffix will go after all, can be used, for example for the check sign (+) or the mate (++).
      */
     void AddMove(const Move& move, std::string ambiguityPrefix = "", std::string suffix = "");
+
+    SpecialMoveType GetSpecialMoveType() const;
 
 
 };
