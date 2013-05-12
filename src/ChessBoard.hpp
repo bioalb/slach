@@ -126,7 +126,8 @@ public:
     void MakeThisMove(const Move& rMove);
 
     /**
-     * Modifies the pieces position on the chessboard according to the given FEN position
+     * Modifies the pieces position on the chessboard according to the given FEN position.
+     * It does nothing if the fen string is invalid
      *
      * @param &rFenPosition the position we want on the chessboard
      *
