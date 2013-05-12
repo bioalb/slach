@@ -60,6 +60,33 @@ private:
     /**The ranks (rows) on this chessboard*/
     std::vector<std::string> mRanks;
 
+protected:
+
+    /**
+     * Helper method that assigns a piece from a character.
+     *
+     * R: white rook
+     * r: black rook
+     * P: white pawn
+     * p: black pawn
+     * Q: white queen
+     * q: black queen
+     * B: white bishop
+     * b: black bishop
+     * K: white king
+     * k: black king
+     * N: white knight
+     * n: black knight
+     *
+     * Any other character is invalid
+     *
+     * @param piece (output) will be filled with the appropriate piece
+     * @param character (input) the character that we want to tranform into a piece
+     *
+     * @return 1 if the character is valid, 0 otherwise.
+     */
+    int AssignPieceFromLetter(PieceType& piece, const char &character);
+
 public:
 
     /**
@@ -97,6 +124,15 @@ public:
      * @param rMove reference to the move we wish to make
      */
     void MakeThisMove(const Move& rMove);
+
+    /**
+     * Modifies the pieces position on the chessboard according to the given FEN position
+     *
+     * @param &rFenPosition the position we want on the chessboard
+     *
+     * @return 1 if the fen string is valid, zero if it is not a valid one
+     */
+    int ArrangePiecesFromFEN(const std::string &rFenPosition);
 };
 
 #endif /* _CHESSBOARD_HPP_ */

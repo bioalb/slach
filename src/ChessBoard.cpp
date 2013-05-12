@@ -183,3 +183,192 @@ void ChessBoard::MakeThisMove(const Move& rMove)
     }
 
 }
+
+int ChessBoard::AssignPieceFromLetter(PieceType& piece, const char &character)
+{
+    int rc = 0;
+    if (character == 'R')
+    {
+        rc =1;
+        piece = WHITE_ROOK;
+    }
+    else if (character == 'r')
+    {
+        rc =1;
+        piece = BLACK_ROOK;
+    }
+    else if (character == 'P')
+    {
+        rc =1;
+        piece = WHITE_PAWN;
+    }
+    else if (character == 'p')
+    {
+        rc =1;
+        piece = BLACK_PAWN;
+    }
+    else if (character == 'Q')
+    {
+        rc =1;
+        piece = WHITE_QUEEN;
+    }
+    else if (character == 'q')
+    {
+        rc =1;
+        piece = BLACK_QUEEN;
+    }
+    else if (character == 'B')
+    {
+        rc =1;
+        piece = WHITE_BISHOP;
+    }
+    else if (character == 'b')
+    {
+        rc =1;
+        piece = BLACK_BISHOP;
+    }
+    else if (character == 'K')
+    {
+        rc =1;
+        piece = WHITE_KING;
+    }
+    else if (character == 'k')
+    {
+        rc =1;
+        piece = BLACK_KING;
+    }
+    else if (character == 'N')
+    {
+        rc =1;
+        piece = WHITE_KNIGHT;
+    }
+    else if (character == 'n')
+    {
+        rc =1;
+        piece = BLACK_KNIGHT;
+    }
+    return rc;
+}
+
+int ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
+{
+    int rc = 1;//return code, initialise at 1
+
+    unsigned rank_index= 7u;//fen starts by 8th rank
+    unsigned file_index = 0u;
+    unsigned square_index = CHESSBOARD_SIZE - mFiles.size() ;//56, index of a8
+    unsigned slash_counter = 0u;
+    unsigned counter_between_slashes = 0u;
+
+    std::vector<Square* > temp_squares;
+    temp_squares.resize(CHESSBOARD_SIZE);
+    for (unsigned i = 0; i <temp_squares.size(); ++i )
+    {
+        temp_squares[i] = new Square();
+    }
+
+    //parse the string character by character
+    for (unsigned i = 0; i < rFenPosition.length(); ++i)
+    {
+        if (rFenPosition[i] == '/')
+        {
+            if (counter_between_slashes != 8u)
+            {
+                rc = 0;
+                break;
+            }
+            counter_between_slashes = 0u;
+            slash_counter++;
+            if (slash_counter > 7u)
+            {
+                rc = 0;
+                break;
+            }
+            rank_index--;
+            file_index = 0;//new rank, start from file a
+            square_index = square_index - 2*mFiles.size();
+            continue;//this one is a slash, no need to do anything, go to next loop.
+        }
+        if (counter_between_slashes > 8u)
+        {
+            rc = 0;
+            break;
+        }
+        if ( (slash_counter == 7u) && (rFenPosition[i] == ' ') )
+        {
+            if (counter_between_slashes==8u)
+            {
+                break;
+            }
+            else
+            {
+                rc = 0;
+                break;
+            }
+        }
+
+        if ( isdigit (rFenPosition[i]))//if it is a number
+        {
+            int empty_squares = atoi (&rFenPosition[i]);//an integer now
+            if ((counter_between_slashes + empty_squares) > 8)
+            {
+                rc = 0;
+                break;
+            }
+            for (unsigned n = 0; n < (unsigned) empty_squares; ++n)
+            {
+                assert(square_index < CHESSBOARD_SIZE);
+                temp_squares[square_index]->SetPieceOnThisSquare(NO_PIECE);
+                file_index++;
+                square_index++;
+                counter_between_slashes++;
+            }
+        }
+        else if (isalpha (rFenPosition[i]))
+        {
+            counter_between_slashes++;
+            if (counter_between_slashes > 8u)
+            {
+                rc = 0;
+                break;
+            }
+
+            PieceType piece_to_be_assigned;
+            //assign a piece (returns 0 if the letter is invalid
+            int valid_piece = AssignPieceFromLetter(piece_to_be_assigned, rFenPosition[i]);
+            assert(square_index < CHESSBOARD_SIZE);
+            temp_squares[square_index]->SetPieceOnThisSquare(piece_to_be_assigned);
+            if (valid_piece != 1)
+            {
+                rc = 0;
+                break;
+            }
+            file_index++;
+            square_index++;
+        }
+    }
+
+    //if there were too many slashes
+    if ( (slash_counter != 7u))
+    {
+        rc = 0;
+    }
+
+    //take care of the nasty case of an empty string.
+    if (rFenPosition.length() == 0u)
+    {
+        rc = 0;
+    }
+
+    //actually assign the pieces to the data structure
+    for (unsigned i = 0; i <temp_squares.size(); ++i )
+    {
+        //...only if the fen was valid...
+        if (rc != 0)
+        {
+            mSquares[i]->SetPieceOnThisSquare( temp_squares[i]->GetPieceOnThisSquare() );
+        }
+        delete temp_squares[i];
+    }
+    return rc;
+}

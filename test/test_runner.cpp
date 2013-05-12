@@ -47,21 +47,33 @@ CxxTest::StaticSuiteDescription suiteDescription_TestChessBoard( "/home/alberto/
 
 static class TestDescription_suite_TestChessBoard_testBasicBoard : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessBoard_testBasicBoard() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 17, "testBasicBoard" ) {}
+ TestDescription_suite_TestChessBoard_testBasicBoard() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 109, "testBasicBoard" ) {}
  void runTest() { suite_TestChessBoard.testBasicBoard(); }
 } testDescription_suite_TestChessBoard_testBasicBoard;
 
 static class TestDescription_suite_TestChessBoard_testInitialPosition : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessBoard_testInitialPosition() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 205, "testInitialPosition" ) {}
+ TestDescription_suite_TestChessBoard_testInitialPosition() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 297, "testInitialPosition" ) {}
  void runTest() { suite_TestChessBoard.testInitialPosition(); }
 } testDescription_suite_TestChessBoard_testInitialPosition;
 
 static class TestDescription_suite_TestChessBoard_testMakeAMove : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessBoard_testMakeAMove() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 299, "testMakeAMove" ) {}
+ TestDescription_suite_TestChessBoard_testMakeAMove() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 307, "testMakeAMove" ) {}
  void runTest() { suite_TestChessBoard.testMakeAMove(); }
 } testDescription_suite_TestChessBoard_testMakeAMove;
+
+static class TestDescription_suite_TestChessBoard_testArrangePiecesFromFEN : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestChessBoard_testArrangePiecesFromFEN() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 362, "testArrangePiecesFromFEN" ) {}
+ void runTest() { suite_TestChessBoard.testArrangePiecesFromFEN(); }
+} testDescription_suite_TestChessBoard_testArrangePiecesFromFEN;
+
+static class TestDescription_suite_TestChessBoard_testInvalidFen : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestChessBoard_testInvalidFen() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 487, "testInvalidFen" ) {}
+ void runTest() { suite_TestChessBoard.testInvalidFen(); }
+} testDescription_suite_TestChessBoard_testInvalidFen;
 
 #include "/home/alberto/code/slach/test/TestSquare.hpp"
 
@@ -121,7 +133,7 @@ public:
 
 static class TestDescription_suite_TestGame_testCastleQueenSide : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestGame_testCastleQueenSide() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 203, "testCastleQueenSide" ) {}
+ TestDescription_suite_TestGame_testCastleQueenSide() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 218, "testCastleQueenSide" ) {}
  void runTest() { suite_TestGame.testCastleQueenSide(); }
 } testDescription_suite_TestGame_testCastleQueenSide;
 
