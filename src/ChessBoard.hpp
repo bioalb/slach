@@ -46,6 +46,8 @@ static const unsigned BOARD_COLUMN_SIZE = 8u;
 class ChessBoard
 {
 
+    friend class TestChessBoard; //for testing
+
 private:
 
     /**
@@ -59,6 +61,9 @@ private:
     std::vector<std::string> mFiles;
     /**The ranks (rows) on this chessboard*/
     std::vector<std::string> mRanks;
+
+    /** Stores whether it is white's or balck's turn*/
+    TurnToMove mTurnToMove;
 
 protected:
 
@@ -85,7 +90,15 @@ protected:
      *
      * @return 0 if the character is valid, 1 otherwise.
      */
-    int AssignPieceFromLetter(PieceType& piece, const char &character);
+    int AssignPieceFromLetter(PieceType& piece, const char &character) const;
+
+
+     /**
+      * Returns true if the FEN string is a valid one, false otherwise.
+      *
+      * @param rFenPosition the fen position string to be analyzed
+      */
+     bool IsFenValid(const std::string &rFenPosition) const;
 
 public:
 
@@ -134,6 +147,10 @@ public:
      * @return 0 if the fen string is valid, 1 if it is not a valid one
      */
     int ArrangePiecesFromFEN(const std::string &rFenPosition);
+
+    TurnToMove WhosTurnIsIt() const;
+
+
 };
 
 #endif /* _CHESSBOARD_HPP_ */

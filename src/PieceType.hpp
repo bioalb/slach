@@ -21,5 +21,11 @@ enum PieceType
     NO_PIECE
 };
 
+enum TurnToMove
+{
+    WHITE = 0,
+    BLACK
+};
+
 
 #endif

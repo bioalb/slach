@@ -69,11 +69,23 @@ public:
  void runTest() { suite_TestChessBoard.testArrangePiecesFromFEN(); }
 } testDescription_suite_TestChessBoard_testArrangePiecesFromFEN;
 
+static class TestDescription_suite_TestChessBoard_testAnotherFen : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestChessBoard_testAnotherFen() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 490, "testAnotherFen" ) {}
+ void runTest() { suite_TestChessBoard.testAnotherFen(); }
+} testDescription_suite_TestChessBoard_testAnotherFen;
+
 static class TestDescription_suite_TestChessBoard_testInvalidFen : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessBoard_testInvalidFen() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 487, "testInvalidFen" ) {}
+ TestDescription_suite_TestChessBoard_testInvalidFen() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 526, "testInvalidFen" ) {}
  void runTest() { suite_TestChessBoard.testInvalidFen(); }
 } testDescription_suite_TestChessBoard_testInvalidFen;
+
+static class TestDescription_suite_TestChessBoard_testMoreInvalidFens : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestChessBoard_testMoreInvalidFens() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 652, "testMoreInvalidFens" ) {}
+ void runTest() { suite_TestChessBoard.testMoreInvalidFens(); }
+} testDescription_suite_TestChessBoard_testMoreInvalidFens;
 
 #include "/home/alberto/code/slach/test/TestSquare.hpp"
 

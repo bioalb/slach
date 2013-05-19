@@ -16,6 +16,8 @@ ChessBoard::ChessBoard()
     {
         mSquares[i] = new Square();
     }
+
+    mTurnToMove = WHITE;
 }
 
 ChessBoard::~ChessBoard()
@@ -184,7 +186,7 @@ void ChessBoard::MakeThisMove(const Move& rMove)
 
 }
 
-int ChessBoard::AssignPieceFromLetter(PieceType& piece, const char &character)
+int ChessBoard::AssignPieceFromLetter(PieceType& piece, const char &character) const
 {
     int rc = 1;
     if (character == 'R')
@@ -250,77 +252,60 @@ int ChessBoard::AssignPieceFromLetter(PieceType& piece, const char &character)
     return rc;
 }
 
-int ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
+bool ChessBoard::IsFenValid(const std::string &rFenPosition) const
 {
-    int rc = 0;//return code, initialise at 1
-
-    unsigned rank_index= 7u;//fen starts by 8th rank
-    unsigned file_index = 0u;
-    unsigned square_index = CHESSBOARD_SIZE - mFiles.size() ;//56, index of a8
+    bool ret = true;
     unsigned slash_counter = 0u;
     unsigned counter_between_slashes = 0u;
+    unsigned end_of_piece_position = UINT_MAX;
 
-    std::vector<Square* > temp_squares;
-    temp_squares.resize(CHESSBOARD_SIZE);
-    for (unsigned i = 0; i <temp_squares.size(); ++i )
-    {
-        temp_squares[i] = new Square();
-    }
-
-    //parse the string character by character
     for (unsigned i = 0; i < rFenPosition.length(); ++i)
     {
         if (rFenPosition[i] == '/')
         {
             if (counter_between_slashes != 8u)
             {
-                rc = 1;
+                ret = false;
                 break;
             }
             counter_between_slashes = 0u;
             slash_counter++;
             if (slash_counter > 7u)
             {
-                rc = 1;
+                ret = false;
                 break;
             }
-            rank_index--;
-            file_index = 0;//new rank, start from file a
-            square_index = square_index - 2*mFiles.size();
             continue;//this one is a slash, no need to do anything, go to next loop.
         }
         if (counter_between_slashes > 8u)
         {
-            rc = 1;
+            ret = false;
             break;
         }
+        //look for the last space after the position
         if ( (slash_counter == 7u) && (rFenPosition[i] == ' ') )
         {
             if (counter_between_slashes==8u)
             {
+                end_of_piece_position = i;
                 break;
             }
             else
             {
-                rc = 1;
+                ret = false;
                 break;
             }
         }
-
         if ( isdigit (rFenPosition[i]))//if it is a number
         {
             int empty_squares = atoi (&rFenPosition[i]);//an integer now
             if ((counter_between_slashes + empty_squares) > 8)
             {
-                rc = 1;
+                ret = false;
                 break;
             }
             for (unsigned n = 0; n < (unsigned) empty_squares; ++n)
             {
-                assert(square_index < CHESSBOARD_SIZE);
-                temp_squares[square_index]->SetPieceOnThisSquare(NO_PIECE);
-                file_index++;
-                square_index++;
                 counter_between_slashes++;
             }
         }
@@ -329,46 +314,281 @@ int ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
             counter_between_slashes++;
             if (counter_between_slashes > 8u)
             {
-                rc = 1;
+                ret = false;
                 break;
             }
-
             PieceType piece_to_be_assigned;
-            //assign a piece (returns 0 if the letter is invalid
+            //check the code of the piece (returns 1 if the letter is invalid)
             int valid_piece = AssignPieceFromLetter(piece_to_be_assigned, rFenPosition[i]);
-            assert(square_index < CHESSBOARD_SIZE);
-            temp_squares[square_index]->SetPieceOnThisSquare(piece_to_be_assigned);
             if (valid_piece != 0)
             {
-                rc = 1;
+                ret = false;
                 break;
             }
-            file_index++;
-            square_index++;
         }
     }
 
-    //if there were too many slashes
+    //if there were too many slashes or too few
     if ( (slash_counter != 7u))
     {
-        rc = 1;
+        ret = false;
     }
 
     //take care of the nasty case of an empty string.
     if (rFenPosition.length() == 0u)
     {
+        ret = false;
+    }
+    if (ret ==  true) //if the string is still valid, do the last bit
+    {
+        bool colour_assigned = false;
+        bool castling_rights_assigned = false;
+        bool castling_rights_started = false;
+        unsigned castling_rights_counter = 0u;
+        bool enpassant_first_checked = false;
+        bool enpassant_second_checked = false;
+        bool enpassant_started = false;
+        bool enpassant_checked = false;
+        unsigned enpassant_counter = 0u;
+        bool half_move_checked = false;
+        bool half_move_started = false;
+        bool first_half_move_checked = false;
+
+        assert(end_of_piece_position < rFenPosition.length());
+        for (unsigned i = end_of_piece_position; i < rFenPosition.length(); ++i)
+        {
+            if (colour_assigned ==false)
+            {
+                if (rFenPosition[i] == ' ')//ignore spaces
+                {
+                    continue;
+                }
+
+                if ( rFenPosition[i] == 'b' || rFenPosition[i] == 'w' )
+                {
+                    colour_assigned = true;
+                    continue;
+                }
+                else
+                {
+                    ret = false;
+                    break;
+                }
+            }
+            if ((colour_assigned == true) && (castling_rights_assigned == false))
+            {
+                if (rFenPosition[i] == ' ' && castling_rights_started == false)
+                {
+                    continue;//ignore spaces before we start
+                }
+                if ( rFenPosition[i] == '-'  || (rFenPosition[i] == ' ' && castling_rights_started == true) )
+                {
+                    if (castling_rights_counter>4)
+                    {
+                        ret = false;
+                        break;
+                    }
+                    else
+                    {
+                        castling_rights_assigned = true;
+                        continue;
+                    }
+                }
+                else if( rFenPosition[i] == 'K' || rFenPosition[i] == 'k'  || rFenPosition[i] == 'Q' || rFenPosition[i] == 'q')
+                {
+                    castling_rights_started = true;
+                    castling_rights_counter++;
+                    continue;
+                }
+                else
+                {
+                    ret = false;
+                    break;
+                }
+            }
+            if (colour_assigned == true && castling_rights_assigned == true && enpassant_checked == false)
+            {
+                if (rFenPosition[i] == ' ' && enpassant_started == false)
+                {
+                    continue;//ignore spaces before we start
+                }
+                if ( rFenPosition[i] == '-'  || (rFenPosition[i] == ' ' && enpassant_started == true) )
+                {
+                    if (enpassant_counter != 2) //two options here, either it was just a - or something is wrong
+                    {
+                        if (rFenPosition[i] == '-')
+                        {
+                            enpassant_checked = true;
+                            continue;
+                        }
+                        else
+                        {
+                            ret = false;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        enpassant_checked = true;
+                        continue;
+                    }
+                }
+                else if( enpassant_first_checked == false )
+                {
+                    if ( rFenPosition[i] == 'a' || rFenPosition[i] == 'b'  || rFenPosition[i] == 'c' || rFenPosition[i] == 'd' ||
+                         rFenPosition[i] == 'e' || rFenPosition[i] == 'f'  || rFenPosition[i] == 'g' || rFenPosition[i] == 'h')
+                    {
+                        enpassant_started = true;
+                        enpassant_first_checked = true;
+                        enpassant_counter++;
+                        continue;
+                    }
+                    else
+                    {
+                        ret = false;
+                        break;
+                    }
+                }
+                else if( enpassant_second_checked == false )
+                {
+                    if ( rFenPosition[i] == '1' || rFenPosition[i] == '2'  || rFenPosition[i] == '3' || rFenPosition[i] == '4' ||
+                         rFenPosition[i] == '5' || rFenPosition[i] == '6'  || rFenPosition[i] == '7' || rFenPosition[i] == '8')
+                    {
+                        enpassant_started = true;
+                        enpassant_second_checked = true;
+                        enpassant_counter++;
+                        continue;
+                    }
+                    else
+                    {
+                        ret = false;
+                        break;
+                    }
+                }
+                else
+                {
+                    ret = false;
+                    break;
+                }
+            }
+
+
+            if (colour_assigned == true && castling_rights_assigned == true && enpassant_checked == true && half_move_checked == false)
+            {
+                if (rFenPosition[i] == ' ' && half_move_started == true)
+                {
+                    continue;//ignore spaces before we start
+                }
+                if ( !isdigit (rFenPosition[i]) && rFenPosition[i] != ' ')//if it is not a number or a space
+                {
+                    ret = false;
+                    break;
+                }
+                else if ( ( isdigit (rFenPosition[i]) && first_half_move_checked == false ) || rFenPosition[i] == ' ')
+                {
+                    first_half_move_checked = true;
+                    continue;
+                }
+                else if ( isdigit (rFenPosition[i]) && first_half_move_checked == true)
+                {
+                    if (rFenPosition[i-1] == ' ')
+                    {
+                        half_move_checked = true;
+                        break;//finished reading, all good
+                    }
+                    else
+                    {
+                        ret = false;
+                        break;
+                    }
+                }
+                else
+                {
+                    ret = false;
+                    break;
+                }
+            }
+        }//end of for loop
+
+        //case where there is absolutely no half or full move numbers
+        if (half_move_checked==false)
+        {
+            ret = false;
+        }
+    }//end of if statement
+    return ret;
+}
+
+int ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
+{
+    int rc = 0;//return code, initialise at 0
+    if (IsFenValid(rFenPosition) == false)
+    {
         rc = 1;
     }
-
-    //actually assign the pieces to the data structure
-    for (unsigned i = 0; i <temp_squares.size(); ++i )
+    else//it is  valid string, we operate on the member variable
     {
-        //...only if the fen was valid...
-        if (rc == 0)
+        unsigned rank_index= 7u;//fen starts by 8th rank
+        unsigned file_index = 0u;
+        unsigned square_index = CHESSBOARD_SIZE - mFiles.size() ;//56, index of a8
+        unsigned slash_counter = 0u;
+        unsigned counter_between_slashes = 0u;
+
+        //parse the string character by character
+        for (unsigned i = 0; i < rFenPosition.length(); ++i)
         {
-            mSquares[i]->SetPieceOnThisSquare( temp_squares[i]->GetPieceOnThisSquare() );
+            if (rFenPosition[i] == '/')
+            {
+                assert(counter_between_slashes == 8u); //assume valid fen string
+                counter_between_slashes = 0u;
+                slash_counter++;
+                assert(slash_counter<=7u); //assume valid fen string
+                rank_index--;
+                file_index = 0;//new rank, start from file a
+                square_index = square_index - 2*mFiles.size();
+                continue;//this one is a slash, no need to do anything, go to next loop.
+            }
+
+            assert(counter_between_slashes <= 8u); //assume valid fen string
+            if ( (slash_counter == 7u) && (rFenPosition[i] == ' ') )
+            {
+                assert(counter_between_slashes==8u);//assume valid fen string
+                break;
+            }
+
+            if ( isdigit (rFenPosition[i]))//if it is a number
+            {
+                int empty_squares = atoi (&rFenPosition[i]);//an integer now
+                assert(counter_between_slashes + empty_squares <= 8u);//assume valid fen string
+                for (unsigned n = 0; n < (unsigned) empty_squares; ++n)
+                {
+                    assert(square_index < CHESSBOARD_SIZE);
+                    mSquares[square_index]->SetPieceOnThisSquare(NO_PIECE);
+                    file_index++;
+                    square_index++;
+                    counter_between_slashes++;
+                }
+            }
+            else if (isalpha (rFenPosition[i]))
+            {
+                counter_between_slashes++;
+                assert(counter_between_slashes <= 8u);//assume valid fen string
+                PieceType piece_to_be_assigned;
+                //assign a piece (returns 1 if the letter is invalid)
+                int valid_piece = AssignPieceFromLetter(piece_to_be_assigned, rFenPosition[i]);
+                assert(valid_piece == 0);//assume valid fen string (all valid pieces)
+                assert(square_index < CHESSBOARD_SIZE);
+                mSquares[square_index]->SetPieceOnThisSquare(piece_to_be_assigned);
+                file_index++;
+                square_index++;
+            }
         }
-        delete temp_squares[i];
     }
+
     return rc;
+}
+
+TurnToMove ChessBoard::WhosTurnIsIt() const
+{
+    return mTurnToMove;
 }
