@@ -83,7 +83,7 @@ protected:
      * @param piece (output) will be filled with the appropriate piece
      * @param character (input) the character that we want to tranform into a piece
      *
-     * @return 1 if the character is valid, 0 otherwise.
+     * @return 0 if the character is valid, 1 otherwise.
      */
     int AssignPieceFromLetter(PieceType& piece, const char &character);
 
@@ -131,7 +131,7 @@ public:
      *
      * @param &rFenPosition the position we want on the chessboard
      *
-     * @return 1 if the fen string is valid, zero if it is not a valid one
+     * @return 0 if the fen string is valid, 1 if it is not a valid one
      */
     int ArrangePiecesFromFEN(const std::string &rFenPosition);
 };

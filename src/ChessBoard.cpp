@@ -186,65 +186,65 @@ void ChessBoard::MakeThisMove(const Move& rMove)
 
 int ChessBoard::AssignPieceFromLetter(PieceType& piece, const char &character)
 {
-    int rc = 0;
+    int rc = 1;
     if (character == 'R')
     {
-        rc =1;
+        rc =0;
         piece = WHITE_ROOK;
     }
     else if (character == 'r')
     {
-        rc =1;
+        rc =0;
         piece = BLACK_ROOK;
     }
     else if (character == 'P')
     {
-        rc =1;
+        rc =0;
         piece = WHITE_PAWN;
     }
     else if (character == 'p')
     {
-        rc =1;
+        rc =0;
         piece = BLACK_PAWN;
     }
     else if (character == 'Q')
     {
-        rc =1;
+        rc =0;
         piece = WHITE_QUEEN;
     }
     else if (character == 'q')
     {
-        rc =1;
+        rc =0;
         piece = BLACK_QUEEN;
     }
     else if (character == 'B')
     {
-        rc =1;
+        rc =0;
         piece = WHITE_BISHOP;
     }
     else if (character == 'b')
     {
-        rc =1;
+        rc =0;
         piece = BLACK_BISHOP;
     }
     else if (character == 'K')
     {
-        rc =1;
+        rc =0;
         piece = WHITE_KING;
     }
     else if (character == 'k')
     {
-        rc =1;
+        rc =0;
         piece = BLACK_KING;
     }
     else if (character == 'N')
     {
-        rc =1;
+        rc =0;
         piece = WHITE_KNIGHT;
     }
     else if (character == 'n')
     {
-        rc =1;
+        rc =0;
         piece = BLACK_KNIGHT;
     }
     return rc;
@@ -252,7 +252,7 @@ int ChessBoard::AssignPieceFromLetter(PieceType& piece, const char &character)
 
 int ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
 {
-    int rc = 1;//return code, initialise at 1
+    int rc = 0;//return code, initialise at 1
 
     unsigned rank_index= 7u;//fen starts by 8th rank
     unsigned file_index = 0u;
@@ -274,14 +274,14 @@ int ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
         {
             if (counter_between_slashes != 8u)
             {
-                rc = 0;
+                rc = 1;
                 break;
             }
             counter_between_slashes = 0u;
             slash_counter++;
             if (slash_counter > 7u)
             {
-                rc = 0;
+                rc = 1;
                 break;
             }
             rank_index--;
@@ -291,7 +291,7 @@ int ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
         }
         if (counter_between_slashes > 8u)
         {
-            rc = 0;
+            rc = 1;
             break;
         }
         if ( (slash_counter == 7u) && (rFenPosition[i] == ' ') )
@@ -302,7 +302,7 @@ int ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
             }
             else
             {
-                rc = 0;
+                rc = 1;
                 break;
             }
         }
@@ -312,7 +312,7 @@ int ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
             int empty_squares = atoi (&rFenPosition[i]);//an integer now
             if ((counter_between_slashes + empty_squares) > 8)
             {
-                rc = 0;
+                rc = 1;
                 break;
             }
             for (unsigned n = 0; n < (unsigned) empty_squares; ++n)
@@ -329,7 +329,7 @@ int ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
             counter_between_slashes++;
             if (counter_between_slashes > 8u)
             {
-                rc = 0;
+                rc = 1;
                 break;
             }
 
@@ -338,9 +338,9 @@ int ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
             int valid_piece = AssignPieceFromLetter(piece_to_be_assigned, rFenPosition[i]);
             assert(square_index < CHESSBOARD_SIZE);
             temp_squares[square_index]->SetPieceOnThisSquare(piece_to_be_assigned);
-            if (valid_piece != 1)
+            if (valid_piece != 0)
             {
-                rc = 0;
+                rc = 1;
                 break;
             }
             file_index++;
@@ -351,20 +351,20 @@ int ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
     //if there were too many slashes
     if ( (slash_counter != 7u))
     {
-        rc = 0;
+        rc = 1;
     }
 
     //take care of the nasty case of an empty string.
     if (rFenPosition.length() == 0u)
     {
-        rc = 0;
+        rc = 1;
     }
 
     //actually assign the pieces to the data structure
     for (unsigned i = 0; i <temp_squares.size(); ++i )
     {
         //...only if the fen was valid...
-        if (rc != 0)
+        if (rc == 0)
         {
             mSquares[i]->SetPieceOnThisSquare( temp_squares[i]->GetPieceOnThisSquare() );
         }

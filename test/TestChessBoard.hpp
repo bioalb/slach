@@ -366,7 +366,7 @@ public:
 
         std::string fen_after_2Nf3 = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
         int rc = my_cb.ArrangePiecesFromFEN(fen_after_2Nf3);
-        TS_ASSERT_EQUALS(rc,1);
+        TS_ASSERT_EQUALS(rc,0);
 
         std::vector<Square*> squares = my_cb.GetSquares();
         for (unsigned i = 0; i < squares.size(); ++i)
@@ -491,7 +491,7 @@ public:
 
         std::string too_long = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R/8/8/8/8 b KQkq - 1 2";
         int rc = my_cb.ArrangePiecesFromFEN(too_long);
-        TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(rc,1);
 
         //invalid fen, check return code and that we don't move anything on the board (all empty squares)
         std::vector<Square*> squares = my_cb.GetSquares();
@@ -502,7 +502,7 @@ public:
 
         std::string too_short = "rnbqkbnr/pp1ppppp/ b KQkq - 1 2";
         rc = my_cb.ArrangePiecesFromFEN(too_short);
-        TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(rc,1);
 
         //invalid fen, check return code and that we don't move anything on the board (all empty squares)
         squares = my_cb.GetSquares();
@@ -515,7 +515,7 @@ public:
         my_cb.SetupInitialChessPosition();
         rc = my_cb.ArrangePiecesFromFEN(too_long);
         squares = my_cb.GetSquares();
-        TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(rc,1);
         CheckInitialPosition(squares);
 
         //another invalid fen, check return code and that we don't move anything on the board (after setting initial position)
@@ -523,7 +523,7 @@ public:
         std::string rubbish = "rubbish";
         rc = my_cb.ArrangePiecesFromFEN(rubbish);
         squares = my_cb.GetSquares();
-        TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(rc,1);
         CheckInitialPosition(squares);
 
         //another invalid fen, check return code and that we don't move anything on the board (after setting initial position)
@@ -531,7 +531,7 @@ public:
         std::string empty = "";
         rc = my_cb.ArrangePiecesFromFEN(empty);
         squares = my_cb.GetSquares();
-        TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(rc,1);
         CheckInitialPosition(squares);
 
         //tricky invalid fen, check return code and that we don't move anything on the board (after setting initial position)
@@ -540,7 +540,7 @@ public:
         std::string tricky_1 = "rnbqkbnrr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
         rc = my_cb.ArrangePiecesFromFEN(tricky_1);
         squares = my_cb.GetSquares();
-        TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(rc,1);
         CheckInitialPosition(squares);
 
         // another tricky invalid fen, check return code and that we don't move anything on the board (after setting initial position)
@@ -549,7 +549,7 @@ public:
         std::string tricky_2 = "rnbqkbnr/pp1ppppp/8/2p9/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
         rc = my_cb.ArrangePiecesFromFEN(tricky_2);
         squares = my_cb.GetSquares();
-        TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(rc,1);
         CheckInitialPosition(squares);
 
         // another tricky invalid fen, check return code and that we don't move anything on the board (after setting initial position)
@@ -558,7 +558,7 @@ public:
         std::string tricky_3 = "rnbqkbnr/pp1ppppp/8/2p15/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
         rc = my_cb.ArrangePiecesFromFEN(tricky_3);
         squares = my_cb.GetSquares();
-        TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(rc,1);
         CheckInitialPosition(squares);
 
         // another tricky invalid fen, check return code and that we don't move anything on the board (after setting initial position)
@@ -567,7 +567,7 @@ public:
         std::string tricky_4 = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBlKB1R b KQkq - 1 2";
         rc = my_cb.ArrangePiecesFromFEN(tricky_4);
         squares = my_cb.GetSquares();
-        TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(rc,1);
         CheckInitialPosition(squares);
 
         // another tricky invalid fen, check return code and that we don't move anything on the board (after setting initial position)
@@ -576,7 +576,7 @@ public:
         std::string tricky_5 = "rnbqkbnr/pp1ppppp/8/2p11/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
         rc = my_cb.ArrangePiecesFromFEN(tricky_5);
         squares = my_cb.GetSquares();
-        TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(rc,1);
         CheckInitialPosition(squares);
 
         // another tricky invalid fen, check return code and that we don't move anything on the board (after setting initial position)
@@ -585,7 +585,7 @@ public:
         std::string tricky_6 = "rnbqkbnr/pp1ppppp//8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
         rc = my_cb.ArrangePiecesFromFEN(tricky_6);
         squares = my_cb.GetSquares();
-        TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(rc,1);
         CheckInitialPosition(squares);
 
         // another tricky invalid fen, check return code and that we don't move anything on the board (after setting initial position)
@@ -594,7 +594,7 @@ public:
         std::string tricky_7 = "rnbqkbnr/pp1ppppp/9/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
         rc = my_cb.ArrangePiecesFromFEN(tricky_7);
         squares = my_cb.GetSquares();
-        TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(rc,1);
         CheckInitialPosition(squares);
     }
 };
