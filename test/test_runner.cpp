@@ -75,15 +75,15 @@ public:
  void runTest() { suite_TestChessBoard.testAnotherFen(); }
 } testDescription_suite_TestChessBoard_testAnotherFen;
 
-static class TestDescription_suite_TestChessBoard_testInvalidFen : public CxxTest::RealTestDescription {
+static class TestDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessBoard_testInvalidFen() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 526, "testInvalidFen" ) {}
- void runTest() { suite_TestChessBoard.testInvalidFen(); }
-} testDescription_suite_TestChessBoard_testInvalidFen;
+ TestDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 526, "testThatInvalidFenChangesNothing" ) {}
+ void runTest() { suite_TestChessBoard.testThatInvalidFenChangesNothing(); }
+} testDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing;
 
 static class TestDescription_suite_TestChessBoard_testMoreInvalidFens : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessBoard_testMoreInvalidFens() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 652, "testMoreInvalidFens" ) {}
+ TestDescription_suite_TestChessBoard_testMoreInvalidFens() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 557, "testMoreInvalidFens" ) {}
  void runTest() { suite_TestChessBoard.testMoreInvalidFens(); }
 } testDescription_suite_TestChessBoard_testMoreInvalidFens;
 

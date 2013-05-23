@@ -533,6 +533,7 @@ int ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
         unsigned square_index = CHESSBOARD_SIZE - mFiles.size() ;//56, index of a8
         unsigned slash_counter = 0u;
         unsigned counter_between_slashes = 0u;
+        unsigned end_of_pos = 0;
 
         //parse the string character by character
         for (unsigned i = 0; i < rFenPosition.length(); ++i)
@@ -553,6 +554,7 @@ int ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
             if ( (slash_counter == 7u) && (rFenPosition[i] == ' ') )
             {
                 assert(counter_between_slashes==8u);//assume valid fen string
+                end_of_pos = i;
                 break;
             }
 
@@ -581,6 +583,31 @@ int ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
                 mSquares[square_index]->SetPieceOnThisSquare(piece_to_be_assigned);
                 file_index++;
                 square_index++;
+            }
+        }
+
+        //assume valid fen
+        assert(end_of_pos > 0);
+        assert(end_of_pos < rFenPosition.length());
+        for (unsigned i = end_of_pos; i < rFenPosition.length(); ++i)
+        {
+            if (rFenPosition[i]==' ')
+            {
+                continue;
+            }
+            else
+            {
+                assert(rFenPosition[i]=='b' || rFenPosition[i]=='w');
+                if (rFenPosition[i]=='b')
+                {
+                    mTurnToMove = BLACK;
+                    break;
+                }
+                else
+                {
+                    mTurnToMove = WHITE;
+                    break;
+                }
             }
         }
     }

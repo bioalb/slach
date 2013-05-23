@@ -148,6 +148,11 @@ public:
      */
     int ArrangePiecesFromFEN(const std::string &rFenPosition);
 
+    /**
+     * Access method for the member variable mTurnToMove
+     *
+     * @return BLACK if it's black's turn, WHITE otherwise
+     */
     TurnToMove WhosTurnIsIt() const;
 
 

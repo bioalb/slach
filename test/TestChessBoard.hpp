@@ -521,9 +521,13 @@ public:
         }
 
         TS_ASSERT_EQUALS(my_cb.WhosTurnIsIt(), WHITE);
+
+        //check that it is nor problem to have no space between the 2 --
+        std::string endgame2 = "8/8/8/8/8/5k2/6p1/5K2 w -- 0 68";
+        TS_ASSERT_EQUALS(my_cb.IsFenValid(endgame2), true);
     }
 
-    void testInvalidFen()
+    void testThatInvalidFenChangesNothing()
     {
         ChessBoard my_cb;
         my_cb.SetupChessBoard();
@@ -552,13 +556,19 @@ public:
         squares = my_cb.GetSquares();
         TS_ASSERT_EQUALS(rc,1);
         CheckInitialPosition(squares);
+    }
+
+    void testMoreInvalidFens()
+    {
+        ChessBoard my_cb;
+        my_cb.SetupChessBoard();
 
         //another invalid fen, check return code and that we don't move anything on the board (after setting initial position)
         my_cb.SetupInitialChessPosition();
         std::string rubbish = "rubbish";
         TS_ASSERT_EQUALS(my_cb.IsFenValid(rubbish), false);
-        rc = my_cb.ArrangePiecesFromFEN(rubbish);
-        squares = my_cb.GetSquares();
+        int rc = my_cb.ArrangePiecesFromFEN(rubbish);
+        std::vector<Square* > squares = my_cb.GetSquares();
         TS_ASSERT_EQUALS(rc,1);
         CheckInitialPosition(squares);
 
@@ -631,8 +641,6 @@ public:
         TS_ASSERT_EQUALS(rc,1);
         CheckInitialPosition(squares);
 
-        // another tricky invalid fen, check return code and that we don't move anything on the board (after setting initial position)
-        my_cb.SetupInitialChessPosition();
         //this one has a 9 instead of a 8
         std::string tricky_7 = "rnbqkbnr/pp1ppppp/9/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
         TS_ASSERT_EQUALS(my_cb.IsFenValid(tricky_7), false);
@@ -640,24 +648,20 @@ public:
         squares = my_cb.GetSquares();
         TS_ASSERT_EQUALS(rc,1);
         CheckInitialPosition(squares);
-    }
 
-    void testMoreInvalidFens()
-    {
-        ChessBoard my_cb;
-        my_cb.SetupChessBoard();
-
+        //space in between
         std::string space_in_between = "rnbqkbnr/p   p1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R o KQkq - 1 2";
         TS_ASSERT_EQUALS(my_cb.IsFenValid(space_in_between), false);
-        int rc = my_cb.ArrangePiecesFromFEN(space_in_between);
+        rc = my_cb.ArrangePiecesFromFEN(space_in_between);
         TS_ASSERT_EQUALS(rc,1);
 
-
+        //wrong letter to move (o, should be w or b)
         std::string wrong_letter_to_move = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R o KQkq - 1 2";
         TS_ASSERT_EQUALS(my_cb.IsFenValid(wrong_letter_to_move), false);
         rc = my_cb.ArrangePiecesFromFEN(wrong_letter_to_move);
         TS_ASSERT_EQUALS(rc,1);
 
+        //wrong castling rights
         std::string wrong_castling_rights = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w Krkq - 1 2";
         TS_ASSERT_EQUALS(my_cb.IsFenValid(wrong_castling_rights), false);
         rc = my_cb.ArrangePiecesFromFEN(wrong_castling_rights);
@@ -718,6 +722,12 @@ public:
         rc = my_cb.ArrangePiecesFromFEN(wrong_en_passant_6);
         TS_ASSERT_EQUALS(rc,1);
 
+        //three dashes
+        std::string wrong_en_passant_7 = "8/8/8/8/8/5k2/6p1/5K2 w --- 0 68";
+        TS_ASSERT_EQUALS(my_cb.IsFenValid(wrong_en_passant_7), false);
+        rc = my_cb.ArrangePiecesFromFEN(wrong_en_passant_7);
+        TS_ASSERT_EQUALS(rc,1);
+
         // right en-passant
         std::string right_en_passant = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQKq a3 1 2";
         TS_ASSERT_EQUALS(my_cb.IsFenValid(right_en_passant), true);
@@ -754,7 +764,7 @@ public:
         rc = my_cb.ArrangePiecesFromFEN(wrong_full_move);
         TS_ASSERT_EQUALS(rc,1);
 
-        // wrong full move  numbers
+        // wrong full move  numbers (no space)
         std::string wrong_full_move_2 = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQKq a3 15";
         TS_ASSERT_EQUALS(my_cb.IsFenValid(wrong_full_move_2), false);
         rc = my_cb.ArrangePiecesFromFEN(wrong_full_move_2);
