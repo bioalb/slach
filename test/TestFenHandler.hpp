@@ -332,5 +332,54 @@ public:
             TS_ASSERT_EQUALS( ok_squares[i]->GetPieceOnThisSquare(), BLACK_BISHOP);
         }
     }
+
+    void TestGetFen()
+    {
+        //create a vector of squares for testing purposes
+        std::vector<Square* > squares;
+        squares.resize(64u);
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            squares[i] = new Square();
+        }
+
+        //fill in the vector of squares with a known position
+        //black king on f3, black pawn on g2 and white king on f1
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            if (i==12u)//e2
+            {
+                squares[i]->SetPieceOnThisSquare(WHITE_KING);
+            }
+            else if (i==18u)//c3
+            {
+                squares[i]->SetPieceOnThisSquare(BLACK_KING);
+            }
+            else if (i==29u)//f4
+            {
+                squares[i]->SetPieceOnThisSquare(BLACK_ROOK);
+            }
+            else if ( (i==31u) || (i==38) )//h4 or g5
+            {
+                squares[i]->SetPieceOnThisSquare(WHITE_PAWN);
+            }
+            else if ( (i==39u) || (i==46) || (i==50) )//h5 or g6 or c7
+            {
+                squares[i]->SetPieceOnThisSquare(BLACK_PAWN);
+            }
+            else
+            {
+                squares[i]->SetPieceOnThisSquare(NO_PIECE);
+            }
+        }
+
+        FenHandler handler;
+        std::vector<CastlingRights> empty_vec;
+        std::string calculated_fen = handler.GetFenFromPosition(squares,WHITE,empty_vec,NULL,0,68);
+        //black king on f3, black pawn on g2 and white king on f1
+        std::string valid_fen = "8/8/8/8/8/5k2/6p1/5K2 w - - 0 68";
+
+        TS_ASSERT_EQUALS(calculated_fen, valid_fen);
+    }
 };
 #endif

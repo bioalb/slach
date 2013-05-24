@@ -131,6 +131,12 @@ public:
  void runTest() { suite_TestFenHandler.testAssignFenStrangeCases(); }
 } testDescription_suite_TestFenHandler_testAssignFenStrangeCases;
 
+static class TestDescription_suite_TestFenHandler_TestGetFen : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestFenHandler_TestGetFen() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 336, "TestGetFen" ) {}
+ void runTest() { suite_TestFenHandler.TestGetFen(); }
+} testDescription_suite_TestFenHandler_TestGetFen;
+
 #include "/home/alberto/code/slach/test/TestGame.hpp"
 
 static TestGame suite_TestGame;

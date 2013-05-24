@@ -27,5 +27,11 @@ enum TurnToMove
     BLACK
 };
 
-
+enum CastlingRights
+{
+    WHITE_KINGSIDE = 0,
+    WHITE_QUEENSIDE,
+    BLACK_KINGSIDE,
+    BLACK_QUEENSIDE
+};
 #endif

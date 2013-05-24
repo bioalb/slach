@@ -1,5 +1,7 @@
 #include <climits>
 #include <cassert>
+#include <iostream>
+#include <sstream>
 #include "FenHandler.hpp"
 
 FenHandler::FenHandler()
@@ -452,6 +454,43 @@ int FenHandler::SetPositionFromFen(const std::string &rFenString, std::vector<Sq
         }
     }
     return rc;
+}
+
+std::string FenHandler::GetFenFromPosition(const std::vector<Square* > &rSquares,
+        TurnToMove turnToMove,
+        std::vector<CastlingRights> castlingRights,
+        Square* pEnPassantSquare,
+        unsigned halfMoveClock,
+        unsigned fullMoveNumber) const
+{
+    unsigned sq_counter = 63u - 8u + 1u;//56-->a8
+    unsigned empty_sq_counter = 0u;
+    std::string ret = "";
+    for (unsigned i =0; i < rSquares.size(); ++i)
+    {
+        std::cout<<sq_counter<<std::endl;
+
+        if (rSquares[i]->GetPieceOnThisSquare() == NO_PIECE)
+        {
+            empty_sq_counter++;
+        }
+        else
+        {
+
+        }
+        if ((sq_counter+1)%8==0)
+        {
+            std::stringstream ss;
+            ss << empty_sq_counter;
+            ret.append(ss.str());
+            ret.append("/");
+            sq_counter = sq_counter - 16;
+            empty_sq_counter = 0u;
+        }
+        sq_counter++;
+
+    }
+    return ret;
 }
 
 TurnToMove FenHandler::WhosTurnIsIt() const

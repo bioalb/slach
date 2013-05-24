@@ -88,6 +88,22 @@ class FenHandler
      */
     int SetPositionFromFen(const std::string &rFenString, std::vector<Square* > &rSquares);
 
+    /**
+     * Returns the Fen string corresponding to the vector of squares that is passed in
+     */
+    std::string GetFenFromPosition(const std::vector<Square* > &rSquares,
+            TurnToMove turnToMove,
+            std::vector<CastlingRights> castlingRights,
+            Square* pEnPassantSquare = NULL,
+            unsigned halfMoveClock = 0,
+            unsigned fullMoveNumber = 0) const;
+
+    /**
+     * Access method for the variable mTurnToMove. Refers to the last valid fen that
+     * was passed to SetPositionFromFen
+     *
+     * @return BLACK if it is black's turn to move, WHITe if it is white
+     */
     TurnToMove WhosTurnIsIt() const;
 };
 
