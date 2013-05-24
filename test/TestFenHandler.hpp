@@ -377,7 +377,7 @@ public:
         std::vector<CastlingRights> empty_vec;
         std::string calculated_fen = handler.GetFenFromPosition(squares,WHITE,empty_vec,NULL,0,68);
         //black king on f3, black pawn on g2 and white king on f1
-        std::string valid_fen = "8/8/8/8/8/5k2/6p1/5K2 w - - 0 68";
+        std::string valid_fen = "8/2p5/6p1/6Pp/5r1P/2k5/4K3/8 b - - 1 47";
 
         TS_ASSERT_EQUALS(calculated_fen, valid_fen);
     }

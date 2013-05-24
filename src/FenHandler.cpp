@@ -456,6 +456,58 @@ int FenHandler::SetPositionFromFen(const std::string &rFenString, std::vector<Sq
     return rc;
 }
 
+std::string FenHandler::GetLetterFromPiece(PieceType piece) const
+{
+    if (piece == WHITE_KING)
+    {
+        return "K";
+    }
+    else if (piece == BLACK_KING)
+    {
+        return "k";
+    }
+    else if (piece == WHITE_BISHOP)
+    {
+        return "B";
+    }
+    else if (piece == BLACK_BISHOP)
+    {
+        return "b";
+    }
+    else if (piece == WHITE_ROOK)
+    {
+        return "R";
+    }
+    else if (piece == BLACK_ROOK)
+    {
+        return "r";
+    }
+    else if (piece == WHITE_QUEEN)
+    {
+        return "Q";
+    }
+    else if (piece == BLACK_QUEEN)
+    {
+        return "q";
+    }
+    else if (piece == WHITE_KNIGHT)
+    {
+        return "N";
+    }
+    else if (piece == BLACK_KNIGHT)
+    {
+        return "k";
+    }
+    else if (piece == WHITE_PAWN)
+    {
+        return "P";
+    }
+    else //(piece == BLACK_PAWN)
+    {
+        return "p";
+    }
+
+}
 std::string FenHandler::GetFenFromPosition(const std::vector<Square* > &rSquares,
         TurnToMove turnToMove,
         std::vector<CastlingRights> castlingRights,
@@ -470,20 +522,35 @@ std::string FenHandler::GetFenFromPosition(const std::vector<Square* > &rSquares
     {
         std::cout<<sq_counter<<std::endl;
 
-        if (rSquares[i]->GetPieceOnThisSquare() == NO_PIECE)
+        if (rSquares[sq_counter]->GetPieceOnThisSquare() == NO_PIECE)
         {
             empty_sq_counter++;
         }
         else
         {
-
+            if (empty_sq_counter > 0)
+            {
+                std::stringstream ss;
+                ss << empty_sq_counter;
+                ret.append(ss.str());
+                empty_sq_counter = 0u;
+            }
+            std::string piece_letter = GetLetterFromPiece(rSquares[sq_counter]->GetPieceOnThisSquare());
+            ret.append(piece_letter);
         }
+
         if ((sq_counter+1)%8==0)
         {
-            std::stringstream ss;
-            ss << empty_sq_counter;
-            ret.append(ss.str());
-            ret.append("/");
+            if (empty_sq_counter>0)
+            {
+                std::stringstream ss;
+                ss << empty_sq_counter;
+                ret.append(ss.str());
+            }
+            if (sq_counter > 7)
+            {
+                ret.append("/");
+            }
             sq_counter = sq_counter - 16;
             empty_sq_counter = 0u;
         }

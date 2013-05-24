@@ -40,6 +40,18 @@ class FenHandler
     */
     int AssignPieceFromLetter(PieceType& piece, const char &character) const;
 
+    /**
+     * Helper method.
+     * Given a piece, it returns the corresponding letter.
+     *
+     * @oaram piece the input piece
+     * @return a string of one character containing the corresponding letter.
+     */
+    std::string GetLetterFromPiece(PieceType piece) const;
+
+    /**
+     * Stores the turn to move
+     */
     TurnToMove mTurnToMove;
 
   protected:
