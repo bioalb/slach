@@ -6,7 +6,9 @@
 #include "Square.hpp"
 
 /**
- * A class to handle FEN strings
+ * A class to handle Forsyth Edwards Notation (FEN) strings.
+ *
+ * Reference for http://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
  */
 class FenHandler
 {
@@ -64,13 +66,20 @@ class FenHandler
 
     /**
      * This method takes in a string representing the FEN position on the chessboard.
-     * It checks whether the string is valid. If not, it does nothing and returns 1.
+     * It checks whether the string is valid. To be valid the FEN string should
+     * comply with the criteria listed at
+     *
+     * http://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+     *
+     * If not valid , this method does nothing and returns 1.
      * If it is a valid string, it will arrange the vector of squares so as to have the correct position
      * of pieces. This method ONLY changes the piece that is set on the square, not any other feature of the square.
      * (See documentation of the Square class for more info).
      * The vector of squares is intended as from a1 (first element) to h8 (last element).
      * It must have 64 non-NULL pointer as its elements. If one of these two conditions is not met,
      * this method will return one and do nothing.
+     * No re-sizing of vector or creating of objects is done in this method. It's either 64 pointers to Square objects
+     * (already "newed") or this method will just do nothing and return 1.
      *
      * @param rFenString (input) the input FEN string
      * @param rSquares (output) the vector of squares that will contain the correct position of pieces.

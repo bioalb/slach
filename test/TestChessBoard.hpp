@@ -495,7 +495,6 @@ public:
         my_cb.SetupInitialChessPosition();
         //black king on f3, black pawn on g2 and white king on f1
         std::string endgame = "8/8/8/8/8/5k2/6p1/5K2 w - - 0 68";
-        TS_ASSERT_EQUALS(my_cb.IsFenValid(endgame), true);
         int rc = my_cb.ArrangePiecesFromFEN(endgame);
         TS_ASSERT_EQUALS(rc,0);
         std::vector<Square*> squares = my_cb.GetSquares();
@@ -521,10 +520,6 @@ public:
         }
 
         TS_ASSERT_EQUALS(my_cb.WhosTurnIsIt(), WHITE);
-
-        //check that it is nor problem to have no space between the 2 --
-        std::string endgame2 = "8/8/8/8/8/5k2/6p1/5K2 w -- 0 68";
-        TS_ASSERT_EQUALS(my_cb.IsFenValid(endgame2), true);
     }
 
     void testThatInvalidFenChangesNothing()
@@ -533,12 +528,10 @@ public:
         my_cb.SetupChessBoard();
 
         std::string too_long = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R/8/8/8/8 b KQkq - 1 2";
-        TS_ASSERT_EQUALS(my_cb.IsFenValid(too_long), false);
         int rc = my_cb.ArrangePiecesFromFEN(too_long);
         TS_ASSERT_EQUALS(rc,1);
 
         std::string too_short = "rnbqkbnr/pp1ppppp/ b KQkq - 1 2";
-        TS_ASSERT_EQUALS(my_cb.IsFenValid(too_short), false);
         rc = my_cb.ArrangePiecesFromFEN(too_short);
         TS_ASSERT_EQUALS(rc,1);
         TS_ASSERT_EQUALS(my_cb.WhosTurnIsIt(), WHITE);//invalid fen not applied, still white's turn

@@ -77,7 +77,7 @@ public:
 
 static class TestDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 530, "testThatInvalidFenChangesNothing" ) {}
+ TestDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 525, "testThatInvalidFenChangesNothing" ) {}
  void runTest() { suite_TestChessBoard.testThatInvalidFenChangesNothing(); }
 } testDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing;
 
@@ -127,7 +127,7 @@ public:
 
 static class TestDescription_suite_TestFenHandler_testAssignFenStrangeCases : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestFenHandler_testAssignFenStrangeCases() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 271, "testAssignFenStrangeCases" ) {}
+ TestDescription_suite_TestFenHandler_testAssignFenStrangeCases() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 272, "testAssignFenStrangeCases" ) {}
  void runTest() { suite_TestFenHandler.testAssignFenStrangeCases(); }
 } testDescription_suite_TestFenHandler_testAssignFenStrangeCases;
 
