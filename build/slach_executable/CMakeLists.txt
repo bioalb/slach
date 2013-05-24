@@ -12,6 +12,7 @@ ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64
 
 ADD_EXECUTABLE(slach ${srcdir}/Exception.cpp
                        ${srcdir}/Game.cpp
+                       ${srcdir}/FenHandler.cpp
                        ${srcdir}/ChessBoard.cpp
                        ${srcdir}/ChessBoardWithBorders.cpp
                        ${srcdir}/Square.cpp

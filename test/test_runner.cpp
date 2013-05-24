@@ -77,15 +77,9 @@ public:
 
 static class TestDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 526, "testThatInvalidFenChangesNothing" ) {}
+ TestDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 530, "testThatInvalidFenChangesNothing" ) {}
  void runTest() { suite_TestChessBoard.testThatInvalidFenChangesNothing(); }
 } testDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing;
-
-static class TestDescription_suite_TestChessBoard_testMoreInvalidFens : public CxxTest::RealTestDescription {
-public:
- TestDescription_suite_TestChessBoard_testMoreInvalidFens() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 557, "testMoreInvalidFens" ) {}
- void runTest() { suite_TestChessBoard.testMoreInvalidFens(); }
-} testDescription_suite_TestChessBoard_testMoreInvalidFens;
 
 #include "/home/alberto/code/slach/test/TestSquare.hpp"
 
@@ -105,6 +99,37 @@ public:
  TestDescription_suite_TestSquare_testSameSquare() : CxxTest::RealTestDescription( Tests_TestSquare, suiteDescription_TestSquare, 58, "testSameSquare" ) {}
  void runTest() { suite_TestSquare.testSameSquare(); }
 } testDescription_suite_TestSquare_testSameSquare;
+
+#include "/home/alberto/code/slach/test/TestFenHandler.hpp"
+
+static TestFenHandler suite_TestFenHandler;
+
+static CxxTest::List Tests_TestFenHandler = { 0, 0 };
+CxxTest::StaticSuiteDescription suiteDescription_TestFenHandler( "/home/alberto/code/slach/test/TestFenHandler.hpp", 12, "TestFenHandler", suite_TestFenHandler, Tests_TestFenHandler );
+
+static class TestDescription_suite_TestFenHandler_testFenValidity : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestFenHandler_testFenValidity() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 16, "testFenValidity" ) {}
+ void runTest() { suite_TestFenHandler.testFenValidity(); }
+} testDescription_suite_TestFenHandler_testFenValidity;
+
+static class TestDescription_suite_TestFenHandler_testAssignFen : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestFenHandler_testAssignFen() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 177, "testAssignFen" ) {}
+ void runTest() { suite_TestFenHandler.testAssignFen(); }
+} testDescription_suite_TestFenHandler_testAssignFen;
+
+static class TestDescription_suite_TestFenHandler_testAnotherValidFen : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestFenHandler_testAnotherValidFen() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 221, "testAnotherValidFen" ) {}
+ void runTest() { suite_TestFenHandler.testAnotherValidFen(); }
+} testDescription_suite_TestFenHandler_testAnotherValidFen;
+
+static class TestDescription_suite_TestFenHandler_testAssignFenStrangeCases : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestFenHandler_testAssignFenStrangeCases() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 271, "testAssignFenStrangeCases" ) {}
+ void runTest() { suite_TestFenHandler.testAssignFenStrangeCases(); }
+} testDescription_suite_TestFenHandler_testAssignFenStrangeCases;
 
 #include "/home/alberto/code/slach/test/TestGame.hpp"
 

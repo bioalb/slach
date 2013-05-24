@@ -10,6 +10,7 @@ ADD_DEFINITIONS(-I${srcdir}
 ADD_EXECUTABLE(TESTRUNNER ${testfiledir}/test_runner.cpp
                           ${srcdir}/Exception.cpp 
                           ${srcdir}/Game.cpp 
+                          ${srcdir}/FenHandler.cpp
                           ${srcdir}/Square.cpp 
                           ${srcdir}/ChessBoard.cpp
                           ${srcdir}/ChessBoardWithBorders.cpp)
@@ -19,6 +20,7 @@ add_custom_command(OUTPUT ${testfiledir}/test_runner.cpp
                                                                                     ${testfiledir}/TestChessboardWithBorders.hpp 
                                                                                     ${testfiledir}/TestChessBoard.hpp
                                                                                     ${testfiledir}/TestSquare.hpp
+                                                                                    ${testfiledir}/TestFenHandler.hpp
                                                                                     ${testfiledir}/TestGame.hpp
                    DEPENDS 
                    COMMENT "running cxxtestgen now..."
