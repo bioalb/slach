@@ -1,6 +1,4 @@
-#short-hand for the srcdir 
-SET(srcdir ${CMAKE_SOURCE_DIR}/src)
-SET(stockfishdir ${CMAKE_SOURCE_DIR}/src/engines/stockfish_3/src)
+
 
 #most of this from the wx widgets documentation
 ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 

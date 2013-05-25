@@ -1,7 +1,4 @@
-#short-hand for the srcdir 
-SET(srcdir ${CMAKE_SOURCE_DIR}/src)
-SET(testfiledir ${CMAKE_SOURCE_DIR}/test)
-SET(stockfishdir ${CMAKE_SOURCE_DIR}/src/engines/stockfish_3/src)
+
 ADD_DEFINITIONS(-I${srcdir}
                 -I${CMAKE_SOURCE_DIR}/test/cxxtest
                 -I${testfiledir}
