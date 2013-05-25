@@ -496,7 +496,7 @@ std::string FenHandler::GetLetterFromPiece(PieceType piece) const
     }
     else if (piece == BLACK_KNIGHT)
     {
-        return "k";
+        return "n";
     }
     else if (piece == WHITE_PAWN)
     {
@@ -520,8 +520,6 @@ std::string FenHandler::GetFenFromPosition(const std::vector<Square* > &rSquares
     std::string ret = "";
     for (unsigned i =0; i < rSquares.size(); ++i)
     {
-        std::cout<<sq_counter<<std::endl;
-
         if (rSquares[sq_counter]->GetPieceOnThisSquare() == NO_PIECE)
         {
             empty_sq_counter++;
@@ -555,8 +553,69 @@ std::string FenHandler::GetFenFromPosition(const std::vector<Square* > &rSquares
             empty_sq_counter = 0u;
         }
         sq_counter++;
-
     }
+
+    //Append turn to move
+    if (turnToMove==WHITE)
+    {
+        ret.append(" w ");
+    }
+    else
+    {
+        ret.append(" b ");
+    }
+
+    //append castling rights no spaces either before or after
+    if (castlingRights.size()==0)
+    {
+        ret.append("-");
+    }
+    else
+    {
+        for (unsigned i = 0; i < castlingRights.size(); ++i)
+        {
+            if (castlingRights[i] == WHITE_KINGSIDE)
+            {
+                ret.append("K");
+            }
+            if (castlingRights[i] == BLACK_KINGSIDE)
+            {
+                ret.append("k");
+            }
+            if (castlingRights[i] == WHITE_QUEENSIDE)
+            {
+                ret.append("Q");
+            }
+            if (castlingRights[i] == BLACK_QUEENSIDE)
+            {
+                ret.append("q");
+            }
+        }
+    }
+
+    //append en-passant, spaces all around
+    if (pEnPassantSquare==NULL)
+    {
+        ret.append(" - ");
+    }
+    else
+    {
+        ret.append(" ");
+        ret.append(pEnPassantSquare->GetFile());
+        ret.append(pEnPassantSquare->GetRank());
+        ret.append(" ");
+    }
+
+    //append half move counter
+    std::stringstream hm_SS;
+    hm_SS << halfMoveClock;
+    ret.append(hm_SS.str());
+
+    ret.append(" ");
+
+    std::stringstream fm_SS;
+    fm_SS << fullMoveNumber;
+    ret.append(fm_SS.str());
     return ret;
 }
 

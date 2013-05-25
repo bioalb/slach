@@ -137,6 +137,12 @@ public:
  void runTest() { suite_TestFenHandler.TestGetFen(); }
 } testDescription_suite_TestFenHandler_TestGetFen;
 
+static class TestDescription_suite_TestFenHandler_TestGetFenWithEnpassant : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestFenHandler_TestGetFenWithEnpassant() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 385, "TestGetFenWithEnpassant" ) {}
+ void runTest() { suite_TestFenHandler.TestGetFenWithEnpassant(); }
+} testDescription_suite_TestFenHandler_TestGetFenWithEnpassant;
+
 #include "/home/alberto/code/slach/test/TestGame.hpp"
 
 static TestGame suite_TestGame;

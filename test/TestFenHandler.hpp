@@ -375,11 +375,96 @@ public:
 
         FenHandler handler;
         std::vector<CastlingRights> empty_vec;
-        std::string calculated_fen = handler.GetFenFromPosition(squares,WHITE,empty_vec,NULL,0,68);
+        std::string calculated_fen = handler.GetFenFromPosition(squares,BLACK,empty_vec,NULL,1,47);
         //black king on f3, black pawn on g2 and white king on f1
         std::string valid_fen = "8/2p5/6p1/6Pp/5r1P/2k5/4K3/8 b - - 1 47";
 
         TS_ASSERT_EQUALS(calculated_fen, valid_fen);
     }
+
+    void TestGetFenWithEnpassant()
+    {
+        //create a vector of squares for testing purposes
+        std::vector<Square* > squares;
+        squares.resize(64u);
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            squares[i] = new Square();
+        }
+
+        //fill in the vector of squares with a known position
+        //initial position after 1.e4
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            if (i==0u || i==7u)//a1 and h1
+            {
+                squares[i]->SetPieceOnThisSquare(WHITE_ROOK);
+            }
+            else if (i==1u || i==6u)//b1 and g1
+            {
+                squares[i]->SetPieceOnThisSquare(WHITE_KNIGHT);
+            }
+            else if (i==2u || i==5u)//c1 and f1
+            {
+                squares[i]->SetPieceOnThisSquare(WHITE_BISHOP);
+            }
+            else if (i==3u)//d1
+            {
+                squares[i]->SetPieceOnThisSquare(WHITE_QUEEN);
+            }
+            else if (i==4u)//e1
+            {
+                squares[i]->SetPieceOnThisSquare(WHITE_KING);
+            }
+            else if ( ( i>7u && i<16u && i!=12u) || i==28u)//12 is e2, pawn was moved to e4 (28)
+            {
+                squares[i]->SetPieceOnThisSquare(WHITE_PAWN);
+            }
+            //black pieces
+            else if (i==56u || i==63u)//a8 and h8
+            {
+                squares[i]->SetPieceOnThisSquare(BLACK_ROOK);
+            }
+            else if (i==57u || i==62u)//b8 and g8
+            {
+                squares[i]->SetPieceOnThisSquare(BLACK_KNIGHT);
+            }
+            else if (i==58u || i==61u)//c8 and f8
+            {
+                squares[i]->SetPieceOnThisSquare(BLACK_BISHOP);
+            }
+            else if (i==59u)//d8
+            {
+                squares[i]->SetPieceOnThisSquare(BLACK_QUEEN);
+            }
+            else if (i==60u)//e8
+            {
+                squares[i]->SetPieceOnThisSquare(BLACK_KING);
+            }
+            else if ( i>47u && i<56u )
+            {
+                squares[i]->SetPieceOnThisSquare(BLACK_PAWN);
+            }
+            else
+            {
+                squares[i]->SetPieceOnThisSquare(NO_PIECE);
+            }
+        }
+
+        FenHandler handler;
+        std::vector<CastlingRights> cr = {WHITE_KINGSIDE, WHITE_QUEENSIDE, BLACK_KINGSIDE, BLACK_QUEENSIDE};
+
+        Square* p_enpassantsquare = new Square();
+        p_enpassantsquare->SetFile("e");
+        p_enpassantsquare->SetRank("3");
+        std::string calculated_fen = handler.GetFenFromPosition(squares,BLACK,cr,p_enpassantsquare,0,1);
+        //initial position after 1. e4 (from wikipedia)
+        std::string valid_fen = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
+
+        TS_ASSERT_EQUALS(calculated_fen, valid_fen);
+
+    }
+
+
 };
 #endif
