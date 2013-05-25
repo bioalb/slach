@@ -1,10 +1,11 @@
 #short-hand for the srcdir 
 SET(srcdir ${CMAKE_SOURCE_DIR}/src)
 SET(testfiledir ${CMAKE_SOURCE_DIR}/test)
-
+SET(stockfishdir ${CMAKE_SOURCE_DIR}/src/engines/stockfish_3/src)
 ADD_DEFINITIONS(-I${srcdir}
                 -I${CMAKE_SOURCE_DIR}/test/cxxtest
                 -I${testfiledir}
+                -I${stockfishdir}
                 -O0 -std=c++0x -g3 -Wall -fmessage-length=0 -finstrument-functions)
 
 ADD_EXECUTABLE(TESTRUNNER ${testfiledir}/test_runner.cpp

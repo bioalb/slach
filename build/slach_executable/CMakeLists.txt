@@ -1,5 +1,6 @@
 #short-hand for the srcdir 
 SET(srcdir ${CMAKE_SOURCE_DIR}/src)
+SET(stockfishdir ${CMAKE_SOURCE_DIR}/src/engines/stockfish_3/src)
 
 #most of this from the wx widgets documentation
 ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 
@@ -7,7 +8,8 @@ ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64
                 -D__WXGTK__ 
                 -I/usr/lib/i386-linux-gnu/wx/include/gtk2-unicode-release-2.8 
                 -I/usr/include/wx-2.8
-                -I/usr/include/wxSVG 
+                -I/usr/include/wxSVG
+                -I${stockfishdir} 
                  -O0 -std=c++0x -g3 -Wall -fmessage-length=0 -finstrument-functions)
 
 ADD_EXECUTABLE(slach ${srcdir}/Exception.cpp
