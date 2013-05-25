@@ -13,6 +13,7 @@ ADD_EXECUTABLE(TESTRUNNER ${testfiledir}/test_runner.cpp
                           ${srcdir}/FenHandler.cpp
                           ${srcdir}/Square.cpp 
                           ${srcdir}/ChessBoard.cpp
+                          ${srcdir}/EngineInterface.cpp
                           ${srcdir}/ChessBoardWithBorders.cpp)
 
 add_custom_command(OUTPUT ${testfiledir}/test_runner.cpp
@@ -22,6 +23,7 @@ add_custom_command(OUTPUT ${testfiledir}/test_runner.cpp
                                                                                     ${testfiledir}/TestSquare.hpp
                                                                                     ${testfiledir}/TestFenHandler.hpp
                                                                                     ${testfiledir}/TestGame.hpp
+                                                                                    ${testfiledir}/TestEngineInterface.hpp
                    DEPENDS 
                    COMMENT "running cxxtestgen now..."
                    VERBATIM)

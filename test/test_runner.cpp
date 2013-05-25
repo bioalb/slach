@@ -186,5 +186,18 @@ public:
  void runTest() { suite_TestGame.testCastleQueenSide(); }
 } testDescription_suite_TestGame_testCastleQueenSide;
 
+#include "/home/alberto/code/slach/test/TestEngineInterface.hpp"
+
+static TestEngineInterface suite_TestEngineInterface;
+
+static CxxTest::List Tests_TestEngineInterface = { 0, 0 };
+CxxTest::StaticSuiteDescription suiteDescription_TestEngineInterface( "/home/alberto/code/slach/test/TestEngineInterface.hpp", 12, "TestEngineInterface", suite_TestEngineInterface, Tests_TestEngineInterface );
+
+static class TestDescription_suite_TestEngineInterface_TestInterface : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestEngineInterface_TestInterface() : CxxTest::RealTestDescription( Tests_TestEngineInterface, suiteDescription_TestEngineInterface, 16, "TestInterface" ) {}
+ void runTest() { suite_TestEngineInterface.TestInterface(); }
+} testDescription_suite_TestEngineInterface_TestInterface;
+
 #include <cxxtest/Root.cpp>
 const char* CxxTest::RealWorldDescription::_worldName = "cxxtest";
