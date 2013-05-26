@@ -5,7 +5,7 @@
 
 #include "ChessBoardWithBorders.hpp"
 
-ChessBoardWithBorders::ChessBoardWithBorders()
+slach::ChessBoardWithBorders::ChessBoardWithBorders()
 {
     mChessBoardSizeWithBorders = 100u;//with border
     std::vector<std::string > files = {"0" , "a", "b", "c", "d", "e","f", "g",  "h", "0"};
@@ -108,7 +108,7 @@ ChessBoardWithBorders::ChessBoardWithBorders()
     }
 }
 
-ChessBoardWithBorders::~ChessBoardWithBorders()
+slach::ChessBoardWithBorders::~ChessBoardWithBorders()
 {
     for (unsigned i = 0; i <mSquares.size(); ++i )
     {
@@ -120,12 +120,12 @@ ChessBoardWithBorders::~ChessBoardWithBorders()
     delete mpChessBoard;
 }
 
-std::vector<Square* > ChessBoardWithBorders::GetSquares() const
+std::vector<slach::Square* > slach::ChessBoardWithBorders::GetSquares() const
 {
     return mSquares;
 }
 
-ChessBoard* ChessBoardWithBorders::GetPlayableChessBoard() const
+slach::ChessBoard* slach::ChessBoardWithBorders::GetPlayableChessBoard() const
 {
     return mpChessBoard;
 }

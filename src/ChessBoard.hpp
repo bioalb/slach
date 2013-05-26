@@ -37,6 +37,9 @@
  *
  */
 
+namespace slach
+{
+
 static const unsigned CHESSBOARD_SIZE_WB = 100u;
 static const unsigned CHESSBOARD_SIZE = 64u;
 static const unsigned BOARD_ROW_SIZE = 8u;
@@ -94,7 +97,7 @@ public:
      * Returns a vector of (pointers to) squares for this chessboard
      * It is an access method for the variable mSquares
      */
-    std::vector<Square* > GetSquares() const;
+    std::vector<slach::Square* > GetSquares() const;
 
     bool IsLegalMove();
 
@@ -121,9 +124,10 @@ public:
      *
      * @return BLACK if it's black's turn, WHITE otherwise
      */
-    TurnToMove WhosTurnIsIt() const;
+    slach::TurnToMove WhosTurnIsIt() const;
 
 
 };
 
+}//namespace slach
 #endif /* _CHESSBOARD_HPP_ */

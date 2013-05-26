@@ -25,7 +25,7 @@ ADD_EXECUTABLE(slach ${srcdir}/Exception.cpp
                        ${srcdir}/GUI/ActualBoardPanel.cpp 
                        ${srcdir}/GUI/ChessboardPanel.cpp 
                        ${srcdir}/GUI/BottomPanel.cpp 
-                       ${srcdir}/GUI/slach.cpp)
+                       ${srcdir}/GUI/slach_main.cpp)
 
 link_directories (/usr/lib/i386-linux-gnu) 
 

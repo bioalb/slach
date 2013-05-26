@@ -1,10 +1,10 @@
-#include "slach.hpp"
+#include "slach_main.hpp"
 
 
-bool slach::OnInit()
+bool slach_main::OnInit()
 {
     wxImage::AddHandler(new wxPNGHandler);
-    MainFrame *frame = new MainFrame( wxT("slach"),
+    slach_gui::MainFrame *frame = new slach_gui::MainFrame( wxT("slach"),
                                       wxPoint(250, 50),
                                       wxSize(650, 440) );
 

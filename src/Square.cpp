@@ -1,7 +1,7 @@
 #include "Square.hpp"
 #include "Exception.hpp"
 
-Square::Square()
+slach::Square::Square()
 {
     mIsBorderSquare = false;
     mIsCornerSquare = false;
@@ -13,94 +13,94 @@ Square::Square()
     mPieceOnThisSquare = NO_PIECE;
 }
 
-Square::~Square()
+slach::Square::~Square()
 {
 
 }
 
-void Square::SetAsBorderSquare(bool border)
+void slach::Square::SetAsBorderSquare(bool border)
 {
     mIsBorderSquare = border;
 }
 
-void Square::SetAsCornerSquare(bool corner)
+void slach::Square::SetAsCornerSquare(bool corner)
 {
     mIsCornerSquare = corner;
 }
 
-bool Square::IsBorderSquare() const
+bool slach::Square::IsBorderSquare() const
 {
     return mIsBorderSquare;
 }
 
-bool Square::IsCornerSquare() const
+bool slach::Square::IsCornerSquare() const
 {
     return mIsCornerSquare;
 }
 
-void Square::SetAsLightSquare(bool light)
+void slach::Square::SetAsLightSquare(bool light)
 {
     mIsLightSquare = light;
     mIsDarkSquare = !light;
 }
 
-void Square::SetAsDarkSquare(bool dark)
+void slach::Square::SetAsDarkSquare(bool dark)
 {
     mIsDarkSquare = dark;
     mIsLightSquare = !dark;
 }
 
-bool Square::IsLightSquare() const
+bool slach::Square::IsLightSquare() const
 {
     return mIsLightSquare;
 }
 
-bool Square::IsDarkSquare() const
+bool slach::Square::IsDarkSquare() const
 {
     return mIsDarkSquare;
 }
 
-void Square::SetFile(std::string file)
+void slach::Square::SetFile(std::string file)
 {
     mFile = file;
 }
 
-void Square::SetRank(std::string rank)
+void slach::Square::SetRank(std::string rank)
 {
     mRank = rank;
 }
 
-void Square::SetAsPrintableCoordinates(bool print)
+void slach::Square::SetAsPrintableCoordinates(bool print)
 {
     mIsCoordinatePrintable = print;
 }
 
-bool Square::IsCoordinatePrintable() const
+bool slach::Square::IsCoordinatePrintable() const
 {
     return mIsCoordinatePrintable;
 }
 
-std::string Square::GetFile() const
+std::string slach::Square::GetFile() const
 {
     return mFile;
 }
 
-std::string Square::GetRank() const
+std::string slach::Square::GetRank() const
 {
     return mRank;
 }
 
-void Square::SetPieceOnThisSquare(PieceType piece)
+void slach::Square::SetPieceOnThisSquare(PieceType piece)
 {
     mPieceOnThisSquare = piece;
 }
 
-PieceType Square::GetPieceOnThisSquare() const
+slach::PieceType slach::Square::GetPieceOnThisSquare() const
 {
     return mPieceOnThisSquare;
 }
 
-bool Square::IsSameSquare(const Square &rSquare) const
+bool slach::Square::IsSameSquare(const Square &rSquare) const
 {
     if (mRank == rSquare.GetRank() && mFile == rSquare.GetFile())
     {

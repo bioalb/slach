@@ -9,6 +9,9 @@
 /**
  * Test suite to test the game class
  */
+
+using namespace slach;//it should be OK for testing code (non-production)
+
 class TestGame : public CxxTest::TestSuite
 {
 public:

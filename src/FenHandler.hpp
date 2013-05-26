@@ -10,9 +10,15 @@
  *
  * Reference for http://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
  */
+
+class TestFenHandler;
+
+namespace slach
+{
+
 class FenHandler
 {
-  friend class TestFenHandler;//for testing
+  friend class ::TestFenHandler;//for testing
 
   private:
     /**
@@ -116,9 +122,9 @@ class FenHandler
      *
      * @return BLACK if it is black's turn to move, WHITe if it is white
      */
-    TurnToMove WhosTurnIsIt() const;
+    slach::TurnToMove WhosTurnIsIt() const;
 };
 
-
+}//namespace slach
 
 #endif

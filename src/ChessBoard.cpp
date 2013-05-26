@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <iostream>
 
-ChessBoard::ChessBoard()
+slach::ChessBoard::ChessBoard()
 {
     //allocate memory for the vectors
     mSquares.resize(CHESSBOARD_SIZE);
@@ -22,7 +22,7 @@ ChessBoard::ChessBoard()
     mpFenHandler = new FenHandler();
 }
 
-ChessBoard::~ChessBoard()
+slach::ChessBoard::~ChessBoard()
 {
     for (unsigned i = 0; i <mSquares.size(); ++i )
     {
@@ -31,12 +31,12 @@ ChessBoard::~ChessBoard()
     delete mpFenHandler;
 }
 
-std::vector<Square* > ChessBoard::GetSquares() const
+std::vector<slach::Square* > slach::ChessBoard::GetSquares() const
 {
     return mSquares;
 }
 
-void ChessBoard::SetupInitialChessPosition()
+void slach::ChessBoard::SetupInitialChessPosition()
 {
     for (unsigned i = 0; i < mSquares.size(); ++i)
     {
@@ -124,7 +124,7 @@ void ChessBoard::SetupInitialChessPosition()
     }
 }
 
-void ChessBoard::SetupChessBoard()
+void slach::ChessBoard::SetupChessBoard()
 {
     unsigned row=0;//row counter
     unsigned column=0;//column counter
@@ -158,12 +158,12 @@ void ChessBoard::SetupChessBoard()
     }
 }
 
-bool ChessBoard::IsLegalMove()
+bool slach::ChessBoard::IsLegalMove()
 {
     return true;
 }
 
-void ChessBoard::MakeThisMove(const Move& rMove)
+void slach::ChessBoard::MakeThisMove(const Move& rMove)
 {
     Square* origin = rMove.first;
     Square* destination = rMove.second;
@@ -189,7 +189,7 @@ void ChessBoard::MakeThisMove(const Move& rMove)
 }
 
 
-int ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
+int slach::ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
 {
      int rc = mpFenHandler->SetPositionFromFen(rFenPosition, mSquares);
      if (rc ==0)
@@ -199,7 +199,7 @@ int ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
      return rc;
 }
 
-TurnToMove ChessBoard::WhosTurnIsIt() const
+slach::TurnToMove slach::ChessBoard::WhosTurnIsIt() const
 {
     return mTurnToMove;
 }

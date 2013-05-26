@@ -15,7 +15,7 @@ public:
 
     void TestInterface()
     {
-        EngineInterface interface;
+        slach::EngineInterface interface;
         TS_ASSERT_EQUALS(1+1,3);
     }
 };

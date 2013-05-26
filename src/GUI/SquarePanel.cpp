@@ -38,7 +38,7 @@
 #include "bitmaps/pieces/xpm/white_king.xpm"
 #include "bitmaps/pieces/xpm/no_piece.xpm"
 
-SquarePanel::SquarePanel(ActualBoardPanel* parent, Square* pSquare, const wxColour& colour, const wxPoint& pos, const wxSize& size, long style )
+slach_gui::SquarePanel::SquarePanel(ActualBoardPanel* parent, slach::Square* pSquare, const wxColour& colour, const wxPoint& pos, const wxSize& size, long style )
     : wxPanel(parent,wxID_ANY, pos,size, style),
       mpParent(parent),
       mpSquare(pSquare)
@@ -56,24 +56,24 @@ SquarePanel::SquarePanel(ActualBoardPanel* parent, Square* pSquare, const wxColo
 
 }
 
-SquarePanel::~SquarePanel()
+slach_gui::SquarePanel::~SquarePanel()
 {
 
 }
 
-void SquarePanel::OnSize(wxSizeEvent& event)
+void slach_gui::SquarePanel::OnSize(wxSizeEvent& event)
 {
     Refresh();
     //skip the event.
     event.Skip();
 }
 
-Square* SquarePanel::GetSquare()
+slach::Square* slach_gui::SquarePanel::GetSquare()
 {
     return mpSquare;
 }
 
-void SquarePanel::PaintBackground()
+void slach_gui::SquarePanel::PaintBackground()
 {
     std::vector<wxSVGDocument*> svgdocs = mpParent->GetPiecesSvgDocs();
     if ( (mpSquare->IsDarkSquare() == true) && (mpSquare->IsBorderSquare() == false))
@@ -100,7 +100,7 @@ void SquarePanel::PaintBackground()
 
 
 
-void SquarePanel::DetermineCoordinateToPrint()
+void slach_gui::SquarePanel::DetermineCoordinateToPrint()
 {
     assert(mIsSquarePanelPrintable);
     assert(mIsBorderSquarePanel);
@@ -191,7 +191,7 @@ void SquarePanel::DetermineCoordinateToPrint()
     }
 }
 
-void SquarePanel::PaintOnBorder()
+void slach_gui::SquarePanel::PaintOnBorder()
 {
     if ( (mIsBorderSquarePanel==true &&
           mIsCornerSquarePanel==false &&
@@ -222,63 +222,63 @@ void SquarePanel::PaintOnBorder()
     }
 }
 
-void SquarePanel::PaintPiece()
+void slach_gui::SquarePanel::PaintPiece()
 {
-    PieceType piece = mpSquare->GetPieceOnThisSquare();
+    slach::PieceType piece = mpSquare->GetPieceOnThisSquare();
     std::vector<wxSVGDocument*> svgdocs = mpParent->GetPiecesSvgDocs();
 
     switch(piece)
     {
-        case WHITE_KING:
+        case slach::WHITE_KING:
             //last true is for transparency!
             mImageOfPieceOnThisSquare = svgdocs[0]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             mIconNearTheMouse = wxDROP_ICON(white_king);
             break;
-        case BLACK_KING:
+        case slach::BLACK_KING:
             mImageOfPieceOnThisSquare = svgdocs[1]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             mIconNearTheMouse = wxDROP_ICON(black_king);
             break;
-        case WHITE_QUEEN:
+        case slach::WHITE_QUEEN:
             mImageOfPieceOnThisSquare = svgdocs[2]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             mIconNearTheMouse = wxDROP_ICON(white_queen);
             break;
-        case BLACK_QUEEN:
+        case slach::BLACK_QUEEN:
             mImageOfPieceOnThisSquare = svgdocs[3]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             mIconNearTheMouse = wxDROP_ICON(black_queen);
             break;
-        case WHITE_ROOK:
+        case slach::WHITE_ROOK:
             mImageOfPieceOnThisSquare = svgdocs[4]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             mIconNearTheMouse = wxDROP_ICON(white_rook);
             break;
-        case BLACK_ROOK:
+        case slach::BLACK_ROOK:
             mImageOfPieceOnThisSquare = svgdocs[5]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             mIconNearTheMouse = wxDROP_ICON(black_rook);
             break;
-        case WHITE_BISHOP:
+        case slach::WHITE_BISHOP:
             mImageOfPieceOnThisSquare = svgdocs[6]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             mIconNearTheMouse = wxDROP_ICON(white_bishop);
             break;
-        case BLACK_BISHOP:
+        case slach::BLACK_BISHOP:
             mImageOfPieceOnThisSquare = svgdocs[7]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             mIconNearTheMouse = wxDROP_ICON(black_bishop);
             break;
-        case WHITE_KNIGHT:
+        case slach::WHITE_KNIGHT:
             mImageOfPieceOnThisSquare = svgdocs[8]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             mIconNearTheMouse = wxDROP_ICON(white_knight);
             break;
-        case BLACK_KNIGHT:
+        case slach::BLACK_KNIGHT:
             mImageOfPieceOnThisSquare = svgdocs[9]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             mIconNearTheMouse = wxDROP_ICON(black_knight);
             break;
-        case WHITE_PAWN:
+        case slach::WHITE_PAWN:
             mImageOfPieceOnThisSquare = svgdocs[10]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             mIconNearTheMouse = wxDROP_ICON(white_pawn);
             break;
-        case BLACK_PAWN:
+        case slach::BLACK_PAWN:
             mImageOfPieceOnThisSquare = svgdocs[11]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             mIconNearTheMouse = wxDROP_ICON(black_pawn);
             break;
-        case NO_PIECE:
+        case slach::NO_PIECE:
             mImageOfPieceOnThisSquare = svgdocs[12]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
             mIconNearTheMouse = wxDROP_ICON(no_piece);
             break;
@@ -292,7 +292,7 @@ void SquarePanel::PaintPiece()
     dc.DrawBitmap( mImageOfPieceOnThisSquare, 0, 0, false );
 }
 
-void SquarePanel::RenderOnChessBoard(wxPaintEvent & evt)
+void slach_gui::SquarePanel::RenderOnChessBoard(wxPaintEvent & evt)
 {
     int neww, newh;
     this->GetSize( &neww, &newh );
@@ -308,18 +308,18 @@ void SquarePanel::RenderOnChessBoard(wxPaintEvent & evt)
 }
 
 
-void SquarePanel::rightClick(wxMouseEvent& event)
+void slach_gui::SquarePanel::rightClick(wxMouseEvent& event)
 {
     std::cout<<mFile<<mRank<<std::endl;
 }
 
-wxImage SquarePanel::GetImageOfPieceOnThisSquare()
+wxImage slach_gui::SquarePanel::GetImageOfPieceOnThisSquare()
 {
     return mImageOfPieceOnThisSquare;
 }
 
 
-void SquarePanel::LeftMouseClick(wxMouseEvent& event)
+void slach_gui::SquarePanel::LeftMouseClick(wxMouseEvent& event)
 {
     //first record source coordinates
     mpParent->SetOriginSquare(this);
@@ -342,16 +342,16 @@ void SquarePanel::LeftMouseClick(wxMouseEvent& event)
     }
 }
 
-bool SquarePanel::OnDrop(wxCoord x, wxCoord y, std::string file, std::string rank)
+bool slach_gui::SquarePanel::OnDrop(wxCoord x, wxCoord y, std::string file, std::string rank)
 {
     mpParent->SetDestinationSquare(this);
     return true;
 }
 
 
-BEGIN_EVENT_TABLE(SquarePanel, wxPanel)
-    EVT_SIZE(SquarePanel::OnSize)
-    EVT_RIGHT_DOWN(SquarePanel::rightClick)
-    EVT_PAINT(SquarePanel::RenderOnChessBoard)
-    EVT_LEFT_DOWN(SquarePanel::LeftMouseClick)
+BEGIN_EVENT_TABLE(slach_gui::SquarePanel, wxPanel)
+    EVT_SIZE(slach_gui::SquarePanel::OnSize)
+    EVT_RIGHT_DOWN(slach_gui::SquarePanel::rightClick)
+    EVT_PAINT(slach_gui::SquarePanel::RenderOnChessBoard)
+    EVT_LEFT_DOWN(slach_gui::SquarePanel::LeftMouseClick)
 END_EVENT_TABLE()

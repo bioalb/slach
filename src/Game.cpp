@@ -1,28 +1,28 @@
 #include "Game.hpp"
 #include "Exception.hpp"
 
-Game::Game()
+slach::Game::Game()
 {
     mMoveList.resize(0u);
     mMoveListAlgFormat.resize(0u);
     mSpecialMove = ORDINARY_MOVE;
 }
-Game::~Game()
+slach::Game::~Game()
 {
 
 }
 
-std::vector<Move> Game::GetMoveList() const
+std::vector<slach::Move> slach::Game::GetMoveList() const
 {
     return mMoveList;
 }
 
-std::vector<std::string> Game::GetMoveListAlgebraicFormat() const
+std::vector<std::string> slach::Game::GetMoveListAlgebraicFormat() const
 {
     return mMoveListAlgFormat;
 }
 
-void Game::DetermineSpecialMove(const Move& rMove)
+void slach::Game::DetermineSpecialMove(const Move& rMove)
 {
     Square* p_origin = rMove.first;
     Square* p_destination = rMove.second;
@@ -49,13 +49,13 @@ void Game::DetermineSpecialMove(const Move& rMove)
     }
 }
 
-void Game::AddMove(const Move& move, std::string ambiguityPrefix, std::string suffix)
+void slach::Game::AddMove(const Move& move, std::string ambiguityPrefix, std::string suffix)
 {
 
     Square* p_origin = move.first;
     Square* p_destination = move.second;
 
-    PieceType origin_piece = p_origin->GetPieceOnThisSquare();
+    slach::PieceType origin_piece = p_origin->GetPieceOnThisSquare();
     bool empty_origin_square = false;
     std::string piece_code = "";
 
@@ -135,7 +135,7 @@ void Game::AddMove(const Move& move, std::string ambiguityPrefix, std::string su
     }
 }
 
-SpecialMoveType Game::GetSpecialMoveType() const
+slach::SpecialMoveType slach::Game::GetSpecialMoveType() const
 {
     return mSpecialMove;
 }

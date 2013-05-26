@@ -1,6 +1,6 @@
 #include "MainPanel.hpp"
 
-MainPanel::MainPanel(wxFrame* parent, const wxPoint& pos, const wxSize& size)
+slach_gui::MainPanel::MainPanel(wxFrame* parent, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,-1, pos,size)
 {
 
@@ -14,16 +14,16 @@ MainPanel::MainPanel(wxFrame* parent, const wxPoint& pos, const wxSize& size)
 
     this->SetSizer(v_sizer);
 }
-MainPanel::~MainPanel()
+slach_gui::MainPanel::~MainPanel()
 {
 }
 
-void MainPanel::OnSize(wxSizeEvent& event){
+void slach_gui::MainPanel::OnSize(wxSizeEvent& event){
     Refresh();
     //skip the event.
     event.Skip();
 }
 
-BEGIN_EVENT_TABLE(MainPanel, wxPanel)
-    EVT_SIZE(MainPanel::OnSize)
+BEGIN_EVENT_TABLE(slach_gui::MainPanel, wxPanel)
+    EVT_SIZE(slach_gui::MainPanel::OnSize)
 END_EVENT_TABLE()

@@ -7,6 +7,9 @@
 #include <vector>
 #include "ActualBoardPanel.hpp"
 
+namespace slach_gui
+{
+
 class ChessboardPanel : public wxPanel
 {
 
@@ -28,4 +31,5 @@ public:
     DECLARE_EVENT_TABLE()
 };
 
+}//namespace slach_gui
 #endif /* _CHESSBOARDPANEL_HPP_ */

@@ -1,14 +1,14 @@
 #include "DropTargetPanel.hpp"
 
-DropTargetPanel::DropTargetPanel(SquarePanel* pParent)
+slach_gui::DropTargetPanel::DropTargetPanel(SquarePanel* pParent)
     : mpPanel(pParent)
 {
     this->SetDataObject(new wxBitmapDataObject());
 }
-DropTargetPanel::~DropTargetPanel()
+slach_gui::DropTargetPanel::~DropTargetPanel()
 { }
 
-wxDragResult DropTargetPanel::OnData(wxCoord x, wxCoord y, wxDragResult def)
+wxDragResult slach_gui::DropTargetPanel::OnData(wxCoord x, wxCoord y, wxDragResult def)
 {
     std::string drop_rank = mpPanel->GetSquare()->GetRank();
     std::string drop_file = mpPanel->GetSquare()->GetFile();
@@ -16,7 +16,7 @@ wxDragResult DropTargetPanel::OnData(wxCoord x, wxCoord y, wxDragResult def)
 
     return def;
 }
-wxDragResult DropTargetPanel::OnDragOver(wxCoord x, wxCoord y, wxDragResult def)
+wxDragResult slach_gui::DropTargetPanel::OnDragOver(wxCoord x, wxCoord y, wxDragResult def)
 {
     //will implement this later
     return def;

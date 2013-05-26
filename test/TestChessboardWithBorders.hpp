@@ -4,19 +4,21 @@
 #include <cxxtest/TestSuite.h>
 #include <iostream>
 #include <sstream>
-#include "../src/ChessBoardWithBorders.hpp"
-#include "../src/PieceType.hpp"
+#include "ChessBoardWithBorders.hpp"
+#include "PieceType.hpp"
 
 /**
  * Test suite to test the chessboard and the chessboard with border class.
  */
+using namespace slach;//it should be OK for testing code (non-production)
+
 class TestChessboards : public CxxTest::TestSuite
 {
 public:
 
     void testBorderFlags(void)
     {
-        ChessBoardWithBorders my_cb;
+        slach::ChessBoardWithBorders my_cb;
 
         std::vector<Square* > squares = my_cb.GetSquares();
         TS_ASSERT_EQUALS(squares.size(), CHESSBOARD_SIZE_WB);
@@ -46,7 +48,7 @@ public:
     void testBoardWithBorders(void)
     {
 
-        ChessBoardWithBorders my_cb;
+        slach::ChessBoardWithBorders my_cb;
 
         std::vector<Square* > squares = my_cb.GetSquares();
         TS_ASSERT_EQUALS(squares.size(), CHESSBOARD_SIZE_WB);

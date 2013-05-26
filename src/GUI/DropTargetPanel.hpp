@@ -7,6 +7,8 @@
 #include <wx/dnd.h>
 #include "ChessboardPanel.hpp"
 
+namespace slach_gui
+{
 
 class DropTargetPanel : public wxDropTarget
 {
@@ -18,5 +20,7 @@ public:
     virtual wxDragResult OnData(wxCoord x, wxCoord y, wxDragResult def);
     virtual wxDragResult OnDragOver(wxCoord x, wxCoord y, wxDragResult def);
 };
+
+} //namespace slach_gui
 #endif
 

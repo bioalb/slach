@@ -9,6 +9,9 @@
 /**
  * Test suite to test the fen handler class
  */
+
+using namespace slach;//it should be OK for testing code (non-production)
+
 class TestFenHandler : public CxxTest::TestSuite
 {
 public:

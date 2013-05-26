@@ -18,6 +18,10 @@
  * The first division is between Right and Main panel.
  * The Main panel will be divided in bottom and chessboard panel
  */
+
+namespace slach_gui
+{
+
 class MainPanel : public wxPanel
 {
     ChessboardPanel* mpChessboardPanel;
@@ -35,4 +39,5 @@ public:
     DECLARE_EVENT_TABLE()
 };
 
+}//namespace slach_gui
 #endif /* MainPanel_HPP_ */

@@ -5,6 +5,9 @@
 #include <wx/sizer.h>
 #include <wx/panel.h>
 
+namespace slach_gui
+{
+
 class BottomPanel : public wxPanel
 {
 
@@ -21,4 +24,5 @@ public:
     DECLARE_EVENT_TABLE()
 };
 
+} //namespace slach_gui
 #endif /* _BOTTOMPANEL_HPP_ */

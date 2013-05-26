@@ -50,6 +50,9 @@
  *
  */
 
+namespace slach
+{
+
 class ChessBoardWithBorders
 {
 
@@ -87,7 +90,7 @@ public:
     /**
      * Access method for the vector of squares (mSquares)
      */
-    std::vector<Square* > GetSquares() const;
+    std::vector<slach::Square* > GetSquares() const;
 
     /**
      * Access method for the underlying playable (no border) square
@@ -97,4 +100,6 @@ public:
 
 
 };
+
+}//namespace slach
 #endif /* _CHESSBOARDWITHBORDERS_HPP_ */

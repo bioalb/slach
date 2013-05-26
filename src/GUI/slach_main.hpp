@@ -7,13 +7,13 @@
 #include "MainFrame.hpp"
 
 
-class slach : public wxApp
+class slach_main : public wxApp
 {
 public:
     virtual bool OnInit();
 };
 
-IMPLEMENT_APP(slach);
+IMPLEMENT_APP(slach_main);
 
 
 

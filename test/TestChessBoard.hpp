@@ -10,6 +10,9 @@
 /**
  * Test suite to test the chessboard
  */
+
+using namespace slach;//it should be OK for testing code (non-production)
+
 class TestChessBoard : public CxxTest::TestSuite
 {
 private:

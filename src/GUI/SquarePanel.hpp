@@ -7,6 +7,9 @@
 #include <wx/dnd.h>
 #include "../Square.hpp"
 
+namespace slach_gui
+{
+
 class ActualBoardPanel;//forward declaration of the parent
 
 class SquarePanel : public wxPanel
@@ -26,7 +29,7 @@ private:
 
     bool mIsSquarePanelPrintable;
 
-    Square* mpSquare;
+    slach::Square* mpSquare;
 
     wxBitmap mResized;
 
@@ -42,7 +45,7 @@ private:
     wxIcon mIconNearTheMouse;
 
 public:
-    SquarePanel(ActualBoardPanel* parent, Square* pSquare,const wxColour& colour = wxT("red"), const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize, long style =  wxBORDER_NONE);
+    SquarePanel(ActualBoardPanel* parent, slach::Square* pSquare,const wxColour& colour = wxT("red"), const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize, long style =  wxBORDER_NONE);
     ~SquarePanel();
 
     void PaintPiece();
@@ -60,9 +63,10 @@ public:
 
     wxImage GetImageOfPieceOnThisSquare();
 
-    Square* GetSquare();
+    slach::Square* GetSquare();
 
     DECLARE_EVENT_TABLE()
 };
 
+}//namespace slach_gui
 #endif /* _SQUARE_HPP_ */

@@ -8,6 +8,9 @@
 #include "MainPanel.hpp"
 #include "RightPanel.hpp"
 
+namespace slach_gui
+{
+
 class MainFrame: public wxFrame
 {
 public:
@@ -43,5 +46,5 @@ private:
     DECLARE_EVENT_TABLE()
 };
 
-
+}//namespace slach_gui
 #endif

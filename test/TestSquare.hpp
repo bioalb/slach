@@ -9,6 +9,8 @@
 /**
  * Test suite to test the SQUARE
  */
+using namespace slach;//it should be OK for testing code (non-production)
+
 class TestSquare : public CxxTest::TestSuite
 {
 public:

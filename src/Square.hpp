@@ -7,7 +7,8 @@
  * Class that encapsulates a square on the chessboard
  * It can be on the playing board or one of the border squares
  */
-
+namespace slach
+{
 
 class Square
 {
@@ -167,4 +168,5 @@ public:
 
 };
 
+}//namespace slach
 #endif /* _SQUARE_HPP_ */

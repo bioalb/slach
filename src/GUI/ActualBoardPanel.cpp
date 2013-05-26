@@ -6,7 +6,7 @@
 #include "DropTargetPanel.hpp"
 #include "ActualBoardPanel.hpp"
 
-ActualBoardPanel::ActualBoardPanel(wxPanel* parent, wxWindowID id, const wxPoint& pos, const wxSize& size)
+slach_gui::ActualBoardPanel::ActualBoardPanel(wxPanel* parent, wxWindowID id, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size),
       mpParent(parent),
       mpOriginSquarePanel(NULL),
@@ -15,13 +15,13 @@ ActualBoardPanel::ActualBoardPanel(wxPanel* parent, wxWindowID id, const wxPoint
     mSvgPieceDirectory = "../../src/GUI/bitmaps/pieces/svg/";
     mSvgBackgroundDirectory = "../../src/GUI/bitmaps/squares/svg/";
 
-    mSquarePanels.resize(CHESSBOARD_SIZE_WB);
-    mpChessBoardWithBorders = new ChessBoardWithBorders();
+    mSquarePanels.resize(slach::CHESSBOARD_SIZE_WB);
+    mpChessBoardWithBorders = new slach::ChessBoardWithBorders();
 
 
     //now the grid sizer.
     int square_to_border_prop = 3;//proportion between border and square
-    mpGridSizer = new wxFlexGridSizer(BOARD_ROW_SIZE+2,BOARD_COLUMN_SIZE+2,0,0);
+    mpGridSizer = new wxFlexGridSizer(slach::BOARD_ROW_SIZE+2,slach::BOARD_COLUMN_SIZE+2,0,0);
     mpGridSizer->AddGrowableCol(0,1);//border
     mpGridSizer->AddGrowableCol(1,square_to_border_prop);
     mpGridSizer->AddGrowableCol(2,square_to_border_prop);
@@ -49,16 +49,16 @@ ActualBoardPanel::ActualBoardPanel(wxPanel* parent, wxWindowID id, const wxPoint
 
 }
 
-ActualBoardPanel::~ActualBoardPanel()
+slach_gui::ActualBoardPanel::~ActualBoardPanel()
 {
-    for (unsigned i = 0; i < CHESSBOARD_SIZE_WB; ++i)
+    for (unsigned i = 0; i < slach::CHESSBOARD_SIZE_WB; ++i)
     {
         delete mSquarePanels[i];
     }
     delete mpChessBoard;
 }
 
-void ActualBoardPanel::LoadSvgPieces()
+void slach_gui::ActualBoardPanel::LoadSvgPieces()
 {
     mPiecesSvgDocs.resize(16u);
     for (unsigned i = 0; i < mPiecesSvgDocs.size(); ++i)
@@ -85,19 +85,19 @@ void ActualBoardPanel::LoadSvgPieces()
 
 }
 
-std::vector<SquarePanel* > ActualBoardPanel::GetSquarePanels()
+std::vector<slach_gui::SquarePanel* > slach_gui::ActualBoardPanel::GetSquarePanels()
 {
     return mSquarePanels;
 }
 
-std::vector<wxSVGDocument* > ActualBoardPanel::GetPiecesSvgDocs()
+std::vector<wxSVGDocument* > slach_gui::ActualBoardPanel::GetPiecesSvgDocs()
 {
     return mPiecesSvgDocs;
 }
 
-void ActualBoardPanel::SetupChessboard()
+void slach_gui::ActualBoardPanel::SetupChessboard()
 {
-    std::vector<Square* > squares = mpChessBoardWithBorders->GetSquares();
+    std::vector<slach::Square* > squares = mpChessBoardWithBorders->GetSquares();
     assert(squares.size() == mSquarePanels.size());
     for (unsigned i = 0; i < squares.size(); ++i)
     {
@@ -109,7 +109,7 @@ void ActualBoardPanel::SetupChessboard()
     mpChessBoard->SetupInitialChessPosition();
 }
 
-void ActualBoardPanel::SetDestinationSquare(SquarePanel* pDestinationPanel)
+void slach_gui::ActualBoardPanel::SetDestinationSquare(SquarePanel* pDestinationPanel)
 {
     mpDestinationSquarePanel = pDestinationPanel;
 
@@ -117,7 +117,7 @@ void ActualBoardPanel::SetDestinationSquare(SquarePanel* pDestinationPanel)
     mpDestinationSquarePanel->PaintBackground();
     if (mpChessBoard->/*GetPosition()->*/IsLegalMove()==true)
     {
-        PieceType origin_piece  = mpOriginSquarePanel->GetSquare()->GetPieceOnThisSquare();
+        slach::PieceType origin_piece  = mpOriginSquarePanel->GetSquare()->GetPieceOnThisSquare();
         mpDestinationSquarePanel->GetSquare()->SetPieceOnThisSquare(origin_piece);
         mpDestinationSquarePanel->PaintPiece();
 
@@ -127,22 +127,23 @@ void ActualBoardPanel::SetDestinationSquare(SquarePanel* pDestinationPanel)
         mpOriginSquarePanel->PaintPiece();
     }
 }
-void ActualBoardPanel::SetOriginSquare(SquarePanel* pOriginPanel)
+void slach_gui::ActualBoardPanel::SetOriginSquare(SquarePanel* pOriginPanel)
 {
     mpOriginSquarePanel = pOriginPanel;
 }
 
-SquarePanel* ActualBoardPanel::GetDestinationSquare()
+slach_gui::SquarePanel* slach_gui::ActualBoardPanel::GetDestinationSquare()
 {
     return mpDestinationSquarePanel;
 
 }
-SquarePanel* ActualBoardPanel::GetOriginSquare()
+
+slach_gui::SquarePanel* slach_gui::ActualBoardPanel::GetOriginSquare()
 {
     return mpOriginSquarePanel;
 }
 
-void ActualBoardPanel::OnSize(wxSizeEvent& event)
+void slach_gui::ActualBoardPanel::OnSize(wxSizeEvent& event)
 {
     Refresh();
     //figure out the new dimensions
@@ -177,7 +178,7 @@ void ActualBoardPanel::OnSize(wxSizeEvent& event)
 }
 
 
-BEGIN_EVENT_TABLE(ActualBoardPanel, wxPanel)
-    EVT_SIZE(ActualBoardPanel::OnSize)
+BEGIN_EVENT_TABLE(slach_gui::ActualBoardPanel, wxPanel)
+    EVT_SIZE(slach_gui::ActualBoardPanel::OnSize)
 END_EVENT_TABLE()
 

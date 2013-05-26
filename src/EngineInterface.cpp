@@ -1,11 +1,11 @@
 #include "EngineInterface.hpp"
 
-EngineInterface::EngineInterface()
+slach::EngineInterface::EngineInterface()
 {
 
 }
 
-EngineInterface::~EngineInterface()
+slach::EngineInterface::~EngineInterface()
 {
 
 }

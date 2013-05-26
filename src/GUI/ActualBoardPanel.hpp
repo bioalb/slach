@@ -9,7 +9,8 @@
 #include "SquarePanel.hpp"
 #include "../ChessBoardWithBorders.hpp"
 
-
+namespace slach_gui
+{
 
 class ActualBoardPanel : public wxPanel
 {
@@ -30,8 +31,8 @@ private:
     std::vector<wxSVGDocument*> mPiecesSvgDocs;
     std::vector<SquarePanel* > mSquarePanels;
     wxFlexGridSizer* mpGridSizer;
-    ChessBoardWithBorders* mpChessBoardWithBorders;
-    ChessBoard* mpChessBoard;
+    slach::ChessBoardWithBorders* mpChessBoardWithBorders;
+    slach::ChessBoard* mpChessBoard;
     wxPanel* mpParent;
     SquarePanel* mpOriginSquarePanel;
     SquarePanel* mpDestinationSquarePanel;
@@ -57,4 +58,6 @@ public:
 
     DECLARE_EVENT_TABLE()
 };
+
+}//namespace slach_gui
 #endif /* _ACTUALBOARDPANEL_HPP_ */

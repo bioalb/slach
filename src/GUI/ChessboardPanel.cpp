@@ -5,7 +5,7 @@
 #include "DropTargetPanel.hpp"
 
 
-ChessboardPanel::ChessboardPanel(wxPanel* parent, const wxPoint& pos, const wxSize& size)
+slach_gui::ChessboardPanel::ChessboardPanel(wxPanel* parent, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size)
 {
     this->SetBackgroundColour(wxT("yellow"));
@@ -13,12 +13,12 @@ ChessboardPanel::ChessboardPanel(wxPanel* parent, const wxPoint& pos, const wxSi
 }
 
 
-ChessboardPanel::~ChessboardPanel()
+slach_gui::ChessboardPanel::~ChessboardPanel()
 {
     delete mpActualChessboard;
 }
 
-void ChessboardPanel::OnSize(wxSizeEvent& event)
+void slach_gui::ChessboardPanel::OnSize(wxSizeEvent& event)
 {
     Refresh();
     mpActualChessboard->OnSize(event);
@@ -27,6 +27,6 @@ void ChessboardPanel::OnSize(wxSizeEvent& event)
 }
 
 
-BEGIN_EVENT_TABLE(ChessboardPanel, wxPanel)
-    EVT_SIZE(ChessboardPanel::OnSize)
+BEGIN_EVENT_TABLE(slach_gui::ChessboardPanel, wxPanel)
+    EVT_SIZE(slach_gui::ChessboardPanel::OnSize)
 END_EVENT_TABLE()

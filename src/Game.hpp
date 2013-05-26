@@ -9,6 +9,10 @@
 /**
  * The game class
  */
+class TestGame;//forward declaration, for testing and accessing protected methods
+
+namespace slach
+{
 
 /**
  * Typedef for a move as a pair of square objects
@@ -31,7 +35,7 @@ enum SpecialMoveType
 
 class Game
 {
-    friend class TestGame; //for testing
+    friend class ::TestGame; //for testing
 private:
 
     /**
@@ -73,7 +77,7 @@ public:
     /**
      * Access method for the variable containing the move list
      */
-    std::vector<Move> GetMoveList() const;
+    std::vector<slach::Move> GetMoveList() const;
 
     /**
      * Access method for the variable containing the move list in algebraic format
@@ -95,8 +99,9 @@ public:
      */
     void AddMove(const Move& move, std::string ambiguityPrefix = "", std::string suffix = "");
 
-    SpecialMoveType GetSpecialMoveType() const;
-
+    slach::SpecialMoveType GetSpecialMoveType() const;
 
 };
+
+}//namespace slach
 #endif

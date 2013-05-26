@@ -2,7 +2,7 @@
 #include "MainFrame.hpp"
 
 
-MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
+slach_gui::MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
   : wxFrame(NULL, wxID_ANY, title, pos, size)
 {
     //the File menu
@@ -37,22 +37,22 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     this->SetSizer(h_sizer);
 }
 
-MainFrame::~MainFrame()
+slach_gui::MainFrame::~MainFrame()
 {
 }
 
-void MainFrame::OnExit(wxCommandEvent& event)
+void slach_gui::MainFrame::OnExit(wxCommandEvent& event)
 {
     Close( true );
 }
-void MainFrame::OnAbout(wxCommandEvent& event)
+void slach_gui::MainFrame::OnAbout(wxCommandEvent& event)
 {
     //first is content of the window, second string is title of the window.
     wxMessageBox( wxT("This is Alberto testing the widgets"),
     wxT("About Slach"), wxOK | wxICON_INFORMATION );
 }
 
-BEGIN_EVENT_TABLE(MainFrame, wxFrame)
-    EVT_MENU(wxID_EXIT,  MainFrame::OnExit)
-    EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
+BEGIN_EVENT_TABLE(slach_gui::MainFrame, wxFrame)
+    EVT_MENU(wxID_EXIT,  slach_gui::MainFrame::OnExit)
+    EVT_MENU(wxID_ABOUT, slach_gui::MainFrame::OnAbout)
 END_EVENT_TABLE()

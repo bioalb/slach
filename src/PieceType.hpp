@@ -1,6 +1,9 @@
 #ifndef _PIECETYPE_HPP_
 #define _PIECETYPE_HPP_
 
+namespace slach
+{
+
 /**
  * Type for a piece on the chessboard
  */
@@ -34,4 +37,6 @@ enum CastlingRights
     BLACK_KINGSIDE,
     BLACK_QUEENSIDE
 };
+
+}//namespace slach
 #endif

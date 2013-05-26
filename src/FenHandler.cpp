@@ -4,17 +4,17 @@
 #include <sstream>
 #include "FenHandler.hpp"
 
-FenHandler::FenHandler()
+slach::FenHandler::FenHandler()
 {
 
 }
 
-FenHandler::~FenHandler()
+slach::FenHandler::~FenHandler()
 {
 
 }
 
-bool FenHandler::IsFenValid(const std::string &rFenString) const
+bool slach::FenHandler::IsFenValid(const std::string &rFenString) const
 {
     bool ret = true;
     unsigned slash_counter = 0u;
@@ -282,7 +282,7 @@ bool FenHandler::IsFenValid(const std::string &rFenString) const
 }
 
 
-int FenHandler::AssignPieceFromLetter(PieceType& piece, const char &character) const
+int slach::FenHandler::AssignPieceFromLetter(PieceType& piece, const char &character) const
 {
     int rc = 1;
     if (character == 'R')
@@ -349,7 +349,7 @@ int FenHandler::AssignPieceFromLetter(PieceType& piece, const char &character) c
 }
 
 
-int FenHandler::SetPositionFromFen(const std::string &rFenString, std::vector<Square* > &rSquares)
+int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::vector<Square* > &rSquares)
 {
     int rc = 0;//return code, initialise at 0
 
@@ -456,7 +456,7 @@ int FenHandler::SetPositionFromFen(const std::string &rFenString, std::vector<Sq
     return rc;
 }
 
-std::string FenHandler::GetLetterFromPiece(PieceType piece) const
+std::string slach::FenHandler::GetLetterFromPiece(PieceType piece) const
 {
     if (piece == WHITE_KING)
     {
@@ -508,7 +508,7 @@ std::string FenHandler::GetLetterFromPiece(PieceType piece) const
     }
 
 }
-std::string FenHandler::GetFenFromPosition(const std::vector<Square* > &rSquares,
+std::string slach::FenHandler::GetFenFromPosition(const std::vector<Square* > &rSquares,
         TurnToMove turnToMove,
         std::vector<CastlingRights> castlingRights,
         Square* pEnPassantSquare,
@@ -619,7 +619,7 @@ std::string FenHandler::GetFenFromPosition(const std::vector<Square* > &rSquares
     return ret;
 }
 
-TurnToMove FenHandler::WhosTurnIsIt() const
+slach::TurnToMove slach::FenHandler::WhosTurnIsIt() const
 {
     return mTurnToMove;
 }

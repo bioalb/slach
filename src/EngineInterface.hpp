@@ -3,6 +3,9 @@
 
 //#include "position.h"
 
+namespace slach
+{
+
 class EngineInterface
 {
 public:
@@ -10,5 +13,5 @@ public:
     ~EngineInterface();
 };
 
-
+}//namespace slach
 #endif
