@@ -10,7 +10,9 @@ ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64
                 -I${stockfishdir} 
                  -O0 -std=c++0x -g3 -Wall -fmessage-length=0 -finstrument-functions)
 
-ADD_EXECUTABLE(slach ${srcdir}/Exception.cpp
+link_directories (/usr/lib/i386-linux-gnu ${CMAKE_SOURCE_DIR}/build/lib) 
+
+ADD_EXECUTABLE(slach   ${srcdir}/Exception.cpp
                        ${srcdir}/Game.cpp
                        ${srcdir}/FenHandler.cpp
                        ${srcdir}/ChessBoard.cpp
@@ -27,10 +29,8 @@ ADD_EXECUTABLE(slach ${srcdir}/Exception.cpp
                        ${srcdir}/GUI/BottomPanel.cpp 
                        ${srcdir}/GUI/slach_main.cpp)
 
-link_directories (/usr/lib/i386-linux-gnu) 
-
 #most of this from the wx widgets documentation
-TARGET_LINK_LIBRARIES(slach -lwx_gtk2u_richtext-2.8 
+TARGET_LINK_LIBRARIES(slach   -lwx_gtk2u_richtext-2.8 
                               -lwx_gtk2u_aui-2.8 
                               -lwx_gtk2u_xrc-2.8 
                               -lwx_gtk2u_qa-2.8 
@@ -40,7 +40,8 @@ TARGET_LINK_LIBRARIES(slach -lwx_gtk2u_richtext-2.8
                               -lwx_baseu_xml-2.8 
                               -lwx_baseu_net-2.8 
                               -lwx_baseu-2.8
-                              -lwxsvg)
+                              -lwxsvg
+                              -lstockfish)
 
 
 

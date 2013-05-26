@@ -5,9 +5,12 @@ ADD_DEFINITIONS(-I${srcdir}
                 -I${stockfishdir}
                 -O0 -std=c++0x -g3 -Wall -fmessage-length=0 -finstrument-functions)
 
+link_directories (/usr/lib/i386-linux-gnu ${CMAKE_SOURCE_DIR}/build/lib) 
+
 ADD_EXECUTABLE(TESTRUNNER ${testfiledir}/test_runner.cpp
                           ${srcdir}/Exception.cpp 
-                          ${srcdir}/Game.cpp 
+                          ${srcdir}/Game.cpp
+                          ${stockfishdir}/position.cpp 
                           ${srcdir}/FenHandler.cpp
                           ${srcdir}/Square.cpp 
                           ${srcdir}/ChessBoard.cpp
@@ -26,6 +29,6 @@ add_custom_command(OUTPUT ${testfiledir}/test_runner.cpp
                    COMMENT "running cxxtestgen now..."
                    VERBATIM)
                    
-link_directories (/usr/lib/i386-linux-gnu) 
 
-TARGET_LINK_LIBRARIES(TESTRUNNER -lm)
+
+TARGET_LINK_LIBRARIES(TESTRUNNER -lm -lstockfish)
