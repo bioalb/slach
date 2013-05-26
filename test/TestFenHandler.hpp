@@ -218,6 +218,12 @@ public:
             }
         }
         TS_ASSERT_EQUALS(handler.WhosTurnIsIt(), slach::WHITE);
+
+        //clear up memory
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
     }
 
     void testAnotherValidFen()
@@ -269,6 +275,12 @@ public:
             }
         }
         TS_ASSERT_EQUALS(handler.WhosTurnIsIt(), slach::BLACK);
+
+        //clear up memory
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
     }
 
     void testAssignFenStrangeCases()
@@ -333,6 +345,13 @@ public:
         {
             TS_ASSERT_EQUALS( ok_squares[i]->GetPieceOnThisSquare(), slach::BLACK_BISHOP);
         }
+
+        //clear up memory
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+            delete ok_squares[i];
+        }
     }
 
     void TestGetFen()
@@ -382,6 +401,12 @@ public:
         std::string valid_fen = "8/2p5/6p1/6Pp/5r1P/2k5/4K3/8 b - - 1 47";
 
         TS_ASSERT_EQUALS(calculated_fen, valid_fen);
+
+        //clear up memory
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
     }
 
     void TestGetFenWithEnpassant()
@@ -464,6 +489,13 @@ public:
         std::string valid_fen = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
 
         TS_ASSERT_EQUALS(calculated_fen, valid_fen);
+
+        //clear up memory
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
+        delete p_enpassantsquare;
 
     }
 
