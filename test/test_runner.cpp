@@ -24,17 +24,17 @@ bool suite_TestChessboards_init = false;
 static TestChessboards suite_TestChessboards;
 
 static CxxTest::List Tests_TestChessboards = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestChessboards( "/home/alberto/code/slach/test/TestChessboardWithBorders.hpp", 13, "TestChessboards", suite_TestChessboards, Tests_TestChessboards );
+CxxTest::StaticSuiteDescription suiteDescription_TestChessboards( "/home/alberto/code/slach/test/TestChessboardWithBorders.hpp", 14, "TestChessboards", suite_TestChessboards, Tests_TestChessboards );
 
 static class TestDescription_suite_TestChessboards_testBorderFlags : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessboards_testBorderFlags() : CxxTest::RealTestDescription( Tests_TestChessboards, suiteDescription_TestChessboards, 17, "testBorderFlags" ) {}
+ TestDescription_suite_TestChessboards_testBorderFlags() : CxxTest::RealTestDescription( Tests_TestChessboards, suiteDescription_TestChessboards, 18, "testBorderFlags" ) {}
  void runTest() { suite_TestChessboards.testBorderFlags(); }
 } testDescription_suite_TestChessboards_testBorderFlags;
 
 static class TestDescription_suite_TestChessboards_testBoardWithBorders : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessboards_testBoardWithBorders() : CxxTest::RealTestDescription( Tests_TestChessboards, suiteDescription_TestChessboards, 46, "testBoardWithBorders" ) {}
+ TestDescription_suite_TestChessboards_testBoardWithBorders() : CxxTest::RealTestDescription( Tests_TestChessboards, suiteDescription_TestChessboards, 47, "testBoardWithBorders" ) {}
  void runTest() { suite_TestChessboards.testBoardWithBorders(); }
 } testDescription_suite_TestChessboards_testBoardWithBorders;
 
@@ -43,41 +43,41 @@ public:
 static TestChessBoard suite_TestChessBoard;
 
 static CxxTest::List Tests_TestChessBoard = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestChessBoard( "/home/alberto/code/slach/test/TestChessBoard.hpp", 13, "TestChessBoard", suite_TestChessBoard, Tests_TestChessBoard );
+CxxTest::StaticSuiteDescription suiteDescription_TestChessBoard( "/home/alberto/code/slach/test/TestChessBoard.hpp", 14, "TestChessBoard", suite_TestChessBoard, Tests_TestChessBoard );
 
 static class TestDescription_suite_TestChessBoard_testBasicBoard : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessBoard_testBasicBoard() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 109, "testBasicBoard" ) {}
+ TestDescription_suite_TestChessBoard_testBasicBoard() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 110, "testBasicBoard" ) {}
  void runTest() { suite_TestChessBoard.testBasicBoard(); }
 } testDescription_suite_TestChessBoard_testBasicBoard;
 
 static class TestDescription_suite_TestChessBoard_testInitialPosition : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessBoard_testInitialPosition() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 297, "testInitialPosition" ) {}
+ TestDescription_suite_TestChessBoard_testInitialPosition() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 298, "testInitialPosition" ) {}
  void runTest() { suite_TestChessBoard.testInitialPosition(); }
 } testDescription_suite_TestChessBoard_testInitialPosition;
 
 static class TestDescription_suite_TestChessBoard_testMakeAMove : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessBoard_testMakeAMove() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 307, "testMakeAMove" ) {}
+ TestDescription_suite_TestChessBoard_testMakeAMove() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 308, "testMakeAMove" ) {}
  void runTest() { suite_TestChessBoard.testMakeAMove(); }
 } testDescription_suite_TestChessBoard_testMakeAMove;
 
 static class TestDescription_suite_TestChessBoard_testArrangePiecesFromFEN : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessBoard_testArrangePiecesFromFEN() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 362, "testArrangePiecesFromFEN" ) {}
+ TestDescription_suite_TestChessBoard_testArrangePiecesFromFEN() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 363, "testArrangePiecesFromFEN" ) {}
  void runTest() { suite_TestChessBoard.testArrangePiecesFromFEN(); }
 } testDescription_suite_TestChessBoard_testArrangePiecesFromFEN;
 
 static class TestDescription_suite_TestChessBoard_testAnotherFen : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessBoard_testAnotherFen() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 490, "testAnotherFen" ) {}
+ TestDescription_suite_TestChessBoard_testAnotherFen() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 491, "testAnotherFen" ) {}
  void runTest() { suite_TestChessBoard.testAnotherFen(); }
 } testDescription_suite_TestChessBoard_testAnotherFen;
 
 static class TestDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 525, "testThatInvalidFenChangesNothing" ) {}
+ TestDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 526, "testThatInvalidFenChangesNothing" ) {}
  void runTest() { suite_TestChessBoard.testThatInvalidFenChangesNothing(); }
 } testDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing;
 
@@ -86,17 +86,17 @@ public:
 static TestSquare suite_TestSquare;
 
 static CxxTest::List Tests_TestSquare = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestSquare( "/home/alberto/code/slach/test/TestSquare.hpp", 12, "TestSquare", suite_TestSquare, Tests_TestSquare );
+CxxTest::StaticSuiteDescription suiteDescription_TestSquare( "/home/alberto/code/slach/test/TestSquare.hpp", 13, "TestSquare", suite_TestSquare, Tests_TestSquare );
 
 static class TestDescription_suite_TestSquare_testGetAndSetMethos : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestSquare_testGetAndSetMethos() : CxxTest::RealTestDescription( Tests_TestSquare, suiteDescription_TestSquare, 16, "testGetAndSetMethos" ) {}
+ TestDescription_suite_TestSquare_testGetAndSetMethos() : CxxTest::RealTestDescription( Tests_TestSquare, suiteDescription_TestSquare, 17, "testGetAndSetMethos" ) {}
  void runTest() { suite_TestSquare.testGetAndSetMethos(); }
 } testDescription_suite_TestSquare_testGetAndSetMethos;
 
 static class TestDescription_suite_TestSquare_testSameSquare : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestSquare_testSameSquare() : CxxTest::RealTestDescription( Tests_TestSquare, suiteDescription_TestSquare, 58, "testSameSquare" ) {}
+ TestDescription_suite_TestSquare_testSameSquare() : CxxTest::RealTestDescription( Tests_TestSquare, suiteDescription_TestSquare, 59, "testSameSquare" ) {}
  void runTest() { suite_TestSquare.testSameSquare(); }
 } testDescription_suite_TestSquare_testSameSquare;
 
@@ -105,41 +105,41 @@ public:
 static TestFenHandler suite_TestFenHandler;
 
 static CxxTest::List Tests_TestFenHandler = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestFenHandler( "/home/alberto/code/slach/test/TestFenHandler.hpp", 12, "TestFenHandler", suite_TestFenHandler, Tests_TestFenHandler );
+CxxTest::StaticSuiteDescription suiteDescription_TestFenHandler( "/home/alberto/code/slach/test/TestFenHandler.hpp", 14, "TestFenHandler", suite_TestFenHandler, Tests_TestFenHandler );
 
 static class TestDescription_suite_TestFenHandler_testFenValidity : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestFenHandler_testFenValidity() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 16, "testFenValidity" ) {}
+ TestDescription_suite_TestFenHandler_testFenValidity() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 18, "testFenValidity" ) {}
  void runTest() { suite_TestFenHandler.testFenValidity(); }
 } testDescription_suite_TestFenHandler_testFenValidity;
 
 static class TestDescription_suite_TestFenHandler_testAssignFen : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestFenHandler_testAssignFen() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 177, "testAssignFen" ) {}
+ TestDescription_suite_TestFenHandler_testAssignFen() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 179, "testAssignFen" ) {}
  void runTest() { suite_TestFenHandler.testAssignFen(); }
 } testDescription_suite_TestFenHandler_testAssignFen;
 
 static class TestDescription_suite_TestFenHandler_testAnotherValidFen : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestFenHandler_testAnotherValidFen() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 221, "testAnotherValidFen" ) {}
+ TestDescription_suite_TestFenHandler_testAnotherValidFen() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 223, "testAnotherValidFen" ) {}
  void runTest() { suite_TestFenHandler.testAnotherValidFen(); }
 } testDescription_suite_TestFenHandler_testAnotherValidFen;
 
 static class TestDescription_suite_TestFenHandler_testAssignFenStrangeCases : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestFenHandler_testAssignFenStrangeCases() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 272, "testAssignFenStrangeCases" ) {}
+ TestDescription_suite_TestFenHandler_testAssignFenStrangeCases() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 274, "testAssignFenStrangeCases" ) {}
  void runTest() { suite_TestFenHandler.testAssignFenStrangeCases(); }
 } testDescription_suite_TestFenHandler_testAssignFenStrangeCases;
 
 static class TestDescription_suite_TestFenHandler_TestGetFen : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestFenHandler_TestGetFen() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 336, "TestGetFen" ) {}
+ TestDescription_suite_TestFenHandler_TestGetFen() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 338, "TestGetFen" ) {}
  void runTest() { suite_TestFenHandler.TestGetFen(); }
 } testDescription_suite_TestFenHandler_TestGetFen;
 
 static class TestDescription_suite_TestFenHandler_TestGetFenWithEnpassant : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestFenHandler_TestGetFenWithEnpassant() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 385, "TestGetFenWithEnpassant" ) {}
+ TestDescription_suite_TestFenHandler_TestGetFenWithEnpassant() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 387, "TestGetFenWithEnpassant" ) {}
  void runTest() { suite_TestFenHandler.TestGetFenWithEnpassant(); }
 } testDescription_suite_TestFenHandler_TestGetFenWithEnpassant;
 
@@ -148,41 +148,41 @@ public:
 static TestGame suite_TestGame;
 
 static CxxTest::List Tests_TestGame = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestGame( "/home/alberto/code/slach/test/TestGame.hpp", 12, "TestGame", suite_TestGame, Tests_TestGame );
+CxxTest::StaticSuiteDescription suiteDescription_TestGame( "/home/alberto/code/slach/test/TestGame.hpp", 13, "TestGame", suite_TestGame, Tests_TestGame );
 
 static class TestDescription_suite_TestGame_testBasicMove : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestGame_testBasicMove() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 17, "testBasicMove" ) {}
+ TestDescription_suite_TestGame_testBasicMove() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 18, "testBasicMove" ) {}
  void runTest() { suite_TestGame.testBasicMove(); }
 } testDescription_suite_TestGame_testBasicMove;
 
 static class TestDescription_suite_TestGame_testPawnMove : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestGame_testPawnMove() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 48, "testPawnMove" ) {}
+ TestDescription_suite_TestGame_testPawnMove() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 49, "testPawnMove" ) {}
  void runTest() { suite_TestGame.testPawnMove(); }
 } testDescription_suite_TestGame_testPawnMove;
 
 static class TestDescription_suite_TestGame_testCapture : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestGame_testCapture() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 79, "testCapture" ) {}
+ TestDescription_suite_TestGame_testCapture() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 80, "testCapture" ) {}
  void runTest() { suite_TestGame.testCapture(); }
 } testDescription_suite_TestGame_testCapture;
 
 static class TestDescription_suite_TestGame_testPawnCapture : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestGame_testPawnCapture() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 111, "testPawnCapture" ) {}
+ TestDescription_suite_TestGame_testPawnCapture() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 112, "testPawnCapture" ) {}
  void runTest() { suite_TestGame.testPawnCapture(); }
 } testDescription_suite_TestGame_testPawnCapture;
 
 static class TestDescription_suite_TestGame_testCastleKingSide : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestGame_testCastleKingSide() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 142, "testCastleKingSide" ) {}
+ TestDescription_suite_TestGame_testCastleKingSide() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 143, "testCastleKingSide" ) {}
  void runTest() { suite_TestGame.testCastleKingSide(); }
 } testDescription_suite_TestGame_testCastleKingSide;
 
 static class TestDescription_suite_TestGame_testCastleQueenSide : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestGame_testCastleQueenSide() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 218, "testCastleQueenSide" ) {}
+ TestDescription_suite_TestGame_testCastleQueenSide() : CxxTest::RealTestDescription( Tests_TestGame, suiteDescription_TestGame, 219, "testCastleQueenSide" ) {}
  void runTest() { suite_TestGame.testCastleQueenSide(); }
 } testDescription_suite_TestGame_testCastleQueenSide;
 

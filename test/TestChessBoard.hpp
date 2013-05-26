@@ -11,8 +11,6 @@
  * Test suite to test the chessboard
  */
 
-using namespace slach;//it should be OK for testing code (non-production)
-
 class TestChessBoard : public CxxTest::TestSuite
 {
 private:
@@ -20,90 +18,90 @@ private:
     /**
      * helper method to check the initial chess position
      */
-    void CheckInitialPosition(const std::vector<Square* >& rSquares)
+    void CheckInitialPosition(const std::vector<slach::Square* >& rSquares)
     {
         for (unsigned i = 0; i < rSquares.size(); ++i)
         {
             //first rank
             if ((rSquares[i]->GetFile()=="a")&&(rSquares[i]->GetRank()=="1"))
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),WHITE_ROOK);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::WHITE_ROOK);
             }
             else if ((rSquares[i]->GetFile()=="h")&&(rSquares[i]->GetRank()=="1"))
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),WHITE_ROOK);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::WHITE_ROOK);
             }
             else if ((rSquares[i]->GetFile()=="b")&&(rSquares[i]->GetRank()=="1"))
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),WHITE_KNIGHT);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::WHITE_KNIGHT);
             }
             else if ((rSquares[i]->GetFile()=="g")&&(rSquares[i]->GetRank()=="1"))
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),WHITE_KNIGHT);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::WHITE_KNIGHT);
             }
             else if ((rSquares[i]->GetFile()=="c")&&(rSquares[i]->GetRank()=="1"))
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),WHITE_BISHOP);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::WHITE_BISHOP);
             }
             else if ((rSquares[i]->GetFile()=="f")&&(rSquares[i]->GetRank()=="1"))
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),WHITE_BISHOP);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::WHITE_BISHOP);
             }
             else if ((rSquares[i]->GetFile()=="d")&&(rSquares[i]->GetRank()=="1"))
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),WHITE_QUEEN);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::WHITE_QUEEN);
             }
             else if ((rSquares[i]->GetFile()=="e")&&(rSquares[i]->GetRank()=="1"))
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),WHITE_KING);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::WHITE_KING);
             }
             //second rank, all white pawns
             else if(rSquares[i]->GetRank()=="2" && rSquares[i]->IsBorderSquare()==false)
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),WHITE_PAWN);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::WHITE_PAWN);
             }
             //seventh rank, all black pawns
             else if (rSquares[i]->GetRank()=="7" && rSquares[i]->IsBorderSquare()==false)
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),BLACK_PAWN);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::BLACK_PAWN);
             }
 
             //EIGTH rank
             else if ((rSquares[i]->GetFile()=="a")&&(rSquares[i]->GetRank()=="8"))
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),BLACK_ROOK);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::BLACK_ROOK);
             }
             else if ((rSquares[i]->GetFile()=="h")&&(rSquares[i]->GetRank()=="8"))
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),BLACK_ROOK);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::BLACK_ROOK);
             }
             else if ((rSquares[i]->GetFile()=="b")&&(rSquares[i]->GetRank()=="8"))
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),BLACK_KNIGHT);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::BLACK_KNIGHT);
             }
             else if ((rSquares[i]->GetFile()=="g")&&(rSquares[i]->GetRank()=="8"))
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),BLACK_KNIGHT);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::BLACK_KNIGHT);
             }
             else if ((rSquares[i]->GetFile()=="c")&&(rSquares[i]->GetRank()=="8"))
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),BLACK_BISHOP);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::BLACK_BISHOP);
             }
             else if ((rSquares[i]->GetFile()=="f")&&(rSquares[i]->GetRank()=="8"))
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),BLACK_BISHOP);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::BLACK_BISHOP);
             }
             else if ((rSquares[i]->GetFile()=="d")&&(rSquares[i]->GetRank()=="8"))
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),BLACK_QUEEN);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::BLACK_QUEEN);
             }
             else if ((rSquares[i]->GetFile()=="e")&&(rSquares[i]->GetRank()=="8"))
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),BLACK_KING);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::BLACK_KING);
             }
             else
             {
-                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),NO_PIECE);
+                TS_ASSERT_EQUALS(rSquares[i]->GetPieceOnThisSquare(),slach::NO_PIECE);
             }
         }
     }
@@ -111,9 +109,9 @@ public:
 
     void testBasicBoard(void)
     {
-        ChessBoard my_cb;
+        slach::ChessBoard my_cb;
         my_cb.SetupChessBoard();
-        std::vector<Square* > squares = my_cb.GetSquares();
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
         TS_ASSERT_EQUALS(squares.size(), 64u);
 
         //a1
@@ -299,31 +297,31 @@ public:
 
     void testInitialPosition(void)
     {
-        ChessBoard my_cb;
+        slach::ChessBoard my_cb;
         my_cb.SetupChessBoard();
         my_cb.SetupInitialChessPosition();
-        std::vector<Square* > squares = my_cb.GetSquares();
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
         TS_ASSERT_EQUALS(squares.size(), 64u);
         CheckInitialPosition(squares);
     }
 
     void testMakeAMove()
     {
-        ChessBoard my_cb;
+        slach::ChessBoard my_cb;
         my_cb.SetupChessBoard();
         my_cb.SetupInitialChessPosition();
 
         //non-capturing move
-        std::vector<Square*> squares = my_cb.GetSquares();
+        std::vector<slach::Square*> squares = my_cb.GetSquares();
         TS_ASSERT_EQUALS(squares[12]->GetFile(),"e");
         TS_ASSERT_EQUALS(squares[20]->GetFile(),"e");
         TS_ASSERT_EQUALS(squares[12]->GetRank(),"2");
         TS_ASSERT_EQUALS(squares[20]->GetRank(),"3");
 
-        TS_ASSERT_EQUALS(squares[12]->GetPieceOnThisSquare(),WHITE_PAWN);
-        TS_ASSERT_EQUALS(squares[20]->GetPieceOnThisSquare(),NO_PIECE);
+        TS_ASSERT_EQUALS(squares[12]->GetPieceOnThisSquare(),slach::WHITE_PAWN);
+        TS_ASSERT_EQUALS(squares[20]->GetPieceOnThisSquare(),slach::NO_PIECE);
 
-        Move non_capturing_move;
+        slach::Move non_capturing_move;
         non_capturing_move.first = squares[12];
         non_capturing_move.second = squares[20];
 
@@ -331,9 +329,9 @@ public:
         my_cb.MakeThisMove(non_capturing_move);
 
         //size is the same
-        std::vector<Square*> updated_squares = my_cb.GetSquares();
-        TS_ASSERT_EQUALS(updated_squares[12]->GetPieceOnThisSquare(),NO_PIECE);//e2 now empty
-        TS_ASSERT_EQUALS(updated_squares[20]->GetPieceOnThisSquare(),WHITE_PAWN);//e3 with white pawn
+        std::vector<slach::Square*> updated_squares = my_cb.GetSquares();
+        TS_ASSERT_EQUALS(updated_squares[12]->GetPieceOnThisSquare(),slach::NO_PIECE);//e2 now empty
+        TS_ASSERT_EQUALS(updated_squares[20]->GetPieceOnThisSquare(),slach::WHITE_PAWN);//e3 with white pawn
 
         //make sure we do not screw up the coordinates
         TS_ASSERT_EQUALS(updated_squares[12]->GetFile(),"e");
@@ -343,12 +341,12 @@ public:
 
         //capturing move a2 takes a7 (a fake one, but does not matter here)
 
-        Move capturing_move;
+        slach::Move capturing_move;
         capturing_move.first = squares[8];//a2
         capturing_move.second = squares[48];//a7
 
-        TS_ASSERT_EQUALS(squares[8]->GetPieceOnThisSquare(),WHITE_PAWN);//a2, white pawn
-        TS_ASSERT_EQUALS(squares[48]->GetPieceOnThisSquare(),BLACK_PAWN);//a7, black pawn
+        TS_ASSERT_EQUALS(squares[8]->GetPieceOnThisSquare(),slach::WHITE_PAWN);//a2, white pawn
+        TS_ASSERT_EQUALS(squares[48]->GetPieceOnThisSquare(),slach::BLACK_PAWN);//a7, black pawn
 
         TS_ASSERT_EQUALS(squares[8]->GetFile(),"a");
         TS_ASSERT_EQUALS(squares[48]->GetFile(),"a");
@@ -358,65 +356,65 @@ public:
         //make the move e2-e4
         my_cb.MakeThisMove(capturing_move);
 
-        TS_ASSERT_EQUALS(squares[8]->GetPieceOnThisSquare(),NO_PIECE);//e2 now empty
-        TS_ASSERT_EQUALS(squares[48]->GetPieceOnThisSquare(),WHITE_PAWN);//e4 with white pawn
+        TS_ASSERT_EQUALS(squares[8]->GetPieceOnThisSquare(),slach::NO_PIECE);//e2 now empty
+        TS_ASSERT_EQUALS(squares[48]->GetPieceOnThisSquare(),slach::WHITE_PAWN);//e4 with white pawn
     }
 
     void testArrangePiecesFromFEN()
     {
-        ChessBoard my_cb;
+        slach::ChessBoard my_cb;
         my_cb.SetupChessBoard();
 
         std::string fen_after_2Nf3 = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
         int rc = my_cb.ArrangePiecesFromFEN(fen_after_2Nf3);
         TS_ASSERT_EQUALS(rc,0);
 
-        std::vector<Square*> squares = my_cb.GetSquares();
+        std::vector<slach::Square*> squares = my_cb.GetSquares();
         for (unsigned i = 0; i < squares.size(); ++i)
         {
             //first rank
             if ((squares[i]->GetFile()=="a")&&(squares[i]->GetRank()=="1"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_ROOK);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_ROOK);
             }
             else if ((squares[i]->GetFile()=="h")&&(squares[i]->GetRank()=="1"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_ROOK);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_ROOK);
             }
             else if ((squares[i]->GetFile()=="b")&&(squares[i]->GetRank()=="1"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_KNIGHT);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_KNIGHT);
             }
             else if ((squares[i]->GetFile()=="g")&&(squares[i]->GetRank()=="1"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),NO_PIECE);//knight wne to f3
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::NO_PIECE);//knight wne to f3
             }
             else if ((squares[i]->GetFile()=="c")&&(squares[i]->GetRank()=="1"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_BISHOP);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_BISHOP);
             }
             else if ((squares[i]->GetFile()=="f")&&(squares[i]->GetRank()=="1"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_BISHOP);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_BISHOP);
             }
             else if ((squares[i]->GetFile()=="d")&&(squares[i]->GetRank()=="1"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_QUEEN);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_QUEEN);
             }
             else if ((squares[i]->GetFile()=="e")&&(squares[i]->GetRank()=="1"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_KING);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_KING);
             }
             //second rank, all white pawns
             else if(squares[i]->GetRank()=="2" && squares[i]->IsBorderSquare()==false)
             {
                 if (squares[i]->GetFile()=="e")//pawn went to e4
                 {
-                    TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),NO_PIECE);
+                    TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::NO_PIECE);
                 }
                 else
                 {
-                    TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_PAWN);
+                    TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_PAWN);
                 }
             }
             //seventh rank, all black pawns
@@ -424,75 +422,75 @@ public:
             {
                 if (squares[i]->GetFile()=="c")//pawn went to c5
                 {
-                    TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),NO_PIECE);
+                    TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::NO_PIECE);
                 }
                 else
                 {
-                    TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_PAWN);
+                    TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_PAWN);
                 }
             }
 
             //EIGTH rank
             else if ((squares[i]->GetFile()=="a")&&(squares[i]->GetRank()=="8"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_ROOK);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_ROOK);
             }
             else if ((squares[i]->GetFile()=="h")&&(squares[i]->GetRank()=="8"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_ROOK);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_ROOK);
             }
             else if ((squares[i]->GetFile()=="b")&&(squares[i]->GetRank()=="8"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_KNIGHT);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_KNIGHT);
             }
             else if ((squares[i]->GetFile()=="g")&&(squares[i]->GetRank()=="8"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_KNIGHT);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_KNIGHT);
             }
             else if ((squares[i]->GetFile()=="c")&&(squares[i]->GetRank()=="8"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_BISHOP);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_BISHOP);
             }
             else if ((squares[i]->GetFile()=="f")&&(squares[i]->GetRank()=="8"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_BISHOP);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_BISHOP);
             }
             else if ((squares[i]->GetFile()=="d")&&(squares[i]->GetRank()=="8"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_QUEEN);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_QUEEN);
             }
             else if ((squares[i]->GetFile()=="e")&&(squares[i]->GetRank()=="8"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_KING);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_KING);
             }
             else
             {
                 if (((squares[i]->GetFile()=="f")&&(squares[i]->GetRank()=="3")))
                 {
-                    TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_KNIGHT);
+                    TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_KNIGHT);
                 }
                 else if (((squares[i]->GetFile()=="c")&&(squares[i]->GetRank()=="5")))
                 {
-                    TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_PAWN);
+                    TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_PAWN);
                 }
                 else if (((squares[i]->GetFile()=="e")&&(squares[i]->GetRank()=="4")))
                 {
-                    TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_PAWN);
+                    TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_PAWN);
                 }
                 else
                 {
-                    TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),NO_PIECE);
+                    TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::NO_PIECE);
                 }
             }
         }
 
         //black's turn
-        TS_ASSERT_EQUALS(my_cb.WhosTurnIsIt(), BLACK);
+        TS_ASSERT_EQUALS(my_cb.WhosTurnIsIt(), slach::BLACK);
     }
 
     void testAnotherFen()
     {
-        ChessBoard my_cb;
+        slach::ChessBoard my_cb;
         my_cb.SetupChessBoard();
         //here we test that we are able to change a position from the initial position
         my_cb.SetupInitialChessPosition();
@@ -500,34 +498,34 @@ public:
         std::string endgame = "8/8/8/8/8/5k2/6p1/5K2 w - - 0 68";
         int rc = my_cb.ArrangePiecesFromFEN(endgame);
         TS_ASSERT_EQUALS(rc,0);
-        std::vector<Square*> squares = my_cb.GetSquares();
+        std::vector<slach::Square*> squares = my_cb.GetSquares();
         for (unsigned i = 0; i < squares.size(); ++i)
         {
             //first rank
             if ((squares[i]->GetFile()=="f")&&(squares[i]->GetRank()=="3"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_KING);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_KING);
             }
             else if ((squares[i]->GetFile()=="f")&&(squares[i]->GetRank()=="1"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_KING);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_KING);
             }
             else if ((squares[i]->GetFile()=="g")&&(squares[i]->GetRank()=="2"))
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_PAWN);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_PAWN);
             }
             else
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),NO_PIECE);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::NO_PIECE);
             }
         }
 
-        TS_ASSERT_EQUALS(my_cb.WhosTurnIsIt(), WHITE);
+        TS_ASSERT_EQUALS(my_cb.WhosTurnIsIt(), slach::WHITE);
     }
 
     void testThatInvalidFenChangesNothing()
     {
-        ChessBoard my_cb;
+        slach::ChessBoard my_cb;
         my_cb.SetupChessBoard();
 
         std::string too_long = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R/8/8/8/8 b KQkq - 1 2";
@@ -537,13 +535,13 @@ public:
         std::string too_short = "rnbqkbnr/pp1ppppp/ b KQkq - 1 2";
         rc = my_cb.ArrangePiecesFromFEN(too_short);
         TS_ASSERT_EQUALS(rc,1);
-        TS_ASSERT_EQUALS(my_cb.WhosTurnIsIt(), WHITE);//invalid fen not applied, still white's turn
+        TS_ASSERT_EQUALS(my_cb.WhosTurnIsIt(), slach::WHITE);//invalid fen not applied, still white's turn
 
         //invalid fen, check return code and that we don't move anything on the board (all empty squares)
-        std::vector<Square*> squares = my_cb.GetSquares();
+        std::vector<slach::Square*> squares = my_cb.GetSquares();
         for (unsigned i = 0; i < squares.size(); ++i)
         {
-            TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),NO_PIECE);
+            TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::NO_PIECE);
         }
 
         //invalid fen again, check return code and that we don't move anything on the board (after setting initial position)
@@ -554,4 +552,5 @@ public:
         CheckInitialPosition(squares);
     }
 };
+
 #endif

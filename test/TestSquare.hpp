@@ -9,7 +9,6 @@
 /**
  * Test suite to test the SQUARE
  */
-using namespace slach;//it should be OK for testing code (non-production)
 
 class TestSquare : public CxxTest::TestSuite
 {
@@ -17,7 +16,7 @@ public:
 
     void testGetAndSetMethos(void)
     {
-        Square sq1;
+        slach::Square sq1;
         //check default values
         TS_ASSERT_EQUALS(sq1.GetRank(), "UNDEFINED");
         TS_ASSERT_EQUALS(sq1.GetFile(), "UNDEFINED");
@@ -25,7 +24,7 @@ public:
         TS_ASSERT_EQUALS(sq1.IsCornerSquare(), false);
         TS_ASSERT_EQUALS(sq1.IsCoordinatePrintable(), false);
         TS_ASSERT_EQUALS(sq1.IsCornerSquare(), false);
-        TS_ASSERT_EQUALS(sq1.GetPieceOnThisSquare(),NO_PIECE);
+        TS_ASSERT_EQUALS(sq1.GetPieceOnThisSquare(),slach::NO_PIECE);
         TS_ASSERT_EQUALS(sq1.IsDarkSquare(), false);
         TS_ASSERT_EQUALS(sq1.IsLightSquare(), false);
 
@@ -42,11 +41,11 @@ public:
         TS_ASSERT_EQUALS(sq1.IsLightSquare(), false);
         TS_ASSERT_EQUALS(sq1.IsDarkSquare(), true);
 
-        sq1.SetPieceOnThisSquare(BLACK_KING);
-        TS_ASSERT_EQUALS(sq1.GetPieceOnThisSquare(),BLACK_KING);
+        sq1.SetPieceOnThisSquare(slach::BLACK_KING);
+        TS_ASSERT_EQUALS(sq1.GetPieceOnThisSquare(),slach::BLACK_KING);
 
-        sq1.SetPieceOnThisSquare(WHITE_PAWN);
-        TS_ASSERT_EQUALS(sq1.GetPieceOnThisSquare(),WHITE_PAWN);
+        sq1.SetPieceOnThisSquare(slach::WHITE_PAWN);
+        TS_ASSERT_EQUALS(sq1.GetPieceOnThisSquare(),slach::WHITE_PAWN);
 
         //set some features and check
         sq1.SetAsBorderSquare();
@@ -59,8 +58,8 @@ public:
 
     void testSameSquare(void)
     {
-        Square sq1;
-        Square sq2;
+        slach::Square sq1;
+        slach::Square sq2;
 
         TS_ASSERT_EQUALS(sq1.IsSameSquare(sq2), true);
         TS_ASSERT_EQUALS(sq2.IsSameSquare(sq1), true);

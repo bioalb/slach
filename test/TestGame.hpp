@@ -10,8 +10,6 @@
  * Test suite to test the game class
  */
 
-using namespace slach;//it should be OK for testing code (non-production)
-
 class TestGame : public CxxTest::TestSuite
 {
 public:
@@ -19,21 +17,21 @@ public:
 
     void testBasicMove()
     {
-        Game gm;
+        slach::Game gm;
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 0u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 0u);
 
-        Square sq1;
+        slach::Square sq1;
         sq1.SetFile("a");
         sq1.SetRank("1");
-        sq1.SetPieceOnThisSquare(BLACK_BISHOP);
+        sq1.SetPieceOnThisSquare(slach::BLACK_BISHOP);
 
-        Square sq2;
+        slach::Square sq2;
         sq2.SetFile("e");
         sq2.SetRank("4");
-        sq2.SetPieceOnThisSquare(NO_PIECE);
+        sq2.SetPieceOnThisSquare(slach::NO_PIECE);
 
-        Move bishop_e4_move;
+        slach::Move bishop_e4_move;
         bishop_e4_move.first = &sq1;
         bishop_e4_move.second = &sq2;
 
@@ -50,21 +48,21 @@ public:
 
     void testPawnMove()
     {
-        Game gm;
+        slach::Game gm;
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 0u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 0u);
 
-        Square sq1;
+        slach::Square sq1;
         sq1.SetFile("a");
         sq1.SetRank("2");
-        sq1.SetPieceOnThisSquare(BLACK_PAWN);
+        sq1.SetPieceOnThisSquare(slach::BLACK_PAWN);
 
-        Square sq2;
+        slach::Square sq2;
         sq2.SetFile("a");
         sq2.SetRank("4");
-        sq2.SetPieceOnThisSquare(NO_PIECE);
+        sq2.SetPieceOnThisSquare(slach::NO_PIECE);
 
-        Move a4_move;
+        slach::Move a4_move;
         a4_move.first = &sq1;
         a4_move.second = &sq2;
 
@@ -81,21 +79,21 @@ public:
 
     void testCapture()
     {
-        Game gm;
+        slach::Game gm;
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 0u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 0u);
 
-        Square sq1;
+        slach::Square sq1;
         sq1.SetFile("a");
         sq1.SetRank("2");
-        sq1.SetPieceOnThisSquare(BLACK_QUEEN);
+        sq1.SetPieceOnThisSquare(slach::BLACK_QUEEN);
 
-        Square sq2;
+        slach::Square sq2;
         sq2.SetFile("a");
         sq2.SetRank("4");
-        sq2.SetPieceOnThisSquare(WHITE_BISHOP);
+        sq2.SetPieceOnThisSquare(slach::WHITE_BISHOP);
 
-        Move queen_takes_bishop;
+        slach::Move queen_takes_bishop;
         queen_takes_bishop.first = &sq1;
         queen_takes_bishop.second = &sq2;
 
@@ -113,21 +111,21 @@ public:
 
     void testPawnCapture()
     {
-        Game gm;
+        slach::Game gm;
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 0u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 0u);
 
-        Square sq1;
+        slach::Square sq1;
         sq1.SetFile("a");
         sq1.SetRank("2");
-        sq1.SetPieceOnThisSquare(BLACK_PAWN);
+        sq1.SetPieceOnThisSquare(slach::BLACK_PAWN);
 
-        Square sq2;
+        slach::Square sq2;
         sq2.SetFile("b");
         sq2.SetRank("3");
-        sq2.SetPieceOnThisSquare(WHITE_BISHOP);
+        sq2.SetPieceOnThisSquare(slach::WHITE_BISHOP);
 
-        Move pawn_takes_bishop;
+        slach::Move pawn_takes_bishop;
         pawn_takes_bishop.first = &sq1;
         pawn_takes_bishop.second = &sq2;
 
@@ -144,27 +142,27 @@ public:
 
     void testCastleKingSide()
     {
-        Game gm;
+        slach::Game gm;
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 0u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 0u);
 
-        Square sq1;
+        slach::Square sq1;
         sq1.SetFile("e");
         sq1.SetRank("1");
-        sq1.SetPieceOnThisSquare(WHITE_KING);
+        sq1.SetPieceOnThisSquare(slach::WHITE_KING);
 
-        Square sq2;
+        slach::Square sq2;
         sq2.SetFile("g");
         sq2.SetRank("1");
-        sq2.SetPieceOnThisSquare(NO_PIECE);
+        sq2.SetPieceOnThisSquare(slach::NO_PIECE);
 
-        Move castle_white;
+        slach::Move castle_white;
         castle_white.first = &sq1;
         castle_white.second = &sq2;
 
         gm.DetermineSpecialMove(castle_white);
-        SpecialMoveType mt = gm.GetSpecialMoveType();
-        TS_ASSERT_EQUALS(mt, WHITE_CASTLE_KINGSIDE);
+        slach::SpecialMoveType mt = gm.GetSpecialMoveType();
+        TS_ASSERT_EQUALS(mt, slach::WHITE_CASTLE_KINGSIDE);
 
         gm.AddMove(castle_white);
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 1u);
@@ -176,23 +174,23 @@ public:
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 1u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat()[0], "O-O");
 
-        Square sq3;
+        slach::Square sq3;
         sq3.SetFile("e");
         sq3.SetRank("8");
-        sq3.SetPieceOnThisSquare(BLACK_KING);
+        sq3.SetPieceOnThisSquare(slach::BLACK_KING);
 
-        Square sq4;
+        slach::Square sq4;
         sq4.SetFile("g");
         sq4.SetRank("8");
-        sq4.SetPieceOnThisSquare(NO_PIECE);
+        sq4.SetPieceOnThisSquare(slach::NO_PIECE);
 
-        Move castle_black;
+        slach::Move castle_black;
         castle_black.first = &sq3;
         castle_black.second = &sq4;
 
         gm.DetermineSpecialMove(castle_black);
-        SpecialMoveType mt2 = gm.GetSpecialMoveType();
-        TS_ASSERT_EQUALS(mt2, BLACK_CASTLE_KINGSIDE);
+        slach::SpecialMoveType mt2 = gm.GetSpecialMoveType();
+        TS_ASSERT_EQUALS(mt2, slach::BLACK_CASTLE_KINGSIDE);
 
         gm.AddMove(castle_black);
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 2u);
@@ -220,27 +218,27 @@ public:
 
     void testCastleQueenSide()
     {
-        Game gm;
+        slach::Game gm;
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 0u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 0u);
 
-        Square sq1;
+        slach::Square sq1;
         sq1.SetFile("e");
         sq1.SetRank("1");
-        sq1.SetPieceOnThisSquare(WHITE_KING);
+        sq1.SetPieceOnThisSquare(slach::WHITE_KING);
 
-        Square sq2;
+        slach::Square sq2;
         sq2.SetFile("c");
         sq2.SetRank("1");
-        sq2.SetPieceOnThisSquare(NO_PIECE);
+        sq2.SetPieceOnThisSquare(slach::NO_PIECE);
 
-        Move castle_white;
+        slach::Move castle_white;
         castle_white.first = &sq1;
         castle_white.second = &sq2;
 
         gm.DetermineSpecialMove(castle_white);
-        SpecialMoveType mt = gm.GetSpecialMoveType();
-        TS_ASSERT_EQUALS(mt, WHITE_CASTLE_QUEENSIDE);
+        slach::SpecialMoveType mt = gm.GetSpecialMoveType();
+        TS_ASSERT_EQUALS(mt, slach::WHITE_CASTLE_QUEENSIDE);
 
         gm.AddMove(castle_white);
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 1u);
@@ -252,23 +250,23 @@ public:
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 1u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat()[0], "O-O-O");
 
-        Square sq3;
+        slach::Square sq3;
         sq3.SetFile("e");
         sq3.SetRank("8");
-        sq3.SetPieceOnThisSquare(BLACK_KING);
+        sq3.SetPieceOnThisSquare(slach::BLACK_KING);
 
-        Square sq4;
+        slach::Square sq4;
         sq4.SetFile("c");
         sq4.SetRank("8");
-        sq4.SetPieceOnThisSquare(NO_PIECE);
+        sq4.SetPieceOnThisSquare(slach::NO_PIECE);
 
-        Move castle_black;
+        slach::Move castle_black;
         castle_black.first = &sq3;
         castle_black.second = &sq4;
 
         gm.DetermineSpecialMove(castle_black);
-        SpecialMoveType mt2 = gm.GetSpecialMoveType();
-        TS_ASSERT_EQUALS(mt2, BLACK_CASTLE_QUEENSIDE);
+        slach::SpecialMoveType mt2 = gm.GetSpecialMoveType();
+        TS_ASSERT_EQUALS(mt2, slach::BLACK_CASTLE_QUEENSIDE);
 
         gm.AddMove(castle_black);
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 2u);

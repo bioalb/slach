@@ -10,7 +10,6 @@
  * Test suite to test the fen handler class
  */
 
-using namespace slach;//it should be OK for testing code (non-production)
 
 class TestFenHandler : public CxxTest::TestSuite
 {
@@ -18,7 +17,7 @@ public:
 
     void testFenValidity()
     {
-        FenHandler handler;
+        slach::FenHandler handler;
 
         /////////////////////////////
         //WRONG STRINGS
@@ -179,19 +178,19 @@ public:
 
     void testAssignFen()
     {
-        FenHandler handler;
+        slach::FenHandler handler;
 
         //black king on f3, black pawn on g2 and white king on f1
         std::string endgame = "8/8/8/8/8/5k2/6p1/5K2 w - - 0 68";
         TS_ASSERT_EQUALS(handler.IsFenValid(endgame), true);
 
         //create a vector of squares for testing purposes
-        std::vector<Square* > squares;
+        std::vector<slach::Square* > squares;
         squares.resize(64u);
         for (unsigned i = 0; i < squares.size(); ++i)
         {
-            squares[i] = new Square();
-            squares[i]->SetPieceOnThisSquare(BLACK_BISHOP);//for testing, we start with all bishops!!
+            squares[i] = new slach::Square();
+            squares[i]->SetPieceOnThisSquare(slach::BLACK_BISHOP);//for testing, we start with all bishops!!
         }
 
         int rc = handler.SetPositionFromFen(endgame, squares);
@@ -203,39 +202,39 @@ public:
 
             if (i==5u)//f1
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_KING);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_KING);
             }
             else if (i==21u)//f3
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_KING);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_KING);
             }
             else if (i==14u)//g2
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_PAWN);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_PAWN);
             }
             else
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),NO_PIECE);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::NO_PIECE);
             }
         }
-        TS_ASSERT_EQUALS(handler.WhosTurnIsIt(), WHITE);
+        TS_ASSERT_EQUALS(handler.WhosTurnIsIt(), slach::WHITE);
     }
 
     void testAnotherValidFen()
     {
-        FenHandler handler;
+        slach::FenHandler handler;
 
         //white king on e2, black king on c3, black rook on f4 white pawn on h4 and g5, black pawn on h5, g56 and c7
         std::string endgame = "8/2p5/6p1/6Pp/5r1P/2k5/4K3/8 b - - 1 47";
         TS_ASSERT_EQUALS(handler.IsFenValid(endgame), true);
 
         //create a vector of squares for testing purposes
-        std::vector<Square* > squares;
+        std::vector<slach::Square* > squares;
         squares.resize(64u);
         for (unsigned i = 0; i < squares.size(); ++i)
         {
-            squares[i] = new Square();
-            squares[i]->SetPieceOnThisSquare(BLACK_BISHOP);//for testing, we start with all bishops!!
+            squares[i] = new slach::Square();
+            squares[i]->SetPieceOnThisSquare(slach::BLACK_BISHOP);//for testing, we start with all bishops!!
         }
 
         int rc = handler.SetPositionFromFen(endgame, squares);
@@ -246,47 +245,47 @@ public:
         {
             if (i==12u)//e2
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_KING);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_KING);
             }
             else if (i==18u)//c3
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_KING);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_KING);
             }
             else if (i==29u)//f4
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_ROOK);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_ROOK);
             }
             else if ( (i==31u) || (i==38) )//h4 or g5
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),WHITE_PAWN);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_PAWN);
             }
             else if ( (i==39u) || (i==46) || (i==50) )//h5 or g6 or c7
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),BLACK_PAWN);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_PAWN);
             }
             else
             {
-                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),NO_PIECE);
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::NO_PIECE);
             }
         }
-        TS_ASSERT_EQUALS(handler.WhosTurnIsIt(), BLACK);
+        TS_ASSERT_EQUALS(handler.WhosTurnIsIt(), slach::BLACK);
     }
 
     void testAssignFenStrangeCases()
     {
-        FenHandler handler;
+        slach::FenHandler handler;
         //some valid fen
         std::string endgame = "8/8/8/8/8/5k2/6p1/5K2 w - - 0 68";
         TS_ASSERT_EQUALS(handler.IsFenValid(endgame), true);
 
         //create a vector of squares for testing purposes...
-        std::vector<Square* > squares;
+        std::vector<slach::Square* > squares;
         //but one element short
         squares.resize(63u);
         for (unsigned i = 0; i < squares.size(); ++i)
         {
-            squares[i] = new Square();
-            squares[i]->SetPieceOnThisSquare(BLACK_BISHOP);//for testing, we start with all bishops!!
+            squares[i] = new slach::Square();
+            squares[i]->SetPieceOnThisSquare(slach::BLACK_BISHOP);//for testing, we start with all bishops!!
         }
 
         //check that the method returns 1 as error code...
@@ -296,13 +295,13 @@ public:
         //..and that it didn't touch anything else
         for (unsigned i = 0; i < squares.size(); ++i)
         {
-            TS_ASSERT_EQUALS( squares[i]->GetPieceOnThisSquare(), BLACK_BISHOP);
+            TS_ASSERT_EQUALS( squares[i]->GetPieceOnThisSquare(), slach::BLACK_BISHOP);
         }
 
         //now check the case of a vector of NULL pointers (should not segfault, it should simply return 1)
 
         //create a vector of squares for testing purposes...
-        std::vector<Square* > null_squares;
+        std::vector<slach::Square* > null_squares;
         null_squares.resize(64u);
 
         //check that the method returns 1 as error code as the pointers point to NULL...
@@ -317,12 +316,12 @@ public:
         TS_ASSERT_EQUALS(handler.IsFenValid(invalid_endgame), false);
 
         //create a vector of valid squares for testing purposes...
-        std::vector<Square* > ok_squares;
+        std::vector<slach::Square* > ok_squares;
         ok_squares.resize(64u);
         for (unsigned i = 0; i < squares.size(); ++i)
         {
-            ok_squares[i] = new Square();
-            ok_squares[i]->SetPieceOnThisSquare(BLACK_BISHOP);//for testing, we start with all bishops!!
+            ok_squares[i] = new slach::Square();
+            ok_squares[i]->SetPieceOnThisSquare(slach::BLACK_BISHOP);//for testing, we start with all bishops!!
         }
 
         //check that the method returns 1 as error code...
@@ -332,18 +331,18 @@ public:
         //..and that it didn't touch anything else
         for (unsigned i = 0; i < squares.size(); ++i)
         {
-            TS_ASSERT_EQUALS( ok_squares[i]->GetPieceOnThisSquare(), BLACK_BISHOP);
+            TS_ASSERT_EQUALS( ok_squares[i]->GetPieceOnThisSquare(), slach::BLACK_BISHOP);
         }
     }
 
     void TestGetFen()
     {
         //create a vector of squares for testing purposes
-        std::vector<Square* > squares;
+        std::vector<slach::Square* > squares;
         squares.resize(64u);
         for (unsigned i = 0; i < squares.size(); ++i)
         {
-            squares[i] = new Square();
+            squares[i] = new slach::Square();
         }
 
         //fill in the vector of squares with a known position
@@ -352,33 +351,33 @@ public:
         {
             if (i==12u)//e2
             {
-                squares[i]->SetPieceOnThisSquare(WHITE_KING);
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_KING);
             }
             else if (i==18u)//c3
             {
-                squares[i]->SetPieceOnThisSquare(BLACK_KING);
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_KING);
             }
             else if (i==29u)//f4
             {
-                squares[i]->SetPieceOnThisSquare(BLACK_ROOK);
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_ROOK);
             }
             else if ( (i==31u) || (i==38) )//h4 or g5
             {
-                squares[i]->SetPieceOnThisSquare(WHITE_PAWN);
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_PAWN);
             }
             else if ( (i==39u) || (i==46) || (i==50) )//h5 or g6 or c7
             {
-                squares[i]->SetPieceOnThisSquare(BLACK_PAWN);
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_PAWN);
             }
             else
             {
-                squares[i]->SetPieceOnThisSquare(NO_PIECE);
+                squares[i]->SetPieceOnThisSquare(slach::NO_PIECE);
             }
         }
 
-        FenHandler handler;
-        std::vector<CastlingRights> empty_vec;
-        std::string calculated_fen = handler.GetFenFromPosition(squares,BLACK,empty_vec,NULL,1,47);
+        slach::FenHandler handler;
+        std::vector<slach::CastlingRights> empty_vec;
+        std::string calculated_fen = handler.GetFenFromPosition(squares,slach::BLACK,empty_vec,NULL,1,47);
         //black king on f3, black pawn on g2 and white king on f1
         std::string valid_fen = "8/2p5/6p1/6Pp/5r1P/2k5/4K3/8 b - - 1 47";
 
@@ -388,11 +387,11 @@ public:
     void TestGetFenWithEnpassant()
     {
         //create a vector of squares for testing purposes
-        std::vector<Square* > squares;
+        std::vector<slach::Square* > squares;
         squares.resize(64u);
         for (unsigned i = 0; i < squares.size(); ++i)
         {
-            squares[i] = new Square();
+            squares[i] = new slach::Square();
         }
 
         //fill in the vector of squares with a known position
@@ -401,66 +400,66 @@ public:
         {
             if (i==0u || i==7u)//a1 and h1
             {
-                squares[i]->SetPieceOnThisSquare(WHITE_ROOK);
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_ROOK);
             }
             else if (i==1u || i==6u)//b1 and g1
             {
-                squares[i]->SetPieceOnThisSquare(WHITE_KNIGHT);
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_KNIGHT);
             }
             else if (i==2u || i==5u)//c1 and f1
             {
-                squares[i]->SetPieceOnThisSquare(WHITE_BISHOP);
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_BISHOP);
             }
             else if (i==3u)//d1
             {
-                squares[i]->SetPieceOnThisSquare(WHITE_QUEEN);
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_QUEEN);
             }
             else if (i==4u)//e1
             {
-                squares[i]->SetPieceOnThisSquare(WHITE_KING);
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_KING);
             }
             else if ( ( i>7u && i<16u && i!=12u) || i==28u)//12 is e2, pawn was moved to e4 (28)
             {
-                squares[i]->SetPieceOnThisSquare(WHITE_PAWN);
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_PAWN);
             }
             //black pieces
             else if (i==56u || i==63u)//a8 and h8
             {
-                squares[i]->SetPieceOnThisSquare(BLACK_ROOK);
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_ROOK);
             }
             else if (i==57u || i==62u)//b8 and g8
             {
-                squares[i]->SetPieceOnThisSquare(BLACK_KNIGHT);
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_KNIGHT);
             }
             else if (i==58u || i==61u)//c8 and f8
             {
-                squares[i]->SetPieceOnThisSquare(BLACK_BISHOP);
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_BISHOP);
             }
             else if (i==59u)//d8
             {
-                squares[i]->SetPieceOnThisSquare(BLACK_QUEEN);
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_QUEEN);
             }
             else if (i==60u)//e8
             {
-                squares[i]->SetPieceOnThisSquare(BLACK_KING);
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_KING);
             }
             else if ( i>47u && i<56u )
             {
-                squares[i]->SetPieceOnThisSquare(BLACK_PAWN);
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_PAWN);
             }
             else
             {
-                squares[i]->SetPieceOnThisSquare(NO_PIECE);
+                squares[i]->SetPieceOnThisSquare(slach::NO_PIECE);
             }
         }
 
-        FenHandler handler;
-        std::vector<CastlingRights> cr = {WHITE_KINGSIDE, WHITE_QUEENSIDE, BLACK_KINGSIDE, BLACK_QUEENSIDE};
+        slach::FenHandler handler;
+        std::vector<slach::CastlingRights> cr = {slach::WHITE_KINGSIDE, slach::WHITE_QUEENSIDE, slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
 
-        Square* p_enpassantsquare = new Square();
+        slach::Square* p_enpassantsquare = new slach::Square();
         p_enpassantsquare->SetFile("e");
         p_enpassantsquare->SetRank("3");
-        std::string calculated_fen = handler.GetFenFromPosition(squares,BLACK,cr,p_enpassantsquare,0,1);
+        std::string calculated_fen = handler.GetFenFromPosition(squares,slach::BLACK,cr,p_enpassantsquare,0,1);
         //initial position after 1. e4 (from wikipedia)
         std::string valid_fen = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
 
