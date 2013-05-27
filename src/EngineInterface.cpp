@@ -1,7 +1,24 @@
 #include "EngineInterface.hpp"
+#include "platform.h"
+#include "bitboard.h"
+#include "evaluate.h"
+#include "position.h"
+#include "search.h"
+#include "thread.h"
+#include "tt.h"
+#include "ucioption.h"
+
 
 slach::EngineInterface::EngineInterface()
 {
+    UCI::init(Options);
+    Bitboards::init();
+    Zobrist::init();
+    Bitbases::init_kpk();
+    Search::init();
+    Eval::init();
+    Threads.init();
+    TT.set_size(Options["Hash"]);
     mpStockfishPosition = new Position();
 }
 

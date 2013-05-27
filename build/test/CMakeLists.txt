@@ -10,7 +10,6 @@ link_directories (/usr/lib/i386-linux-gnu ${CMAKE_SOURCE_DIR}/build/lib)
 ADD_EXECUTABLE(TESTRUNNER ${testfiledir}/test_runner.cpp
                           ${srcdir}/Exception.cpp 
                           ${srcdir}/Game.cpp
-                          ${stockfishdir}/position.cpp 
                           ${srcdir}/FenHandler.cpp
                           ${srcdir}/Square.cpp 
                           ${srcdir}/ChessBoard.cpp
