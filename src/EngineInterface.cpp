@@ -30,5 +30,9 @@ slach::EngineInterface::~EngineInterface()
 bool slach::EngineInterface::IsMoveValidInPosition(const std::string &rFenPosition, const slach::Move &rMove) const
 {
     mpStockfishPosition->set(rFenPosition, false, NULL);
-    return true;
+    /////THIS WORKS. NEED TO FIND CORRESPONDENCE BETWEEN rMove and stockfish Squares.
+    ::Square from = SQ_G8;
+    ::Square to = SQ_F6;
+    ::Move stockfish_move = make_move(from, to);
+    return mpStockfishPosition->is_pseudo_legal(stockfish_move);
 }
