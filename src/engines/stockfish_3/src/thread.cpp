@@ -51,11 +51,11 @@ Thread::Thread() /* : splitPoints() */ { // Value-initialization bug in MSVC
   activePosition = NULL;
   idx = Threads.size();
 
-//  if (!thread_create(handle, start_routine, this))
-//  {
-//      std::cerr << "Failed to create thread number " << idx << std::endl;
-//      ::exit(EXIT_FAILURE);
-//  }
+  if (!thread_create(handle, start_routine, this))
+  {
+      std::cerr << "Failed to create thread number " << idx << std::endl;
+      ::exit(EXIT_FAILURE);
+  }
 }
 
 
@@ -65,7 +65,7 @@ Thread::~Thread() {
 
   exit = true; // Search must be already finished
   notify_one();
-  //thread_join(handle); // Wait for thread termination
+  thread_join(handle); // Wait for thread termination
 }
 
 

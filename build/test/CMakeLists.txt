@@ -8,13 +8,13 @@ ADD_DEFINITIONS(-I${srcdir}
 link_directories (/usr/lib/i386-linux-gnu ${CMAKE_SOURCE_DIR}/build/lib) 
 
 ADD_EXECUTABLE(TESTRUNNER ${testfiledir}/test_runner.cpp
-                          ${srcdir}/Exception.cpp 
+                          ${srcdir}/Exception.cpp
                           ${srcdir}/Game.cpp
                           ${srcdir}/FenHandler.cpp
-                          ${srcdir}/Square.cpp 
                           ${srcdir}/ChessBoard.cpp
-                          ${srcdir}/EngineInterface.cpp
-                          ${srcdir}/ChessBoardWithBorders.cpp)
+                          ${srcdir}/ChessBoardWithBorders.cpp
+                          ${srcdir}/Square.cpp
+                          ${srcdir}/EngineInterface.cpp)
 
 add_custom_command(OUTPUT ${testfiledir}/test_runner.cpp
                    COMMAND ${testfiledir}/cxxtest/bin/cxxtestgen --error-printer -o ${testfiledir}/test_runner.cpp 
@@ -30,4 +30,4 @@ add_custom_command(OUTPUT ${testfiledir}/test_runner.cpp
                    
 
 
-TARGET_LINK_LIBRARIES(TESTRUNNER -lm -lstockfish)
+TARGET_LINK_LIBRARIES(TESTRUNNER -lm  -lstockfish -pthread)

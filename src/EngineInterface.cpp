@@ -1,4 +1,5 @@
 #include <iostream>
+#include <pthread.h>
 #include "EngineInterface.hpp"
 #include "Exception.hpp"
 #include "platform.h"
@@ -27,6 +28,7 @@ slach::EngineInterface::EngineInterface()
 slach::EngineInterface::~EngineInterface()
 {
     delete mpStockfishPosition;
+    //Threads.exit();
 }
 
 bool slach::EngineInterface::IsMoveValidInPosition(const std::string &rFenPosition, const slach::Move &rMove) const
