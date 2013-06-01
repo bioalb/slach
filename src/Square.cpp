@@ -1,3 +1,4 @@
+#include <climits>
 #include "Square.hpp"
 #include "Exception.hpp"
 
@@ -11,6 +12,7 @@ slach::Square::Square()
     mFile = "UNDEFINED";
     mRank = "UNDEFINED";
     mPieceOnThisSquare = NO_PIECE;
+    mIndexFromA1 = UINT_MAX;
 }
 
 slach::Square::~Square()
@@ -110,4 +112,14 @@ bool slach::Square::IsSameSquare(const Square &rSquare) const
     {
         return false;
     }
+}
+
+void slach::Square::SetIndexFromA1(unsigned index)
+{
+    mIndexFromA1 = index;
+}
+
+unsigned slach::Square::GetIndexFromA1() const
+{
+    return mIndexFromA1;
 }

@@ -293,6 +293,12 @@ public:
         TS_ASSERT_EQUALS(squares[56]->GetFile(), "a");
         TS_ASSERT_EQUALS(squares[56]->GetRank(), "8");
 
+        //check the index within the Square class
+        for (unsigned index = 0; index < squares.size(); ++index)
+        {
+            TS_ASSERT_EQUALS(squares[index]->GetIndexFromA1(), index);
+        }
+
     }
 
     void testInitialPosition(void)

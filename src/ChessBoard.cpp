@@ -137,6 +137,7 @@ void slach::ChessBoard::SetupChessBoard()
         assert(column<mFiles.size());
         mSquares[index]->SetFile(mFiles[column]);
         mSquares[index]->SetRank(mRanks[row]);
+        mSquares[index]->SetIndexFromA1(index);
 
         if (bw_counter%2==0)
         {

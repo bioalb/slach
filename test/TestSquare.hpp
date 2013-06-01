@@ -27,11 +27,15 @@ public:
         TS_ASSERT_EQUALS(sq1.GetPieceOnThisSquare(),slach::NO_PIECE);
         TS_ASSERT_EQUALS(sq1.IsDarkSquare(), false);
         TS_ASSERT_EQUALS(sq1.IsLightSquare(), false);
+        TS_ASSERT_EQUALS(sq1.GetIndexFromA1(), UINT_MAX);
 
         sq1.SetFile("A");
         sq1.SetRank("4");
         TS_ASSERT_EQUALS(sq1.GetRank(), "4");
         TS_ASSERT_EQUALS(sq1.GetFile(), "A");
+        TS_ASSERT_EQUALS(sq1.GetIndexFromA1(), UINT_MAX);
+        sq1.SetIndexFromA1(24u);
+        TS_ASSERT_EQUALS(sq1.GetIndexFromA1(), 24u);
 
         sq1.SetAsLightSquare();
         TS_ASSERT_EQUALS(sq1.IsLightSquare(), true);

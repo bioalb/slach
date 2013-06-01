@@ -41,6 +41,12 @@ private:
     /**The piece that occupies this square. Initialized to NO_PIECE*/
     PieceType mPieceOnThisSquare;
 
+    /**
+     * The index of this square on a chessboard counting from square A1 (index=0) to H8 (index = 63)
+     * it is initialised to UINT_MAX in the constructor
+     */
+    unsigned mIndexFromA1;
+
 public:
     /**Constructor*/
     Square();
@@ -165,6 +171,21 @@ public:
      * @param rSquare the square we want to compare with.
      */
     bool IsSameSquare(const Square &rSquare) const;
+
+    /**
+     * Access the member variable mIndexFromA1.
+     * @return the index index of this square on a chessboard counting from square A1 (index=0) to H8 (index = 63)
+     */
+    unsigned GetIndexFromA1() const;
+
+    /**
+     * Set the index of this square.
+     * This method PERFORMS NO CHECKS. whatever is passed in, gets assigned to the mIndexFromA1
+     * member variable.
+     *
+     * @param index the idnex we wish to set.
+     */
+    void SetIndexFromA1(unsigned index);
 
 };
 
