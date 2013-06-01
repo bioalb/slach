@@ -15,6 +15,7 @@ private:
 
     Position* mpStockfishPosition;
 
+    ::Square ConvertSquareToStockfish(const Square* pSquare) const;
 public:
 
     EngineInterface();
