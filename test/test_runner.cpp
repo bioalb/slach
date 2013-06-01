@@ -5,6 +5,7 @@
 #endif
 
 #define _CXXTEST_HAVE_STD
+#define _CXXTEST_HAVE_EH
 #include <cxxtest/TestListener.h>
 #include <cxxtest/TestTracker.h>
 #include <cxxtest/TestRunner.h>
@@ -198,6 +199,18 @@ public:
  TestDescription_suite_TestEngineInterface_TestInterface() : CxxTest::RealTestDescription( Tests_TestEngineInterface, suiteDescription_TestEngineInterface, 16, "TestInterface" ) {}
  void runTest() { suite_TestEngineInterface.TestInterface(); }
 } testDescription_suite_TestEngineInterface_TestInterface;
+
+static class TestDescription_suite_TestEngineInterface_TestLegalMoves : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestEngineInterface_TestLegalMoves() : CxxTest::RealTestDescription( Tests_TestEngineInterface, suiteDescription_TestEngineInterface, 54, "TestLegalMoves" ) {}
+ void runTest() { suite_TestEngineInterface.TestLegalMoves(); }
+} testDescription_suite_TestEngineInterface_TestLegalMoves;
+
+static class TestDescription_suite_TestEngineInterface_TestConversionFromSalchToStockfish : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestEngineInterface_TestConversionFromSalchToStockfish() : CxxTest::RealTestDescription( Tests_TestEngineInterface, suiteDescription_TestEngineInterface, 102, "TestConversionFromSalchToStockfish" ) {}
+ void runTest() { suite_TestEngineInterface.TestConversionFromSalchToStockfish(); }
+} testDescription_suite_TestEngineInterface_TestConversionFromSalchToStockfish;
 
 #include <cxxtest/Root.cpp>
 const char* CxxTest::RealWorldDescription::_worldName = "cxxtest";
