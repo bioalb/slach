@@ -3,7 +3,7 @@ ADD_DEFINITIONS(-I${srcdir}
                 -I${CMAKE_SOURCE_DIR}/test/cxxtest
                 -I${testfiledir}
                 -I${stockfishdir}
-                -O0 -std=c++0x -g3 -Wall -fmessage-length=0 -finstrument-functions)
+                -O0 -std=c++0x -g3 -Wall -fmessage-length=0 -finstrument-functions -g -pg)
 
 link_directories (/usr/lib/i386-linux-gnu ${CMAKE_SOURCE_DIR}/build/lib) 
 
@@ -30,4 +30,4 @@ add_custom_command(OUTPUT ${testfiledir}/test_runner.cpp
                    
 
 
-TARGET_LINK_LIBRARIES(TESTRUNNER -lm  -lstockfish -pthread)
+TARGET_LINK_LIBRARIES(TESTRUNNER -lm  -lstockfish -pthread -pg)

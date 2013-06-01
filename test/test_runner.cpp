@@ -84,7 +84,7 @@ public:
 
 static class TestDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 562, "testThatInvalidFenChangesNothing" ) {}
+ TestDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 560, "testThatInvalidFenChangesNothing" ) {}
  void runTest() { suite_TestChessBoard.testThatInvalidFenChangesNothing(); }
 } testDescription_suite_TestChessBoard_testThatInvalidFenChangesNothing;
 

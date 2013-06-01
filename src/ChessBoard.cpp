@@ -191,12 +191,13 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
             break;
         }
     }
-    //mpFenHandler->GetFenFromPosition(mSquares, rMove);
+    //mCurrentFenPosition = mpFenHandler->GetFenFromPosition(mSquares, rMove);
 }
 
 
 int slach::ChessBoard::SetFenPosition(const std::string &rFenPosition)
 {
+    //if the fen is valid, this changes mSquares.
      int rc = mpFenHandler->SetPositionFromFen(rFenPosition, mSquares);
      if (rc == 0)//only if fen is valid
      {
