@@ -6,6 +6,7 @@
 #include "Square.hpp"
 #include "Game.hpp"
 #include "FenHandler.hpp"
+#include "EngineInterface.hpp"
 
 /**
  *
@@ -69,7 +70,12 @@ private:
     /** Stores whether it is white's or balck's turn*/
     TurnToMove mTurnToMove;
 
+    /**Stores the current position in FEN format*/
+    std::string mCurrentFenPosition;
+
     FenHandler* mpFenHandler;
+
+    EngineInterface* mpEngineInterface;
 
 public:
 
@@ -99,7 +105,7 @@ public:
      */
     std::vector<slach::Square* > GetSquares() const;
 
-    bool IsLegalMove();
+    bool IsLegalMove(const Move& rMove) const;
 
     /**
      * Updates the current position (vector mSquares) with the move that is passed in.
@@ -117,7 +123,7 @@ public:
      *
      * @return 0 if the fen string is valid, 1 if it is not a valid one
      */
-    int ArrangePiecesFromFEN(const std::string &rFenPosition);
+    int SetFenPosition(const std::string &rFenPosition);
 
     /**
      * Access method for the member variable mTurnToMove
@@ -126,7 +132,13 @@ public:
      */
     slach::TurnToMove WhosTurnIsIt() const;
 
-
+    /**
+     * Access method for the variable mCurrentFenPosition
+     *
+     * @return a string containing the current FEN position.
+     *         the string is guaranteed to be a valid FEN.
+     */
+    std::string GetCurrentFenPosition() const;
 };
 
 }//namespace slach

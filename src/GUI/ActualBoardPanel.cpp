@@ -113,14 +113,18 @@ void slach_gui::ActualBoardPanel::SetDestinationSquare(SquarePanel* pDestination
 {
     mpDestinationSquarePanel = pDestinationPanel;
 
-    mpOriginSquarePanel->PaintBackground();
-    mpDestinationSquarePanel->PaintBackground();
-    if (mpChessBoard->/*GetPosition()->*/IsLegalMove()==true)
+    slach::Move candidate_move;
+    candidate_move.first = mpOriginSquarePanel->GetSquare();
+    candidate_move.second = mpDestinationSquarePanel->GetSquare();
+    if (mpChessBoard->IsLegalMove(candidate_move)==true)
     {
+        mpOriginSquarePanel->PaintBackground();
+        mpDestinationSquarePanel->PaintBackground();
         slach::PieceType origin_piece  = mpOriginSquarePanel->GetSquare()->GetPieceOnThisSquare();
         mpDestinationSquarePanel->GetSquare()->SetPieceOnThisSquare(origin_piece);
         mpDestinationSquarePanel->PaintPiece();
-
+        //update underlying chessboard
+        mpChessBoard->MakeThisMove(candidate_move);
     }
     else
     {

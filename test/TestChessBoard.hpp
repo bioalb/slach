@@ -366,14 +366,15 @@ public:
         TS_ASSERT_EQUALS(squares[48]->GetPieceOnThisSquare(),slach::WHITE_PAWN);//e4 with white pawn
     }
 
-    void testArrangePiecesFromFEN()
+    void testSetFenPosition()
     {
         slach::ChessBoard my_cb;
         my_cb.SetupChessBoard();
 
         std::string fen_after_2Nf3 = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
-        int rc = my_cb.ArrangePiecesFromFEN(fen_after_2Nf3);
+        int rc = my_cb.SetFenPosition(fen_after_2Nf3);
         TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(fen_after_2Nf3, my_cb.GetCurrentFenPosition());
 
         std::vector<slach::Square*> squares = my_cb.GetSquares();
         for (unsigned i = 0; i < squares.size(); ++i)
@@ -502,8 +503,10 @@ public:
         my_cb.SetupInitialChessPosition();
         //black king on f3, black pawn on g2 and white king on f1
         std::string endgame = "8/8/8/8/8/5k2/6p1/5K2 w - - 0 68";
-        int rc = my_cb.ArrangePiecesFromFEN(endgame);
+        int rc = my_cb.SetFenPosition(endgame);
         TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(endgame, my_cb.GetCurrentFenPosition());
+
         std::vector<slach::Square*> squares = my_cb.GetSquares();
         for (unsigned i = 0; i < squares.size(); ++i)
         {
@@ -529,17 +532,42 @@ public:
         TS_ASSERT_EQUALS(my_cb.WhosTurnIsIt(), slach::WHITE);
     }
 
+    void testCheckingValidityAndMakingAMove()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        my_cb.SetupInitialChessPosition();
+        //black king on f3, black pawn on g2 and white king on f1
+        std::string endgame = "8/8/8/8/8/5k2/6p1/5K2 w - - 0 68";
+        int rc = my_cb.SetFenPosition(endgame);
+        TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(endgame, my_cb.GetCurrentFenPosition());
+
+        std::vector<slach::Square*> squares = my_cb.GetSquares();
+        //now make a valid move f1-g1
+        slach::Move f1_g1;
+        f1_g1.first = squares[5];
+        f1_g1.second = squares[6];
+
+        TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(f1_g1));
+        my_cb.MakeThisMove(f1_g1);
+        TS_ASSERT_EQUALS(squares[5]->GetPieceOnThisSquare(), slach::NO_PIECE);
+        TS_ASSERT_EQUALS(squares[6]->GetPieceOnThisSquare(), slach::WHITE_KING);
+
+        std::string updated_endgame = "8/8/8/8/8/5k2/6p1/6K1 b - - 0 69";
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), updated_endgame);
+    }
     void testThatInvalidFenChangesNothing()
     {
         slach::ChessBoard my_cb;
         my_cb.SetupChessBoard();
 
         std::string too_long = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R/8/8/8/8 b KQkq - 1 2";
-        int rc = my_cb.ArrangePiecesFromFEN(too_long);
+        int rc = my_cb.SetFenPosition(too_long);
         TS_ASSERT_EQUALS(rc,1);
 
         std::string too_short = "rnbqkbnr/pp1ppppp/ b KQkq - 1 2";
-        rc = my_cb.ArrangePiecesFromFEN(too_short);
+        rc = my_cb.SetFenPosition(too_short);
         TS_ASSERT_EQUALS(rc,1);
         TS_ASSERT_EQUALS(my_cb.WhosTurnIsIt(), slach::WHITE);//invalid fen not applied, still white's turn
 
@@ -552,10 +580,12 @@ public:
 
         //invalid fen again, check return code and that we don't move anything on the board (after setting initial position)
         my_cb.SetupInitialChessPosition();
-        rc = my_cb.ArrangePiecesFromFEN(too_long);
+        rc = my_cb.SetFenPosition(too_long);
         squares = my_cb.GetSquares();
         TS_ASSERT_EQUALS(rc,1);
         CheckInitialPosition(squares);
+        std::string init_pos_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        TS_ASSERT_EQUALS(init_pos_fen, my_cb.GetCurrentFenPosition());
     }
 };
 

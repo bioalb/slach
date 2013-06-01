@@ -16,6 +16,9 @@ class TestFenHandler;
 namespace slach
 {
 
+/**
+ * A class to handle FEN strings
+ */
 class FenHandler
 {
   friend class ::TestFenHandler;//for testing

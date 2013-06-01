@@ -4,8 +4,9 @@
 #include <cxxtest/TestSuite.h>
 #include <iostream>
 #include <sstream>
-#include "EngineInterface.hpp"
 #include "ChessBoard.hpp"
+#include "EngineInterface.hpp"
+
 /**
  * Test suite to test the engine interface class
  */
@@ -58,7 +59,7 @@ public:
 
         //from one of my games on chessworld (8771022). Picture stored in test/data/test_position_1 for reference only
         std::string test_position_1 = "r2q1rk1/pp2b1pp/2n2np1/2pp4/3P4/2PB1N2/PP2QPPP/R1B1R1K1 b - - 3 15";
-        my_cb.ArrangePiecesFromFEN(test_position_1);
+        my_cb.SetFenPosition(test_position_1);
         std::vector<slach::Square*> squares =  my_cb.GetSquares();//already numbered and well defined.
 
         slach::EngineInterface interface;

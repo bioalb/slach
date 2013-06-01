@@ -20,6 +20,7 @@ slach::ChessBoard::ChessBoard()
     mTurnToMove = WHITE;
 
     mpFenHandler = new FenHandler();
+    mpEngineInterface = new EngineInterface();
 }
 
 slach::ChessBoard::~ChessBoard()
@@ -29,6 +30,7 @@ slach::ChessBoard::~ChessBoard()
         delete mSquares[i];
     }
     delete mpFenHandler;
+    delete mpEngineInterface;
 }
 
 std::vector<slach::Square* > slach::ChessBoard::GetSquares() const
@@ -122,6 +124,8 @@ void slach::ChessBoard::SetupInitialChessPosition()
             mSquares[i]->SetPieceOnThisSquare(NO_PIECE);
         }
     }
+
+    mCurrentFenPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 }
 
 void slach::ChessBoard::SetupChessBoard()
@@ -159,9 +163,9 @@ void slach::ChessBoard::SetupChessBoard()
     }
 }
 
-bool slach::ChessBoard::IsLegalMove()
+bool slach::ChessBoard::IsLegalMove(const Move& rMove) const
 {
-    return true;
+    return mpEngineInterface->IsMoveValidInPosition(mCurrentFenPosition, rMove);
 }
 
 void slach::ChessBoard::MakeThisMove(const Move& rMove)
@@ -187,17 +191,24 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
             break;
         }
     }
+    //mpFenHandler->GetFenFromPosition(mSquares, rMove);
 }
 
 
-int slach::ChessBoard::ArrangePiecesFromFEN(const std::string &rFenPosition)
+int slach::ChessBoard::SetFenPosition(const std::string &rFenPosition)
 {
      int rc = mpFenHandler->SetPositionFromFen(rFenPosition, mSquares);
-     if (rc ==0)
+     if (rc == 0)//only if fen is valid
      {
          mTurnToMove = mpFenHandler->WhosTurnIsIt();
+         mCurrentFenPosition = rFenPosition;
      }
      return rc;
+}
+
+std::string slach::ChessBoard::GetCurrentFenPosition() const
+{
+    return mCurrentFenPosition;
 }
 
 slach::TurnToMove slach::ChessBoard::WhosTurnIsIt() const
