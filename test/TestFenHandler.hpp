@@ -441,6 +441,11 @@ public:
         TS_ASSERT_EQUALS(handler.GetEnPassantSquareIndex(), 64u);//no enpassant, last move was Rook to g1
         TS_ASSERT_EQUALS(handler.GetHalfMoveClock(), 3u);
         TS_ASSERT_EQUALS(handler.GetFullMoveClock(), 8u);
+
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
     }
     void testAssignFenStrangeCases()
     {
