@@ -44,19 +44,18 @@ namespace slach
 class ChessBoard
 {
 
-    friend class TestChessBoard; //for testing
-
 private:
 
     /**
-     * All the squares on this chessboard. This is core variable of this class.
+     * All the squares on this chessboard. This is the core variable of this class.
      * Note that each square contains information about the piece it is occupied by
      * Hence, this vector has all the info to assess a position.
-     * */
+     */
     std::vector<Square* > mSquares;
 
     /**The files (columns) on this chessboard*/
     std::vector<std::string> mFiles;
+
     /**The ranks (rows) on this chessboard*/
     std::vector<std::string> mRanks;
 
@@ -66,8 +65,10 @@ private:
     /**Stores the current position in FEN format*/
     std::string mCurrentFenPosition;
 
+    /**A pointer to a FenHandler object. Initialised in constructor*/
     FenHandler* mpFenHandler;
 
+    /**A pointer to an EngineInterface object. Initialised in constructor*/
     EngineInterface* mpEngineInterface;
 
 public:
@@ -90,6 +91,12 @@ public:
      */
     void SetupChessBoard();
 
+    /**
+     * This method does the following things:
+     *
+     * 1) set the current FEN position (mCurrentFenPosition) to be the initial chess position
+     * 2) Uses the FEN handler to arrange the pieces on the borda by modifying mSquares.
+     */
     void SetupInitialChessPosition();
 
     /**
