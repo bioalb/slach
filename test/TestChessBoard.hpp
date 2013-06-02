@@ -554,7 +554,7 @@ public:
         TS_ASSERT_EQUALS(squares[5]->GetPieceOnThisSquare(), slach::NO_PIECE);
         TS_ASSERT_EQUALS(squares[6]->GetPieceOnThisSquare(), slach::WHITE_KING);
 
-        std::string updated_endgame = "8/8/8/8/8/5k2/6p1/6K1 b - - 0 69";
+        std::string updated_endgame = "8/8/8/8/8/5k2/6p1/6K1 b - - 0 68";
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), updated_endgame);
     }
     void testThatInvalidFenChangesNothing()

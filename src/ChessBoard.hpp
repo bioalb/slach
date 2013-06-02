@@ -74,7 +74,7 @@ private:
     std::vector<CastlingRights> mCastlingRights;
     Square* mpEnPassantSquare;
     unsigned mHalfMoveClock;
-    unsigned mFullMoveclock;
+    unsigned mFullMoveClock;
 
 public:
 

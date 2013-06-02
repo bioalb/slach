@@ -46,7 +46,7 @@ void slach::ChessBoard::SetupInitialChessPosition()
     std::vector<CastlingRights> mCastlingRights = {WHITE_KINGSIDE, BLACK_KINGSIDE, WHITE_QUEENSIDE, BLACK_QUEENSIDE};
     mpEnPassantSquare = NULL;
     mHalfMoveClock = 0;
-    mFullMoveclock = 1;
+    mFullMoveClock = 1;
 }
 
 void slach::ChessBoard::SetupChessBoard()
@@ -130,11 +130,24 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
         }
     }
 
+    mCastlingRights = mpFenHandler->GetLatestCastlingRights();
+    mHalfMoveClock = mpFenHandler->GetHalfMoveClock();
+    mFullMoveClock = mpFenHandler->GetFullMoveClock();
+    mTurnToMove = mpFenHandler->WhosTurnIsIt();
+    if (mTurnToMove == slach::BLACK)
+    {
+        mTurnToMove = slach::WHITE;//black has moved, white's turn
+        mFullMoveClock++;//black has moved, increment move clock
+    }
+    else //it was white's turn
+    {
+        mTurnToMove = slach::BLACK;//white has moved, black's turn
+    }
     mCurrentFenPosition = mpFenHandler->GetFenFromPosition(mSquares, mTurnToMove,
             mCastlingRights,
             mpEnPassantSquare,
             mHalfMoveClock,
-            mFullMoveclock);
+            mFullMoveClock);
     mpEnPassantSquare = NULL;
 }
 
