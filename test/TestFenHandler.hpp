@@ -354,7 +354,7 @@ public:
         }
     }
 
-    void TestGetFen()
+    void TestGetFenOrdinaryMove()
     {
         //create a vector of squares for testing purposes
         std::vector<slach::Square* > squares;
@@ -365,28 +365,29 @@ public:
         }
 
         //fill in the vector of squares with a known position
-        //black king on f3, black pawn on g2 and white king on f1
+        //this is a position from one of chessworld games (8750737)
+        // a picture is stored in test/data/test_position_2.png for reference
         for (unsigned i = 0; i < squares.size(); ++i)
         {
             if (i==12u)//e2
             {
                 squares[i]->SetPieceOnThisSquare(slach::WHITE_KING);
             }
-            else if (i==18u)//c3
+            else if (i==55u)//h7
             {
                 squares[i]->SetPieceOnThisSquare(slach::BLACK_KING);
             }
-            else if (i==29u)//f4
-            {
-                squares[i]->SetPieceOnThisSquare(slach::BLACK_ROOK);
-            }
-            else if ( (i==31u) || (i==38) )//h4 or g5
+            else if ( (i==8u) || (i==9u) || (i==10u) || (i==20u) || (i==36u) || (i==38u) || (i==39u))//a2, b2, c2 , e3, e5, g5, h5
             {
                 squares[i]->SetPieceOnThisSquare(slach::WHITE_PAWN);
             }
-            else if ( (i==39u) || (i==46) || (i==50) )//h5 or g6 or c7
+            else if ( (i==48u) || (i==41u) || (i==35u) || (i==37u) )//a7, b6, d5, f5
             {
                 squares[i]->SetPieceOnThisSquare(slach::BLACK_PAWN);
+            }
+            else if (i==44u)//e6
+            {
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_BISHOP);
             }
             else
             {
@@ -394,11 +395,11 @@ public:
             }
         }
 
-        slach::FenHandler handler;
         std::vector<slach::CastlingRights> empty_vec;
-        std::string calculated_fen = handler.GetFenFromPosition(squares,slach::BLACK,empty_vec,NULL,1,47);
-        //black king on f3, black pawn on g2 and white king on f1
-        std::string valid_fen = "8/2p5/6p1/6Pp/5r1P/2k5/4K3/8 b - - 1 47";
+
+        slach::FenHandler handler;
+        std::string calculated_fen = handler.GetFenFromPosition(squares,slach::BLACK,empty_vec,NULL,4,40);
+        std::string valid_fen = "8/p6k/1p2b3/3pPpPP/8/4P3/PPP1K3/8 b - - 4 40";
 
         TS_ASSERT_EQUALS(calculated_fen, valid_fen);
 
