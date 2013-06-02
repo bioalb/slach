@@ -409,6 +409,39 @@ public:
         }
     }
 
+    void testMixedCastlingRights()
+    {
+        slach::FenHandler handler;
+        // a picture is stored in test/data/test_position_3.png for reference
+        std::string test_position_3 = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
+        TS_ASSERT_EQUALS(handler.IsFenValid(test_position_3), true);
+
+        //create a vector of squares for testing purposes...
+        std::vector<slach::Square* > squares;
+        //but one element short
+        squares.resize(64u);
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            squares[i] = new slach::Square();
+            squares[i]->SetPieceOnThisSquare(slach::BLACK_BISHOP);//for testing, we start with all bishops!!
+        }
+
+        int rc = handler.SetPositionFromFen(test_position_3, squares);
+        TS_ASSERT_EQUALS(rc,0);
+        //the aim of this test is actually the castling rights, but just in case we check some squares
+        TS_ASSERT_EQUALS(squares[0]->GetPieceOnThisSquare(),slach::WHITE_ROOK);
+        TS_ASSERT_EQUALS(squares[1]->GetPieceOnThisSquare(),slach::NO_PIECE);
+        TS_ASSERT_EQUALS(squares[4]->GetPieceOnThisSquare(),slach::WHITE_KING);
+        TS_ASSERT_EQUALS(squares[63]->GetPieceOnThisSquare(),slach::BLACK_ROOK);
+
+        TS_ASSERT_EQUALS(handler.WhosTurnIsIt(), slach::BLACK);
+        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights().size(), 2u);
+        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights()[0], slach::WHITE_QUEENSIDE);
+        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights()[1], slach::BLACK_KINGSIDE);
+        TS_ASSERT_EQUALS(handler.GetEnPassantSquareIndex(), 64u);//no enpassant, last move was Rook to g1
+        TS_ASSERT_EQUALS(handler.GetHalfMoveClock(), 3u);
+        TS_ASSERT_EQUALS(handler.GetFullMoveClock(), 8u);
+    }
     void testAssignFenStrangeCases()
     {
         slach::FenHandler handler;

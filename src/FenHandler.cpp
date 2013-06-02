@@ -530,17 +530,20 @@ int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::ve
         //castling rights
         mCastlingRights.resize(0);
         unsigned end_of_castling_rights = end_of_colour;
+        bool castling_rights_started = false;
         for (unsigned i = end_of_colour+1; i < rFenString.length(); ++i)
         {
-            if (rFenString[i]==' ')
+            if ((rFenString[i]==' ') && castling_rights_started == false)
             {
                 continue;
             }
             else
             {
+                castling_rights_started = true;
                 if (rFenString[i]=='-')
                 {
                     mCastlingRights.resize(0);
+                    end_of_castling_rights = i;
                     break;
                 }
                 else if (rFenString[i]=='K')
@@ -559,11 +562,7 @@ int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::ve
                 {
                     mCastlingRights.push_back(BLACK_QUEENSIDE);
                 }
-                else
-                {
-                    NEVER_REACHED;//assume valid FEN
-                }
-                if (mCastlingRights.size()==4u)
+                else if (rFenString[i]==' ')
                 {
                     end_of_castling_rights = i;
                     break;
