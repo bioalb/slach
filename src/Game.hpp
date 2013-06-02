@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "PieceType.hpp"
+#include "SlachTypes.hpp"
 #include "Square.hpp"
 
 /**
@@ -19,19 +19,6 @@ namespace slach
  * the first is the origin square, the second is the destination square
  */
 typedef std::pair<Square*,Square*> Move;
-
-enum SpecialMoveType
-{
-    WHITE_CASTLE_KINGSIDE = 0,
-    BLACK_CASTLE_KINGSIDE,
-    WHITE_CASTLE_QUEENSIDE,
-    BLACK_CASTLE_QUEENSIDE,
-    WHITEPAWN_PROMOTES_QUEEN,
-    BLACKPAWN_PROMOTES_QUEEN,
-    WHITEPAWN_PROMOTES_KNIGHT,
-    BLACKPAWN_PROMOTES_KNIGHT,
-    ORDINARY_MOVE
-};
 
 class Game
 {

@@ -5,7 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include "../src/ChessBoard.hpp"
-#include "../src/PieceType.hpp"
+#include "SlachTypes.hpp"
 
 /**
  * Test suite to test the chessboard

@@ -4,8 +4,8 @@
 #include <algorithm>
 #include "SquarePanel.hpp"
 #include "DropTargetPanel.hpp"
-#include "../Exception.hpp"
-#include "../PieceType.hpp"
+#include "Exception.hpp"
+#include "SlachTypes.hpp"
 #include "bitmaps/letters/png/a.png.h"
 #include "bitmaps/letters/png/b.png.h"
 #include "bitmaps/letters/png/c.png.h"

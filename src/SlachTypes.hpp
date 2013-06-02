@@ -4,6 +4,24 @@
 namespace slach
 {
 
+static const unsigned CHESSBOARD_SIZE_WB = 100u;
+static const unsigned CHESSBOARD_SIZE = 64u;
+static const unsigned BOARD_ROW_SIZE = 8u;
+static const unsigned BOARD_COLUMN_SIZE = 8u;
+
+enum SpecialMoveType
+{
+    WHITE_CASTLE_KINGSIDE = 0,
+    BLACK_CASTLE_KINGSIDE,
+    WHITE_CASTLE_QUEENSIDE,
+    BLACK_CASTLE_QUEENSIDE,
+    WHITEPAWN_PROMOTES_QUEEN,
+    BLACKPAWN_PROMOTES_QUEEN,
+    WHITEPAWN_PROMOTES_KNIGHT,
+    BLACKPAWN_PROMOTES_KNIGHT,
+    ORDINARY_MOVE
+};
+
 /**
  * Type for a piece on the chessboard
  */

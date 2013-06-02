@@ -5,7 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include "ChessBoardWithBorders.hpp"
-#include "PieceType.hpp"
+#include "SlachTypes.hpp"
 
 /**
  * Test suite to test the chessboard and the chessboard with border class.

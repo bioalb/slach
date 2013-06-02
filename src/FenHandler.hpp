@@ -123,7 +123,7 @@ class FenHandler
      * Access method for the variable mTurnToMove. Refers to the last valid fen that
      * was passed to SetPositionFromFen
      *
-     * @return BLACK if it is black's turn to move, WHITe if it is white
+     * @return BLACK if it is black's turn to move, WHITE if it is white
      */
     slach::TurnToMove WhosTurnIsIt() const;
 };

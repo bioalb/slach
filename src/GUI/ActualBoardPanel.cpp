@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <cassert>
-#include "../PieceType.hpp"
+#include "SlachTypes.hpp"
 #include "ActualBoardPanel.hpp"
 #include "DropTargetPanel.hpp"
 #include "ActualBoardPanel.hpp"

@@ -7,7 +7,7 @@
 #include <SVGDocument.h>
 #include <vector>
 #include "SquarePanel.hpp"
-#include "../ChessBoardWithBorders.hpp"
+#include "ChessBoardWithBorders.hpp"
 
 namespace slach_gui
 {

@@ -2,13 +2,15 @@
 #define _SQUARE_HPP_
 
 #include <string>
-#include "PieceType.hpp"
+#include "SlachTypes.hpp"
 /**
  * Class that encapsulates a square on the chessboard
  * It can be on the playing board or one of the border squares
  */
 namespace slach
 {
+
+
 
 class Square
 {

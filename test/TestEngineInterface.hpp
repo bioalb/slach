@@ -4,8 +4,9 @@
 #include <cxxtest/TestSuite.h>
 #include <iostream>
 #include <sstream>
-#include "ChessBoard.hpp"
 #include "EngineInterface.hpp"
+#include "ChessBoard.hpp"
+
 
 /**
  * Test suite to test the engine interface class

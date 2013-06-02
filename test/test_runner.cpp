@@ -198,23 +198,23 @@ public:
 static TestEngineInterface suite_TestEngineInterface;
 
 static CxxTest::List Tests_TestEngineInterface = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestEngineInterface( "/home/alberto/code/slach/test/TestEngineInterface.hpp", 13, "TestEngineInterface", suite_TestEngineInterface, Tests_TestEngineInterface );
+CxxTest::StaticSuiteDescription suiteDescription_TestEngineInterface( "/home/alberto/code/slach/test/TestEngineInterface.hpp", 14, "TestEngineInterface", suite_TestEngineInterface, Tests_TestEngineInterface );
 
 static class TestDescription_suite_TestEngineInterface_TestInterface : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestEngineInterface_TestInterface() : CxxTest::RealTestDescription( Tests_TestEngineInterface, suiteDescription_TestEngineInterface, 17, "TestInterface" ) {}
+ TestDescription_suite_TestEngineInterface_TestInterface() : CxxTest::RealTestDescription( Tests_TestEngineInterface, suiteDescription_TestEngineInterface, 18, "TestInterface" ) {}
  void runTest() { suite_TestEngineInterface.TestInterface(); }
 } testDescription_suite_TestEngineInterface_TestInterface;
 
 static class TestDescription_suite_TestEngineInterface_TestLegalMoves : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestEngineInterface_TestLegalMoves() : CxxTest::RealTestDescription( Tests_TestEngineInterface, suiteDescription_TestEngineInterface, 55, "TestLegalMoves" ) {}
+ TestDescription_suite_TestEngineInterface_TestLegalMoves() : CxxTest::RealTestDescription( Tests_TestEngineInterface, suiteDescription_TestEngineInterface, 56, "TestLegalMoves" ) {}
  void runTest() { suite_TestEngineInterface.TestLegalMoves(); }
 } testDescription_suite_TestEngineInterface_TestLegalMoves;
 
 static class TestDescription_suite_TestEngineInterface_TestConversionFromSalchToStockfish : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestEngineInterface_TestConversionFromSalchToStockfish() : CxxTest::RealTestDescription( Tests_TestEngineInterface, suiteDescription_TestEngineInterface, 103, "TestConversionFromSalchToStockfish" ) {}
+ TestDescription_suite_TestEngineInterface_TestConversionFromSalchToStockfish() : CxxTest::RealTestDescription( Tests_TestEngineInterface, suiteDescription_TestEngineInterface, 104, "TestConversionFromSalchToStockfish" ) {}
  void runTest() { suite_TestEngineInterface.TestConversionFromSalchToStockfish(); }
 } testDescription_suite_TestEngineInterface_TestConversionFromSalchToStockfish;
 

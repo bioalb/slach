@@ -41,13 +41,6 @@
 namespace slach
 {
 
-static const unsigned CHESSBOARD_SIZE_WB = 100u;
-static const unsigned CHESSBOARD_SIZE = 64u;
-static const unsigned BOARD_ROW_SIZE = 8u;
-static const unsigned BOARD_COLUMN_SIZE = 8u;
-
-
-
 class ChessBoard
 {
 

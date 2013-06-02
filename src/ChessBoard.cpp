@@ -1,8 +1,9 @@
-#include "ChessBoard.hpp"
-#include "Exception.hpp"
 #include <cassert>
 #include <cstdio>
 #include <iostream>
+
+#include "ChessBoard.hpp"
+#include "Exception.hpp"
 
 slach::ChessBoard::ChessBoard()
 {
