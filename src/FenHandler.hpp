@@ -59,12 +59,24 @@ class FenHandler
     std::string GetLetterFromPiece(PieceType piece) const;
 
     /**
-     * Stores the turn to move
+     * Stores the turn to move,Set upon calling SetPositionFromFen
      */
     TurnToMove mTurnToMove;
 
-  protected:
+    /**Stores the castling rights. Set upon calling SetPositionFromFen*/
+    std::vector<CastlingRights> mCastlingRights;
+    /**
+     * Stores the index of the en-passant square, if any. Set upon calling SetPositionFromFen.
+     * It refers to the index of a square on a chessboard starting from A1 (0->63).
+     * If there is no en-passant, its value is 64 (out of the chessboard)
+     */
+    unsigned mEnPassantSquare;
+    /**Stores the half-move clock Set upon calling SetPositionFromFen*/
+    unsigned mHalfMoveClock;
+    /**Stores the full-move clock Set upon calling SetPositionFromFen*/
+    unsigned mFullMoveClock;
 
+  protected:
     /**
      * Helper method that checks whether the string is a valid FEN string or not.
      * Returns true of the string is a valid FEN string, false otherwise (for whatever reason).
@@ -72,6 +84,16 @@ class FenHandler
      * @param rFenString the string to be analysed
      */
     bool IsFenValid(const std::string &rFenString) const;
+
+    /**
+     * Helper method that returns the index (counting on a chessboard from A1 to H8, from 0 to 63)
+     * corresponding to the char coordinates
+     *
+     * @param  rFile the file of the coordinate (column), a to h
+     * @param rRank the rank of the coordinate (row) 1 to 8
+     * @return the index if rank and files are appropriate, 64 (out of the chessboard) otherwise
+     */
+    unsigned GetIndexFromCoordinates(const char &rFile, const char &rRank) const;
 
   public:
 
@@ -111,6 +133,8 @@ class FenHandler
 
     /**
      * Returns the Fen string corresponding to the vector of squares that is passed in
+     *
+     * @param pEnPassantSquare the en-passant square. Pass NULL (default) if there is none (- will be printed)
      */
     std::string GetFenFromPosition(const std::vector<Square* > &rSquares,
             TurnToMove turnToMove,
@@ -126,6 +150,41 @@ class FenHandler
      * @return BLACK if it is black's turn to move, WHITE if it is white
      */
     slach::TurnToMove WhosTurnIsIt() const;
+
+    /**
+     * Access the member variable mCastlingRights
+     *
+     * @return a vector containing the castling rights set the last time SetPositionFromFen was called.
+     *         if it is empty, it means there are no castling rights
+     */
+    std::vector<slach::CastlingRights> GetLatestCastlingRights() const;
+
+
+    /**
+     * Access the member variable mEnPassantSquare
+     *
+     * @return the index of the square available for enpassant (starting from A1 to H8, 0 to 63)
+     *         as per the last time SetPositionFromFen was called.
+     *         if it returns 64 (out of the chessboard), it means there are no enpassant squares
+     */
+    unsigned GetEnPassantSquareIndex() const;
+
+    /**
+     * Access the member variable mHalfMoveClock
+     *
+     * @return the number of half moves since the last pawn move
+     *         as per the last time SetPositionFromFen was called.
+     */
+    unsigned GetHalfMoveClock() const;
+
+    /**
+     * Access the member variable mFullMoveClock
+     *
+     * @return the number of moves so far as per the last time SetPositionFromFen was called.
+     */
+    unsigned GetFullMoveClock() const;
+
+
 };
 
 }//namespace slach

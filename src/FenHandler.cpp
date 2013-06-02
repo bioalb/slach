@@ -2,16 +2,19 @@
 #include <cassert>
 #include <iostream>
 #include <sstream>
+#include <cmath>
+#include "Exception.hpp"
 #include "FenHandler.hpp"
 
 slach::FenHandler::FenHandler()
 {
-
+    mEnPassantSquare = 64u;
+    mHalfMoveClock = 0u;
+    mFullMoveClock = 0u;
 }
 
 slach::FenHandler::~FenHandler()
 {
-
 }
 
 bool slach::FenHandler::IsFenValid(const std::string &rFenString) const
@@ -213,7 +216,7 @@ bool slach::FenHandler::IsFenValid(const std::string &rFenString) const
                 }
                 else if( enpassant_second_checked == false )
                 {
-                    if ( rFenString[i] == '1' || rFenString[i] == '2'  || rFenString[i] == '3' || rFenString[i] == '4' ||
+                    if ( rFenString[i] == '6' || rFenString[i] == '2'  || rFenString[i] == '3' || rFenString[i] == '4' ||
                          rFenString[i] == '5' || rFenString[i] == '6'  || rFenString[i] == '7' || rFenString[i] == '8')
                     {
                         enpassant_started = true;
@@ -348,7 +351,75 @@ int slach::FenHandler::AssignPieceFromLetter(PieceType& piece, const char &chara
     return rc;
 }
 
+unsigned slach::FenHandler::GetIndexFromCoordinates(const char &rFile, const char &rRank) const
+{
+    if (rFile=='a' && rRank=='1') return 0;
+    if (rFile=='b' && rRank=='1') return 1;
+    if (rFile=='c' && rRank=='1') return 2;
+    if (rFile=='d' && rRank=='1') return 3;
+    if (rFile=='e' && rRank=='1') return 4;
+    if (rFile=='f' && rRank=='1') return 5;
+    if (rFile=='g' && rRank=='1') return 6;
+    if (rFile=='h' && rRank=='1') return 7;
+    if (rFile=='a' && rRank=='2') return 8;
+    if (rFile=='b' && rRank=='2') return 9;
+    if (rFile=='c' && rRank=='2') return 10;
+    if (rFile=='d' && rRank=='2') return 11;
+    if (rFile=='e' && rRank=='2') return 12;
+    if (rFile=='f' && rRank=='2') return 13;
+    if (rFile=='g' && rRank=='2') return 14;
+    if (rFile=='h' && rRank=='2') return 15;
+    if (rFile=='a' && rRank=='3') return 16;
+    if (rFile=='b' && rRank=='3') return 17;
+    if (rFile=='c' && rRank=='3') return 18;
+    if (rFile=='d' && rRank=='3') return 19;
+    if (rFile=='e' && rRank=='3') return 20;
+    if (rFile=='f' && rRank=='3') return 21;
+    if (rFile=='g' && rRank=='3') return 22;
+    if (rFile=='h' && rRank=='3') return 23;
+    if (rFile=='a' && rRank=='4') return 24;
+    if (rFile=='b' && rRank=='4') return 25;
+    if (rFile=='c' && rRank=='4') return 26;
+    if (rFile=='d' && rRank=='4') return 27;
+    if (rFile=='e' && rRank=='4') return 28;
+    if (rFile=='f' && rRank=='4') return 29;
+    if (rFile=='g' && rRank=='4') return 30;
+    if (rFile=='h' && rRank=='4') return 31;
+    if (rFile=='a' && rRank=='5') return 32;
+    if (rFile=='b' && rRank=='5') return 33;
+    if (rFile=='c' && rRank=='5') return 34;
+    if (rFile=='d' && rRank=='5') return 35;
+    if (rFile=='e' && rRank=='5') return 36;
+    if (rFile=='f' && rRank=='5') return 37;
+    if (rFile=='g' && rRank=='5') return 38;
+    if (rFile=='h' && rRank=='5') return 39;
+    if (rFile=='a' && rRank=='6') return 40;
+    if (rFile=='b' && rRank=='6') return 41;
+    if (rFile=='c' && rRank=='6') return 42;
+    if (rFile=='d' && rRank=='6') return 43;
+    if (rFile=='e' && rRank=='6') return 44;
+    if (rFile=='f' && rRank=='6') return 45;
+    if (rFile=='g' && rRank=='6') return 46;
+    if (rFile=='h' && rRank=='6') return 47;
+    if (rFile=='a' && rRank=='7') return 48;
+    if (rFile=='b' && rRank=='7') return 49;
+    if (rFile=='c' && rRank=='7') return 50;
+    if (rFile=='d' && rRank=='7') return 51;
+    if (rFile=='e' && rRank=='7') return 52;
+    if (rFile=='f' && rRank=='7') return 53;
+    if (rFile=='g' && rRank=='7') return 54;
+    if (rFile=='h' && rRank=='7') return 55;
+    if (rFile=='a' && rRank=='8') return 56;
+    if (rFile=='b' && rRank=='8') return 57;
+    if (rFile=='c' && rRank=='8') return 58;
+    if (rFile=='d' && rRank=='8') return 59;
+    if (rFile=='e' && rRank=='8') return 60;
+    if (rFile=='f' && rRank=='8') return 61;
+    if (rFile=='g' && rRank=='8') return 62;
+    if (rFile=='h' && rRank=='8') return 63;
 
+    return 64u;
+}
 int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::vector<Square* > &rSquares)
 {
     int rc = 0;//return code, initialise at 0
@@ -431,6 +502,7 @@ int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::ve
         //assume valid fen
         assert(end_of_pos > 0);
         assert(end_of_pos < rFenString.length());
+        unsigned end_of_colour = end_of_pos;
         for (unsigned i = end_of_pos; i < rFenString.length(); ++i)
         {
             if (rFenString[i]==' ')
@@ -439,17 +511,127 @@ int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::ve
             }
             else
             {
-                assert(rFenString[i]=='b' || rFenString[i]=='w');
+                assert(rFenString[i]=='b' || rFenString[i]=='w');//assume valid fen
                 if (rFenString[i]=='b')
                 {
                     mTurnToMove = BLACK;
+                    end_of_colour = i;
                     break;
                 }
                 else
                 {
                     mTurnToMove = WHITE;
+                    end_of_colour = i;
                     break;
                 }
+            }
+        }
+
+        //castling rights
+        mCastlingRights.resize(0);
+        unsigned end_of_castling_rights = end_of_colour;
+        for (unsigned i = end_of_colour+1; i < rFenString.length(); ++i)
+        {
+            if (rFenString[i]==' ')
+            {
+                continue;
+            }
+            else
+            {
+                if (rFenString[i]=='-')
+                {
+                    mCastlingRights.resize(0);
+                    break;
+                }
+                else if (rFenString[i]=='K')
+                {
+                    mCastlingRights.push_back(WHITE_KINGSIDE);
+                }
+                else if (rFenString[i]=='k')
+                {
+                    mCastlingRights.push_back(BLACK_KINGSIDE);
+                }
+                else if (rFenString[i]=='Q')
+                {
+                    mCastlingRights.push_back(WHITE_QUEENSIDE);
+                }
+                else if (rFenString[i]=='q')
+                {
+                    mCastlingRights.push_back(BLACK_QUEENSIDE);
+                }
+                else
+                {
+                    NEVER_REACHED;//assume valid FEN
+                }
+                if (mCastlingRights.size()==4u)
+                {
+                    end_of_castling_rights = i;
+                    break;
+                }
+            }
+        }//castling rights for loop
+
+        unsigned end_of_enpassant = end_of_castling_rights;
+        char file;
+        char rank;
+        bool no_enpassant = false;
+        for (unsigned i = end_of_castling_rights+1; i < rFenString.length(); ++i)
+        {
+            if (rFenString[i]==' ')
+            {
+                continue;
+            }
+            else
+            {
+                if (rFenString[i]=='-')
+                {
+                    mEnPassantSquare = 64u;
+                    end_of_enpassant = i;
+                    no_enpassant = true;
+                    break;
+                }
+                else
+                {
+                    if (isalpha (rFenString[i]))
+                    {
+                        file = rFenString[i];
+                    }
+                    else if (isdigit (rFenString[i]))
+                    {
+                        rank =  rFenString[i];
+                        end_of_enpassant = i;
+                        break;//assume valid fen, after the number, it is over
+                    }
+                    else
+                    {
+                        NEVER_REACHED;//assume valid fen
+                    }
+                }
+            }
+        }
+        if (no_enpassant == false)
+        {
+            mEnPassantSquare = GetIndexFromCoordinates(file, rank);
+        }
+
+        //clocks, half move and full move
+        bool half_move_clock_done = false;
+        bool full_move_clock_done = false;
+        for (unsigned i = end_of_enpassant+1; i < rFenString.length(); ++i)
+        {
+            if ( isdigit (rFenString[i]) && half_move_clock_done==false)
+            {
+                mHalfMoveClock =   atoi (&rFenString[i]);
+                half_move_clock_done = true;
+            }
+            else if ( isdigit (rFenString[i]) && half_move_clock_done ==  true && full_move_clock_done == false)
+            {
+                mFullMoveClock = atoi (&rFenString[i]);
+                full_move_clock_done = true;
+            }
+            else
+            {
+                continue;//white space
             }
         }
     }
@@ -622,4 +804,24 @@ std::string slach::FenHandler::GetFenFromPosition(const std::vector<Square* > &r
 slach::TurnToMove slach::FenHandler::WhosTurnIsIt() const
 {
     return mTurnToMove;
+}
+
+std::vector<slach::CastlingRights> slach::FenHandler::GetLatestCastlingRights() const
+{
+    return mCastlingRights;
+}
+
+unsigned slach::FenHandler::GetEnPassantSquareIndex() const
+{
+    return mEnPassantSquare;
+}
+
+unsigned slach::FenHandler::GetHalfMoveClock() const
+{
+    return mHalfMoveClock;
+}
+
+unsigned slach::FenHandler::GetFullMoveClock() const
+{
+    return mFullMoveClock;
 }

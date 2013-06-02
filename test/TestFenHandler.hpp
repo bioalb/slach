@@ -176,6 +176,124 @@ public:
         TS_ASSERT_EQUALS(handler.IsFenValid(test_fen), true);
     }
 
+    void TestIndexFromChars()
+    {
+        slach::FenHandler handler;
+        std::vector<char> files = {'a','b','c','d','e','f','g','h'};
+        std::vector<char> ranks = {'1','2','3','4','5','6','7','8'};
+
+        unsigned global_counter = 0u;
+        for (unsigned rank_index  = 0; rank_index < ranks.size(); ++rank_index)
+        {
+            for (unsigned file_index = 0; file_index <  files.size(); ++file_index)
+            {
+                TS_ASSERT_EQUALS(handler.GetIndexFromCoordinates(files[file_index], ranks[rank_index]), global_counter);
+                global_counter++;
+            }
+        }
+
+        //coverage
+        TS_ASSERT_EQUALS(handler.GetIndexFromCoordinates('k', '2'), 64u);
+        TS_ASSERT_EQUALS(handler.GetIndexFromCoordinates('a', '9'), 64u);
+    }
+
+    void testAssignFenInitialAftere2e4()
+    {
+        slach::FenHandler handler;
+
+        //initial position after e2-e4
+        std::string aftere2e4 = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
+        TS_ASSERT_EQUALS(handler.IsFenValid(aftere2e4), true);
+
+        //create a vector of squares for testing purposes
+        std::vector<slach::Square* > squares;
+        squares.resize(64u);
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            squares[i] = new slach::Square();
+            squares[i]->SetPieceOnThisSquare(slach::BLACK_BISHOP);//for testing, we start with all bishops!!
+        }
+
+        int rc = handler.SetPositionFromFen(aftere2e4, squares);
+        TS_ASSERT_EQUALS(rc,0);
+
+        //check the vector of squares one by one
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            if ( ((i>7u) && (i<12u)) || ( (i>12u) && (i<16u)) )//a2,b2,c2,d2 OR f2,g2, h2
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_PAWN);
+            }
+            else if (i==28u)//e4
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_PAWN);
+            }
+            else if ((i>47u) && (i<56u))//the whole 7th rank
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_PAWN);
+            }
+            else if ((i==0u) || (i==7u))//A1 and H1
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_ROOK);
+            }
+            else if ((i==1u) || (i==6u))//B1 and G1
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_KNIGHT);
+            }
+            else if ((i==2u) || (i==5u))//C1 and F1
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_BISHOP);
+            }
+            else if (i==3u)//D1
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_QUEEN);
+            }
+            else if (i==4u)//E1
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::WHITE_KING);
+            }
+            else if ((i==56u) || (i==63))//A8 and H8
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_ROOK);
+            }
+            else if ((i==57u) || (i==62u))//B8 and G8
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_KNIGHT);
+            }
+            else if ((i==58u) || (i==61u))//C8 and F8
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_BISHOP);
+            }
+            else if (i==59u)//D8
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_QUEEN);
+            }
+            else if (i==60)//E8
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::BLACK_KING);
+            }
+            else
+            {
+                TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::NO_PIECE);
+            }
+        }
+        TS_ASSERT_EQUALS(handler.WhosTurnIsIt(), slach::BLACK);
+        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights().size(), 4u);
+        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights()[0], slach::WHITE_KINGSIDE);
+        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights()[1], slach::WHITE_QUEENSIDE);
+        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights()[2], slach::BLACK_KINGSIDE);
+        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights()[3], slach::BLACK_QUEENSIDE);
+        TS_ASSERT_EQUALS(handler.GetEnPassantSquareIndex(), 20u);//e3
+        TS_ASSERT_EQUALS(handler.GetHalfMoveClock(), 0u);
+        TS_ASSERT_EQUALS(handler.GetFullMoveClock(), 1u);
+
+        //clear up memory
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
+    }
+
     void testAssignFen()
     {
         slach::FenHandler handler;
@@ -218,6 +336,10 @@ public:
             }
         }
         TS_ASSERT_EQUALS(handler.WhosTurnIsIt(), slach::WHITE);
+        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights().size(), 0u);
+        TS_ASSERT_EQUALS(handler.GetEnPassantSquareIndex(), 64u);//no en-passant
+        TS_ASSERT_EQUALS(handler.GetHalfMoveClock(), 0u);
+        TS_ASSERT_EQUALS(handler.GetFullMoveClock(), 68u);
 
         //clear up memory
         for (unsigned i = 0; i < squares.size(); ++i)
@@ -275,6 +397,10 @@ public:
             }
         }
         TS_ASSERT_EQUALS(handler.WhosTurnIsIt(), slach::BLACK);
+        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights().size(), 0u);
+        TS_ASSERT_EQUALS(handler.GetEnPassantSquareIndex(), 64u);//no en-passant
+        TS_ASSERT_EQUALS(handler.GetHalfMoveClock(), 1);
+        TS_ASSERT_EQUALS(handler.GetFullMoveClock(), 47);
 
         //clear up memory
         for (unsigned i = 0; i < squares.size(); ++i)

@@ -43,6 +43,10 @@ void slach::ChessBoard::SetupInitialChessPosition()
 {
     mCurrentFenPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     mpFenHandler->SetPositionFromFen(mCurrentFenPosition, mSquares);
+    std::vector<CastlingRights> mCastlingRights = {WHITE_KINGSIDE, BLACK_KINGSIDE, WHITE_QUEENSIDE, BLACK_QUEENSIDE};
+    mpEnPassantSquare = NULL;
+    mHalfMoveClock = 0;
+    mFullMoveclock = 1;
 }
 
 void slach::ChessBoard::SetupChessBoard()
@@ -90,6 +94,23 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
     Square* origin = rMove.first;
     Square* destination = rMove.second;
 
+    //check for pawn move
+    if ((origin->GetPieceOnThisSquare() == WHITE_PAWN) || (origin->GetPieceOnThisSquare() == BLACK_PAWN))
+    {
+        if (abs(origin->GetIndexFromA1() - destination->GetIndexFromA1()) == 16)
+        {
+            if (origin->GetIndexFromA1() < 16)//white pawn
+            {
+                mpEnPassantSquare = mSquares[origin->GetIndexFromA1() + 8u];
+            }
+            else
+            {
+                mpEnPassantSquare = mSquares[origin->GetIndexFromA1() - 8u];
+            }
+        }
+        mHalfMoveClock = 0;
+    }
+
     for (unsigned i = 0; i < mSquares.size(); ++i)
     {
         if (origin->IsSameSquare((*mSquares[i])))//if we found the origin square
@@ -108,7 +129,13 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
             break;
         }
     }
-    //mCurrentFenPosition = mpFenHandler->GetFenFromPosition(mSquares, rMove);
+
+    mCurrentFenPosition = mpFenHandler->GetFenFromPosition(mSquares, mTurnToMove,
+            mCastlingRights,
+            mpEnPassantSquare,
+            mHalfMoveClock,
+            mFullMoveclock);
+    mpEnPassantSquare = NULL;
 }
 
 

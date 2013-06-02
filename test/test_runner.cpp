@@ -120,33 +120,45 @@ public:
  void runTest() { suite_TestFenHandler.testFenValidity(); }
 } testDescription_suite_TestFenHandler_testFenValidity;
 
+static class TestDescription_suite_TestFenHandler_TestIndexFromChars : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestFenHandler_TestIndexFromChars() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 179, "TestIndexFromChars" ) {}
+ void runTest() { suite_TestFenHandler.TestIndexFromChars(); }
+} testDescription_suite_TestFenHandler_TestIndexFromChars;
+
+static class TestDescription_suite_TestFenHandler_testAssignFenInitialAftere2e4 : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestFenHandler_testAssignFenInitialAftere2e4() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 194, "testAssignFenInitialAftere2e4" ) {}
+ void runTest() { suite_TestFenHandler.testAssignFenInitialAftere2e4(); }
+} testDescription_suite_TestFenHandler_testAssignFenInitialAftere2e4;
+
 static class TestDescription_suite_TestFenHandler_testAssignFen : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestFenHandler_testAssignFen() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 179, "testAssignFen" ) {}
+ TestDescription_suite_TestFenHandler_testAssignFen() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 291, "testAssignFen" ) {}
  void runTest() { suite_TestFenHandler.testAssignFen(); }
 } testDescription_suite_TestFenHandler_testAssignFen;
 
 static class TestDescription_suite_TestFenHandler_testAnotherValidFen : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestFenHandler_testAnotherValidFen() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 229, "testAnotherValidFen" ) {}
+ TestDescription_suite_TestFenHandler_testAnotherValidFen() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 345, "testAnotherValidFen" ) {}
  void runTest() { suite_TestFenHandler.testAnotherValidFen(); }
 } testDescription_suite_TestFenHandler_testAnotherValidFen;
 
 static class TestDescription_suite_TestFenHandler_testAssignFenStrangeCases : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestFenHandler_testAssignFenStrangeCases() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 286, "testAssignFenStrangeCases" ) {}
+ TestDescription_suite_TestFenHandler_testAssignFenStrangeCases() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 406, "testAssignFenStrangeCases" ) {}
  void runTest() { suite_TestFenHandler.testAssignFenStrangeCases(); }
 } testDescription_suite_TestFenHandler_testAssignFenStrangeCases;
 
 static class TestDescription_suite_TestFenHandler_TestGetFenOrdinaryMove : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestFenHandler_TestGetFenOrdinaryMove() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 357, "TestGetFenOrdinaryMove" ) {}
+ TestDescription_suite_TestFenHandler_TestGetFenOrdinaryMove() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 477, "TestGetFenOrdinaryMove" ) {}
  void runTest() { suite_TestFenHandler.TestGetFenOrdinaryMove(); }
 } testDescription_suite_TestFenHandler_TestGetFenOrdinaryMove;
 
 static class TestDescription_suite_TestFenHandler_TestGetFenWithEnpassant : public CxxTest::RealTestDescription {
 public:
- TestDescription_suite_TestFenHandler_TestGetFenWithEnpassant() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 413, "TestGetFenWithEnpassant" ) {}
+ TestDescription_suite_TestFenHandler_TestGetFenWithEnpassant() : CxxTest::RealTestDescription( Tests_TestFenHandler, suiteDescription_TestFenHandler, 533, "TestGetFenWithEnpassant" ) {}
  void runTest() { suite_TestFenHandler.TestGetFenWithEnpassant(); }
 } testDescription_suite_TestFenHandler_TestGetFenWithEnpassant;
 

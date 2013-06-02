@@ -71,6 +71,11 @@ private:
     /**A pointer to an EngineInterface object. Initialised in constructor*/
     EngineInterface* mpEngineInterface;
 
+    std::vector<CastlingRights> mCastlingRights;
+    Square* mpEnPassantSquare;
+    unsigned mHalfMoveClock;
+    unsigned mFullMoveclock;
+
 public:
 
     /**
