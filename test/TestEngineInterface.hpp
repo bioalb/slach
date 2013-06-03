@@ -19,18 +19,18 @@ public:
     {
         slach::EngineInterface interface;
         slach::Square* pe2 = new slach::Square();
-        pe2->SetFile("e");
-        pe2->SetRank("2");
+        pe2->SetFile('e');
+        pe2->SetRank('2');
         pe2->SetIndexFromA1(12u);
 
         slach::Square* pe4 = new slach::Square();
-        pe4->SetFile("e");
-        pe4->SetRank("4");
+        pe4->SetFile('e');
+        pe4->SetRank('4');
         pe4->SetIndexFromA1(28u);
 
         slach::Square* pe5 = new slach::Square();
-        pe5->SetFile("e");
-        pe5->SetRank("5");
+        pe5->SetFile('e');
+        pe5->SetRank('5');
         pe5->SetIndexFromA1(36u);
 
         slach::Move e2e4;

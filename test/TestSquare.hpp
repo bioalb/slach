@@ -18,8 +18,10 @@ public:
     {
         slach::Square sq1;
         //check default values
-        TS_ASSERT_EQUALS(sq1.GetRank(), "UNDEFINED");
-        TS_ASSERT_EQUALS(sq1.GetFile(), "UNDEFINED");
+        TS_ASSERT_EQUALS(sq1.GetRank(), '0');
+        TS_ASSERT_EQUALS(sq1.GetFile(), '0');
+        TS_ASSERT_EQUALS(sq1.GetRankAsString(), "0");
+        TS_ASSERT_EQUALS(sq1.GetFileAsString(), "0");
         TS_ASSERT_EQUALS(sq1.IsBorderSquare(), false);
         TS_ASSERT_EQUALS(sq1.IsCornerSquare(), false);
         TS_ASSERT_EQUALS(sq1.IsCoordinatePrintable(), false);
@@ -29,10 +31,12 @@ public:
         TS_ASSERT_EQUALS(sq1.IsLightSquare(), false);
         TS_ASSERT_EQUALS(sq1.GetIndexFromA1(), UINT_MAX);
 
-        sq1.SetFile("A");
-        sq1.SetRank("4");
-        TS_ASSERT_EQUALS(sq1.GetRank(), "4");
-        TS_ASSERT_EQUALS(sq1.GetFile(), "A");
+        sq1.SetFile('A');
+        sq1.SetRank('4');
+        TS_ASSERT_EQUALS(sq1.GetRank(), '4');
+        TS_ASSERT_EQUALS(sq1.GetFile(), 'A');
+        TS_ASSERT_EQUALS(sq1.GetRankAsString(), "4");
+        TS_ASSERT_EQUALS(sq1.GetFileAsString(), "A");
         TS_ASSERT_EQUALS(sq1.GetIndexFromA1(), UINT_MAX);
         sq1.SetIndexFromA1(24u);
         TS_ASSERT_EQUALS(sq1.GetIndexFromA1(), 24u);
@@ -68,23 +72,23 @@ public:
         TS_ASSERT_EQUALS(sq1.IsSameSquare(sq2), true);
         TS_ASSERT_EQUALS(sq2.IsSameSquare(sq1), true);
 
-        sq1.SetFile("A");
-        sq2.SetFile("B");
+        sq1.SetFile('A');
+        sq2.SetFile('B');
 
         TS_ASSERT_EQUALS(sq1.IsSameSquare(sq2), false);
         TS_ASSERT_EQUALS(sq2.IsSameSquare(sq1), false);
 
-        sq2.SetFile("A");
+        sq2.SetFile('A');
 
         TS_ASSERT_EQUALS(sq1.IsSameSquare(sq2), true);
         TS_ASSERT_EQUALS(sq2.IsSameSquare(sq1), true);
 
-        sq2.SetRank("2");
+        sq2.SetRank('2');
 
         TS_ASSERT_EQUALS(sq1.IsSameSquare(sq2), false);
         TS_ASSERT_EQUALS(sq2.IsSameSquare(sq1), false);
 
-        sq1.SetRank("2");
+        sq1.SetRank('2');
 
         TS_ASSERT_EQUALS(sq1.IsSameSquare(sq2), true);
         TS_ASSERT_EQUALS(sq2.IsSameSquare(sq1), true);

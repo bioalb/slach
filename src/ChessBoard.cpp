@@ -10,9 +10,6 @@ slach::ChessBoard::ChessBoard()
     //allocate memory for the vectors
     mSquares.resize(CHESSBOARD_SIZE);
 
-    mFiles = {"a", "b", "c", "d", "e","f", "g",  "h"};
-    mRanks = {"1", "2", "3", "4", "5","6", "7",  "8"};
-
     for (unsigned i = 0; i <mSquares.size(); ++i )
     {
         mSquares[i] = new Square();
@@ -58,10 +55,10 @@ void slach::ChessBoard::SetupChessBoard()
     //will create the squares row by row, starting from bottom left (A1)
     for (unsigned index = 0; index < CHESSBOARD_SIZE; ++index)
     {
-        assert(row<mRanks.size());
-        assert(column<mFiles.size());
-        mSquares[index]->SetFile(mFiles[column]);
-        mSquares[index]->SetRank(mRanks[row]);
+        assert(row<CHESSBOARD_RANKS.size());
+        assert(column<CHESSBOARD_FILES.size());
+        mSquares[index]->SetFile(CHESSBOARD_FILES[column]);
+        mSquares[index]->SetRank(CHESSBOARD_RANKS[row]);
         mSquares[index]->SetIndexFromA1(index);
 
         if (bw_counter%2==0)

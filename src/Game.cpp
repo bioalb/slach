@@ -27,23 +27,23 @@ void slach::Game::DetermineSpecialMove(const Move& rMove)
     Square* p_origin = rMove.first;
     Square* p_destination = rMove.second;
 
-    if ( (p_origin->GetFile()=="e" && p_origin->GetRank()=="1") &&
-         (p_destination->GetFile()=="g" && p_destination->GetRank()=="1"))
+    if ( (p_origin->GetFile()=='e' && p_origin->GetRank()=='1') &&
+         (p_destination->GetFile()=='g' && p_destination->GetRank()=='1'))
     {
         mSpecialMove = WHITE_CASTLE_KINGSIDE;
     }
-    if ( (p_origin->GetFile()=="e" && p_origin->GetRank()=="1") &&
-         (p_destination->GetFile()=="c" && p_destination->GetRank()=="1"))
+    if ( (p_origin->GetFile()=='e' && p_origin->GetRank()=='1') &&
+         (p_destination->GetFile()=='c' && p_destination->GetRank()=='1'))
     {
         mSpecialMove = WHITE_CASTLE_QUEENSIDE;
     }
-    if ( (p_origin->GetFile()=="e" && p_origin->GetRank()=="8") &&
-         (p_destination->GetFile()=="c" && p_destination->GetRank()=="8"))
+    if ( (p_origin->GetFile()=='e' && p_origin->GetRank()=='8') &&
+         (p_destination->GetFile()=='c' && p_destination->GetRank()=='8'))
     {
         mSpecialMove = BLACK_CASTLE_QUEENSIDE;
     }
-    if ( (p_origin->GetFile()=="e" && p_origin->GetRank()=="8") &&
-         (p_destination->GetFile()=="g" && p_destination->GetRank()=="8"))
+    if ( (p_origin->GetFile()=='e' && p_origin->GetRank()=='8') &&
+         (p_destination->GetFile()=='g' && p_destination->GetRank()=='8'))
     {
         mSpecialMove = BLACK_CASTLE_KINGSIDE;
     }

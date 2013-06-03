@@ -17,13 +17,13 @@ class Square
 
 private:
     /**
-     * The file ("column") of this square. Initialised to "UNDEFINED"
+     * The file ("column") of this square. Initialised to '0'
      */
-    std::string mFile;
+    char mFile;
     /**
-     * The rank ("row") of this square. Initialised to "UNDEFINED"
+     * The rank ("row") of this square. Initialised to '0'
      */
-    std::string mRank;
+    char mRank;
 
     /**True if the square belongs to the border. False by  default*/
     bool mIsBorderSquare;
@@ -57,29 +57,32 @@ public:
 
     /**
      * Sets the file of the square (mFile)
-     * @param file the string containing the file (A to H)
+     * @param file the char containing the file ('a' to 'h')
      */
-    void SetFile(std::string file);
+    void SetFile(char file);
 
     /**
      * Sets the file of the square (mRank)
-     * @param rank the string containing the file (1 to 8)
+     * @param rank the char containing the file ('1' to '8')
      */
-    void SetRank(std::string rank);
+    void SetRank(char rank);
 
     /**
      * Access the file of this square
      *
      * @return the file as a string
      */
-    std::string GetFile() const;
+    char GetFile() const;
 
     /**
      * Access the rank of this square
      *
      * @return the rank as a string
      */
-    std::string GetRank() const;
+    char GetRank() const;
+
+    std::string GetFileAsString() const;
+    std::string GetRankAsString() const;
 
     /**
      * Sets this square as light (also puts the flag for dark square to false)

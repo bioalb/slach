@@ -700,8 +700,8 @@ public:
         std::vector<slach::CastlingRights> cr = {slach::WHITE_KINGSIDE, slach::WHITE_QUEENSIDE, slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
 
         slach::Square* p_enpassantsquare = new slach::Square();
-        p_enpassantsquare->SetFile("e");
-        p_enpassantsquare->SetRank("3");
+        p_enpassantsquare->SetFile('e');
+        p_enpassantsquare->SetRank('3');
         std::string calculated_fen = handler.GetFenFromPosition(squares,slach::BLACK,cr,p_enpassantsquare,0,1);
         //initial position after 1. e4 (from wikipedia)
         std::string valid_fen = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";

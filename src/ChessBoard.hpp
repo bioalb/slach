@@ -53,12 +53,6 @@ private:
      */
     std::vector<Square* > mSquares;
 
-    /**The files (columns) on this chessboard*/
-    std::vector<std::string> mFiles;
-
-    /**The ranks (rows) on this chessboard*/
-    std::vector<std::string> mRanks;
-
     /** Stores whether it is white's or balck's turn*/
     TurnToMove mTurnToMove;
 

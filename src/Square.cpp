@@ -9,8 +9,8 @@ slach::Square::Square()
     mIsLightSquare = false;
     mIsDarkSquare = false;
     mIsCoordinatePrintable = false;
-    mFile = "UNDEFINED";
-    mRank = "UNDEFINED";
+    mFile = '0';
+    mRank = '0';
     mPieceOnThisSquare = NO_PIECE;
     mIndexFromA1 = UINT_MAX;
 }
@@ -62,12 +62,12 @@ bool slach::Square::IsDarkSquare() const
     return mIsDarkSquare;
 }
 
-void slach::Square::SetFile(std::string file)
+void slach::Square::SetFile(char file)
 {
     mFile = file;
 }
 
-void slach::Square::SetRank(std::string rank)
+void slach::Square::SetRank(char rank)
 {
     mRank = rank;
 }
@@ -82,14 +82,25 @@ bool slach::Square::IsCoordinatePrintable() const
     return mIsCoordinatePrintable;
 }
 
-std::string slach::Square::GetFile() const
+char slach::Square::GetFile() const
 {
     return mFile;
 }
 
-std::string slach::Square::GetRank() const
+char slach::Square::GetRank() const
 {
     return mRank;
+}
+
+std::string slach::Square::GetFileAsString() const
+{
+    std::string ret(1,mFile);
+    return ret;
+}
+std::string slach::Square::GetRankAsString() const
+{
+    std::string ret(1,mRank);
+    return ret;
 }
 
 void slach::Square::SetPieceOnThisSquare(PieceType piece)

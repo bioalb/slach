@@ -729,8 +729,8 @@ std::string slach::FenHandler::GetFenFromPosition(const std::vector<Square* > &r
     else
     {
         ret.append(" ");
-        ret.append(pEnPassantSquare->GetFile());
-        ret.append(pEnPassantSquare->GetRank());
+        ret.append(pEnPassantSquare->GetFileAsString());
+        ret.append(pEnPassantSquare->GetRankAsString());
         ret.append(" ");
     }
 
