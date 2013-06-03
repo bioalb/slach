@@ -353,71 +353,18 @@ int slach::FenHandler::AssignPieceFromLetter(PieceType& piece, const char &chara
 
 unsigned slach::FenHandler::GetIndexFromCoordinates(const char &rFile, const char &rRank) const
 {
-    if (rFile=='a' && rRank=='1') return 0;
-    if (rFile=='b' && rRank=='1') return 1;
-    if (rFile=='c' && rRank=='1') return 2;
-    if (rFile=='d' && rRank=='1') return 3;
-    if (rFile=='e' && rRank=='1') return 4;
-    if (rFile=='f' && rRank=='1') return 5;
-    if (rFile=='g' && rRank=='1') return 6;
-    if (rFile=='h' && rRank=='1') return 7;
-    if (rFile=='a' && rRank=='2') return 8;
-    if (rFile=='b' && rRank=='2') return 9;
-    if (rFile=='c' && rRank=='2') return 10;
-    if (rFile=='d' && rRank=='2') return 11;
-    if (rFile=='e' && rRank=='2') return 12;
-    if (rFile=='f' && rRank=='2') return 13;
-    if (rFile=='g' && rRank=='2') return 14;
-    if (rFile=='h' && rRank=='2') return 15;
-    if (rFile=='a' && rRank=='3') return 16;
-    if (rFile=='b' && rRank=='3') return 17;
-    if (rFile=='c' && rRank=='3') return 18;
-    if (rFile=='d' && rRank=='3') return 19;
-    if (rFile=='e' && rRank=='3') return 20;
-    if (rFile=='f' && rRank=='3') return 21;
-    if (rFile=='g' && rRank=='3') return 22;
-    if (rFile=='h' && rRank=='3') return 23;
-    if (rFile=='a' && rRank=='4') return 24;
-    if (rFile=='b' && rRank=='4') return 25;
-    if (rFile=='c' && rRank=='4') return 26;
-    if (rFile=='d' && rRank=='4') return 27;
-    if (rFile=='e' && rRank=='4') return 28;
-    if (rFile=='f' && rRank=='4') return 29;
-    if (rFile=='g' && rRank=='4') return 30;
-    if (rFile=='h' && rRank=='4') return 31;
-    if (rFile=='a' && rRank=='5') return 32;
-    if (rFile=='b' && rRank=='5') return 33;
-    if (rFile=='c' && rRank=='5') return 34;
-    if (rFile=='d' && rRank=='5') return 35;
-    if (rFile=='e' && rRank=='5') return 36;
-    if (rFile=='f' && rRank=='5') return 37;
-    if (rFile=='g' && rRank=='5') return 38;
-    if (rFile=='h' && rRank=='5') return 39;
-    if (rFile=='a' && rRank=='6') return 40;
-    if (rFile=='b' && rRank=='6') return 41;
-    if (rFile=='c' && rRank=='6') return 42;
-    if (rFile=='d' && rRank=='6') return 43;
-    if (rFile=='e' && rRank=='6') return 44;
-    if (rFile=='f' && rRank=='6') return 45;
-    if (rFile=='g' && rRank=='6') return 46;
-    if (rFile=='h' && rRank=='6') return 47;
-    if (rFile=='a' && rRank=='7') return 48;
-    if (rFile=='b' && rRank=='7') return 49;
-    if (rFile=='c' && rRank=='7') return 50;
-    if (rFile=='d' && rRank=='7') return 51;
-    if (rFile=='e' && rRank=='7') return 52;
-    if (rFile=='f' && rRank=='7') return 53;
-    if (rFile=='g' && rRank=='7') return 54;
-    if (rFile=='h' && rRank=='7') return 55;
-    if (rFile=='a' && rRank=='8') return 56;
-    if (rFile=='b' && rRank=='8') return 57;
-    if (rFile=='c' && rRank=='8') return 58;
-    if (rFile=='d' && rRank=='8') return 59;
-    if (rFile=='e' && rRank=='8') return 60;
-    if (rFile=='f' && rRank=='8') return 61;
-    if (rFile=='g' && rRank=='8') return 62;
-    if (rFile=='h' && rRank=='8') return 63;
-
+    unsigned global_counter = 0u;
+    for (unsigned rank_index  = 0; rank_index < CHESSBOARD_FILES.size(); ++rank_index)
+    {
+        for (unsigned file_index = 0; file_index <  CHESSBOARD_RANKS.size(); ++file_index)
+        {
+            if ((CHESSBOARD_RANKS[rank_index] == rRank) && (CHESSBOARD_FILES[file_index] == rFile))
+            {
+                return global_counter;
+            }
+            global_counter++;
+        }
+    }
     return 64u;
 }
 int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::vector<Square* > &rSquares)
