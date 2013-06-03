@@ -5,19 +5,17 @@
 #include <string>
 #include "Square.hpp"
 
-/**
- * A class to handle Forsyth Edwards Notation (FEN) strings.
- *
- * Reference for http://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
- */
 
+//Forward declaration for testing
 class TestFenHandler;
 
 namespace slach
 {
 
 /**
- * A class to handle FEN strings
+ * A class to handle Forsyth Edwards Notation (FEN) strings.
+ *
+ * Reference for http://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
  */
 class FenHandler
 {

@@ -6,9 +6,7 @@
 #include "SlachTypes.hpp"
 #include "Square.hpp"
 
-/**
- * The game class
- */
+
 class TestGame;//forward declaration, for testing and accessing protected methods
 
 namespace slach
@@ -20,6 +18,9 @@ namespace slach
  */
 typedef std::pair<Square*,Square*> Move;
 
+/**
+ * The game class
+ */
 class Game
 {
     friend class ::TestGame; //for testing

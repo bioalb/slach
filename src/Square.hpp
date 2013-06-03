@@ -3,15 +3,14 @@
 
 #include <string>
 #include "SlachTypes.hpp"
+
+namespace slach
+{
+
 /**
  * Class that encapsulates a square on the chessboard
  * It can be on the playing board or one of the border squares
  */
-namespace slach
-{
-
-
-
 class Square
 {
 

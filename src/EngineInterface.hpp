@@ -4,6 +4,8 @@
 #include "position.h"//within stockfish
 #include "Game.hpp"
 
+class TestEngineInterface;//forward declaration, for testing and accessing protected methods from the test class
+
 namespace slach
 {
 /**
@@ -11,7 +13,7 @@ namespace slach
  */
 class EngineInterface
 {
-    friend class TestEngineInterface;// for testing
+    friend class ::TestEngineInterface;// for testing
 
   private:
     /**Cache for a FEN string*/
@@ -20,7 +22,8 @@ class EngineInterface
     /**pointer to a position object within the stockfish engine*/
     Position* mpStockfishPosition;
 
-  public :
+  protected:
+
     /**
      * Helper method to convert a Square object within slach
      * to one within the stockfish engine
@@ -29,6 +32,8 @@ class EngineInterface
      * @return The corresponding square of the correct type defined by stocksfish (enum)
      */
     ::Square ConvertSquareToStockfish(const Square* pSquare) const;
+
+  public :
 
     EngineInterface();
     ~EngineInterface();
