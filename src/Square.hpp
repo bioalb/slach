@@ -68,20 +68,33 @@ public:
     void SetRank(char rank);
 
     /**
-     * Access the file of this square
+     * Access the file (column on the chessboard) of this square
      *
      * @return the file as a string
      */
     char GetFile() const;
 
     /**
-     * Access the rank of this square
+     * Access the rank (row on the chessboard) of this square
      *
      * @return the rank as a string
      */
     char GetRank() const;
 
+    /**
+     * Access the file (column on the chessboard) of this square and returns it as a std::string.
+     * A simple convenience method
+     *
+     * @return a string with one character representing the file of the square
+     */
     std::string GetFileAsString() const;
+
+    /**
+     * Access the rank (row on the chessboard)  of this square and returns it as a std::string.
+     * A simple convenience method
+     *
+     * @return a string with one character representing the rank of the square
+     */
     std::string GetRankAsString() const;
 
     /**
