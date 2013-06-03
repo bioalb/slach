@@ -57,13 +57,19 @@ public:
 
     /**
      * Sets the file of the square (mFile)
-     * @param file the char containing the file ('a' to 'h')
+     * One of a,b,c,d,e,f,g,h or 0 are allowed (case sensitive).
+     * If none of the above is passed in, an exception is thrown
+     *
+     * @param file the char containing the file ('a' to 'h' or '0')
      */
     void SetFile(char file);
 
     /**
      * Sets the file of the square (mRank)
-     * @param rank the char containing the file ('1' to '8')
+     * One of 1,2,3,4,5,6,7,8 or 0 are allowed (as characters, not numbers).
+     * If none of the above is passed in, an exception is thrown
+     *
+     * @param rank the char containing the file ('1' to '8' or '0')
      */
     void SetRank(char rank);
 

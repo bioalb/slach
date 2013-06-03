@@ -64,11 +64,21 @@ bool slach::Square::IsDarkSquare() const
 
 void slach::Square::SetFile(char file)
 {
+    if ( (file < 'a' || file >'h') && !(file=='0'))
+    {
+        EXCEPTION("slach::Square::SetFile: you must set one of a,b,c,d,e,f,g,h or 0 as character");
+    }
+
     mFile = file;
 }
 
 void slach::Square::SetRank(char rank)
 {
+
+    if ( (rank < '1' || rank >'8') && !(rank=='0'))
+    {
+        EXCEPTION("slach::Square::SetRank: you must set one of 1,2,3,4,5,6,7,8 or 0 as character");
+    }
     mRank = rank;
 }
 

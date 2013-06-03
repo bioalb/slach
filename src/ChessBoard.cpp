@@ -146,6 +146,8 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
             mHalfMoveClock,
             mFullMoveClock);
     mpEnPassantSquare = NULL;
+    //this line will update mSquares with the new FEN position
+    mpFenHandler->SetPositionFromFen(mCurrentFenPosition, mSquares);
 }
 
 
