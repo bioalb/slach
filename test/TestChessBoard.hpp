@@ -532,31 +532,6 @@ public:
         TS_ASSERT_EQUALS(my_cb.WhosTurnIsIt(), slach::WHITE);
     }
 
-    void testCheckingValidityAndMakingAMove()
-    {
-        slach::ChessBoard my_cb;
-        my_cb.SetupChessBoard();
-        my_cb.SetupInitialChessPosition();
-        //black king on f3, black pawn on g2 and white king on f1
-        std::string endgame = "8/8/8/8/8/5k2/6p1/5K2 w - - 0 68";
-        int rc = my_cb.SetFenPosition(endgame);
-        TS_ASSERT_EQUALS(rc,0);
-        TS_ASSERT_EQUALS(endgame, my_cb.GetCurrentFenPosition());
-
-        std::vector<slach::Square*> squares = my_cb.GetSquares();
-        //now make a valid move f1-g1
-        slach::Move f1_g1;
-        f1_g1.first = squares[5];
-        f1_g1.second = squares[6];
-
-        TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(f1_g1));
-        my_cb.MakeThisMove(f1_g1);
-        TS_ASSERT_EQUALS(squares[5]->GetPieceOnThisSquare(), slach::NO_PIECE);
-        TS_ASSERT_EQUALS(squares[6]->GetPieceOnThisSquare(), slach::WHITE_KING);
-
-        std::string updated_endgame = "8/8/8/8/8/5k2/6p1/6K1 b - - 0 68";
-        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), updated_endgame);
-    }
     void testThatInvalidFenChangesNothing()
     {
         slach::ChessBoard my_cb;
@@ -587,6 +562,120 @@ public:
         std::string init_pos_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         TS_ASSERT_EQUALS(init_pos_fen, my_cb.GetCurrentFenPosition());
     }
+
+    void testCheckingValidityAndMakingAMove()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        my_cb.SetupInitialChessPosition();
+        //black king on f3, black pawn on g2 and white king on f1
+        std::string endgame = "8/8/8/8/8/5k2/6p1/5K2 w - - 0 68";
+        int rc = my_cb.SetFenPosition(endgame);
+        TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(endgame, my_cb.GetCurrentFenPosition());
+
+        std::vector<slach::Square*> squares = my_cb.GetSquares();
+        //now make a valid move f1-g1
+        slach::Move f1_g1;
+        f1_g1.first = squares[5];
+        f1_g1.second = squares[6];
+
+        TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(f1_g1));
+        my_cb.MakeThisMove(f1_g1);
+        TS_ASSERT_EQUALS(squares[5]->GetPieceOnThisSquare(), slach::NO_PIECE);
+        TS_ASSERT_EQUALS(squares[6]->GetPieceOnThisSquare(), slach::WHITE_KING);
+
+        std::string updated_endgame = "8/8/8/8/8/5k2/6p1/6K1 b - - 1 68";
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), updated_endgame);
+    }
+
+    void testMakingSeveralMovesFromStart()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        my_cb.SetupInitialChessPosition();
+        std::string initial = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        int rc = my_cb.SetFenPosition(initial);
+
+        TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(initial, my_cb.GetCurrentFenPosition());
+
+        std::vector<slach::Square*> squares = my_cb.GetSquares();
+        CheckInitialPosition(squares);
+
+        /////Initial position done, move d2-d4 now
+        slach::Move d2_d4;
+        d2_d4.first = squares[11];//d2
+        d2_d4.second = squares[27];//d4
+
+        TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(d2_d4));
+        my_cb.MakeThisMove(d2_d4);
+        TS_ASSERT_EQUALS(squares[11]->GetPieceOnThisSquare(), slach::NO_PIECE);
+        TS_ASSERT_EQUALS(squares[27]->GetPieceOnThisSquare(), slach::WHITE_PAWN);
+
+        std::string after_d2_d4 = "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq d3 0 1";
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_d2_d4);
+
+        //////Black now moves e7-e5
+        slach::Move e7_e5;
+        e7_e5.first = squares[52];//e7
+        e7_e5.second = squares[36];//e5
+
+        TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(e7_e5));
+        my_cb.MakeThisMove(e7_e5);
+        TS_ASSERT_EQUALS(squares[52]->GetPieceOnThisSquare(), slach::NO_PIECE);
+        TS_ASSERT_EQUALS(squares[36]->GetPieceOnThisSquare(), slach::BLACK_PAWN);
+
+        std::string after_e7_e5 = "rnbqkbnr/pppp1ppp/8/4p3/3P4/8/PPP1PPPP/RNBQKBNR w KQkq e6 0 2";
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_e7_e5);
+
+        ///white captures the pawn on e5
+        slach::Move d4_takes_e5;
+        d4_takes_e5.first = squares[27];//d4
+        d4_takes_e5.second = squares[36];//e5
+
+        TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(d4_takes_e5));
+        my_cb.MakeThisMove(d4_takes_e5);
+        TS_ASSERT_EQUALS(squares[27]->GetPieceOnThisSquare(), slach::NO_PIECE);
+        TS_ASSERT_EQUALS(squares[36]->GetPieceOnThisSquare(), slach::WHITE_PAWN);
+
+        std::string after_d4_takes_e5 = "rnbqkbnr/pppp1ppp/8/4P3/8/8/PPP1PPPP/RNBQKBNR b KQkq - 0 2";
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_d4_takes_e5);
+
+        ///black plays bishop b4 check
+        slach::Move bishop_b4_check;
+        bishop_b4_check.first = squares[61];//f8
+        bishop_b4_check.second = squares[25];//b4
+
+        TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(bishop_b4_check));
+        my_cb.MakeThisMove(bishop_b4_check);
+        TS_ASSERT_EQUALS(squares[61]->GetPieceOnThisSquare(), slach::NO_PIECE);
+        TS_ASSERT_EQUALS(squares[25]->GetPieceOnThisSquare(), slach::BLACK_BISHOP);
+
+        std::string after_bishop_b4_check = "rnbqk1nr/pppp1ppp/8/4P3/1b6/8/PPP1PPPP/RNBQKBNR w KQkq - 1 3";
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_bishop_b4_check);
+
+        ///now white tries an illegal move (h2-h4) it's under check and not allowed
+        slach::Move illegal_h2_h4;
+        illegal_h2_h4.first = squares[15];//h2
+        illegal_h2_h4.second = squares[31];//h4
+
+        TS_ASSERT_EQUALS(false, my_cb.IsLegalMove(illegal_h2_h4));
+
+        // a legal move is c2-c3...
+        slach::Move c2_c3;
+        c2_c3.first = squares[10];//c2
+        c2_c3.second = squares[18];//c3
+
+        TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(c2_c3));
+        my_cb.MakeThisMove(c2_c3);
+        TS_ASSERT_EQUALS(squares[10]->GetPieceOnThisSquare(), slach::NO_PIECE);
+        TS_ASSERT_EQUALS(squares[18]->GetPieceOnThisSquare(), slach::WHITE_PAWN);
+
+        std::string after_c2c3 =  "rnbqk1nr/pppp1ppp/8/4P3/1b6/2P5/PP2PPPP/RNBQKBNR b KQkq - 0 3";
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_c2c3);
+    }
+
 };
 
 #endif

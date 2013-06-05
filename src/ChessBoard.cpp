@@ -91,6 +91,11 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
     Square* origin = rMove.first;
     Square* destination = rMove.second;
 
+    mCastlingRights = mpFenHandler->GetLatestCastlingRights();
+    mFullMoveClock = mpFenHandler->GetFullMoveClock();
+    mTurnToMove = mpFenHandler->WhosTurnIsIt();
+    mHalfMoveClock = mpFenHandler->GetHalfMoveClock();
+
     //check for pawn move
     if ((origin->GetPieceOnThisSquare() == WHITE_PAWN) || (origin->GetPieceOnThisSquare() == BLACK_PAWN))
     {
@@ -106,6 +111,10 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
             }
         }
         mHalfMoveClock = 0;
+    }
+    else
+    {
+        mHalfMoveClock++;
     }
 
     for (unsigned i = 0; i < mSquares.size(); ++i)
@@ -127,10 +136,7 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
         }
     }
 
-    mCastlingRights = mpFenHandler->GetLatestCastlingRights();
-    mHalfMoveClock = mpFenHandler->GetHalfMoveClock();
-    mFullMoveClock = mpFenHandler->GetFullMoveClock();
-    mTurnToMove = mpFenHandler->WhosTurnIsIt();
+
     if (mTurnToMove == slach::BLACK)
     {
         mTurnToMove = slach::WHITE;//black has moved, white's turn
