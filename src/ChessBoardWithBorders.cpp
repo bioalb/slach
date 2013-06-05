@@ -18,7 +18,7 @@ slach::ChessBoardWithBorders::ChessBoardWithBorders()
     mpChessBoard->SetupChessBoard();
 
     //allocate memory for the vectors
-    mSquares.resize(CHESSBOARD_SIZE_WB);
+    mSquares.resize(gChessBoardSizeWB);
     for (unsigned i = 0; i <mSquares.size(); ++i )
     {
         mSquares[i] = new Square();
@@ -63,7 +63,7 @@ slach::ChessBoardWithBorders::ChessBoardWithBorders()
             }
         }
         //all the other rows (ranks) before we hit to bottom border
-        else if (index < (CHESSBOARD_SIZE_WB - (rank_size)))
+        else if (index < (gChessBoardSizeWB - (rank_size)))
         {
             //left border
             if ( (index%(rank_size)==0)  )

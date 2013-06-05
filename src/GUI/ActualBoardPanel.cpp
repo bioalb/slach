@@ -15,13 +15,13 @@ slach_gui::ActualBoardPanel::ActualBoardPanel(wxPanel* parent, wxWindowID id, co
     mSvgPieceDirectory = "../../src/GUI/bitmaps/pieces/svg/";
     mSvgBackgroundDirectory = "../../src/GUI/bitmaps/squares/svg/";
 
-    mSquarePanels.resize(slach::CHESSBOARD_SIZE_WB);
+    mSquarePanels.resize(slach::gChessBoardSizeWB);
     mpChessBoardWithBorders = new slach::ChessBoardWithBorders();
 
 
     //now the grid sizer.
     int square_to_border_prop = 3;//proportion between border and square
-    mpGridSizer = new wxFlexGridSizer(slach::BOARD_ROW_SIZE+2,slach::BOARD_COLUMN_SIZE+2,0,0);
+    mpGridSizer = new wxFlexGridSizer(slach::gBoardRowSize+2,slach::gBoardColumnSize+2,0,0);
     mpGridSizer->AddGrowableCol(0,1);//border
     mpGridSizer->AddGrowableCol(1,square_to_border_prop);
     mpGridSizer->AddGrowableCol(2,square_to_border_prop);
@@ -51,7 +51,7 @@ slach_gui::ActualBoardPanel::ActualBoardPanel(wxPanel* parent, wxWindowID id, co
 
 slach_gui::ActualBoardPanel::~ActualBoardPanel()
 {
-    for (unsigned i = 0; i < slach::CHESSBOARD_SIZE_WB; ++i)
+    for (unsigned i = 0; i < slach::gChessBoardSizeWB; ++i)
     {
         delete mSquarePanels[i];
     }

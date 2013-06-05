@@ -6,13 +6,13 @@
 namespace slach
 {
 
-static const unsigned CHESSBOARD_SIZE_WB = 100u;
-static const unsigned CHESSBOARD_SIZE = 64u;
-static const unsigned BOARD_ROW_SIZE = 8u;
-static const unsigned BOARD_COLUMN_SIZE = 8u;
+static const unsigned gChessBoardSizeWB = 100u;
+static const unsigned gChessBoardSize = 64u;
+static const unsigned gBoardRowSize = 8u;
+static const unsigned gBoardColumnSize = 8u;
 
-const std::vector<char> CHESSBOARD_FILES = {'a','b','c','d','e','f','g','h'};
-const std::vector<char> CHESSBOARD_RANKS = {'1','2','3','4','5','6','7','8'};
+const std::vector<char> gChessboardFiles = {'a','b','c','d','e','f','g','h'};
+const std::vector<char> gChessboardRanks = {'1','2','3','4','5','6','7','8'};
 
 enum SpecialMoveType
 {

@@ -8,7 +8,7 @@
 slach::ChessBoard::ChessBoard()
 {
     //allocate memory for the vectors
-    mSquares.resize(CHESSBOARD_SIZE);
+    mSquares.resize(gChessBoardSize);
 
     for (unsigned i = 0; i <mSquares.size(); ++i )
     {
@@ -53,12 +53,12 @@ void slach::ChessBoard::SetupChessBoard()
     unsigned bw_counter = 0; //at zero, it will start with black (square A1).
 
     //will create the squares row by row, starting from bottom left (A1)
-    for (unsigned index = 0; index < CHESSBOARD_SIZE; ++index)
+    for (unsigned index = 0; index < gChessBoardSize; ++index)
     {
-        assert(row<CHESSBOARD_RANKS.size());
-        assert(column<CHESSBOARD_FILES.size());
-        mSquares[index]->SetFile(CHESSBOARD_FILES[column]);
-        mSquares[index]->SetRank(CHESSBOARD_RANKS[row]);
+        assert(row<gChessboardRanks.size());
+        assert(column<gChessboardFiles.size());
+        mSquares[index]->SetFile(gChessboardFiles[column]);
+        mSquares[index]->SetRank(gChessboardRanks[row]);
         mSquares[index]->SetIndexFromA1(index);
 
         if (bw_counter%2==0)
@@ -72,7 +72,7 @@ void slach::ChessBoard::SetupChessBoard()
         column++;
         bw_counter++;
 
-        if ( (column%(BOARD_ROW_SIZE)==0) )
+        if ( (column%(gBoardRowSize)==0) )
         {
             bw_counter++;//trick the counter, end of a row and beginning of new one have same colour
             row++;

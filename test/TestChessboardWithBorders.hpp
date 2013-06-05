@@ -20,7 +20,7 @@ public:
         slach::ChessBoardWithBorders my_cb;
 
         std::vector<slach::Square* > squares = my_cb.GetSquares();
-        TS_ASSERT_EQUALS(squares.size(), slach::CHESSBOARD_SIZE_WB);
+        TS_ASSERT_EQUALS(squares.size(), slach::gChessBoardSizeWB);
 
         std::vector<unsigned> border_indices_no_corners =
              {1,2,3,4,5,6,7,8,10,19,20,29,30,39,40,49,50,59,60,69,70,79,80,89};
@@ -50,10 +50,10 @@ public:
         slach::ChessBoardWithBorders my_cb;
 
         std::vector<slach::Square* > squares = my_cb.GetSquares();
-        TS_ASSERT_EQUALS(squares.size(), slach::CHESSBOARD_SIZE_WB);
+        TS_ASSERT_EQUALS(squares.size(), slach::gChessBoardSizeWB);
 
         //check top left corner
-        TS_ASSERT_EQUALS(squares.size(), slach::CHESSBOARD_SIZE_WB);
+        TS_ASSERT_EQUALS(squares.size(), slach::gChessBoardSizeWB);
         TS_ASSERT_EQUALS(squares[0]->IsCornerSquare(), true);
         TS_ASSERT_EQUALS(squares[0]->IsBorderSquare(), true);
         TS_ASSERT_EQUALS(squares[0]->GetFile(), '0');
