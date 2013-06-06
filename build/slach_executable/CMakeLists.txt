@@ -4,13 +4,24 @@
 ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 
                 -D_LARGE_FILES 
                 -D__WXGTK__ 
-                -I/usr/lib/i386-linux-gnu/wx/include/gtk2-unicode-release-2.8 
-                -I/usr/include/wx-2.8
-                -I/usr/include/wxSVG
-                -I${srcdir}
-                -I${stockfishdir} 
                  -O0 -std=c++0x -g3 -Wall -fmessage-length=0 -finstrument-functions)
+                 
+if (os_bit_number EQUAL 32)             
+include_directories(/usr/lib/i386-linux-gnu/wx/include/gtk2-unicode-release-2.8 
+                    /usr/include/wx-2.8 
+                    /usr/include/wxSVG 
+                    ${srcdir} 
+                    ${stockfishdir} )
+else()
+include_directories(/usr/lib/x86_64-linux-gnu/wx/include/gtk2-unicode-release-2.8 
+                    /usr/include/wx-2.8 
+                    /usr/include/wxSVG 
+                    ${srcdir} 
+                    ${stockfishdir} )
+endif()
 
+
+                    
 link_directories (/usr/lib/i386-linux-gnu ${CMAKE_SOURCE_DIR}/build/lib) 
 
 ADD_EXECUTABLE(slach   ${srcdir}/Exception.cpp

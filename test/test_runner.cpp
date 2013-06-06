@@ -20,12 +20,12 @@ int main( int argc, char *argv[] ) {
     return status;
 }
 bool suite_TestChessboards_init = false;
-#include "/home/alberto/code/slach/test/TestChessboardWithBorders.hpp"
+#include "/home/alberto/codes/slach/test/TestChessboardWithBorders.hpp"
 
 static TestChessboards suite_TestChessboards;
 
 static CxxTest::List Tests_TestChessboards = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestChessboards( "/home/alberto/code/slach/test/TestChessboardWithBorders.hpp", 14, "TestChessboards", suite_TestChessboards, Tests_TestChessboards );
+CxxTest::StaticSuiteDescription suiteDescription_TestChessboards( "/home/alberto/codes/slach/test/TestChessboardWithBorders.hpp", 14, "TestChessboards", suite_TestChessboards, Tests_TestChessboards );
 
 static class TestDescription_suite_TestChessboards_testBorderFlags : public CxxTest::RealTestDescription {
 public:
@@ -39,12 +39,12 @@ public:
  void runTest() { suite_TestChessboards.testBoardWithBorders(); }
 } testDescription_suite_TestChessboards_testBoardWithBorders;
 
-#include "/home/alberto/code/slach/test/TestChessBoard.hpp"
+#include "/home/alberto/codes/slach/test/TestChessBoard.hpp"
 
 static TestChessBoard suite_TestChessBoard;
 
 static CxxTest::List Tests_TestChessBoard = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestChessBoard( "/home/alberto/code/slach/test/TestChessBoard.hpp", 14, "TestChessBoard", suite_TestChessBoard, Tests_TestChessBoard );
+CxxTest::StaticSuiteDescription suiteDescription_TestChessBoard( "/home/alberto/codes/slach/test/TestChessBoard.hpp", 14, "TestChessBoard", suite_TestChessBoard, Tests_TestChessBoard );
 
 static class TestDescription_suite_TestChessBoard_testBasicBoard : public CxxTest::RealTestDescription {
 public:
@@ -94,12 +94,12 @@ public:
  void runTest() { suite_TestChessBoard.testMakingSeveralMovesFromStart(); }
 } testDescription_suite_TestChessBoard_testMakingSeveralMovesFromStart;
 
-#include "/home/alberto/code/slach/test/TestSquare.hpp"
+#include "/home/alberto/codes/slach/test/TestSquare.hpp"
 
 static TestSquare suite_TestSquare;
 
 static CxxTest::List Tests_TestSquare = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestSquare( "/home/alberto/code/slach/test/TestSquare.hpp", 13, "TestSquare", suite_TestSquare, Tests_TestSquare );
+CxxTest::StaticSuiteDescription suiteDescription_TestSquare( "/home/alberto/codes/slach/test/TestSquare.hpp", 13, "TestSquare", suite_TestSquare, Tests_TestSquare );
 
 static class TestDescription_suite_TestSquare_testGetAndSetMethos : public CxxTest::RealTestDescription {
 public:
@@ -113,12 +113,12 @@ public:
  void runTest() { suite_TestSquare.testSameSquare(); }
 } testDescription_suite_TestSquare_testSameSquare;
 
-#include "/home/alberto/code/slach/test/TestFenHandler.hpp"
+#include "/home/alberto/codes/slach/test/TestFenHandler.hpp"
 
 static TestFenHandler suite_TestFenHandler;
 
 static CxxTest::List Tests_TestFenHandler = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestFenHandler( "/home/alberto/code/slach/test/TestFenHandler.hpp", 14, "TestFenHandler", suite_TestFenHandler, Tests_TestFenHandler );
+CxxTest::StaticSuiteDescription suiteDescription_TestFenHandler( "/home/alberto/codes/slach/test/TestFenHandler.hpp", 14, "TestFenHandler", suite_TestFenHandler, Tests_TestFenHandler );
 
 static class TestDescription_suite_TestFenHandler_testFenValidity : public CxxTest::RealTestDescription {
 public:
@@ -174,12 +174,12 @@ public:
  void runTest() { suite_TestFenHandler.TestGetFenWithEnpassant(); }
 } testDescription_suite_TestFenHandler_TestGetFenWithEnpassant;
 
-#include "/home/alberto/code/slach/test/TestGame.hpp"
+#include "/home/alberto/codes/slach/test/TestGame.hpp"
 
 static TestGame suite_TestGame;
 
 static CxxTest::List Tests_TestGame = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestGame( "/home/alberto/code/slach/test/TestGame.hpp", 13, "TestGame", suite_TestGame, Tests_TestGame );
+CxxTest::StaticSuiteDescription suiteDescription_TestGame( "/home/alberto/codes/slach/test/TestGame.hpp", 13, "TestGame", suite_TestGame, Tests_TestGame );
 
 static class TestDescription_suite_TestGame_testBasicMove : public CxxTest::RealTestDescription {
 public:
@@ -217,12 +217,12 @@ public:
  void runTest() { suite_TestGame.testCastleQueenSide(); }
 } testDescription_suite_TestGame_testCastleQueenSide;
 
-#include "/home/alberto/code/slach/test/TestEngineInterface.hpp"
+#include "/home/alberto/codes/slach/test/TestEngineInterface.hpp"
 
 static TestEngineInterface suite_TestEngineInterface;
 
 static CxxTest::List Tests_TestEngineInterface = { 0, 0 };
-CxxTest::StaticSuiteDescription suiteDescription_TestEngineInterface( "/home/alberto/code/slach/test/TestEngineInterface.hpp", 14, "TestEngineInterface", suite_TestEngineInterface, Tests_TestEngineInterface );
+CxxTest::StaticSuiteDescription suiteDescription_TestEngineInterface( "/home/alberto/codes/slach/test/TestEngineInterface.hpp", 14, "TestEngineInterface", suite_TestEngineInterface, Tests_TestEngineInterface );
 
 static class TestDescription_suite_TestEngineInterface_TestInterface : public CxxTest::RealTestDescription {
 public:

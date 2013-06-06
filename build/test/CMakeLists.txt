@@ -1,10 +1,11 @@
 
-ADD_DEFINITIONS(-I${srcdir}
-                -I${CMAKE_SOURCE_DIR}/test/cxxtest
-                -I${testfiledir}
-                -I${stockfishdir}
-                -O0 -std=c++0x -g3 -Wall -fmessage-length=0 -finstrument-functions -g -pg)
+ADD_DEFINITIONS(-O0 -std=c++0x -g3 -Wall -fmessage-length=0 -finstrument-functions -g -pg)
 
+include_directories(. ${srcdir}
+                    ${CMAKE_SOURCE_DIR}/test/cxxtest
+                    ${testfiledir}
+                    ${stockfishdir})
+                    
 link_directories (/usr/lib/i386-linux-gnu ${CMAKE_SOURCE_DIR}/build/lib) 
 
 ADD_EXECUTABLE(TESTRUNNER ${testfiledir}/test_runner.cpp

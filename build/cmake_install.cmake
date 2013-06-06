@@ -1,4 +1,4 @@
-# Install script for directory: /home/alberto/code/slach/build
+# Install script for directory: /home/alberto/codes/slach/build
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,9 +34,9 @@ ENDIF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 
 IF(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  INCLUDE("/home/alberto/code/slach/build/lib/cmake_install.cmake")
-  INCLUDE("/home/alberto/code/slach/build/slach_executable/cmake_install.cmake")
-  INCLUDE("/home/alberto/code/slach/build/test/cmake_install.cmake")
+  INCLUDE("/home/alberto/codes/slach/build/lib/cmake_install.cmake")
+  INCLUDE("/home/alberto/codes/slach/build/slach_executable/cmake_install.cmake")
+  INCLUDE("/home/alberto/codes/slach/build/test/cmake_install.cmake")
 
 ENDIF(NOT CMAKE_INSTALL_LOCAL_ONLY)
 
