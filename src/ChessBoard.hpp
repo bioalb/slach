@@ -53,9 +53,6 @@ private:
      */
     std::vector<Square* > mSquares;
 
-    /** Stores whether it is white's or balck's turn*/
-    TurnToMove mTurnToMove;
-
     /**Stores the current position in FEN format*/
     std::string mCurrentFenPosition;
 
@@ -64,11 +61,6 @@ private:
 
     /**A pointer to an EngineInterface object. Initialised in constructor*/
     EngineInterface* mpEngineInterface;
-
-    std::vector<CastlingRights> mCastlingRights;
-    Square* mpEnPassantSquare;
-    unsigned mHalfMoveClock;
-    unsigned mFullMoveClock;
 
 public:
 

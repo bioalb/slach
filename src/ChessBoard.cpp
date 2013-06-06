@@ -15,7 +15,7 @@ slach::ChessBoard::ChessBoard()
         mSquares[i] = new Square();
     }
 
-    mTurnToMove = WHITE;
+
 
     mpFenHandler = new FenHandler();
     mpEngineInterface = new EngineInterface();
@@ -40,10 +40,6 @@ void slach::ChessBoard::SetupInitialChessPosition()
 {
     mCurrentFenPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     mpFenHandler->SetPositionFromFen(mCurrentFenPosition, mSquares);
-    std::vector<CastlingRights> mCastlingRights = {WHITE_KINGSIDE, BLACK_KINGSIDE, WHITE_QUEENSIDE, BLACK_QUEENSIDE};
-    mpEnPassantSquare = NULL;
-    mHalfMoveClock = 0;
-    mFullMoveClock = 1;
 }
 
 void slach::ChessBoard::SetupChessBoard()
@@ -91,10 +87,11 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
     Square* origin = rMove.first;
     Square* destination = rMove.second;
 
-    mCastlingRights = mpFenHandler->GetLatestCastlingRights();
-    mFullMoveClock = mpFenHandler->GetFullMoveClock();
-    mTurnToMove = mpFenHandler->WhosTurnIsIt();
-    mHalfMoveClock = mpFenHandler->GetHalfMoveClock();
+    std::vector<CastlingRights> castling_rights = mpFenHandler->GetLatestCastlingRights();
+    unsigned full_move_clock = mpFenHandler->GetFullMoveClock();
+    unsigned half_move_clock = mpFenHandler->GetHalfMoveClock();
+    TurnToMove turn_to_move = mpFenHandler->WhosTurnIsIt();
+    Square* p_en_passant_square = NULL;
 
     //check for pawn move
     if ((origin->GetPieceOnThisSquare() == WHITE_PAWN) || (origin->GetPieceOnThisSquare() == BLACK_PAWN))
@@ -103,18 +100,18 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
         {
             if (origin->GetIndexFromA1() < 16)//white pawn
             {
-                mpEnPassantSquare = mSquares[origin->GetIndexFromA1() + 8u];
+            	p_en_passant_square = mSquares[origin->GetIndexFromA1() + 8u];
             }
             else
             {
-                mpEnPassantSquare = mSquares[origin->GetIndexFromA1() - 8u];
+            	p_en_passant_square = mSquares[origin->GetIndexFromA1() - 8u];
             }
         }
-        mHalfMoveClock = 0;
+        half_move_clock = 0u;
     }
     else
     {
-        mHalfMoveClock++;
+    	half_move_clock++;
     }
 
     for (unsigned i = 0; i < mSquares.size(); ++i)
@@ -137,22 +134,22 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
     }
 
 
-    if (mTurnToMove == slach::BLACK)
+    if (turn_to_move == slach::BLACK)
     {
-        mTurnToMove = slach::WHITE;//black has moved, white's turn
-        mFullMoveClock++;//black has moved, increment move clock
+    	turn_to_move = slach::WHITE;//black has moved, white's turn
+    	full_move_clock++;//black has moved, increment move clock
     }
     else //it was white's turn
     {
-        mTurnToMove = slach::BLACK;//white has moved, black's turn
+    	turn_to_move = slach::BLACK;//white has moved, black's turn
     }
-    mCurrentFenPosition = mpFenHandler->GetFenFromPosition(mSquares, mTurnToMove,
-            mCastlingRights,
-            mpEnPassantSquare,
-            mHalfMoveClock,
-            mFullMoveClock);
-    mpEnPassantSquare = NULL;
-    //this line will update mSquares with the new FEN position
+    mCurrentFenPosition = mpFenHandler->GetFenFromPosition(mSquares, turn_to_move,
+    		castling_rights,
+    		p_en_passant_square,
+            half_move_clock,
+            full_move_clock);
+
+    //this line will update squares and all other details within the fen handler
     mpFenHandler->SetPositionFromFen(mCurrentFenPosition, mSquares);
 }
 
@@ -163,7 +160,6 @@ int slach::ChessBoard::SetFenPosition(const std::string &rFenPosition)
      int rc = mpFenHandler->SetPositionFromFen(rFenPosition, mSquares);
      if (rc == 0)//only if fen is valid
      {
-         mTurnToMove = mpFenHandler->WhosTurnIsIt();
          mCurrentFenPosition = rFenPosition;
      }
      return rc;
@@ -176,5 +172,5 @@ std::string slach::ChessBoard::GetCurrentFenPosition() const
 
 slach::TurnToMove slach::ChessBoard::WhosTurnIsIt() const
 {
-    return mTurnToMove;
+    return mpFenHandler->WhosTurnIsIt();
 }

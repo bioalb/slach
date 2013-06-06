@@ -94,6 +94,12 @@ public:
  void runTest() { suite_TestChessBoard.testMakingSeveralMovesFromStart(); }
 } testDescription_suite_TestChessBoard_testMakingSeveralMovesFromStart;
 
+static class TestDescription_suite_TestChessBoard_testSettingFenAndCastling : public CxxTest::RealTestDescription {
+public:
+ TestDescription_suite_TestChessBoard_testSettingFenAndCastling() : CxxTest::RealTestDescription( Tests_TestChessBoard, suiteDescription_TestChessBoard, 679, "testSettingFenAndCastling" ) {}
+ void runTest() { suite_TestChessBoard.testSettingFenAndCastling(); }
+} testDescription_suite_TestChessBoard_testSettingFenAndCastling;
+
 #include "/home/alberto/codes/slach/test/TestSquare.hpp"
 
 static TestSquare suite_TestSquare;

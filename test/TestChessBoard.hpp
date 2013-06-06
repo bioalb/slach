@@ -555,7 +555,9 @@ public:
 
         //invalid fen again, check return code and that we don't move anything on the board (after setting initial position)
         my_cb.SetupInitialChessPosition();
+        TS_ASSERT_EQUALS(my_cb.WhosTurnIsIt(), slach::WHITE);
         rc = my_cb.SetFenPosition(too_long);
+        TS_ASSERT_EQUALS(my_cb.WhosTurnIsIt(), slach::WHITE);//still white's trun
         squares = my_cb.GetSquares();
         TS_ASSERT_EQUALS(rc,1);
         CheckInitialPosition(squares);
@@ -676,6 +678,36 @@ public:
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_c2c3);
     }
 
+    void testSettingFenAndCastling()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        my_cb.SetupInitialChessPosition();
+        std::vector<slach::Square*> squares = my_cb.GetSquares();
+        CheckInitialPosition(squares);
+
+        //this one is after 1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 (Giuoco piano) ... now white can castle kingside, it is white's turn
+    	std::string before_castling = "r1bqk1nr/pppp1ppp/2n5/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4";
+        int rc = my_cb.SetFenPosition(before_castling);
+        TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(before_castling, my_cb.GetCurrentFenPosition());
+
+        // e1-g1 (castling)
+        slach::Move castle_kingside;
+        castle_kingside.first = squares[4];//e1
+        castle_kingside.second = squares[6];//g1
+
+        TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(castle_kingside));
+        my_cb.MakeThisMove(castle_kingside);
+
+        TS_ASSERT_EQUALS(squares[4]->GetPieceOnThisSquare(), slach::NO_PIECE);//e1
+        TS_ASSERT_EQUALS(squares[5]->GetPieceOnThisSquare(), slach::WHITE_ROOK);//f1 --> rook
+        TS_ASSERT_EQUALS(squares[6]->GetPieceOnThisSquare(), slach::WHITE_KING);//g1
+        TS_ASSERT_EQUALS(squares[7]->GetPieceOnThisSquare(), slach::NO_PIECE);//h1
+
+        std::string after_castling = "r1bqk1nr/pppp1ppp/2n5/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 5 4";
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_castling);
+    }
 };
 
 #endif
