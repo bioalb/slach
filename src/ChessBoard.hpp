@@ -68,10 +68,11 @@ private:
      * 1) determine if the move is a special move.
      * 2) if it is a special move, it re-arranges the squares accordingly. If not it does nothing.
      *
-     * @param rMove the move to be processed
+     * @param rMove (input) the move to be processed
+     * @param rCastlingRights (output) will contain castling rights after this move
      * @return the type of move that this method found the move to be
      */
-    slach::SpecialMoveType ProcessSpecialMove(const Move& rMove);
+    slach::SpecialMoveType ProcessSpecialMove(const Move& rMove, std::vector<CastlingRights>& rCastlingRights);
 
 public:
 

@@ -128,7 +128,7 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
     	turn_to_move = slach::BLACK;//white has moved, black's turn
     }
 
-    SpecialMoveType special_move_type = ORDINARY_MOVE;
+    SpecialMoveType special_move_type = ProcessSpecialMove(rMove, castling_rights);;
 
     if (special_move_type == ORDINARY_MOVE)
     {
@@ -136,11 +136,8 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
 		PieceType origin_piece = mSquares[origin_index]->GetPieceOnThisSquare();
 		mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);//no more piece here
 		mSquares[destination_index]->SetPieceOnThisSquare(origin_piece);
-    }
-    else
-    {
-    	ProcessSpecialMove(rMove);
-    }
+    } //otherwise the special move method above  would have processed it
+
 
     //get a valid fen for the new position and update the member variable
     mCurrentFenPosition = mpFenHandler->GetFenFromPosition(mSquares, turn_to_move,
@@ -175,7 +172,48 @@ slach::TurnToMove slach::ChessBoard::WhosTurnIsIt() const
     return mpFenHandler->WhosTurnIsIt();
 }
 
-slach::SpecialMoveType slach::ChessBoard::ProcessSpecialMove(const Move& rMove)
+slach::SpecialMoveType slach::ChessBoard::ProcessSpecialMove(const Move& rMove, std::vector<CastlingRights>& rCastlingRights)
 {
-	return ORDINARY_MOVE;
+    unsigned origin_index = rMove.first->GetIndexFromA1();
+    unsigned destination_index = rMove.second->GetIndexFromA1();
+
+    SpecialMoveType ret =  ORDINARY_MOVE;
+
+    if (mSquares[origin_index]->GetPieceOnThisSquare() == WHITE_KING)
+    {
+        //check for e1-g1
+        if (origin_index == 4u && destination_index==6u)
+        {
+            mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
+            mSquares[destination_index]->SetPieceOnThisSquare(WHITE_KING);
+            mSquares[origin_index+1]->SetPieceOnThisSquare(WHITE_ROOK);
+            mSquares[7]->SetPieceOnThisSquare(NO_PIECE);//h1
+            ret = WHITE_CASTLE_KINGSIDE;
+        }
+        else if (origin_index == 4u && destination_index==2u) //e1-c1
+        {
+            mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
+            mSquares[destination_index]->SetPieceOnThisSquare(WHITE_KING);
+            mSquares[origin_index-1]->SetPieceOnThisSquare(WHITE_ROOK);
+            mSquares[0]->SetPieceOnThisSquare(NO_PIECE);//a1
+            ret = WHITE_CASTLE_QUEENSIDE;
+        }
+
+        //white can't castle anymore anyway
+        for (unsigned i = 0; i < rCastlingRights.size(); ++i)
+        {
+            if ((rCastlingRights[i] == WHITE_KINGSIDE) || (rCastlingRights[i] == WHITE_QUEENSIDE))
+            {
+                rCastlingRights.erase(rCastlingRights.begin()+i);
+                i--;//index will be incremented at next loop and must therefore be adjusted by minus 1
+            }
+        }
+    }
+    else if (mSquares[origin_index]->GetPieceOnThisSquare() == BLACK_KING)
+    {
+
+    }
+
+
+    return ret;
 }
