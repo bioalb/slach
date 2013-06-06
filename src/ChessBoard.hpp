@@ -62,6 +62,17 @@ private:
     /**A pointer to an EngineInterface object. Initialised in constructor*/
     EngineInterface* mpEngineInterface;
 
+    /**
+     * Helper method that does two things:
+     *
+     * 1) determine if the move is a special move.
+     * 2) if it is a special move, it re-arranges the squares accordingly. If not it does nothing.
+     *
+     * @param rMove the move to be processed
+     * @return the type of move that this method found the move to be
+     */
+    slach::SpecialMoveType ProcessSpecialMove(const Move& rMove);
+
 public:
 
     /**

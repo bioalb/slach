@@ -84,8 +84,8 @@ bool slach::ChessBoard::IsLegalMove(const Move& rMove) const
 
 void slach::ChessBoard::MakeThisMove(const Move& rMove)
 {
-    Square* origin = rMove.first;
-    Square* destination = rMove.second;
+    unsigned origin_index = rMove.first->GetIndexFromA1();
+    unsigned destination_index = rMove.second->GetIndexFromA1();
 
     std::vector<CastlingRights> castling_rights = mpFenHandler->GetLatestCastlingRights();
     unsigned full_move_clock = mpFenHandler->GetFullMoveClock();
@@ -93,47 +93,31 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
     TurnToMove turn_to_move = mpFenHandler->WhosTurnIsIt();
     Square* p_en_passant_square = NULL;
 
-    //check for pawn move
-    if ((origin->GetPieceOnThisSquare() == WHITE_PAWN) || (origin->GetPieceOnThisSquare() == BLACK_PAWN))
+    assert(origin_index<mSquares.size());//segfault guard
+    assert(destination_index<mSquares.size());//segfault guard
+
+    //check for pawn move to adjust the clock and enpassant tag
+    if ((mSquares[origin_index]->GetPieceOnThisSquare() == WHITE_PAWN) || (mSquares[origin_index]->GetPieceOnThisSquare() == BLACK_PAWN))
     {
-        if (abs(origin->GetIndexFromA1() - destination->GetIndexFromA1()) == 16)
+        if (abs(origin_index - destination_index) == 16)
         {
-            if (origin->GetIndexFromA1() < 16)//white pawn
+            if (origin_index < 16)//white pawn
             {
-            	p_en_passant_square = mSquares[origin->GetIndexFromA1() + 8u];
+            	p_en_passant_square = mSquares[origin_index + 8u];
             }
             else
             {
-            	p_en_passant_square = mSquares[origin->GetIndexFromA1() - 8u];
+            	p_en_passant_square = mSquares[origin_index - 8u];
             }
         }
         half_move_clock = 0u;
     }
-    else
+    else//not a pawn move, increase the clock
     {
     	half_move_clock++;
     }
 
-    for (unsigned i = 0; i < mSquares.size(); ++i)
-    {
-        if (origin->IsSameSquare((*mSquares[i])))//if we found the origin square
-        {
-            PieceType origin_piece = mSquares[i]->GetPieceOnThisSquare();
-            mSquares[i]->SetPieceOnThisSquare(NO_PIECE);//no more piece here
-            //look for the destination
-            for (unsigned j = 0; j < mSquares.size(); ++j)
-            {
-                if (destination->IsSameSquare((*mSquares[j])))//if we found the destination square
-                {
-                    mSquares[j]->SetPieceOnThisSquare(origin_piece);
-                    break;
-                }
-            }
-            break;
-        }
-    }
-
-
+    //update turn to move and move counter
     if (turn_to_move == slach::BLACK)
     {
     	turn_to_move = slach::WHITE;//black has moved, white's turn
@@ -143,6 +127,22 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
     {
     	turn_to_move = slach::BLACK;//white has moved, black's turn
     }
+
+    SpecialMoveType special_move_type = ORDINARY_MOVE;
+
+    if (special_move_type == ORDINARY_MOVE)
+    {
+		//Now move the pieces
+		PieceType origin_piece = mSquares[origin_index]->GetPieceOnThisSquare();
+		mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);//no more piece here
+		mSquares[destination_index]->SetPieceOnThisSquare(origin_piece);
+    }
+    else
+    {
+    	ProcessSpecialMove(rMove);
+    }
+
+    //get a valid fen for the new position and update the member variable
     mCurrentFenPosition = mpFenHandler->GetFenFromPosition(mSquares, turn_to_move,
     		castling_rights,
     		p_en_passant_square,
@@ -173,4 +173,9 @@ std::string slach::ChessBoard::GetCurrentFenPosition() const
 slach::TurnToMove slach::ChessBoard::WhosTurnIsIt() const
 {
     return mpFenHandler->WhosTurnIsIt();
+}
+
+slach::SpecialMoveType slach::ChessBoard::ProcessSpecialMove(const Move& rMove)
+{
+	return ORDINARY_MOVE;
 }
