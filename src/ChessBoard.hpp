@@ -10,8 +10,8 @@
 
 /**
  *
- * The class represents a chessboard. The data structure is one
- * standard vector of squares objects.
+ * The class represents a chessboard.
+ * The data structure is one standard vector of squares objects.
  *
  * The indices go from 0 to 63. (64 playable squares).
  * A visual representation of the indices is as follows
@@ -53,7 +53,7 @@ private:
      */
     std::vector<Square* > mSquares;
 
-    /**Stores the current position in FEN format*/
+    /**Stores the current position on this chessboard in FEN format*/
     std::string mCurrentFenPosition;
 
     /**A pointer to a FenHandler object. Initialised in constructor*/

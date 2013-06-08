@@ -13,7 +13,7 @@ class PseudoLegalMoveGenerator
 {
 private :
 
-    std::vector<unsigned> mPseudoLegalDestinations;
+
     std::vector<Square*> mSquares;
 
 public :
