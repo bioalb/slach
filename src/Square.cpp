@@ -1,4 +1,5 @@
 #include <climits>
+#include <cstdlib> //std div
 #include "Square.hpp"
 #include "Exception.hpp"
 
@@ -102,6 +103,26 @@ char slach::Square::GetRank() const
     return mRank;
 }
 
+int slach::Square::GetFileAsInt() const
+{
+    if (mIndexFromA1 > 63)
+    {
+        EXCEPTION("slach::Square::GetFileAsInt the square index must be initialised before calling this method");
+    }
+    std::div_t divresult = std::div( (int) mIndexFromA1,8);
+    return divresult.rem;
+}
+
+int slach::Square::GetRankAsInt() const
+{
+    if (mIndexFromA1 > 63)
+    {
+        EXCEPTION("slach::Square::GetRankAsInt the square index must be initialised before calling this method");
+    }
+    std::div_t divresult = std::div( (int) mIndexFromA1,8);
+    return divresult.quot;
+}
+
 std::string slach::Square::GetFileAsString() const
 {
     std::string ret(1,mFile);
@@ -143,4 +164,17 @@ void slach::Square::SetIndexFromA1(unsigned index)
 unsigned slach::Square::GetIndexFromA1() const
 {
     return mIndexFromA1;
+}
+
+int slach::Square::Getx88Index() const
+{
+    return 16*GetRankAsInt() + GetFileAsInt();
+}
+
+int slach::Square::GetA1IndexFromx88(int x88index) const
+{
+    int file = x88index & 7;
+    int rank = x88index >> 4; // indexFromA1 / 16
+
+    return (8*rank + file);
 }

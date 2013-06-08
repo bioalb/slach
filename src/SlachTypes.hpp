@@ -87,6 +87,36 @@ inline bool IsBlackPiece(const PieceType& piece)
     }
 }
 
+inline bool IsKnight(const PieceType& piece)
+{
+    return ((piece == WHITE_KNIGHT || piece == BLACK_KNIGHT) ? true : false);
+}
+
+inline bool IsRook(const PieceType& piece)
+{
+    return ((piece == WHITE_ROOK || piece == BLACK_ROOK) ? true : false);
+}
+
+inline bool IsBishop(const PieceType& piece)
+{
+    return ((piece == WHITE_BISHOP || piece == BLACK_BISHOP) ? true : false);
+}
+
+inline bool IsQueen(const PieceType& piece)
+{
+    return ((piece == WHITE_QUEEN || piece == BLACK_QUEEN) ? true : false);
+}
+
+inline bool IsKing(const PieceType& piece)
+{
+    return ((piece == WHITE_KING || piece == BLACK_KING) ? true : false);
+}
+
+inline bool IsPawn(const PieceType& piece)
+{
+    return ((piece == WHITE_PAWN || piece == BLACK_PAWN) ? true : false);
+}
+
 enum CastlingRights
 {
     WHITE_KINGSIDE = 0,

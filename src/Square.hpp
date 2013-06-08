@@ -19,6 +19,7 @@ private:
      * The file ("column") of this square. Initialised to '0'
      */
     char mFile;
+
     /**
      * The rank ("row") of this square. Initialised to '0'
      */
@@ -85,6 +86,25 @@ public:
      * @return the rank as a string
      */
     char GetRank() const;
+
+    /**
+     * Return the file (column on the chessboard) of this square as integer
+     * (A file = 0, H file = 7).
+     * It does so by examining mIndexFromA1, rather than the chracters mFile and mRank
+     *
+     * @return the file as an integer
+     */
+    int GetFileAsInt() const;
+
+    /**
+     * Return the rank (row on the chessboard) of this square as integer
+     * (0 to 7)
+     * It does so by examining mIndexFromA1, rather than the chracters mFile and mRank
+     *
+     * @return the rank as an integer
+     */
+    int GetRankAsInt() const;
+
 
     /**
      * Access the file (column on the chessboard) of this square and returns it as a std::string.
@@ -210,6 +230,8 @@ public:
      */
     void SetIndexFromA1(unsigned index);
 
+    int Getx88Index() const;
+    int GetA1IndexFromx88(int x88index) const;
 };
 
 }//namespace slach
