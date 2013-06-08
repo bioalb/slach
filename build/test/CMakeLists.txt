@@ -25,6 +25,7 @@ add_custom_command(OUTPUT ${testfiledir}/test_runner.cpp
                                                                                     ${testfiledir}/TestFenHandler.hpp
                                                                                     ${testfiledir}/TestGame.hpp
                                                                                     ${testfiledir}/TestEngineInterface.hpp
+                                                                                    ${testfiledir}/TestHelperGlobalMethod.hpp
                    DEPENDS 
                    COMMENT "running cxxtestgen now..."
                    VERBATIM)

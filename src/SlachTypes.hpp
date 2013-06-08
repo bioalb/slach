@@ -53,6 +53,40 @@ enum TurnToMove
     BLACK
 };
 
+inline bool IsWhitePiece(const PieceType& piece)
+{
+    if (piece == WHITE_KING ||
+        piece == WHITE_QUEEN ||
+        piece == WHITE_ROOK ||
+        piece == WHITE_BISHOP ||
+        piece == WHITE_KNIGHT ||
+        piece == WHITE_PAWN)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+inline bool IsBlackPiece(const PieceType& piece)
+{
+    if (piece == BLACK_KING ||
+        piece == BLACK_QUEEN ||
+        piece == BLACK_ROOK ||
+        piece == BLACK_BISHOP ||
+        piece == BLACK_KNIGHT ||
+        piece == BLACK_PAWN)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 enum CastlingRights
 {
     WHITE_KINGSIDE = 0,
