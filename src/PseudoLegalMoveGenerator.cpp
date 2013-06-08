@@ -2,7 +2,13 @@
 
 slach::PseudoLegalMoveGenerator::PseudoLegalMoveGenerator()
 {
-
+        mOffsets = {
+        {  -33, -31, -18, -14, 14, 18, 31, 33, 0 }, // Knight
+        { -17, -15, 15, 17, 0 },                    // Bishop
+        { -16, 1, 16, -1, 0 },                      // Rook
+        { -17, -16, -15, 1, 17, 16, 15, -1, 0 },    // Queen
+        { -17, -16, -15, 1, 17, 16, 15, -1, 0 }     // King
+        };
 }
 
 slach::PseudoLegalMoveGenerator::~PseudoLegalMoveGenerator()
@@ -17,12 +23,6 @@ void slach::PseudoLegalMoveGenerator::SetSquaresInPosition(std::vector<Square*> 
 std::vector<unsigned> slach::PseudoLegalMoveGenerator::GetPseudoValidDestinations(Square* pOriginSquare)
 {
     std::vector<unsigned> pseudo_legal_destinations = {};
-    const int offsets[5][9] = {
-        {  -33, -31, -18, -14, 14, 18, 31, 33, 0 }, // Knight
-        { -17, -15, 15, 17, 0 }, // Bishop
-        { -16, 1, 16, -1, 0 }, // Rook
-        { -17, -16, -15, 1, 17, 16, 15, -1, 0 }, // Queen
-        { -17, -16, -15, 1, 17, 16, 15, -1, 0 } }; // King
 
     int piece_index = -1;
     if (IsKnight( pOriginSquare->GetPieceOnThisSquare() )== true)
@@ -45,16 +45,21 @@ std::vector<unsigned> slach::PseudoLegalMoveGenerator::GetPseudoValidDestination
     {
       piece_index = 4;
     }
+    else
+    {
+        //empty square
+        return pseudo_legal_destinations;
+    }
 
-    // loop over the offsets
-    for (int i = 0; offsets[piece_index][i] != 0; i++)
+    // loop over the mOffsets
+    for (int i = 0; mOffsets[piece_index][i] != 0; i++)
     {
         int x88_target_index = pOriginSquare->Getx88Index();
         while (true)
         {
-            x88_target_index += offsets[piece_index][i];
-            //key x88 trick, see http://chessprogramming.wikispaces.com/0x88
-            if (x88_target_index & 0x88) //out of the board
+            x88_target_index += mOffsets[piece_index][i];
+            //crucial 0x88 trick, see http://chessprogramming.wikispaces.com/0x88
+            if (x88_target_index & 0x88) //bitwise AND, out of the board if non-zero
             {
                 break;
             }

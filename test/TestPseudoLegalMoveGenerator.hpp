@@ -175,6 +175,10 @@ public:
         TS_ASSERT_EQUALS(pseudo_valid_destinations[5], 14 );//g2
         TS_ASSERT_EQUALS(pseudo_valid_destinations[6], 7 );//h1
         TS_ASSERT_EQUALS(pseudo_valid_destinations[7], 44);//e6
+
+        //from empty square
+        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[0]);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 0u);
     }
 };
 #endif

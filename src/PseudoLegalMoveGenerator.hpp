@@ -16,6 +16,8 @@ private :
 
     std::vector<Square*> mSquares;
 
+    std::vector<std::vector<int> > mOffsets;
+
 public :
     /**
      * Constructor
