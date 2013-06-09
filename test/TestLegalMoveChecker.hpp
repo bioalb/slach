@@ -212,11 +212,11 @@ public:
         potential_moves = generator.GetPseudoLegalMovesSquaresFromOrigin(squares[35],squares);
         TS_ASSERT_EQUALS(potential_moves.size(), 0u);
 
-//        //same as above, but this time there is an enpassant square on c6
-//        unsigned enpassant_index = 42;
-//        potential_moves = generator.GetPseudoLegalMovesSquaresFromOrigin(squares[35],squares, castling_rights, enpassant_index);
-//        TS_ASSERT_EQUALS(attacked_squares.size(), 1u);
-//        TS_ASSERT_EQUALS(attacked_squares[0], 42u);
+        //same as above, but this time there is an enpassant square on c6
+        unsigned enpassant_index = 42;
+        potential_moves = generator.GetPseudoLegalMovesSquaresFromOrigin(squares[35],squares, castling_rights, enpassant_index);
+        TS_ASSERT_EQUALS(potential_moves.size(), 1u);
+        TS_ASSERT_EQUALS(potential_moves[0], 42u);
 
         //pawn on a2
         squares[8]->SetPieceOnThisSquare(slach::WHITE_PAWN);
