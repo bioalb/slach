@@ -4,10 +4,10 @@
 #include <cxxtest/TestSuite.h>
 #include <iostream>
 #include <sstream>
-#include "PseudoLegalMoveGenerator.hpp"
+#include "LegalMoveChecker.hpp"
 #include "Square.hpp"
 
-class TestPseudoLegalMoveGenerator : public CxxTest::TestSuite
+class TestLegalMoveChecker : public CxxTest::TestSuite
 {
 public:
 
@@ -30,9 +30,9 @@ public:
             }
         }
 
-        slach::PseudoLegalMoveGenerator generator;
-        generator.SetSquaresInPosition(squares);
-        std::vector<unsigned> pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[36]);
+        slach::LegalMoveChecker generator;
+
+        std::vector<unsigned> pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[36],squares);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 8u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 19 );//d3
         TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 21);//f3
@@ -45,7 +45,7 @@ public:
 
         //put a white piece on a possible destination square (test the block by your own)
         squares[51]->SetPieceOnThisSquare(slach::WHITE_BISHOP);//d7
-        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[36]);
+        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[36],squares);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 7u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 19 );//d3
         TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 21);//f3
@@ -57,7 +57,7 @@ public:
 
         //put a black piece on a possible destination square
         squares[21]->SetPieceOnThisSquare(slach::BLACK_BISHOP);//f3
-        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[36]);
+        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[36],squares);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 7u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 19 );//d3
         TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 21);//f3, still here, knight captures bishop
@@ -87,22 +87,21 @@ public:
             }
         }
 
-        slach::PseudoLegalMoveGenerator generator;
-        generator.SetSquaresInPosition(squares);
-        std::vector<unsigned> pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[7]);
+        slach::LegalMoveChecker generator;
+        std::vector<unsigned> pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[7],squares);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 2u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 13);//f2
         TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 22);//g3
 
         //put a black piece on a possible destination square (test the block by your own)
         squares[22]->SetPieceOnThisSquare(slach::BLACK_ROOK);//g3
-        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[7]);
+        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[7], squares);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 1u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 13 );//f2
 
         //put a white piece on a possible destination square (can capture)
         squares[22]->SetPieceOnThisSquare(slach::WHITE_ROOK);//g3
-        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[7]);
+        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[7],squares);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 2u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 13 );//f2
         TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 22);//capture the rook on g3
@@ -127,9 +126,9 @@ public:
             }
         }
 
-        slach::PseudoLegalMoveGenerator generator;
-        generator.SetSquaresInPosition(squares);
-        std::vector<unsigned> pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[35]);
+        slach::LegalMoveChecker generator;
+
+        std::vector<unsigned> pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[35], squares);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 13u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 26);//c4
         TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 17);//b3
@@ -148,7 +147,7 @@ public:
         //put a blockage on c6 by own colour (white pawn)
         squares[42]->SetPieceOnThisSquare(slach::WHITE_PAWN);
         //now c6, b7 and a8 are not reachable
-        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[35]);
+        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[35],squares);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 10u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 26);//c4
         TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 17);//b3
@@ -165,7 +164,7 @@ public:
         squares[44]->SetPieceOnThisSquare(slach::BLACK_PAWN);
 
         //now c6, b7 and a8 are not reachable AND f7 and g8 are not reachable either. e6 is (capture)
-        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[35]);
+        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[35],squares);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 8u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 26);//c4
         TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 17);//b3
@@ -177,7 +176,7 @@ public:
         TS_ASSERT_EQUALS(pseudo_valid_destinations[7], 44);//e6
 
         //from empty square
-        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[0]);
+        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[0],squares);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 0u);
     }
 };

@@ -7,6 +7,7 @@
 #include "Game.hpp"
 #include "FenHandler.hpp"
 #include "EngineInterface.hpp"
+#include "LegalMoveChecker.hpp"
 
 /**
  *
@@ -60,7 +61,7 @@ private:
     FenHandler* mpFenHandler;
 
     /**A pointer to an EngineInterface object. Initialised in constructor*/
-    EngineInterface* mpEngineInterface;
+    LegalMoveChecker* mpLegalMoveChecker;
 
     /**
      * Helper method that does two things:

@@ -18,7 +18,7 @@ slach::ChessBoard::ChessBoard()
 
 
     mpFenHandler = new FenHandler();
-    mpEngineInterface = new EngineInterface();
+    mpLegalMoveChecker = new LegalMoveChecker();
 }
 
 slach::ChessBoard::~ChessBoard()
@@ -28,7 +28,7 @@ slach::ChessBoard::~ChessBoard()
         delete mSquares[i];
     }
     delete mpFenHandler;
-    delete mpEngineInterface;
+    delete mpLegalMoveChecker;
 }
 
 std::vector<slach::Square* > slach::ChessBoard::GetSquares() const
@@ -79,7 +79,11 @@ void slach::ChessBoard::SetupChessBoard()
 
 bool slach::ChessBoard::IsLegalMove(const Move& rMove) const
 {
-    return mpEngineInterface->IsMoveValidInPosition(mCurrentFenPosition, rMove);
+    return mpLegalMoveChecker->IsMoveValidInPosition(mSquares,
+                                                     rMove,
+                                                     mpFenHandler->WhosTurnIsIt(),
+                                                     mpFenHandler->GetLatestCastlingRights(),
+                                                     mpFenHandler->GetEnPassantSquareIndex() );
 }
 
 void slach::ChessBoard::MakeThisMove(const Move& rMove)

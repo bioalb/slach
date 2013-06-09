@@ -4,12 +4,13 @@
 #include <string>
 #include <vector>
 #include "SlachTypes.hpp"
+#include "Game.hpp"
 #include "Square.hpp"
 
 namespace slach
 {
 
-class PseudoLegalMoveGenerator
+class LegalMoveChecker
 {
 private :
 
@@ -22,12 +23,12 @@ public :
     /**
      * Constructor
      */
-    PseudoLegalMoveGenerator();
+    LegalMoveChecker();
 
     /**
      * Destructor
      */
-    ~PseudoLegalMoveGenerator();
+    ~LegalMoveChecker();
 
     /**
      * Computes all the possible pseudo valid moves from an origin square
@@ -35,9 +36,10 @@ public :
      * @param pOriginSquare the square we want to pseudo-moves from
      * @return a vector with the indices (starting from A1) that the piece on the origin square is pseudo-allowed to go.
      */
-    std::vector<unsigned> GetPseudoValidDestinations(Square* pOriginSquare);
+    std::vector<unsigned> GetPseudoValidDestinations(Square* pOriginSquare, const std::vector<Square*>& rSquares);
 
-    void SetSquaresInPosition(std::vector<Square*> pSquares);
+    bool IsMoveValidInPosition(const std::vector<Square*>& rSquares,
+            const Move& rMove, TurnToMove turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex);
 };
 
 }//NAMESPACE SLACH

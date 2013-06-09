@@ -16,7 +16,7 @@ ADD_EXECUTABLE(TESTRUNNER ${testfiledir}/test_runner.cpp
                           ${srcdir}/ChessBoardWithBorders.cpp
                           ${srcdir}/Square.cpp
                           ${srcdir}/EngineInterface.cpp
-                          ${srcdir}/PseudoLegalMoveGenerator.cpp)
+                          ${srcdir}/LegalMoveChecker.cpp)
 
 add_custom_command(OUTPUT ${testfiledir}/test_runner.cpp
                    COMMAND ${testfiledir}/cxxtest/bin/cxxtestgen --error-printer -o ${testfiledir}/test_runner.cpp 
@@ -27,7 +27,7 @@ add_custom_command(OUTPUT ${testfiledir}/test_runner.cpp
                                                                                     ${testfiledir}/TestGame.hpp
                                                                                     ${testfiledir}/TestEngineInterface.hpp
                                                                                     ${testfiledir}/TestHelperGlobalMethod.hpp
-                                                                                    ${testfiledir}/TestPseudoLegalMoveGenerator.hpp
+                                                                                    ${testfiledir}/TestLegalMoveChecker.hpp
                    DEPENDS 
                    COMMENT "running cxxtestgen now..."
                    VERBATIM)
