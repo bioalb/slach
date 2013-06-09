@@ -38,9 +38,9 @@ public :
      * @param pOriginSquare the square we want to pseudo-moves from
      * @return a vector with the indices (starting from A1) that the piece on the origin square is pseudo-allowed to go.
      */
-    std::vector<unsigned> GetPseudoValidDestinations(Square* pOriginSquare, const std::vector<Square*>& rSquares);
+    std::vector<unsigned> GetTargetSquaresFromOrigin(Square* pOriginSquare, const std::vector<Square*>& rSquares);
 
-    bool IsMoveValidInPosition(const std::vector<Square*>& rSquares,
+    bool IsMoveLegalInPosition(const std::vector<Square*>& rSquares,
             const Move& rMove, TurnToMove turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex);
 };
 

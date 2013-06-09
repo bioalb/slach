@@ -31,7 +31,7 @@ slach::EngineInterface::~EngineInterface()
     //Threads.exit();
 }
 
-bool slach::EngineInterface::IsMoveValidInPosition(const std::string &rFenPosition, const slach::Move &rMove) const
+bool slach::EngineInterface::IsMoveLegalInPosition(const std::string &rFenPosition, const slach::Move &rMove) const
 {
     mpStockfishPosition->set(rFenPosition, false, NULL);
     ::Square from = ConvertSquareToStockfish(rMove.first);

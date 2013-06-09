@@ -38,14 +38,14 @@ public:
         e2e4.second = pe4;
 
         std::string initial_position = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-        bool valid = interface.IsMoveValidInPosition(initial_position, e2e4);
+        bool valid = interface.IsMoveLegalInPosition(initial_position, e2e4);
         TS_ASSERT_EQUALS(valid,true);
 
         slach::Move e2e5;
         e2e5.first = pe2;
         e2e5.second = pe5;
 
-        valid = interface.IsMoveValidInPosition(initial_position, e2e5);
+        valid = interface.IsMoveLegalInPosition(initial_position, e2e5);
         TS_ASSERT_EQUALS(valid,false);
 
         delete pe2;
@@ -68,37 +68,37 @@ public:
         slach::Move illegal_because_it_is_black_turn;//a1-b1
         illegal_because_it_is_black_turn.first = squares[0];
         illegal_because_it_is_black_turn.second = squares[1];
-        TS_ASSERT_EQUALS(false, interface.IsMoveValidInPosition(test_position_1, illegal_because_it_is_black_turn));
+        TS_ASSERT_EQUALS(false, interface.IsMoveLegalInPosition(test_position_1, illegal_because_it_is_black_turn));
 
         slach::Move illegal_because_no_piece_on_origin;//b1-c1
         illegal_because_no_piece_on_origin.first = squares[1];
         illegal_because_no_piece_on_origin.second = squares[2];
-        TS_ASSERT_EQUALS(false, interface.IsMoveValidInPosition(test_position_1, illegal_because_no_piece_on_origin));
+        TS_ASSERT_EQUALS(false, interface.IsMoveLegalInPosition(test_position_1, illegal_because_no_piece_on_origin));
 
         slach::Move illegal_move_by_black;//f8-g8
         illegal_move_by_black.first = squares[61];
         illegal_move_by_black.second = squares[62];
-        TS_ASSERT_EQUALS(false, interface.IsMoveValidInPosition(test_position_1, illegal_move_by_black));
+        TS_ASSERT_EQUALS(false, interface.IsMoveLegalInPosition(test_position_1, illegal_move_by_black));
 
         slach::Move illegal_move_by_black_2;//d8-e6, queen moving like a knight
         illegal_move_by_black_2.first = squares[59];
         illegal_move_by_black_2.second = squares[44];
-        TS_ASSERT_EQUALS(false, interface.IsMoveValidInPosition(test_position_1, illegal_move_by_black_2));
+        TS_ASSERT_EQUALS(false, interface.IsMoveLegalInPosition(test_position_1, illegal_move_by_black_2));
 
         slach::Move legal_capturte_by_black;//c5-d4
         legal_capturte_by_black.first = squares[34];
         legal_capturte_by_black.second = squares[27];
-        TS_ASSERT_EQUALS(true, interface.IsMoveValidInPosition(test_position_1, legal_capturte_by_black));
+        TS_ASSERT_EQUALS(true, interface.IsMoveLegalInPosition(test_position_1, legal_capturte_by_black));
 
         slach::Move legal_move_by_black;//g8-h8
         legal_move_by_black.first = squares[62];
         legal_move_by_black.second = squares[63];
-        TS_ASSERT_EQUALS(true, interface.IsMoveValidInPosition(test_position_1, legal_move_by_black));
+        TS_ASSERT_EQUALS(true, interface.IsMoveLegalInPosition(test_position_1, legal_move_by_black));
 
         slach::Move legal_move_by_black_2;//c6-a5 knight move
         legal_move_by_black_2.first = squares[42];
         legal_move_by_black_2.second = squares[32];
-        TS_ASSERT_EQUALS(true, interface.IsMoveValidInPosition(test_position_1, legal_move_by_black_2));
+        TS_ASSERT_EQUALS(true, interface.IsMoveLegalInPosition(test_position_1, legal_move_by_black_2));
     }
 
     void TestConversionFromSalchToStockfish()

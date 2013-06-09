@@ -38,7 +38,7 @@ class EngineInterface
     EngineInterface();
     ~EngineInterface();
 
-    bool IsMoveValidInPosition(const std::string &rFenPosition, const slach::Move &rMove) const;
+    bool IsMoveLegalInPosition(const std::string &rFenPosition, const slach::Move &rMove) const;
 
 
 };

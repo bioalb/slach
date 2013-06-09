@@ -79,7 +79,7 @@ void slach::ChessBoard::SetupChessBoard()
 
 bool slach::ChessBoard::IsLegalMove(const Move& rMove) const
 {
-    return mpLegalMoveChecker->IsMoveValidInPosition(mSquares,
+    return mpLegalMoveChecker->IsMoveLegalInPosition(mSquares,
                                                      rMove,
                                                      mpFenHandler->WhosTurnIsIt(),
                                                      mpFenHandler->GetLatestCastlingRights(),

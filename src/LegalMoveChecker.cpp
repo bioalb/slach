@@ -10,7 +10,7 @@ slach::LegalMoveChecker::LegalMoveChecker()
         { -17, -15, 15, 17, 0 },                    // Bishop
         { -16, 1, 16, -1, 0 },                      // Rook
         { -17, -16, -15, 1, 17, 16, 15, -1, 0 },    // Queen
-        { -17, -16, -15, 1, 17, 16, 15, -1, 0 }     // King
+        { -17, -16, -15, -1, 1, 15, 16, 17, 0 }     // King
         };
 
         mPawnCaptureOffsets = { 15, 17 };
@@ -21,7 +21,7 @@ slach::LegalMoveChecker::~LegalMoveChecker()
 
 }
 
-std::vector<unsigned> slach::LegalMoveChecker::GetPseudoValidDestinations(Square* pOriginSquare, const std::vector<Square*>& rSquares)
+std::vector<unsigned> slach::LegalMoveChecker::GetTargetSquaresFromOrigin(Square* pOriginSquare, const std::vector<Square*>& rSquares)
 {
     std::vector<unsigned> pseudo_legal_destinations = {};
 
@@ -67,10 +67,10 @@ std::vector<unsigned> slach::LegalMoveChecker::GetPseudoValidDestinations(Square
         {
             pseudo_legal_destinations.push_back(index_from_a1);
 
+            //double step forward, only if not blocked in front and only if second or seventh rank.
             if ( (pOriginSquare->IsSecondRank() && IsWhitePiece( pOriginSquare->GetPieceOnThisSquare() ) ) ||
                  (pOriginSquare->IsSeventhRank() && IsBlackPiece( pOriginSquare->GetPieceOnThisSquare() ) )  )
             {
-                //double step forward
                 x88_target_index = pOriginSquare->Getx88Index() + ((IsWhitePiece(pOriginSquare->GetPieceOnThisSquare()) == true) ? 32 : -32);
                 //if not obstructed....
                 index_from_a1 = GetA1IndexFromx88(x88_target_index);
@@ -86,9 +86,10 @@ std::vector<unsigned> slach::LegalMoveChecker::GetPseudoValidDestinations(Square
             // Ensure the target square is on the board.
             int offset = (IsWhitePiece(pOriginSquare->GetPieceOnThisSquare()) == true) ? mPawnCaptureOffsets[i] : - mPawnCaptureOffsets[i];
             x88_target_index = pOriginSquare->Getx88Index() + offset;
-            //0x88 trick again to check we are on the board
-            if (x88_target_index & 0x88) {
-            continue;
+            //crucial 0x88 trick, see http://chessprogramming.wikispaces.com/0x88
+            if (x88_target_index & 0x88)//if off the board, check the other square...
+            {
+                continue;
             }
             index_from_a1 = GetA1IndexFromx88(x88_target_index);
             PieceType target_piece = rSquares[index_from_a1]->GetPieceOnThisSquare();
@@ -100,7 +101,7 @@ std::vector<unsigned> slach::LegalMoveChecker::GetPseudoValidDestinations(Square
                 pseudo_legal_destinations.push_back(index_from_a1);
             }
         }
-    }
+    }//end of pawn handling
     else//not a pawn
     {
         assert(piece_index > -1);
@@ -142,14 +143,66 @@ std::vector<unsigned> slach::LegalMoveChecker::GetPseudoValidDestinations(Square
                 }
             }
         }
-    }
+
+        //white castles
+        if ( (pOriginSquare->GetPieceOnThisSquare() == WHITE_KING) && (pOriginSquare->GetIndexFromA1() == 4u)/*e1*/ )
+        {
+            //castling kingside not obstructed, 5 is f1 and 6 is g1
+            if ( (rSquares[5u]->GetPieceOnThisSquare() == NO_PIECE) &&
+                 (rSquares[6u]->GetPieceOnThisSquare() == NO_PIECE) &&
+                 (rSquares[7u]->GetPieceOnThisSquare() == WHITE_ROOK) )
+            {
+                pseudo_legal_destinations.push_back(6u);//g1
+            }
+            //castling queenside check rook and empty squares in the middle
+            if ( (rSquares[0u]->GetPieceOnThisSquare() == WHITE_ROOK) &&
+                 (rSquares[1u]->GetPieceOnThisSquare() == NO_PIECE) &&
+                 (rSquares[2u]->GetPieceOnThisSquare() == NO_PIECE) &&
+                 (rSquares[3u]->GetPieceOnThisSquare() == NO_PIECE) )
+            {
+                pseudo_legal_destinations.push_back(2u);//c1
+            }
+        }
+        //black castles
+        if ( (pOriginSquare->GetPieceOnThisSquare() == BLACK_KING) && (pOriginSquare->GetIndexFromA1() ==60u)/*e8*/ )
+        {
+            //castling kingside not obstructed, 61 is f8 and 62 is g8
+            if ( (rSquares[61u]->GetPieceOnThisSquare() == NO_PIECE) &&
+                 (rSquares[62u]->GetPieceOnThisSquare() == NO_PIECE) &&
+                 (rSquares[63u]->GetPieceOnThisSquare() == BLACK_ROOK) )
+            {
+                pseudo_legal_destinations.push_back(62u);//g8
+            }
+            //castling queenside check rook and empty squares in the middle
+            if ( (rSquares[56u]->GetPieceOnThisSquare() == BLACK_ROOK) &&
+                 (rSquares[57u]->GetPieceOnThisSquare() == NO_PIECE) &&
+                 (rSquares[58u]->GetPieceOnThisSquare() == NO_PIECE) &&
+                 (rSquares[59u]->GetPieceOnThisSquare() == NO_PIECE) )
+            {
+                pseudo_legal_destinations.push_back(58u);//c8
+            }
+        }
+
+    }//end of the "not a pawn case
     return pseudo_legal_destinations;
 }
 
-bool slach::LegalMoveChecker::IsMoveValidInPosition(const std::vector<Square*>& rSquares,
+bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& rSquares,
             const Move& rMove, TurnToMove turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex)
 {
-    std::vector<unsigned> pseudo_destinations = GetPseudoValidDestinations(rMove.first, rSquares);
+
+    std::vector<unsigned> pseudo_destinations = GetTargetSquaresFromOrigin(rMove.first, rSquares);
     std::sort (pseudo_destinations.begin(), pseudo_destinations.end());
-    return std::binary_search (pseudo_destinations.begin(), pseudo_destinations.end(), rMove.second->GetIndexFromA1());
+    if (std::binary_search (pseudo_destinations.begin(), pseudo_destinations.end(), rMove.second->GetIndexFromA1()) == true)
+    {
+        for (unsigned i = 0; i < rSquares.size(); ++i)
+        {
+
+        }
+        return true;
+    }
+    else//move is not even pseudo-legal as defined here
+    {
+        return false;
+    }
 }
