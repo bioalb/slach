@@ -8,8 +8,8 @@ slach::LegalMoveChecker::LegalMoveChecker()
         mOffsets = {
         {  -33, -31, -18, -14, 14, 18, 31, 33, 0 }, // Knight
         { -17, -15, 15, 17, 0 },                    // Bishop
-        { -16, 1, 16, -1, 0 },                      // Rook
-        { -17, -16, -15, 1, 17, 16, 15, -1, 0 },    // Queen
+        { -16, -1, 1, 16, 0 },                      // Rook
+        { -17, -16, -15, -1, 1, 15, 16, 17, 0 },    // Queen
         { -17, -16, -15, -1, 1, 15, 16, 17, 0 }     // King
         };
 
@@ -21,7 +21,7 @@ slach::LegalMoveChecker::~LegalMoveChecker()
 
 }
 
-std::vector<unsigned> slach::LegalMoveChecker::GetTargetSquaresFromOrigin(Square* pOriginSquare, const std::vector<Square*>& rSquares)
+std::vector<unsigned> slach::LegalMoveChecker::GetTargetSquaresFromOrigin(Square* pOriginSquare, const std::vector<Square*>& rSquares, const std::vector<CastlingRights>& rCastlingRights)
 {
     std::vector<unsigned> pseudo_legal_destinations = {};
 
@@ -150,7 +150,8 @@ std::vector<unsigned> slach::LegalMoveChecker::GetTargetSquaresFromOrigin(Square
             //castling kingside not obstructed, 5 is f1 and 6 is g1
             if ( (rSquares[5u]->GetPieceOnThisSquare() == NO_PIECE) &&
                  (rSquares[6u]->GetPieceOnThisSquare() == NO_PIECE) &&
-                 (rSquares[7u]->GetPieceOnThisSquare() == WHITE_ROOK) )
+                 (rSquares[7u]->GetPieceOnThisSquare() == WHITE_ROOK) &&
+                  IsWithinCastlingRights(WHITE_KINGSIDE,rCastlingRights))
             {
                 pseudo_legal_destinations.push_back(6u);//g1
             }
@@ -158,7 +159,8 @@ std::vector<unsigned> slach::LegalMoveChecker::GetTargetSquaresFromOrigin(Square
             if ( (rSquares[0u]->GetPieceOnThisSquare() == WHITE_ROOK) &&
                  (rSquares[1u]->GetPieceOnThisSquare() == NO_PIECE) &&
                  (rSquares[2u]->GetPieceOnThisSquare() == NO_PIECE) &&
-                 (rSquares[3u]->GetPieceOnThisSquare() == NO_PIECE) )
+                 (rSquares[3u]->GetPieceOnThisSquare() == NO_PIECE) &&
+                 IsWithinCastlingRights(WHITE_QUEENSIDE, rCastlingRights))
             {
                 pseudo_legal_destinations.push_back(2u);//c1
             }
@@ -169,7 +171,8 @@ std::vector<unsigned> slach::LegalMoveChecker::GetTargetSquaresFromOrigin(Square
             //castling kingside not obstructed, 61 is f8 and 62 is g8
             if ( (rSquares[61u]->GetPieceOnThisSquare() == NO_PIECE) &&
                  (rSquares[62u]->GetPieceOnThisSquare() == NO_PIECE) &&
-                 (rSquares[63u]->GetPieceOnThisSquare() == BLACK_ROOK) )
+                 (rSquares[63u]->GetPieceOnThisSquare() == BLACK_ROOK) &&
+                 IsWithinCastlingRights(BLACK_KINGSIDE, rCastlingRights))
             {
                 pseudo_legal_destinations.push_back(62u);//g8
             }
@@ -177,7 +180,8 @@ std::vector<unsigned> slach::LegalMoveChecker::GetTargetSquaresFromOrigin(Square
             if ( (rSquares[56u]->GetPieceOnThisSquare() == BLACK_ROOK) &&
                  (rSquares[57u]->GetPieceOnThisSquare() == NO_PIECE) &&
                  (rSquares[58u]->GetPieceOnThisSquare() == NO_PIECE) &&
-                 (rSquares[59u]->GetPieceOnThisSquare() == NO_PIECE) )
+                 (rSquares[59u]->GetPieceOnThisSquare() == NO_PIECE) &&
+                 IsWithinCastlingRights(BLACK_QUEENSIDE, rCastlingRights))
             {
                 pseudo_legal_destinations.push_back(58u);//c8
             }
@@ -191,7 +195,7 @@ bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& 
             const Move& rMove, TurnToMove turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex)
 {
 
-    std::vector<unsigned> pseudo_destinations = GetTargetSquaresFromOrigin(rMove.first, rSquares);
+    std::vector<unsigned> pseudo_destinations = GetTargetSquaresFromOrigin(rMove.first, rSquares, castlingRights);
     std::sort (pseudo_destinations.begin(), pseudo_destinations.end());
     if (std::binary_search (pseudo_destinations.begin(), pseudo_destinations.end(), rMove.second->GetIndexFromA1()) == true)
     {
@@ -205,4 +209,16 @@ bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& 
     {
         return false;
     }
+}
+
+bool slach::LegalMoveChecker::IsWithinCastlingRights(const CastlingRights& test, const std::vector<CastlingRights>& castlingRights)
+{
+    for (unsigned i = 0; i < castlingRights.size(); ++i)
+    {
+        if (castlingRights[i] == test)
+        {
+            return true;
+        }
+    }
+    return false;
 }

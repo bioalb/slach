@@ -269,9 +269,11 @@ public:
             }
         }
 
+        std::vector<slach::CastlingRights> castling_rights = {slach::WHITE_KINGSIDE, slach::WHITE_QUEENSIDE, slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
+
         slach::LegalMoveChecker generator;
 
-        std::vector<unsigned> pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[4u],squares);
+        std::vector<unsigned> pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[4u],squares, castling_rights);
         //first case, there is no rook, can't castle
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 5u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 3u);//d1
@@ -282,7 +284,7 @@ public:
 
         //put a rook on a1, then it can castle queenside
         squares[0]->SetPieceOnThisSquare(slach::WHITE_ROOK);
-        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[4u],squares);
+        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[4u],squares,castling_rights);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 6u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 3u);//d1
         TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 5u);//f1
@@ -291,9 +293,19 @@ public:
         TS_ASSERT_EQUALS(pseudo_valid_destinations[4], 13u);//f2
         TS_ASSERT_EQUALS(pseudo_valid_destinations[5], 2u);//c1, the castle queenside
 
+        //same as above but this time no right to castle queenside for white, only kingside
+        std::vector<slach::CastlingRights> white_only_castle_short = {slach::WHITE_KINGSIDE, slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
+        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[4u],squares,white_only_castle_short);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 5u);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 3u);//d1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 5u);//f1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[2], 11u);//d2
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[3], 12u);//e2
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[4], 13u);//f2
+
         //put a rook on h1, then it can castle queenside AND KINGSIDE
         squares[7]->SetPieceOnThisSquare(slach::WHITE_ROOK);
-        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[4u],squares);
+        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[4u],squares,castling_rights);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 7u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 3u);//d1
         TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 5u);//f1
@@ -303,9 +315,21 @@ public:
         TS_ASSERT_EQUALS(pseudo_valid_destinations[5], 6u);//g1, castle kingside
         TS_ASSERT_EQUALS(pseudo_valid_destinations[6], 2u);//c1, the castle queenside
 
+        //same situation, could castle but no rights this time for white, only for black
+        std::vector<slach::CastlingRights> black_only_castling_rights = {slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
+        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[4u],squares,black_only_castling_rights);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 5u);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 3u);//d1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 5u);//f1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[2], 11u);//d2
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[3], 12u);//e2
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[4], 13u);//f2
+
+
+
         //add a bishop on  f1, then it can castle ONLY queenside
         squares[5]->SetPieceOnThisSquare(slach::WHITE_BISHOP);
-        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[4u],squares);
+        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[4u],squares,castling_rights);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 5u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 3u);//d1
         TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 11u);//d2
@@ -315,7 +339,7 @@ public:
 
         //add a bishop on  c1, no more castles
         squares[2]->SetPieceOnThisSquare(slach::WHITE_BISHOP);
-        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[4u],squares);
+        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[4u],squares,castling_rights);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 4u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 3u);//d1
         TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 11u);//d2
@@ -326,7 +350,7 @@ public:
         ///BLACK KING MOVES
         /////////////////
 
-        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[60u],squares);
+        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[60u],squares,castling_rights);
         //first case, there is no rook, can't castle
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 5u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 51u);//d7
@@ -337,7 +361,7 @@ public:
 
         //put a rook on h8, then it can castle kingside
         squares[63]->SetPieceOnThisSquare(slach::BLACK_ROOK);
-        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[60u],squares);
+        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[60u],squares,castling_rights);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 6u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 51u);//d7
         TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 52u);//e7
@@ -348,7 +372,7 @@ public:
 
         //put a rook on a8, then it can castle queenside AND KINGSIDE
         squares[56]->SetPieceOnThisSquare(slach::BLACK_ROOK);
-        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[60u],squares);
+        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[60u],squares,castling_rights);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 7u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 51u);//d7
         TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 52u);//e7
@@ -360,7 +384,7 @@ public:
 
         //add a bishop on  f8, then it can castle ONLY queenside
         squares[61]->SetPieceOnThisSquare(slach::BLACK_BISHOP);
-        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[60u],squares);
+        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[60u],squares,castling_rights);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 5u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 51u);//d7
         TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 52u);//e7
@@ -368,9 +392,18 @@ public:
         TS_ASSERT_EQUALS(pseudo_valid_destinations[3], 59u);//d8
         TS_ASSERT_EQUALS(pseudo_valid_destinations[4], 58u);//c8, the castle queenside
 
+        //same situation, could castle queenside but no rights this time
+        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[60u],squares);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 4u);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 51u);//d7
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 52u);//e7
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[2], 53u);//f7
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[3], 59u);//d8
+
+
         //add a bishop on  c8, no more castles
         squares[58]->SetPieceOnThisSquare(slach::BLACK_BISHOP);
-        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[60u],squares);
+        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[60u],squares,castling_rights);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 4u);
         TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 51u);//d7
         TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 52u);//e7
