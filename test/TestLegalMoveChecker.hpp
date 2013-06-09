@@ -450,6 +450,13 @@ public:
         TS_ASSERT_EQUALS(attacked_squares[6], 7u);//h1
         TS_ASSERT_EQUALS(attacked_squares[7], 8u);//capture the black rook on a2
 
+        std::vector<unsigned> potential_moves = generator.GetPseudoLegalMovesSquaresFromOrigin(squares[0u],squares);
+        TS_ASSERT_EQUALS(potential_moves.size(), attacked_squares.size());
+        for (unsigned i = 0; i < potential_moves.size(); ++i)
+        {
+            TS_ASSERT_EQUALS(potential_moves[i], attacked_squares[i]);
+        }
+
         //moves of the black rook
         attacked_squares = generator.GetAttackedSquaresFromOrigin(squares[8u],squares);
         TS_ASSERT_EQUALS(attacked_squares.size(), 14u);
