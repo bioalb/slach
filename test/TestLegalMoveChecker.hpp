@@ -377,5 +377,97 @@ public:
         TS_ASSERT_EQUALS(pseudo_valid_destinations[2], 53u);//f7
         TS_ASSERT_EQUALS(pseudo_valid_destinations[3], 59u);//d8
     }
+
+    void testRookMoves(void)
+    {
+        std::vector<slach::Square* > squares;
+        squares.resize(64u);
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            squares[i] = new slach::Square();
+            squares[i]->SetIndexFromA1(i);
+            //put a rook on a1
+            if (i==0u)//a1
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_ROOK);
+            }
+            else if (i==8)//black rook on a2
+            {
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_ROOK);
+            }
+            else
+            {
+                squares[i]->SetPieceOnThisSquare(slach::NO_PIECE);
+            }
+        }
+        slach::LegalMoveChecker generator;
+
+        //moves of the white rook
+        std::vector<unsigned> pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[0u],squares);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 8u);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 1u);//b1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 2u);//c1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[2], 3u);//d1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[3], 4u);//e1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[4], 5u);//f1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[5], 6u);//g1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[6], 7u);//h1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[7], 8u);//capture the black rook on a2
+
+        //moves of the black rook
+        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[8u],squares);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 14u);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 0u);//capture on a1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 9u);//b2
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[2], 10u);//c2
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[3], 11u);//d2
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[4], 12u);//e2
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[5], 13u);//f2
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[6], 14u);//g2
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[7], 15u);//h2
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[8], 16u);//a3
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[9], 24u);//a4
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[10], 32u);//a5
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[11], 40u);//a6
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[12], 48u);//a7
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[13], 56u);//a8
+    }
+
+    void testQueenMoves(void)
+    {
+        std::vector<slach::Square* > squares;
+        squares.resize(64u);
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            squares[i] = new slach::Square();
+            squares[i]->SetIndexFromA1(i);
+            //put a queen on a1
+            if (i==0u)//a1
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_QUEEN);
+            }
+            else if ( (i==8) || (i==17) || (i==18) )//pawns on a2, b3 and c3
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_PAWN);
+            }
+            else
+            {
+                squares[i]->SetPieceOnThisSquare(slach::NO_PIECE);
+            }
+        }
+        slach::LegalMoveChecker generator;
+
+        //moves of the white queen
+        std::vector<unsigned> pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[0u],squares);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 8u);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 1u);//b1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 2u);//c1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[2], 3u);//d1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[3], 4u);//e1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[4], 5u);//f1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[5], 6u);//g1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[6], 7u);//h1
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[7], 9u);//b2
+    }
 };
 #endif
