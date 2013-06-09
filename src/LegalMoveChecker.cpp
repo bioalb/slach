@@ -21,7 +21,7 @@ slach::LegalMoveChecker::~LegalMoveChecker()
 
 }
 
-std::vector<unsigned> slach::LegalMoveChecker::GetTargetSquaresFromOrigin(Square* pOriginSquare, const std::vector<Square*>& rSquares, const std::vector<CastlingRights>& rCastlingRights)
+std::vector<unsigned> slach::LegalMoveChecker::GetTargetSquaresFromOrigin(Square* pOriginSquare, const std::vector<Square*>& rSquares, const std::vector<CastlingRights>& rCastlingRights, unsigned enPassantIndex)
 {
     std::vector<unsigned> pseudo_legal_destinations = {};
 
@@ -95,7 +95,8 @@ std::vector<unsigned> slach::LegalMoveChecker::GetTargetSquaresFromOrigin(Square
             PieceType target_piece = rSquares[index_from_a1]->GetPieceOnThisSquare();
             //check there is something of opposite colours on the target square
             if ( ( IsWhitePiece(target_piece) && IsBlackPiece( pOriginSquare->GetPieceOnThisSquare() ) ) ||
-               (   IsBlackPiece(target_piece) && IsWhitePiece( pOriginSquare->GetPieceOnThisSquare() ) ) )
+               (   IsBlackPiece(target_piece) && IsWhitePiece( pOriginSquare->GetPieceOnThisSquare() ) ) ||
+                   enPassantIndex == index_from_a1 )
             {
                 // Normal capture.
                 pseudo_legal_destinations.push_back(index_from_a1);
@@ -187,7 +188,7 @@ std::vector<unsigned> slach::LegalMoveChecker::GetTargetSquaresFromOrigin(Square
             }
         }
 
-    }//end of the "not a pawn case
+    }//end of the "not a pawn" case
     return pseudo_legal_destinations;
 }
 
@@ -195,7 +196,7 @@ bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& 
             const Move& rMove, TurnToMove turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex)
 {
 
-    std::vector<unsigned> pseudo_destinations = GetTargetSquaresFromOrigin(rMove.first, rSquares, castlingRights);
+    std::vector<unsigned> pseudo_destinations = GetTargetSquaresFromOrigin(rMove.first, rSquares, castlingRights,enpassantIindex);
     std::sort (pseudo_destinations.begin(), pseudo_destinations.end());
     if (std::binary_search (pseudo_destinations.begin(), pseudo_destinations.end(), rMove.second->GetIndexFromA1()) == true)
     {

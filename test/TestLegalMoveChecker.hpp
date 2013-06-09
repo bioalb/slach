@@ -200,6 +200,7 @@ public:
         }
 
         slach::LegalMoveChecker generator;
+        std::vector<slach::CastlingRights> castling_rights = {};//unused here but need to pass in
 
         std::vector<unsigned> pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[35], squares);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 1u);
@@ -210,6 +211,12 @@ public:
         //no move available
         pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[35],squares);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 0u);
+
+        //same as above, but this time there is an enpassant square on c6
+        unsigned enpassant_index = 42;
+        pseudo_valid_destinations = generator.GetTargetSquaresFromOrigin(squares[35],squares, castling_rights, enpassant_index);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 1u);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 42u);
 
         //pawn on a2
         squares[8]->SetPieceOnThisSquare(slach::WHITE_PAWN);
