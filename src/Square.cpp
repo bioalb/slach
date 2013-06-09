@@ -171,10 +171,25 @@ int slach::Square::Getx88Index() const
     return 16*GetRankAsInt() + GetFileAsInt();
 }
 
-int slach::Square::GetA1IndexFromx88(int x88index) const
+bool slach::Square::IsSecondRank() const
 {
-    int file = x88index & 7;
-    int rank = x88index >> 4; // indexFromA1 / 16
-
-    return (8*rank + file);
+    if ( (mIndexFromA1 >7) &&  (mIndexFromA1 < 16) )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+bool slach::Square::IsSeventhRank() const
+{
+    if ( (mIndexFromA1 >47) &&  (mIndexFromA1 < 56) )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }

@@ -47,14 +47,23 @@ public:
         TS_ASSERT_EQUALS(sq1.GetRankAsInt(), 3);
         TS_ASSERT_EQUALS(sq1.GetFileAsInt(), 0);
         TS_ASSERT_EQUALS(sq1.Getx88Index(), 48);
-        TS_ASSERT_EQUALS(sq1.GetA1IndexFromx88(48), 24);
+        TS_ASSERT_EQUALS(sq1.IsSecondRank(), false);
+        TS_ASSERT_EQUALS(sq1.IsSeventhRank(), false);
+
 
         sq1.SetIndexFromA1(25u);//b4
         TS_ASSERT_EQUALS(sq1.GetIndexFromA1(), 25u);
         TS_ASSERT_EQUALS(sq1.GetRankAsInt(), 3);
         TS_ASSERT_EQUALS(sq1.GetFileAsInt(), 1);
         TS_ASSERT_EQUALS(sq1.Getx88Index(), 49);
-        TS_ASSERT_EQUALS(sq1.GetA1IndexFromx88(49), 25);
+
+        sq1.SetIndexFromA1(9u);//b2
+        TS_ASSERT_EQUALS(sq1.IsSecondRank(), true);
+        TS_ASSERT_EQUALS(sq1.IsSeventhRank(), false);
+
+        sq1.SetIndexFromA1(55u);//h7
+        TS_ASSERT_EQUALS(sq1.IsSecondRank(), false);
+        TS_ASSERT_EQUALS(sq1.IsSeventhRank(), true);
 
         sq1.SetAsLightSquare();
         TS_ASSERT_EQUALS(sq1.IsLightSquare(), true);

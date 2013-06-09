@@ -226,12 +226,27 @@ public:
      * This method PERFORMS NO CHECKS. whatever is passed in, gets assigned to the mIndexFromA1
      * member variable.
      *
-     * @param index the idnex we wish to set.
+     * @param index the idedx we wish to set.
      */
     void SetIndexFromA1(unsigned index);
 
     int Getx88Index() const;
-    int GetA1IndexFromx88(int x88index) const;
+
+    /**
+     * Determines if the square is on the seventh rank
+     * it does so by examining the Index from A1, NOT the variable mRank
+     *
+     * @return true if the square is on the seventh rank
+     */
+    bool IsSeventhRank() const;
+
+    /**
+     * Determines if the square is on the second rank
+     * it does so by examining the Index from A1, NOT the variable mRank
+     *
+     * @return true if the square is on the second rank
+     */
+    bool IsSecondRank() const;
 };
 
 }//namespace slach

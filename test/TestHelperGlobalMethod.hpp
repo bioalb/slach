@@ -37,6 +37,9 @@ public:
         TS_ASSERT_EQUALS(slach::IsWhitePiece(slach::WHITE_PAWN), true);
         TS_ASSERT_EQUALS(slach::IsWhitePiece(slach::WHITE_ROOK), true);
         TS_ASSERT_EQUALS(slach::IsWhitePiece(slach::NO_PIECE), false);
+
+        TS_ASSERT_EQUALS(slach::GetA1IndexFromx88(49), 25);
+        TS_ASSERT_EQUALS(slach::GetA1IndexFromx88(48), 24);
     }
 
     void testPieceType()

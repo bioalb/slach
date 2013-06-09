@@ -179,5 +179,71 @@ public:
         pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[0],squares);
         TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 0u);
     }
+
+    void testPawnMoves(void)
+    {
+        std::vector<slach::Square* > squares;
+        squares.resize(64u);
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            squares[i] = new slach::Square();
+            squares[i]->SetIndexFromA1(i);
+            //put a pawn on d5
+            if (i==35u)//d5
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_PAWN);
+            }
+            else
+            {
+                squares[i]->SetPieceOnThisSquare(slach::NO_PIECE);
+            }
+        }
+
+        slach::LegalMoveChecker generator;
+
+        std::vector<unsigned> pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[35], squares);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 1u);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 43);//d6
+
+        //put a blockage on d6 by own colour (white pawn)
+        squares[43]->SetPieceOnThisSquare(slach::WHITE_PAWN);
+        //no move available
+        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[35],squares);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 0u);
+
+        //pawn on a2
+        squares[8]->SetPieceOnThisSquare(slach::WHITE_PAWN);
+        //two moves available: a3 and a4
+        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[8],squares);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 2u);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 16u);//a3
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 24u);//a4
+
+        //pawn capture, there is a black bishop on b3
+        squares[17]->SetPieceOnThisSquare(slach::BLACK_BISHOP);
+        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[8],squares);
+        //now the bishop can also be taken
+        TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 3u);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 16u);//a3
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 24u);//a4
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[2], 17u);//b3
+
+        //black pawn on a7
+        squares[48]->SetPieceOnThisSquare(slach::BLACK_PAWN);
+        //two moves available: a6 and a5
+        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[48],squares);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 2u);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 40u);//a5
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 32u);//a6
+
+        //pawn capture, there is a white queen on b6
+        squares[41]->SetPieceOnThisSquare(slach::WHITE_QUEEN);
+        pseudo_valid_destinations = generator.GetPseudoValidDestinations(squares[48],squares);
+        //now the queen can also be taken
+        TS_ASSERT_EQUALS(pseudo_valid_destinations.size(), 3u);
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[0], 40u);//a5
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[1], 32u);//a6
+        TS_ASSERT_EQUALS(pseudo_valid_destinations[2], 41u);//b6
+    }
 };
 #endif

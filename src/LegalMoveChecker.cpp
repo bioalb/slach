@@ -12,6 +12,8 @@ slach::LegalMoveChecker::LegalMoveChecker()
         { -17, -16, -15, 1, 17, 16, 15, -1, 0 },    // Queen
         { -17, -16, -15, 1, 17, 16, 15, -1, 0 }     // King
         };
+
+        mPawnCaptureOffsets = { 15, 17 };
 }
 
 slach::LegalMoveChecker::~LegalMoveChecker()
@@ -58,21 +60,46 @@ std::vector<unsigned> slach::LegalMoveChecker::GetPseudoValidDestinations(Square
     {
         //single step forward
         int x88_target_index = pOriginSquare->Getx88Index() + ((IsWhitePiece(pOriginSquare->GetPieceOnThisSquare()) == true) ? 16 : -16);
+
         //if not obstructed....
-        unsigned index_from_a1 = rSquares[0]->GetA1IndexFromx88(x88_target_index);
+        unsigned index_from_a1 = GetA1IndexFromx88(x88_target_index);
         if (rSquares [ index_from_a1 ]->GetPieceOnThisSquare() == NO_PIECE)
         {
             pseudo_legal_destinations.push_back(index_from_a1);
-        }
 
-        //double step forward
-        x88_target_index = pOriginSquare->Getx88Index() + ((IsWhitePiece(pOriginSquare->GetPieceOnThisSquare()) == true) ? 32 : -32);
-       //if not obstructed....
-       index_from_a1 = rSquares[0]->GetA1IndexFromx88(x88_target_index);
-       if (rSquares [ index_from_a1 ]->GetPieceOnThisSquare() == NO_PIECE)
-       {
-           pseudo_legal_destinations.push_back(index_from_a1);
-       }
+            if ( (pOriginSquare->IsSecondRank() && IsWhitePiece( pOriginSquare->GetPieceOnThisSquare() ) ) ||
+                 (pOriginSquare->IsSeventhRank() && IsBlackPiece( pOriginSquare->GetPieceOnThisSquare() ) )  )
+            {
+                //double step forward
+                x88_target_index = pOriginSquare->Getx88Index() + ((IsWhitePiece(pOriginSquare->GetPieceOnThisSquare()) == true) ? 32 : -32);
+                //if not obstructed....
+                index_from_a1 = GetA1IndexFromx88(x88_target_index);
+                if (rSquares [ index_from_a1 ]->GetPieceOnThisSquare() == NO_PIECE)
+                {
+                   pseudo_legal_destinations.push_back(index_from_a1);
+                }
+            }
+        }//end of check for obstruction in front of the pawn
+
+        for (unsigned i = 0; i < mPawnCaptureOffsets.size(); ++i)
+        {
+            // Ensure the target square is on the board.
+            int offset = (IsWhitePiece(pOriginSquare->GetPieceOnThisSquare()) == true) ? mPawnCaptureOffsets[i] : - mPawnCaptureOffsets[i];
+            x88_target_index = pOriginSquare->Getx88Index() + offset;
+            //0x88 trick again to check we are on the board
+            if (x88_target_index & 0x88) {
+            continue;
+            }
+            index_from_a1 = GetA1IndexFromx88(x88_target_index);
+            PieceType target_piece = rSquares[index_from_a1]->GetPieceOnThisSquare();
+            //check there is something of opposite colours on the target square
+            if ( ( IsWhitePiece(target_piece) && IsBlackPiece( pOriginSquare->GetPieceOnThisSquare() ) ) ||
+               (   IsBlackPiece(target_piece) && IsWhitePiece( pOriginSquare->GetPieceOnThisSquare() ) ) )
+            {
+                // Normal capture.
+                pseudo_legal_destinations.push_back(index_from_a1);
+            }
+        }
     }
     else//not a pawn
     {
@@ -91,7 +118,7 @@ std::vector<unsigned> slach::LegalMoveChecker::GetPseudoValidDestinations(Square
                     break;
                 }
 
-                int target_index_from_a1 = rSquares[0]->GetA1IndexFromx88(x88_target_index);
+                int target_index_from_a1 = GetA1IndexFromx88(x88_target_index);
                 PieceType target_piece = rSquares[target_index_from_a1]->GetPieceOnThisSquare();
 
                 if ( target_piece == NO_PIECE ||

@@ -53,6 +53,14 @@ enum TurnToMove
     BLACK
 };
 
+inline int GetA1IndexFromx88(int x88index)
+{
+    int file = x88index & 7;
+    int rank = x88index >> 4; // indexFromA1 / 16
+
+    return (8*rank + file);
+}
+
 inline bool IsWhitePiece(const PieceType& piece)
 {
     if (piece == WHITE_KING ||

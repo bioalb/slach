@@ -19,6 +19,8 @@ private :
 
     std::vector<std::vector<int> > mOffsets;
 
+    std::vector<int> mPawnCaptureOffsets;
+
 public :
     /**
      * Constructor
