@@ -41,7 +41,9 @@ public :
      * @param pOriginSquare the square we want to pseudo-moves from
      * @return a vector with the indices (starting from A1) that the piece on the origin square is pseudo-allowed to go.
      */
-    std::vector<unsigned> GetTargetSquaresFromOrigin(Square* pOriginSquare, const std::vector<Square*>& rSquares, const std::vector<CastlingRights>& rCastlingRights = std::vector<CastlingRights>(), unsigned enPassantIndex = 64u);
+    std::vector<unsigned> GetPseudoLegalMovesSquaresFromOrigin(Square* pOriginSquare, const std::vector<Square*>& rSquares, const std::vector<CastlingRights>& rCastlingRights = std::vector<CastlingRights>(), unsigned enPassantIndex = 64u);
+
+    std::vector<unsigned> GetAttackedSquaresFromOrigin(Square* pOriginSquare, const std::vector<Square*>& rSquares);
 
     bool IsMoveLegalInPosition(const std::vector<Square*>& rSquares,
             const Move& rMove, TurnToMove turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex);
