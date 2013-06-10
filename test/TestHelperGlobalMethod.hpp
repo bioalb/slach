@@ -40,6 +40,36 @@ public:
 
         TS_ASSERT_EQUALS(slach::GetA1IndexFromx88(49), 25);
         TS_ASSERT_EQUALS(slach::GetA1IndexFromx88(48), 24);
+
+        TS_ASSERT_EQUALS( slach::IsPieceSameAsTurn(slach::BLACK_KING, slach::BLACK), true);
+
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::BLACK_KING, slach::WHITE), false);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::BLACK_BISHOP, slach::WHITE), false);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::BLACK_QUEEN, slach::WHITE), false);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::BLACK_KNIGHT, slach::WHITE), false);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::BLACK_PAWN, slach::WHITE), false);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::BLACK_ROOK, slach::WHITE), false);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::WHITE_KING, slach::WHITE), true);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::WHITE_BISHOP, slach::WHITE), true);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::WHITE_QUEEN, slach::WHITE), true);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::WHITE_KNIGHT, slach::WHITE), true);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::WHITE_PAWN, slach::WHITE), true);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::WHITE_ROOK, slach::WHITE), true);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::NO_PIECE, slach::WHITE), false);
+
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::BLACK_KING, slach::BLACK), true);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::BLACK_BISHOP, slach::BLACK), true);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::BLACK_QUEEN, slach::BLACK), true);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::BLACK_KNIGHT, slach::BLACK), true);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::BLACK_PAWN, slach::BLACK), true);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::BLACK_ROOK, slach::BLACK), true);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::WHITE_KING, slach::BLACK), false);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::WHITE_BISHOP, slach::BLACK), false);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::WHITE_QUEEN, slach::BLACK), false);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::WHITE_KNIGHT, slach::BLACK), false);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::WHITE_PAWN, slach::BLACK), false);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::WHITE_ROOK, slach::BLACK), false);
+        TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::NO_PIECE, slach::BLACK), false);
     }
 
     void testPieceType()

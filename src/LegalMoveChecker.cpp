@@ -221,9 +221,22 @@ std::vector<unsigned> slach::LegalMoveChecker::GetAttackedSquaresFromOrigin(Squa
     return attacked_squares;
 }
 
+std::vector<unsigned> slach::LegalMoveChecker::GetAttackers(Square* attacked, TurnToMove attackingColour)
+{
+    std::vector<unsigned> attacking_squares = {0,0};
+
+    return attacking_squares;
+}
+
 bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& rSquares,
             const Move& rMove, TurnToMove turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex)
 {
+    PieceType origin_piece = rMove.first->GetPieceOnThisSquare();
+    //NOT YOUR TURN!
+    if (IsPieceSameAsTurn(origin_piece, turn) == false)
+    {
+        return false;
+    }
 
     std::vector<unsigned> pseudo_destinations = GetPseudoLegalMovesSquaresFromOrigin(rMove.first, rSquares, castlingRights,enpassantIindex);
     std::sort (pseudo_destinations.begin(), pseudo_destinations.end());

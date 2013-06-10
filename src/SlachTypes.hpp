@@ -95,6 +95,18 @@ inline bool IsBlackPiece(const PieceType& piece)
     }
 }
 
+inline bool IsPieceSameAsTurn(const PieceType& piece, const TurnToMove turn)
+{
+    if ( (IsBlackPiece(piece) == true && turn == BLACK) ||
+         (IsWhitePiece(piece) == true && turn == WHITE) )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 inline bool IsKnight(const PieceType& piece)
 {
     return ((piece == WHITE_KNIGHT || piece == BLACK_KNIGHT) ? true : false);
