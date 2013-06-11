@@ -1,24 +1,36 @@
 #include <cassert>
 #include <algorithm>
+#include "Exception.hpp"
 #include "LegalMoveChecker.hpp"
 
 
 slach::LegalMoveChecker::LegalMoveChecker()
 {
-        mOffsets = {
-        {  -33, -31, -18, -14, 14, 18, 31, 33, 0 }, // Knight
-        { -17, -15, 15, 17, 0 },                    // Bishop
-        { -16, -1, 1, 16, 0 },                      // Rook
-        { -17, -16, -15, -1, 1, 15, 16, 17, 0 },    // Queen
-        { -17, -16, -15, -1, 1, 15, 16, 17, 0 }     // King
-        };
+	mOffsets = {
+	{  -33, -31, -18, -14, 14, 18, 31, 33, 0 }, // Knight
+	{ -17, -15, 15, 17, 0 },                    // Bishop
+	{ -16, -1, 1, 16, 0 },                      // Rook
+	{ -17, -16, -15, -1, 1, 15, 16, 17, 0 },    // Queen
+	{ -17, -16, -15, -1, 1, 15, 16, 17, 0 }     // King
+	};
 
-        mPawnCaptureOffsets = { 15, 17 };
+	mPawnCaptureOffsets = { 15, 17 };
+
+	mTempSquares.resize(64u);
+	for (unsigned i = 0; i < mTempSquares.size(); ++i)
+	{
+		mTempSquares[i] = new slach::Square();
+		mTempSquares[i]->SetIndexFromA1(i);
+		mTempSquares[i]->SetPieceOnThisSquare(slach::NO_PIECE);
+	}
 }
 
 slach::LegalMoveChecker::~LegalMoveChecker()
 {
-
+	for (unsigned i = 0; i < mTempSquares.size(); ++i)
+	{
+		delete mTempSquares[i];
+	}
 }
 std::vector<unsigned> slach::LegalMoveChecker::GetPseudoLegalMovesSquaresFromOrigin(Square* pOriginSquare, const std::vector<Square*>& rSquares, const std::vector<CastlingRights>& rCastlingRights, unsigned enPassantIndex)
 {
@@ -253,14 +265,39 @@ bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& 
     std::sort (pseudo_destinations.begin(), pseudo_destinations.end());
     if (std::binary_search (pseudo_destinations.begin(), pseudo_destinations.end(), rMove.second->GetIndexFromA1()) == true)
     {
-    	std::vector<unsigned> attackers = GetAttackers(rMove.second, rSquares, OppositeColour(turn));
-    	std::sort (attackers.begin(), attackers.end());
-        //king move to attacked square
-    	if ( attackers.size() > 0 && IsKing(origin_piece) == true)
+    	// sync tempSquares board with what we want to check
+    	for (unsigned  i = 0; i < rSquares.size(); ++i)
+    	{
+    		mTempSquares[i]->SetPieceOnThisSquare( rSquares[i]->GetPieceOnThisSquare() );
+    	}
+    	unsigned origin_index = rMove.first->GetIndexFromA1();
+    	unsigned dest_index = rMove.second->GetIndexFromA1();
+    	//make the move on temp squares
+    	mTempSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
+    	mTempSquares[dest_index]->SetPieceOnThisSquare(rMove.first->GetPieceOnThisSquare());
+    	//look for the king
+    	unsigned king_location = 64;
+    	for (unsigned  i = 0; i < mTempSquares.size(); ++i)
+    	{
+    		if ( IsKing (mTempSquares[i]->GetPieceOnThisSquare() ) &&
+    		     IsPieceSameAsTurn(mTempSquares[i]->GetPieceOnThisSquare(), turn) )
+    		{
+    			king_location = i;
+    			break;
+    		}
+    	}
+    	if (king_location==64)
+    	{
+    		return true;
+    	}
+    	else if (GetAttackers(mTempSquares[king_location], mTempSquares, OppositeColour(turn)).size() > 0)
     	{
     		return false;
     	}
-        return true;
+    	else
+    	{
+    		return true;
+    	}
     }
     else//move is not even pseudo-legal as defined here
     {
@@ -268,6 +305,18 @@ bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& 
     }
 }
 
+bool slach::LegalMoveChecker::IsSquareAttacked(Square * pSquare, const std::vector<Square*>& rSquares,TurnToMove turn)
+{
+	std::vector<unsigned> dest_attackers = GetAttackers(pSquare, rSquares, OppositeColour(turn));
+	if ( dest_attackers.size() > 0 )
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
 bool slach::LegalMoveChecker::IsWithinCastlingRights(const CastlingRights& test, const std::vector<CastlingRights>& castlingRights)
 {
     for (unsigned i = 0; i < castlingRights.size(); ++i)

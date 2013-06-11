@@ -14,8 +14,7 @@ class LegalMoveChecker
 {
 private :
 
-
-    std::vector<Square*> mSquares;
+    std::vector<Square*> mTempSquares;
 
     std::vector<std::vector<int> > mOffsets;
 
@@ -49,6 +48,8 @@ public :
             const Move& rMove, TurnToMove turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex);
 
     std::vector<unsigned> GetAttackers(Square* attacked, const std::vector<Square*>& rSquares, TurnToMove attackingColour);
+
+    bool IsSquareAttacked(Square * pSquare, const std::vector<Square*>& rSquares,TurnToMove turn);
 };
 
 }//NAMESPACE SLACH
