@@ -578,10 +578,15 @@ public:
         king_legal_move.first = squares[4];//e1
         king_legal_move.second = squares[12];//b1
 
+        slach::Move king_illegal_move;
+        king_illegal_move.first = squares[4];//e1
+        king_illegal_move.second = squares[3];//d1
+
         TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, queen_pseudo_illegal_move, turn,castling_rights,enpassant_index ));
         TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, queen_pseudo_legal_move_leaves_king_on_check, turn,castling_rights,enpassant_index ));
         TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, queen_legal_move, turn,castling_rights,enpassant_index ));
         TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, king_legal_move, turn,castling_rights,enpassant_index ));
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, king_illegal_move, turn,castling_rights,enpassant_index ));
     }
 
 };

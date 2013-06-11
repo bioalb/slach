@@ -253,10 +253,13 @@ bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& 
     std::sort (pseudo_destinations.begin(), pseudo_destinations.end());
     if (std::binary_search (pseudo_destinations.begin(), pseudo_destinations.end(), rMove.second->GetIndexFromA1()) == true)
     {
-        for (unsigned i = 0; i < rSquares.size(); ++i)
-        {
-
-        }
+    	std::vector<unsigned> attackers = GetAttackers(rMove.second, rSquares, OppositeColour(turn));
+    	std::sort (attackers.begin(), attackers.end());
+        //king move to attacked square
+    	if ( attackers.size() > 0 && IsKing(origin_piece) == true)
+    	{
+    		return false;
+    	}
         return true;
     }
     else//move is not even pseudo-legal as defined here

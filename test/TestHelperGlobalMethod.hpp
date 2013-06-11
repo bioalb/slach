@@ -70,6 +70,9 @@ public:
         TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::WHITE_PAWN, slach::BLACK), false);
         TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::WHITE_ROOK, slach::BLACK), false);
         TS_ASSERT_EQUALS(slach::IsPieceSameAsTurn(slach::NO_PIECE, slach::BLACK), false);
+
+        TS_ASSERT_EQUALS(slach::OppositeColour(slach::BLACK), slach::WHITE);
+        TS_ASSERT_EQUALS(slach::OppositeColour(slach::WHITE), slach::BLACK);
     }
 
     void testPieceType()

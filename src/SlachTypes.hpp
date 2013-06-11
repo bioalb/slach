@@ -53,6 +53,17 @@ enum TurnToMove
     BLACK
 };
 
+inline TurnToMove OppositeColour(TurnToMove col)
+{
+	if (col ==WHITE)
+	{
+		return BLACK;
+	}
+	else
+	{
+		return WHITE;
+	}
+}
 inline int GetA1IndexFromx88(int x88index)
 {
     int file = x88index & 7;
