@@ -548,8 +548,8 @@ public:
         slach::TurnToMove turn = slach::WHITE;
         unsigned enpassant_index = 64u;//no -ep
         slach::LegalMoveChecker generator;
-        std::vector<unsigned> white_that_attacks_c7 = generator.GetAttackers(squares[50], slach::WHITE);
-        std::vector<unsigned> black_that_attacks_c7 = generator.GetAttackers(squares[50], slach::BLACK);
+        std::vector<unsigned> white_that_attacks_c7 = generator.GetAttackers(squares[50], squares, slach::WHITE);
+        std::vector<unsigned> black_that_attacks_c7 = generator.GetAttackers(squares[50], squares, slach::BLACK);
         TS_ASSERT_EQUALS(white_that_attacks_c7.size(), 1u);//c7, one attacker from white
         TS_ASSERT_EQUALS(white_that_attacks_c7[0], 49u);//b7 attacks c7
         TS_ASSERT_EQUALS(black_that_attacks_c7.size(), 0u);//c7, zero attacker from black
@@ -574,9 +574,14 @@ public:
         queen_legal_move.first = squares[49];//b7
         queen_legal_move.second = squares[1];//b1
 
+        slach::Move king_legal_move;
+        king_legal_move.first = squares[4];//e1
+        king_legal_move.second = squares[12];//b1
+
         TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, queen_pseudo_illegal_move, turn,castling_rights,enpassant_index ));
         TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, queen_pseudo_legal_move_leaves_king_on_check, turn,castling_rights,enpassant_index ));
         TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, queen_legal_move, turn,castling_rights,enpassant_index ));
+        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, king_legal_move, turn,castling_rights,enpassant_index ));
     }
 
 };

@@ -221,10 +221,21 @@ std::vector<unsigned> slach::LegalMoveChecker::GetAttackedSquaresFromOrigin(Squa
     return attacked_squares;
 }
 
-std::vector<unsigned> slach::LegalMoveChecker::GetAttackers(Square* attacked, TurnToMove attackingColour)
+std::vector<unsigned> slach::LegalMoveChecker::GetAttackers(Square* attacked, const std::vector<Square*>& rSquares, TurnToMove attackingColour)
 {
-    std::vector<unsigned> attacking_squares = {0,0};
-
+    std::vector<unsigned> attacking_squares = {};
+    for (unsigned i = 0; i < rSquares.size(); ++i)
+    {
+    	if ( IsPieceSameAsTurn(rSquares[i]->GetPieceOnThisSquare(), attackingColour) == true)
+    	{
+    		std::vector<unsigned> att = GetAttackedSquaresFromOrigin(rSquares[i], rSquares);
+    		std::sort (att.begin(), att.end());
+    	    if (std::binary_search (att.begin(), att.end(), attacked->GetIndexFromA1()) == true)
+    	    {
+    	    	attacking_squares.push_back(i);
+    	    }
+    	}
+    }
     return attacking_squares;
 }
 
