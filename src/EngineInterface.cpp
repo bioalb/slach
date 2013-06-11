@@ -31,15 +31,6 @@ slach::EngineInterface::~EngineInterface()
     //Threads.exit();
 }
 
-bool slach::EngineInterface::IsMoveLegalInPosition(const std::string &rFenPosition, const slach::Move &rMove) const
-{
-    mpStockfishPosition->set(rFenPosition, false, NULL);
-    ::Square from = ConvertSquareToStockfish(rMove.first);
-    ::Square to = ConvertSquareToStockfish(rMove.second);
-    ::Move stockfish_move = make_move(from, to);
-    return mpStockfishPosition->is_pseudo_legal(stockfish_move);
-}
-
 ::Square slach::EngineInterface::ConvertSquareToStockfish(const Square* pSquare) const
 {
     if (pSquare == NULL)

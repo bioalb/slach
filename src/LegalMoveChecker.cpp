@@ -305,18 +305,6 @@ bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& 
     }
 }
 
-bool slach::LegalMoveChecker::IsSquareAttacked(Square * pSquare, const std::vector<Square*>& rSquares,TurnToMove turn)
-{
-	std::vector<unsigned> dest_attackers = GetAttackers(pSquare, rSquares, OppositeColour(turn));
-	if ( dest_attackers.size() > 0 )
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
-}
 bool slach::LegalMoveChecker::IsWithinCastlingRights(const CastlingRights& test, const std::vector<CastlingRights>& castlingRights)
 {
     for (unsigned i = 0; i < castlingRights.size(); ++i)

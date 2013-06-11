@@ -554,7 +554,7 @@ public:
         TS_ASSERT_EQUALS(white_that_attacks_c7[0], 49u);//b7 attacks c7
         TS_ASSERT_EQUALS(black_that_attacks_c7.size(), 0u);//c7, zero attacker from black
 
-
+        //this would be legal, but it is not black's turn'
         slach::Move black_move_not_his_turn;
         black_move_not_his_turn.first = squares[0];//a1
         black_move_not_his_turn.second = squares[1];//b1
@@ -576,9 +576,9 @@ public:
 
         slach::Move king_legal_move;
         king_legal_move.first = squares[4];//e1
-        king_legal_move.second = squares[12];//b1
+        king_legal_move.second = squares[12];//e2
 
-        slach::Move king_illegal_move;
+        slach::Move king_illegal_move;//still in check
         king_illegal_move.first = squares[4];//e1
         king_illegal_move.second = squares[3];//d1
 
@@ -587,6 +587,64 @@ public:
         TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, queen_legal_move, turn,castling_rights,enpassant_index ));
         TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, king_legal_move, turn,castling_rights,enpassant_index ));
         TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, king_illegal_move, turn,castling_rights,enpassant_index ));
+    }
+
+    void testLegalityWithDoubleCheck(void)
+    {
+        std::vector<slach::Square* > squares;
+        squares.resize(64u);
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            squares[i] = new slach::Square();
+            squares[i]->SetIndexFromA1(i);
+            //put the black king on e1
+            if (i==4u)//e1
+            {
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_KING);
+            }
+            else if (i==25)//b4
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_QUEEN);
+            }
+            else if (i==21)//f3 also giving check
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_KNIGHT);
+            }
+            else if (i==58)//c8, could shield the queen check by going to c3...
+            {
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_ROOK);
+            }
+            else if (i==54)//g7
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_KING);
+            }
+            else
+            {
+                squares[i]->SetPieceOnThisSquare(slach::NO_PIECE);
+            }
+        }
+
+        std::vector<slach::CastlingRights> castling_rights = {slach::WHITE_KINGSIDE, slach::WHITE_QUEENSIDE, slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
+        slach::TurnToMove turn = slach::BLACK;
+        unsigned enpassant_index = 64u;//no -ep
+
+        slach::LegalMoveChecker generator;
+
+        slach::Move rook_shield_but_it_is_double_check;
+        rook_shield_but_it_is_double_check.first = squares[58];//c8
+        rook_shield_but_it_is_double_check.second = squares[18];//c3
+
+        slach::Move king_illegal_move;//still in check
+        king_illegal_move.first = squares[4];//e1
+        king_illegal_move.second = squares[11];//d2
+
+        slach::Move king_legal_move;//
+        king_legal_move.first = squares[4];//e1
+        king_legal_move.second = squares[13];//f2
+
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, rook_shield_but_it_is_double_check, turn,castling_rights,enpassant_index ));
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, king_illegal_move, turn,castling_rights,enpassant_index ));
+        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, king_legal_move, turn,castling_rights,enpassant_index ));
     }
 
 };
