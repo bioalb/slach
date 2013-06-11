@@ -45,9 +45,9 @@ public :
     std::vector<unsigned> GetAttackedSquaresFromOrigin(Square* pOriginSquare, const std::vector<Square*>& rSquares);
 
     bool IsMoveLegalInPosition(const std::vector<Square*>& rSquares,
-            const Move& rMove, TurnToMove turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex);
+            const Move& rMove, Colour turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex);
 
-    std::vector<unsigned> GetAttackers(Square* attacked, const std::vector<Square*>& rSquares, TurnToMove attackingColour);
+    std::vector<unsigned> GetAttackers(Square* attacked, const std::vector<Square*>& rSquares, Colour attackingColour);
 };
 
 }//NAMESPACE SLACH

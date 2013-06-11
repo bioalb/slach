@@ -638,7 +638,7 @@ std::string slach::FenHandler::GetLetterFromPiece(PieceType piece) const
 
 }
 std::string slach::FenHandler::GetFenFromPosition(const std::vector<Square* > &rSquares,
-        TurnToMove turnToMove,
+        Colour turnToMove,
         std::vector<CastlingRights> castlingRights,
         Square* pEnPassantSquare,
         unsigned halfMoveClock,
@@ -748,7 +748,7 @@ std::string slach::FenHandler::GetFenFromPosition(const std::vector<Square* > &r
     return ret;
 }
 
-slach::TurnToMove slach::FenHandler::WhosTurnIsIt() const
+slach::Colour slach::FenHandler::WhosTurnIsIt() const
 {
     return mTurnToMove;
 }

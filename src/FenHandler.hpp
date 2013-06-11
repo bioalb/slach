@@ -59,7 +59,7 @@ class FenHandler
     /**
      * Stores the turn to move,Set upon calling SetPositionFromFen
      */
-    TurnToMove mTurnToMove;
+    Colour mTurnToMove;
 
     /**Stores the castling rights. Set upon calling SetPositionFromFen*/
     std::vector<CastlingRights> mCastlingRights;
@@ -135,7 +135,7 @@ class FenHandler
      * @param pEnPassantSquare the en-passant square. Pass NULL (default) if there is none (- will be printed)
      */
     std::string GetFenFromPosition(const std::vector<Square* > &rSquares,
-            TurnToMove turnToMove,
+            Colour turnToMove,
             std::vector<CastlingRights> castlingRights,
             Square* pEnPassantSquare = NULL,
             unsigned halfMoveClock = 0,
@@ -147,7 +147,7 @@ class FenHandler
      *
      * @return BLACK if it is black's turn to move, WHITE if it is white
      */
-    slach::TurnToMove WhosTurnIsIt() const;
+    slach::Colour WhosTurnIsIt() const;
 
     /**
      * Access the member variable mCastlingRights

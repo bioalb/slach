@@ -134,7 +134,7 @@ public:
      *
      * @return BLACK if it's black's turn, WHITE otherwise
      */
-    slach::TurnToMove WhosTurnIsIt() const;
+    slach::Colour WhosTurnIsIt() const;
 
     /**
      * Access method for the variable mCurrentFenPosition

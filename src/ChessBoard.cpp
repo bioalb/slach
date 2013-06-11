@@ -94,7 +94,7 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
     std::vector<CastlingRights> castling_rights = mpFenHandler->GetLatestCastlingRights();
     unsigned full_move_clock = mpFenHandler->GetFullMoveClock();
     unsigned half_move_clock = mpFenHandler->GetHalfMoveClock();
-    TurnToMove turn_to_move = mpFenHandler->WhosTurnIsIt();
+    Colour turn_to_move = mpFenHandler->WhosTurnIsIt();
     Square* p_en_passant_square = NULL;
 
     assert(origin_index<mSquares.size());//segfault guard
@@ -171,7 +171,7 @@ std::string slach::ChessBoard::GetCurrentFenPosition() const
     return mCurrentFenPosition;
 }
 
-slach::TurnToMove slach::ChessBoard::WhosTurnIsIt() const
+slach::Colour slach::ChessBoard::WhosTurnIsIt() const
 {
     return mpFenHandler->WhosTurnIsIt();
 }

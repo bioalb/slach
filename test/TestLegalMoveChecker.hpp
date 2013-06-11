@@ -580,7 +580,7 @@ public:
         }
 
         std::vector<slach::CastlingRights> castling_rights = {slach::WHITE_KINGSIDE, slach::WHITE_QUEENSIDE, slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
-        slach::TurnToMove turn = slach::WHITE;
+        slach::Colour turn = slach::WHITE;
         unsigned enpassant_index = 64u;//no -ep
         slach::LegalMoveChecker generator;
         std::vector<unsigned> white_that_attacks_c7 = generator.GetAttackers(squares[50], squares, slach::WHITE);
@@ -665,7 +665,7 @@ public:
         }
 
         std::vector<slach::CastlingRights> castling_rights = {slach::WHITE_KINGSIDE, slach::WHITE_QUEENSIDE, slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
-        slach::TurnToMove turn = slach::BLACK;
+        slach::Colour turn = slach::BLACK;
         unsigned enpassant_index = 64u;//no -ep
 
         slach::LegalMoveChecker generator;

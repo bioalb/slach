@@ -47,13 +47,13 @@ enum PieceType
     NO_PIECE
 };
 
-enum TurnToMove
+enum Colour
 {
     WHITE = 0,
     BLACK
 };
 
-inline TurnToMove OppositeColour(TurnToMove col)
+inline Colour OppositeColour(Colour col)
 {
 	if (col ==WHITE)
 	{
@@ -106,7 +106,7 @@ inline bool IsBlackPiece(const PieceType& piece)
     }
 }
 
-inline bool IsPieceSameAsTurn(const PieceType& piece, const TurnToMove turn)
+inline bool IsPieceSameAsTurn(const PieceType& piece, const Colour turn)
 {
     if ( (IsBlackPiece(piece) == true && turn == BLACK) ||
          (IsWhitePiece(piece) == true && turn == WHITE) )
