@@ -66,6 +66,11 @@ public:
         TS_ASSERT_EQUALS(attacked_squares[4], 42);//c6
         TS_ASSERT_EQUALS(attacked_squares[5], 46);//g6
         TS_ASSERT_EQUALS(attacked_squares[6], 53);//f7...instead of d7
+
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
     }
 
     void testKnightMovesFromCorner(void)
@@ -105,6 +110,11 @@ public:
         TS_ASSERT_EQUALS(attacked_squares.size(), 2u);
         TS_ASSERT_EQUALS(attacked_squares[0], 13 );//f2
         TS_ASSERT_EQUALS(attacked_squares[1], 22);//capture the rook on g3
+
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
     }
 
     void testBishopMoves(void)
@@ -178,6 +188,11 @@ public:
         //from empty square
         attacked_squares = generator.GetAttackedSquaresFromOrigin(squares[0],squares);
         TS_ASSERT_EQUALS(attacked_squares.size(), 0u);
+
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
     }
 
     void testPawnMoves(void)
@@ -247,6 +262,11 @@ public:
         TS_ASSERT_EQUALS(attacked_squares[0], 40u);//a5
         TS_ASSERT_EQUALS(attacked_squares[1], 32u);//a6
         TS_ASSERT_EQUALS(attacked_squares[2], 41u);//b6
+
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
     }
 
     void testKingMoves(void)
@@ -412,6 +432,11 @@ public:
         TS_ASSERT_EQUALS(potential_moves[1], 52u);//e7
         TS_ASSERT_EQUALS(potential_moves[2], 53u);//f7
         TS_ASSERT_EQUALS(potential_moves[3], 59u);//d8
+
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
     }
 
     void testRookMoves(void)
@@ -474,6 +499,11 @@ public:
         TS_ASSERT_EQUALS(attacked_squares[11], 40u);//a6
         TS_ASSERT_EQUALS(attacked_squares[12], 48u);//a7
         TS_ASSERT_EQUALS(attacked_squares[13], 56u);//a8
+
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
     }
 
     void testQueenMoves(void)
@@ -511,6 +541,11 @@ public:
         TS_ASSERT_EQUALS(attacked_squares[5], 6u);//g1
         TS_ASSERT_EQUALS(attacked_squares[6], 7u);//h1
         TS_ASSERT_EQUALS(attacked_squares[7], 9u);//b2
+
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
     }
 
     void testLegalityWithChecks(void)
@@ -587,6 +622,11 @@ public:
         TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, queen_legal_move, turn,castling_rights,enpassant_index ));
         TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, king_legal_move, turn,castling_rights,enpassant_index ));
         TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, king_illegal_move, turn,castling_rights,enpassant_index ));
+
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
     }
 
     void testLegalityWithDoubleCheck(void)
@@ -645,6 +685,11 @@ public:
         TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, rook_shield_but_it_is_double_check, turn,castling_rights,enpassant_index ));
         TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, king_illegal_move, turn,castling_rights,enpassant_index ));
         TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, king_legal_move, turn,castling_rights,enpassant_index ));
+
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
     }
 
 };
