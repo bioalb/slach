@@ -1,5 +1,5 @@
 
-ADD_DEFINITIONS(-O0 -std=c++0x -g3 -Wall -fmessage-length=0 -finstrument-functions -g -pg)
+ADD_DEFINITIONS(-O0 -std=c++0x -g3 -Wall -fmessage-length=0 -finstrument-functions -fprofile-arcs -ftest-coverage -g -pg)
 
 include_directories(. ${srcdir}
                     ${CMAKE_SOURCE_DIR}/test/cxxtest
@@ -33,5 +33,5 @@ add_custom_command(OUTPUT ${testfiledir}/test_runner.cpp
                    VERBATIM)
                    
 
-
-TARGET_LINK_LIBRARIES(TESTRUNNER -lm  -lstockfish -pthread -pg)
+set(CMAKE_EXE_LINKER_FLAGS "-pthread -pg")
+TARGET_LINK_LIBRARIES(TESTRUNNER -lm  -lstockfish -lgcov)
