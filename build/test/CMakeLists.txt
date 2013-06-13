@@ -22,6 +22,7 @@ add_custom_command(OUTPUT ${testfiledir}/test_runner.cpp
                    COMMAND ${testfiledir}/cxxtest/bin/cxxtestgen --error-printer -o ${testfiledir}/test_runner.cpp 
                                                                                     ${testfiledir}/TestChessboardWithBorders.hpp 
                                                                                     ${testfiledir}/TestChessBoard.hpp
+                                                                                    ${testfiledir}/TestChessBoardSpecialMoves.hpp
                                                                                     ${testfiledir}/TestSquare.hpp
                                                                                     ${testfiledir}/TestFenHandler.hpp
                                                                                     ${testfiledir}/TestGame.hpp
