@@ -692,5 +692,253 @@ public:
         }
     }
 
+    void testIllegalCastlingWhite(void)
+    {
+        std::vector<slach::Square* > squares;
+        squares.resize(64u);
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            squares[i] = new slach::Square();
+            squares[i]->SetIndexFromA1(i);
+            //put the white king on e1
+            if (i==4u)//e1
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_KING);
+            }
+            else if (i==0)//a1
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_ROOK);
+            }
+            else if (i==7)//h1
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_ROOK);
+            }
+            else if (i==60)//e8,
+            {
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_KING);
+            }
+            else if (i==26)//c4, attacking f1 --> should make castling illegal
+            {
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_BISHOP);
+            }
+            else
+            {
+                squares[i]->SetPieceOnThisSquare(slach::NO_PIECE);
+            }
+        }
+
+        std::vector<slach::CastlingRights> castling_rights = {slach::WHITE_KINGSIDE, slach::WHITE_QUEENSIDE, slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
+        slach::Colour turn = slach::WHITE;
+        unsigned enpassant_index = 64u;//no -ep
+
+        slach::LegalMoveChecker generator;
+
+        slach::Move castling_kingside;
+        castling_kingside.first = squares[4];//e1
+        castling_kingside.second = squares[6];//g1
+
+        slach::Move castling_queenside;
+        castling_queenside.first = squares[4];//e1
+        castling_queenside.second = squares[2];//c1
+
+
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index ));
+        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index ));
+
+        squares[30]->SetPieceOnThisSquare(slach::BLACK_QUEEN);//g4, attacking d1 where king passes
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index ));
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index ));
+
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
+    }
+
+    void testIllegalCastlingBlack(void)
+	{
+		std::vector<slach::Square* > squares;
+		squares.resize(64u);
+		for (unsigned i = 0; i < squares.size(); ++i)
+		{
+			 squares[i] = new slach::Square();
+			 squares[i]->SetIndexFromA1(i);
+			 //put the black king on e8
+			 if (i==60u)//e8
+			 {
+				 squares[i]->SetPieceOnThisSquare(slach::BLACK_KING);
+			 }
+			 else if (i==63)//h8
+			 {
+			     squares[i]->SetPieceOnThisSquare(slach::BLACK_ROOK);
+			 }
+			 else if (i==56)//a8
+			 {
+				 squares[i]->SetPieceOnThisSquare(slach::BLACK_ROOK);
+			 }
+			 else if (i==4)//e1,
+			 {
+				 squares[i]->SetPieceOnThisSquare(slach::WHITE_KING);
+			 }
+			 else if (i==34)//c5, attacking f8 --> should make castling illegal
+			 {
+				 squares[i]->SetPieceOnThisSquare(slach::WHITE_BISHOP);
+			 }
+			 else
+			 {
+				 squares[i]->SetPieceOnThisSquare(slach::NO_PIECE);
+			 }
+		}
+
+		std::vector<slach::CastlingRights> castling_rights = {slach::WHITE_KINGSIDE, slach::WHITE_QUEENSIDE, slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
+		slach::Colour turn = slach::BLACK;
+		unsigned enpassant_index = 64u;//no -ep
+
+		slach::LegalMoveChecker generator;
+
+		slach::Move castling_kingside;
+		castling_kingside.first = squares[60];//e8
+		castling_kingside.second = squares[62];//g8
+
+		slach::Move castling_queenside;
+		castling_queenside.first = squares[60];//e8
+		castling_queenside.second = squares[58];//c8
+
+		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index ));
+		TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index ));
+
+		squares[38]->SetPieceOnThisSquare(slach::WHITE_QUEEN);//g5, attacking d8, where the king passes
+		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index ));
+		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index ));
+
+		for (unsigned i = 0; i < squares.size(); ++i)
+		{
+		     delete squares[i];
+		}
+	}
+
+	void testIllegalCastlingDueToCheckWhite(void)
+	{
+        std::vector<slach::Square* > squares;
+        squares.resize(64u);
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            squares[i] = new slach::Square();
+            squares[i]->SetIndexFromA1(i);
+            //put the white king on e1
+            if (i==4u)//e1
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_KING);
+            }
+            else if (i==0)//a1
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_ROOK);
+            }
+            else if (i==7)//h1
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_ROOK);
+            }
+            else if (i==60)//e8,
+            {
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_KING);
+            }
+            else if (i==20)//e3, giving check
+            {
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_ROOK);
+            }
+            else
+            {
+                squares[i]->SetPieceOnThisSquare(slach::NO_PIECE);
+            }
+        }
+
+        std::vector<slach::CastlingRights> castling_rights = {slach::WHITE_KINGSIDE, slach::WHITE_QUEENSIDE, slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
+        slach::Colour turn = slach::WHITE;
+        unsigned enpassant_index = 64u;//no -ep
+
+        slach::LegalMoveChecker generator;
+
+        slach::Move castling_kingside;
+        castling_kingside.first = squares[4];//e1
+        castling_kingside.second = squares[6];//g1
+
+        slach::Move castling_queenside;
+        castling_queenside.first = squares[4];//e1
+        castling_queenside.second = squares[2];//c1
+
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index ));
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index ));
+
+        squares[20]->SetPieceOnThisSquare(slach::NO_PIECE);//remove the rook, and everyone can castle now...
+        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index ));
+        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index ));
+
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
+	}
+
+    void testIllegalCastlingDueToCheckBlack(void)
+	{
+		std::vector<slach::Square* > squares;
+		squares.resize(64u);
+		for (unsigned i = 0; i < squares.size(); ++i)
+		{
+			 squares[i] = new slach::Square();
+			 squares[i]->SetIndexFromA1(i);
+			 //put the black king on e8
+			 if (i==60u)//e8
+			 {
+				 squares[i]->SetPieceOnThisSquare(slach::BLACK_KING);
+			 }
+			 else if (i==63)//h8
+			 {
+			     squares[i]->SetPieceOnThisSquare(slach::BLACK_ROOK);
+			 }
+			 else if (i==56)//a8
+			 {
+				 squares[i]->SetPieceOnThisSquare(slach::BLACK_ROOK);
+			 }
+			 else if (i==4)//e1,
+			 {
+				 squares[i]->SetPieceOnThisSquare(slach::WHITE_KING);
+			 }
+			 else if (i==44)//e6, giving check
+			 {
+				 squares[i]->SetPieceOnThisSquare(slach::WHITE_ROOK);
+			 }
+			 else
+			 {
+				 squares[i]->SetPieceOnThisSquare(slach::NO_PIECE);
+			 }
+		}
+
+		std::vector<slach::CastlingRights> castling_rights = {slach::WHITE_KINGSIDE, slach::WHITE_QUEENSIDE, slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
+		slach::Colour turn = slach::BLACK;
+		unsigned enpassant_index = 64u;//no -ep
+
+		slach::LegalMoveChecker generator;
+
+		slach::Move castling_kingside;
+		castling_kingside.first = squares[60];//e8
+		castling_kingside.second = squares[62];//g8
+
+		slach::Move castling_queenside;
+		castling_queenside.first = squares[60];//e8
+		castling_queenside.second = squares[58];//c8
+
+		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index ));
+		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index ));
+
+		squares[44]->SetPieceOnThisSquare(slach::NO_PIECE);//g5, attacking d8, where the king passes
+		TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index ));
+		TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index ));
+
+		for (unsigned i = 0; i < squares.size(); ++i)
+		{
+		     delete squares[i];
+		}
+	}
 };
 #endif

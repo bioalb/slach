@@ -215,7 +215,33 @@ slach::SpecialMoveType slach::ChessBoard::ProcessSpecialMove(const Move& rMove, 
     }
     else if (mSquares[origin_index]->GetPieceOnThisSquare() == BLACK_KING)
     {
+        //check for e8-g8
+        if (origin_index == 60u && destination_index==62u)
+        {
+            mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
+            mSquares[destination_index]->SetPieceOnThisSquare(BLACK_KING);
+            mSquares[origin_index+1]->SetPieceOnThisSquare(BLACK_ROOK);
+            mSquares[63]->SetPieceOnThisSquare(NO_PIECE);//h8
+            ret = BLACK_CASTLE_KINGSIDE;
+        }
+        else if (origin_index == 60u && destination_index==58u) //e8-c8
+        {
+            mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
+            mSquares[destination_index]->SetPieceOnThisSquare(BLACK_KING);
+            mSquares[origin_index-1]->SetPieceOnThisSquare(BLACK_ROOK);
+            mSquares[56]->SetPieceOnThisSquare(NO_PIECE);//a8
+            ret = BLACK_CASTLE_QUEENSIDE;
+        }
 
+        //black can't castle anymore anyway
+        for (unsigned i = 0; i < rCastlingRights.size(); ++i)
+        {
+            if ((rCastlingRights[i] == BLACK_KINGSIDE) || (rCastlingRights[i] == BLACK_QUEENSIDE))
+            {
+                rCastlingRights.erase(rCastlingRights.begin()+i);
+                i--;//index will be incremented at next loop and must therefore be adjusted by minus 1
+            }
+        }
     }
 
 
