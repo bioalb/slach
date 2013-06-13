@@ -1,5 +1,5 @@
 
-ADD_DEFINITIONS(-O0 -std=c++0x -g3 -Wall -fmessage-length=0 -finstrument-functions -fprofile-arcs -ftest-coverage -g -pg)
+ADD_DEFINITIONS(-O0 -std=c++0x -g3 -Wall -Wextra -pedantic -fmessage-length=0 -finstrument-functions -fprofile-arcs -ftest-coverage -g -pg)
 
 include_directories(. ${srcdir}
                     ${CMAKE_SOURCE_DIR}/test/cxxtest

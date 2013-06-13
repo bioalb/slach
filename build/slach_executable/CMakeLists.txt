@@ -4,7 +4,7 @@
 ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 
                 -D_LARGE_FILES 
                 -D__WXGTK__ 
-                 -O0 -std=c++0x -g3 -Wall -fmessage-length=0 -finstrument-functions)
+                 -O0 -std=c++0x -g3 -Wall -Wextra -pedantic -fmessage-length=0 -finstrument-functions)
                  
 if (os_bit_number EQUAL 32)             
 include_directories(/usr/lib/i386-linux-gnu/wx/include/gtk2-unicode-release-2.8 
