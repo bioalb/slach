@@ -89,11 +89,15 @@ std::vector<unsigned> slach::LegalMoveChecker::GetPseudoLegalMovesSquaresFromOri
         //white castles
         if ( (pOriginSquare->GetPieceOnThisSquare() == WHITE_KING) && (pOriginSquare->GetIndexFromA1() == 4u)/*e1*/ )
         {
+            std::vector<unsigned> f1_attackers = GetAttackers(rSquares[5u], rSquares, BLACK);
+            std::vector<unsigned> e1_attackers = GetAttackers(rSquares[4u], rSquares, BLACK);
+            std::vector<unsigned> d1_attackers = GetAttackers(rSquares[3u], rSquares, BLACK);
             //castling kingside not obstructed, 5 is f1 and 6 is g1
             if ( (rSquares[5u]->GetPieceOnThisSquare() == NO_PIECE) &&
                  (rSquares[6u]->GetPieceOnThisSquare() == NO_PIECE) &&
                  (rSquares[7u]->GetPieceOnThisSquare() == WHITE_ROOK) &&
-                  IsWithinCastlingRights(WHITE_KINGSIDE,rCastlingRights))
+                  IsWithinCastlingRights(WHITE_KINGSIDE,rCastlingRights)&&
+                  f1_attackers.size() == 0 && e1_attackers.size() == 0)
             {
                 pseudo_legal_moves.push_back(6u);//g1
             }
@@ -102,7 +106,8 @@ std::vector<unsigned> slach::LegalMoveChecker::GetPseudoLegalMovesSquaresFromOri
                  (rSquares[1u]->GetPieceOnThisSquare() == NO_PIECE) &&
                  (rSquares[2u]->GetPieceOnThisSquare() == NO_PIECE) &&
                  (rSquares[3u]->GetPieceOnThisSquare() == NO_PIECE) &&
-                 IsWithinCastlingRights(WHITE_QUEENSIDE, rCastlingRights))
+                 IsWithinCastlingRights(WHITE_QUEENSIDE, rCastlingRights)&&
+                 d1_attackers.size() == 0 && e1_attackers.size() == 0)
             {
                 pseudo_legal_moves.push_back(2u);//c1
             }
@@ -110,11 +115,15 @@ std::vector<unsigned> slach::LegalMoveChecker::GetPseudoLegalMovesSquaresFromOri
         //black castles
         if ( (pOriginSquare->GetPieceOnThisSquare() == BLACK_KING) && (pOriginSquare->GetIndexFromA1() ==60u)/*e8*/ )
         {
+            std::vector<unsigned> f8_attackers = GetAttackers(rSquares[61u], rSquares, WHITE);
+            std::vector<unsigned> e8_attackers = GetAttackers(rSquares[60u], rSquares, WHITE);
+            std::vector<unsigned> d8_attackers = GetAttackers(rSquares[59u], rSquares, WHITE);
             //castling kingside not obstructed, 61 is f8 and 62 is g8
             if ( (rSquares[61u]->GetPieceOnThisSquare() == NO_PIECE) &&
                  (rSquares[62u]->GetPieceOnThisSquare() == NO_PIECE) &&
                  (rSquares[63u]->GetPieceOnThisSquare() == BLACK_ROOK) &&
-                 IsWithinCastlingRights(BLACK_KINGSIDE, rCastlingRights))
+                 IsWithinCastlingRights(BLACK_KINGSIDE, rCastlingRights) &&
+                 f8_attackers.size()==0 && e8_attackers.size() == 0)
             {
                 pseudo_legal_moves.push_back(62u);//g8
             }
@@ -123,7 +132,8 @@ std::vector<unsigned> slach::LegalMoveChecker::GetPseudoLegalMovesSquaresFromOri
                  (rSquares[57u]->GetPieceOnThisSquare() == NO_PIECE) &&
                  (rSquares[58u]->GetPieceOnThisSquare() == NO_PIECE) &&
                  (rSquares[59u]->GetPieceOnThisSquare() == NO_PIECE) &&
-                 IsWithinCastlingRights(BLACK_QUEENSIDE, rCastlingRights))
+                 IsWithinCastlingRights(BLACK_QUEENSIDE, rCastlingRights)&&
+                 d8_attackers.size()==0 && e8_attackers.size() == 0)
             {
                 pseudo_legal_moves.push_back(58u);//c8
             }
@@ -275,6 +285,8 @@ bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& 
     	//make the move on temp squares
     	mTempSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
     	mTempSquares[dest_index]->SetPieceOnThisSquare(rMove.first->GetPieceOnThisSquare());
+
+
     	//look for the king
     	unsigned king_location = 64;
     	for (unsigned  i = 0; i < mTempSquares.size(); ++i)
@@ -288,11 +300,11 @@ bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& 
     	}
     	if (king_location==64)
     	{
-    		return true;
+    		return true;//only for testing... case where there is no king on the board
     	}
     	else if (GetAttackers(mTempSquares[king_location], mTempSquares, OppositeColour(turn)).size() > 0)
     	{
-    		return false;
+    		return false;//king under check after the move, not legal!
     	}
     	else
     	{
