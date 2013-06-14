@@ -85,6 +85,46 @@ public:
         TS_ASSERT_EQUALS(true, slach::IsWithinCastlingRights(slach::WHITE_QUEENSIDE, rights_2));
         TS_ASSERT_EQUALS(true, slach::IsWithinCastlingRights(slach::BLACK_KINGSIDE, rights_2));
         TS_ASSERT_EQUALS(true, slach::IsWithinCastlingRights(slach::BLACK_QUEENSIDE, rights_2));
+
+        DeleteCastlingRights(slach::BLACK_KINGSIDE, rights);
+        TS_ASSERT_EQUALS(3u, rights.size());
+        TS_ASSERT_EQUALS(slach::WHITE_KINGSIDE, rights[0]);
+        TS_ASSERT_EQUALS(slach::WHITE_QUEENSIDE, rights[1]);
+        TS_ASSERT_EQUALS(slach::BLACK_QUEENSIDE, rights[2]);
+
+        TS_ASSERT_EQUALS(true, slach::IsWithinCastlingRights(slach::WHITE_KINGSIDE, rights));
+        TS_ASSERT_EQUALS(true, slach::IsWithinCastlingRights(slach::WHITE_QUEENSIDE, rights));
+        TS_ASSERT_EQUALS(false, slach::IsWithinCastlingRights(slach::BLACK_KINGSIDE, rights));
+        TS_ASSERT_EQUALS(true, slach::IsWithinCastlingRights(slach::BLACK_QUEENSIDE, rights));
+
+        DeleteCastlingRights(slach::WHITE_QUEENSIDE, rights);
+        TS_ASSERT_EQUALS(2u, rights.size());
+        TS_ASSERT_EQUALS(slach::WHITE_KINGSIDE, rights[0]);
+        TS_ASSERT_EQUALS(slach::BLACK_QUEENSIDE, rights[1]);
+
+        TS_ASSERT_EQUALS(true, slach::IsWithinCastlingRights(slach::WHITE_KINGSIDE, rights));
+        TS_ASSERT_EQUALS(false, slach::IsWithinCastlingRights(slach::WHITE_QUEENSIDE, rights));
+        TS_ASSERT_EQUALS(false, slach::IsWithinCastlingRights(slach::BLACK_KINGSIDE, rights));
+        TS_ASSERT_EQUALS(true, slach::IsWithinCastlingRights(slach::BLACK_QUEENSIDE, rights));
+
+        DeleteCastlingRights(slach::WHITE_KINGSIDE, rights);
+        TS_ASSERT_EQUALS(1u, rights.size());
+        TS_ASSERT_EQUALS(slach::BLACK_QUEENSIDE, rights[0]);
+
+        TS_ASSERT_EQUALS(false, slach::IsWithinCastlingRights(slach::WHITE_KINGSIDE, rights));
+        TS_ASSERT_EQUALS(false, slach::IsWithinCastlingRights(slach::WHITE_QUEENSIDE, rights));
+        TS_ASSERT_EQUALS(false, slach::IsWithinCastlingRights(slach::BLACK_KINGSIDE, rights));
+        TS_ASSERT_EQUALS(true, slach::IsWithinCastlingRights(slach::BLACK_QUEENSIDE, rights));
+
+        //try deleting something is not there and check everything is still the same
+        DeleteCastlingRights(slach::WHITE_KINGSIDE, rights);
+        TS_ASSERT_EQUALS(1u, rights.size());
+        TS_ASSERT_EQUALS(slach::BLACK_QUEENSIDE, rights[0]);
+
+        TS_ASSERT_EQUALS(false, slach::IsWithinCastlingRights(slach::WHITE_KINGSIDE, rights));
+        TS_ASSERT_EQUALS(false, slach::IsWithinCastlingRights(slach::WHITE_QUEENSIDE, rights));
+        TS_ASSERT_EQUALS(false, slach::IsWithinCastlingRights(slach::BLACK_KINGSIDE, rights));
+        TS_ASSERT_EQUALS(true, slach::IsWithinCastlingRights(slach::BLACK_QUEENSIDE, rights));
     }
 
     void testPieceType()
