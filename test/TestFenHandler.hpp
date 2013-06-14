@@ -406,7 +406,7 @@ public:
         slach::FenHandler handler;
 
         //white king on e2, black king on c3, black rook on f4 white pawn on h4 and g5, black pawn on h5, g56 and c7
-        std::string endgame = "8/2p5/6p1/6Pp/5r1P/2k5/4K3/8 b - - 1 47";
+        std::string endgame = "8/2p5/6p1/6Pp/5r1P/2k5/4K3/8 b - - 11 47";
         TS_ASSERT_EQUALS(handler.IsFenValid(endgame), true);
 
         //create a vector of squares for testing purposes
@@ -452,7 +452,7 @@ public:
         TS_ASSERT_EQUALS(handler.WhosTurnIsIt(), slach::BLACK);
         TS_ASSERT_EQUALS(handler.GetLatestCastlingRights().size(), 0u);
         TS_ASSERT_EQUALS(handler.GetEnPassantSquareIndex(), 64u);//no en-passant
-        TS_ASSERT_EQUALS(handler.GetHalfMoveClock(), 1);
+        TS_ASSERT_EQUALS(handler.GetHalfMoveClock(), 11);
         TS_ASSERT_EQUALS(handler.GetFullMoveClock(), 47);
 
         //clear up memory
@@ -615,7 +615,7 @@ public:
         std::vector<slach::CastlingRights> empty_vec;
 
         slach::FenHandler handler;
-        std::string calculated_fen = handler.GetFenFromPosition(squares,slach::BLACK,empty_vec,NULL,4,40);
+        std::string calculated_fen = handler.GetFenFromPosition(squares,slach::BLACK,empty_vec,NULL,4,40u);
         std::string valid_fen = "8/p6k/1p2b3/3pPpPP/8/4P3/PPP1K3/8 b - - 4 40";
 
         TS_ASSERT_EQUALS(calculated_fen, valid_fen);

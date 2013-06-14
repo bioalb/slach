@@ -156,5 +156,28 @@ enum CastlingRights
     BLACK_QUEENSIDE
 };
 
+inline bool IsWithinCastlingRights(const CastlingRights& test, const std::vector<CastlingRights>& castlingRights)
+{
+    for (unsigned i = 0; i < castlingRights.size(); ++i)
+    {
+        if (castlingRights[i] == test)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline void DeleteCastlingRights(const CastlingRights& toBeDeleted, std::vector<CastlingRights>& rCastlingRights)
+{
+    for (unsigned i = 0; i < rCastlingRights.size(); ++i)
+    {
+        if (rCastlingRights[i] == toBeDeleted)
+        {
+            rCastlingRights.erase(rCastlingRights.begin()+i);
+            break;
+        }
+    }
+}
 }//namespace slach
 #endif

@@ -316,15 +316,3 @@ bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& 
         return false;
     }
 }
-
-bool slach::LegalMoveChecker::IsWithinCastlingRights(const CastlingRights& test, const std::vector<CastlingRights>& castlingRights)
-{
-    for (unsigned i = 0; i < castlingRights.size(); ++i)
-    {
-        if (castlingRights[i] == test)
-        {
-            return true;
-        }
-    }
-    return false;
-}

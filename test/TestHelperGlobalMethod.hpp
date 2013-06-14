@@ -73,6 +73,18 @@ public:
 
         TS_ASSERT_EQUALS(slach::OppositeColour(slach::BLACK), slach::WHITE);
         TS_ASSERT_EQUALS(slach::OppositeColour(slach::WHITE), slach::BLACK);
+
+        std::vector<slach::CastlingRights> rights = {slach::WHITE_KINGSIDE, slach::WHITE_QUEENSIDE, slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
+        TS_ASSERT_EQUALS(true, slach::IsWithinCastlingRights(slach::WHITE_KINGSIDE, rights));
+        TS_ASSERT_EQUALS(true, slach::IsWithinCastlingRights(slach::WHITE_QUEENSIDE, rights));
+        TS_ASSERT_EQUALS(true, slach::IsWithinCastlingRights(slach::BLACK_KINGSIDE, rights));
+        TS_ASSERT_EQUALS(true, slach::IsWithinCastlingRights(slach::BLACK_QUEENSIDE, rights));
+
+        std::vector<slach::CastlingRights> rights_2 = {slach::WHITE_QUEENSIDE, slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
+        TS_ASSERT_EQUALS(false, slach::IsWithinCastlingRights(slach::WHITE_KINGSIDE, rights_2));
+        TS_ASSERT_EQUALS(true, slach::IsWithinCastlingRights(slach::WHITE_QUEENSIDE, rights_2));
+        TS_ASSERT_EQUALS(true, slach::IsWithinCastlingRights(slach::BLACK_KINGSIDE, rights_2));
+        TS_ASSERT_EQUALS(true, slach::IsWithinCastlingRights(slach::BLACK_QUEENSIDE, rights_2));
     }
 
     void testPieceType()

@@ -562,19 +562,38 @@ int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::ve
         }
 
         //clocks, half move and full move
-        bool half_move_clock_done = false;
-        bool full_move_clock_done = false;
+        unsigned end_of_half_move = 0u;
         for (unsigned i = end_of_enpassant+1; i < rFenString.length(); ++i)
         {
-            if ( isdigit (rFenString[i]) && half_move_clock_done==false)
+            if ( isdigit (rFenString[i]) )
             {
                 mHalfMoveClock =   atoi (&rFenString[i]);
-                half_move_clock_done = true;
+                end_of_half_move = i;
+                break;
             }
-            else if ( isdigit (rFenString[i]) && half_move_clock_done ==  true && full_move_clock_done == false)
+            else
+            {
+            	continue;//white space
+            }
+        }
+
+        //after this, if the half move clock has 2 digits, the next time it will read the second digit.
+        //so we wait for a space before starting the full move clock read
+		unsigned start_of_full_clock = 0;
+        for (unsigned i =end_of_half_move; i < rFenString.length(); ++i )
+        {
+			if(isspace(rFenString[i]))
+			{
+				start_of_full_clock = i;
+				break;
+			}
+        }
+        for (unsigned i =start_of_full_clock; i < rFenString.length(); ++i )
+        {
+            if ( isdigit (rFenString[i]) )
             {
                 mFullMoveClock = atoi (&rFenString[i]);
-                full_move_clock_done = true;
+                break;
             }
             else
             {

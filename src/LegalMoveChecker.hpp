@@ -20,9 +20,6 @@ private :
 
     std::vector<int> mPawnCaptureOffsets;
 
-    bool IsWithinCastlingRights(const CastlingRights& test, const std::vector<CastlingRights>& castlingRights);
-
-
 public :
     /**
      * Constructor

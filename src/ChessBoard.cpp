@@ -132,7 +132,7 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
     	turn_to_move = slach::BLACK;//white has moved, black's turn
     }
 
-    SpecialMoveType special_move_type = ProcessSpecialMove(rMove, castling_rights);;
+    SpecialMoveType special_move_type = ProcessSpecialMove(rMove, castling_rights);
 
     if (special_move_type == ORDINARY_MOVE)
     {
@@ -204,14 +204,8 @@ slach::SpecialMoveType slach::ChessBoard::ProcessSpecialMove(const Move& rMove, 
         }
 
         //white can't castle anymore anyway
-        for (unsigned i = 0; i < rCastlingRights.size(); ++i)
-        {
-            if ((rCastlingRights[i] == WHITE_KINGSIDE) || (rCastlingRights[i] == WHITE_QUEENSIDE))
-            {
-                rCastlingRights.erase(rCastlingRights.begin()+i);
-                i--;//index will be incremented at next loop and must therefore be adjusted by minus 1
-            }
-        }
+        DeleteCastlingRights(WHITE_KINGSIDE, rCastlingRights);
+        DeleteCastlingRights(WHITE_QUEENSIDE, rCastlingRights);
     }
     else if (mSquares[origin_index]->GetPieceOnThisSquare() == BLACK_KING)
     {
@@ -232,18 +226,32 @@ slach::SpecialMoveType slach::ChessBoard::ProcessSpecialMove(const Move& rMove, 
             mSquares[56]->SetPieceOnThisSquare(NO_PIECE);//a8
             ret = BLACK_CASTLE_QUEENSIDE;
         }
-
         //black can't castle anymore anyway
-        for (unsigned i = 0; i < rCastlingRights.size(); ++i)
-        {
-            if ((rCastlingRights[i] == BLACK_KINGSIDE) || (rCastlingRights[i] == BLACK_QUEENSIDE))
-            {
-                rCastlingRights.erase(rCastlingRights.begin()+i);
-                i--;//index will be incremented at next loop and must therefore be adjusted by minus 1
-            }
-        }
+        DeleteCastlingRights(BLACK_KINGSIDE, rCastlingRights);
+        DeleteCastlingRights(BLACK_QUEENSIDE, rCastlingRights);
     }
-
+    else if (mSquares[origin_index]->GetPieceOnThisSquare() == WHITE_ROOK)
+    {
+		if (origin_index ==0u)//a1
+		{
+			DeleteCastlingRights(WHITE_QUEENSIDE, rCastlingRights);
+		}
+		if (origin_index ==7u)//h1
+		{
+			DeleteCastlingRights(WHITE_KINGSIDE, rCastlingRights);
+		}
+    }
+    else if (mSquares[origin_index]->GetPieceOnThisSquare() == BLACK_ROOK)
+    {
+		if (origin_index == 56u)//a8
+		{
+			DeleteCastlingRights(BLACK_QUEENSIDE, rCastlingRights);
+		}
+		if (origin_index ==63)//h8
+		{
+			DeleteCastlingRights(BLACK_KINGSIDE, rCastlingRights);
+		}
+    }
 
     return ret;
 }
