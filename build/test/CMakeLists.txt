@@ -15,7 +15,7 @@ SET (source_files ${srcdir}/Exception.cpp
                   ${srcdir}/EngineInterface.cpp
                   ${srcdir}/LegalMoveChecker.cpp)
                  
-SET (single_test_to_run ${testfiledir}/TestChessboardWithBorders.hpp)
+SET (single_test_to_run ${testfiledir}/TestChessBoard.hpp)
           
 SET (all_test_files ${testfiledir}/TestChessboardWithBorders.hpp 
                     ${testfiledir}/TestChessBoard.hpp
@@ -32,16 +32,16 @@ link_directories (/usr/lib/i386-linux-gnu ${CMAKE_SOURCE_DIR}/build/lib)
 ADD_EXECUTABLE(ALL_TESTS ${testfiledir}/test_runner.cpp ${source_files})
 
 ADD_EXECUTABLE(SINGLE_TEST ${testfiledir}/single_test_runner.cpp ${source_files})
-                          
-add_custom_target(to_run_cxxtetgen ALL_TESTS
-                  COMMAND ${testfiledir}/cxxtest/bin/cxxtestgen --error-printer -o ${testfiledir}/test_runner.cpp ${all_test_files}
-
+                      
+add_custom_command(OUTPUT ${testfiledir}/test_runner.cpp
+                   COMMAND ${testfiledir}/cxxtest/bin/cxxtestgen --error-printer -o ${testfiledir}/test_runner.cpp ${all_test_files}
+                   DEPENDS 
                    COMMENT "running cxxtestgen now for all tests..."
                    VERBATIM)
 
-add_custom_target(single_test SINGLE_TEST
-                  COMMAND ${testfiledir}/cxxtest/bin/cxxtestgen --error-printer -o ${testfiledir}/single_test_runner.cpp ${single_test_to_run}
-                                                                                    
+add_custom_command(OUTPUT ${testfiledir}/single_test_runner.cpp
+                   COMMAND ${testfiledir}/cxxtest/bin/cxxtestgen --error-printer -o ${testfiledir}/single_test_runner.cpp ${single_test_to_run}
+                   DEPENDS                                                              
                    COMMENT "running cxxtestgen now for single file..."
                    VERBATIM)              
 
