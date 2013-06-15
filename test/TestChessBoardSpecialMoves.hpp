@@ -322,8 +322,81 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(false, my_cb.IsLegalMove(white_castle_queenside));//not his turn
         TS_ASSERT_EQUALS(false, my_cb.IsLegalMove(black_castle_kingside));//rook in place but no rights
         TS_ASSERT_EQUALS(false, my_cb.IsLegalMove(black_castle_queenside));//rook in place but no rights
-
     }
+
+    //This test starts from a position where, after some moves played, both sides could castle.
+    //Both sides then move their rooks back and forth thus progressively loosing castling rights
+   void testPromotions(void)
+   {
+       slach::ChessBoard my_cb;
+       my_cb.SetupChessBoard();
+       my_cb.SetupInitialChessPosition();
+       std::vector<slach::Square* > squares = my_cb.GetSquares();
+       TS_ASSERT_EQUALS(squares.size(), 64u);
+       //saved in tets/data/test_position_5.png for reference
+       std::string fen_poistion = "4k3/2P1P1P1/3K3P/p4b2/8/P7/1p6/8 b - - 0 59";
+       my_cb.SetFenPosition(fen_poistion);
+       //black's turn move is b2-b1 (promotes queen)
+       slach::Move b2_b1;
+       b2_b1.first = squares[9];//b2
+       b2_b1.second = squares[1];//b1
+
+       TS_ASSERT_EQUALS(my_cb.IsLegalMove(b2_b1), true);
+       my_cb.MakeThisMove(b2_b1);
+       my_cb.SetPromotionPiece(slach::BLACK_QUEEN);//the default anyway
+       TS_ASSERT_EQUALS(squares[1]->GetPieceOnThisSquare(), slach::BLACK_QUEEN);
+       TS_ASSERT_EQUALS(squares[9]->GetPieceOnThisSquare(), slach::NO_PIECE);
+
+       std::string after_black_promotion = "4k3/2P1P1P1/3K3P/p4b2/8/P7/8/1q6 w - - 0 60";
+       TS_ASSERT_EQUALS(after_black_promotion, my_cb.GetCurrentFenPosition());
+
+       //white's turn, also promotes with c7-c8 /// NOTE FOR LATER:g7 g8 here is checkmate
+       slach::Move c7_c8;
+       c7_c8.first = squares[50];//c7
+       c7_c8.second = squares[58];//c8
+
+       TS_ASSERT_EQUALS(my_cb.IsLegalMove(c7_c8), true);
+       my_cb.MakeThisMove(c7_c8);
+
+       TS_ASSERT_EQUALS(squares[58]->GetPieceOnThisSquare(), slach::WHITE_QUEEN);
+       TS_ASSERT_EQUALS(squares[50]->GetPieceOnThisSquare(), slach::NO_PIECE);
+
+       std::string after_white_promotion = "2Q1k3/4P1P1/3K3P/p4b2/8/P7/8/1q6 b - - 0 60";
+       TS_ASSERT_EQUALS(after_white_promotion, my_cb.GetCurrentFenPosition());
+
+       //black's turn, bishop captures queen f5-c8
+       slach::Move f5_c8;
+       f5_c8.first = squares[37];//f5
+       f5_c8.second = squares[58];//c8
+
+       TS_ASSERT_EQUALS(my_cb.IsLegalMove(f5_c8), true);
+       my_cb.MakeThisMove(f5_c8);
+
+       TS_ASSERT_EQUALS(squares[58]->GetPieceOnThisSquare(), slach::BLACK_BISHOP);
+       TS_ASSERT_EQUALS(squares[37]->GetPieceOnThisSquare(), slach::NO_PIECE);
+
+       std::string after_bishop_capture = "2b1k3/4P1P1/3K3P/p7/8/P7/8/1q6 w - - 1 61";
+       TS_ASSERT_EQUALS(after_bishop_capture, my_cb.GetCurrentFenPosition());
+
+       //white's turn--> promotes on g8 but get a knight!
+       slach::Move g7_g8;
+       g7_g8.first = squares[54];//g7
+       g7_g8.second = squares[62];//g8
+
+       my_cb.SetPromotionPiece(slach::WHITE_KNIGHT);
+       TS_ASSERT_EQUALS(my_cb.IsLegalMove(g7_g8), true);
+       my_cb.MakeThisMove(g7_g8);
+
+       TS_ASSERT_EQUALS(squares[62]->GetPieceOnThisSquare(), slach::WHITE_KNIGHT);
+       TS_ASSERT_EQUALS(squares[54]->GetPieceOnThisSquare(), slach::NO_PIECE);
+
+       std::string after_promotion_to_knight = "2b1k1N1/4P3/3K3P/p7/8/P7/8/1q6 b - - 0 61";
+       TS_ASSERT_EQUALS(after_promotion_to_knight, my_cb.GetCurrentFenPosition());
+
+       //coverage
+       TS_ASSERT_THROWS_THIS(my_cb.SetPromotionPiece(slach::WHITE_PAWN), "slach::ChessBoard::SetPromotionPiece: you can't set a pawn to be a promotion piece");
+       TS_ASSERT_THROWS_THIS(my_cb.SetPromotionPiece(slach::BLACK_PAWN), "slach::ChessBoard::SetPromotionPiece: you can't set a pawn to be a promotion piece");
+   }
 };
 
 #endif

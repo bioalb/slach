@@ -63,6 +63,9 @@ private:
     /**A pointer to an EngineInterface object. Initialised in constructor*/
     LegalMoveChecker* mpLegalMoveChecker;
 
+    slach::PieceType mWhitePromotionPiece;
+    slach::PieceType mBlackPromotionPiece;
+
     /**
      * Helper method that does two things:
      *
@@ -143,6 +146,8 @@ public:
      *         the string is guaranteed to be a valid FEN.
      */
     std::string GetCurrentFenPosition() const;
+
+    void SetPromotionPiece(slach::PieceType piece);
 };
 
 }//namespace slach

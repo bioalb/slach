@@ -15,10 +15,12 @@ slach::ChessBoard::ChessBoard()
         mSquares[i] = new Square();
     }
 
-
+    mWhitePromotionPiece = WHITE_QUEEN;
+    mBlackPromotionPiece = BLACK_QUEEN;
 
     mpFenHandler = new FenHandler();
     mpLegalMoveChecker = new LegalMoveChecker();
+
 }
 
 slach::ChessBoard::~ChessBoard()
@@ -252,6 +254,38 @@ slach::SpecialMoveType slach::ChessBoard::ProcessSpecialMove(const Move& rMove, 
 			DeleteCastlingRights(BLACK_KINGSIDE, rCastlingRights);
 		}
     }
-
+    else if ((mSquares[origin_index]->GetPieceOnThisSquare() == WHITE_PAWN) &&
+             (mSquares[destination_index]->GetIndexFromA1() > 55u) &&
+             (mSquares[destination_index]->GetIndexFromA1() < 63u))
+    {
+        mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
+        mSquares[destination_index]->SetPieceOnThisSquare(mWhitePromotionPiece);
+        ret = WHITEPAWN_PROMOTES;
+    }
+    else if ((mSquares[origin_index]->GetPieceOnThisSquare() == BLACK_PAWN) &&
+             (mSquares[destination_index]->GetIndexFromA1() > 0u) &&
+             (mSquares[destination_index]->GetIndexFromA1() < 8u))
+    {
+        mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
+        mSquares[destination_index]->SetPieceOnThisSquare(mBlackPromotionPiece);
+        ret = BLACKPAWN_PROMOTES;
+    }
     return ret;
+}
+
+
+void slach::ChessBoard::SetPromotionPiece(slach::PieceType piece)
+{
+    if (IsPawn(piece))
+    {
+        EXCEPTION("slach::ChessBoard::SetPromotionPiece: you can't set a pawn to be a promotion piece");
+    }
+    if (IsWhitePiece(piece))
+    {
+        mWhitePromotionPiece = piece;
+    }
+    else//black
+    {
+        mBlackPromotionPiece = piece;
+    }
 }
