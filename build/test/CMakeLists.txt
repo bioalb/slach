@@ -5,34 +5,46 @@ include_directories(. ${srcdir}
                     ${CMAKE_SOURCE_DIR}/test/cxxtest
                     ${testfiledir}
                     ${stockfishdir})
-                    
+
+SET (source_files ${srcdir}/Exception.cpp
+                  ${srcdir}/Game.cpp
+                  ${srcdir}/FenHandler.cpp
+                  ${srcdir}/ChessBoard.cpp
+                  ${srcdir}/ChessBoardWithBorders.cpp
+                  ${srcdir}/Square.cpp
+                  ${srcdir}/EngineInterface.cpp
+                  ${srcdir}/LegalMoveChecker.cpp)
+                 
+SET (single_test_to_run ${testfiledir}/TestChessboardWithBorders.hpp)
+          
+SET (all_test_files ${testfiledir}/TestChessboardWithBorders.hpp 
+                    ${testfiledir}/TestChessBoard.hpp
+                    ${testfiledir}/TestChessBoardSpecialMoves.hpp
+                    ${testfiledir}/TestSquare.hpp
+                    ${testfiledir}/TestFenHandler.hpp
+                    ${testfiledir}/TestGame.hpp
+                    ${testfiledir}/TestEngineInterface.hpp
+                    ${testfiledir}/TestHelperGlobalMethod.hpp
+                    ${testfiledir}/TestLegalMoveChecker.hpp)
+
 link_directories (/usr/lib/i386-linux-gnu ${CMAKE_SOURCE_DIR}/build/lib) 
 
-ADD_EXECUTABLE(TESTRUNNER ${testfiledir}/test_runner.cpp
-                          ${srcdir}/Exception.cpp
-                          ${srcdir}/Game.cpp
-                          ${srcdir}/FenHandler.cpp
-                          ${srcdir}/ChessBoard.cpp
-                          ${srcdir}/ChessBoardWithBorders.cpp
-                          ${srcdir}/Square.cpp
-                          ${srcdir}/EngineInterface.cpp
-                          ${srcdir}/LegalMoveChecker.cpp)
+ADD_EXECUTABLE(ALL_TESTS ${testfiledir}/test_runner.cpp ${source_files})
 
-add_custom_command(OUTPUT ${testfiledir}/test_runner.cpp
-                   COMMAND ${testfiledir}/cxxtest/bin/cxxtestgen --error-printer -o ${testfiledir}/test_runner.cpp 
-                                                                                    ${testfiledir}/TestChessboardWithBorders.hpp 
-                                                                                    ${testfiledir}/TestChessBoard.hpp
-                                                                                    ${testfiledir}/TestChessBoardSpecialMoves.hpp
-                                                                                    ${testfiledir}/TestSquare.hpp
-                                                                                    ${testfiledir}/TestFenHandler.hpp
-                                                                                    ${testfiledir}/TestGame.hpp
-                                                                                    ${testfiledir}/TestEngineInterface.hpp
-                                                                                    ${testfiledir}/TestHelperGlobalMethod.hpp
-                                                                                    ${testfiledir}/TestLegalMoveChecker.hpp
-                   DEPENDS 
-                   COMMENT "running cxxtestgen now..."
+ADD_EXECUTABLE(SINGLE_TEST ${testfiledir}/single_test_runner.cpp ${source_files})
+                          
+add_custom_target(to_run_cxxtetgen ALL_TESTS
+                  COMMAND ${testfiledir}/cxxtest/bin/cxxtestgen --error-printer -o ${testfiledir}/test_runner.cpp ${all_test_files}
+
+                   COMMENT "running cxxtestgen now for all tests..."
                    VERBATIM)
-                   
+
+add_custom_target(single_test SINGLE_TEST
+                  COMMAND ${testfiledir}/cxxtest/bin/cxxtestgen --error-printer -o ${testfiledir}/single_test_runner.cpp ${single_test_to_run}
+                                                                                    
+                   COMMENT "running cxxtestgen now for single file..."
+                   VERBATIM)              
 
 set(CMAKE_EXE_LINKER_FLAGS "-pthread -pg")
-TARGET_LINK_LIBRARIES(TESTRUNNER -lm  -lstockfish -lgcov)
+TARGET_LINK_LIBRARIES(ALL_TESTS -lm  -lstockfish -lgcov)
+TARGET_LINK_LIBRARIES(SINGLE_TEST -lm  -lstockfish -lgcov)
