@@ -47,6 +47,10 @@ public:
         test_fen = "rnbqkbnrr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
         TS_ASSERT_EQUALS(handler.IsFenValid(test_fen), false);
 
+        //9 pieces in last file
+        test_fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1RN b KQkq - 1 2";
+        TS_ASSERT_EQUALS(handler.IsFenValid(test_fen), false);
+
         //this one has one too many indications on the 5th rank
         test_fen = "rnbqkbnr/pp1ppppp/8/2p9/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
         TS_ASSERT_EQUALS(handler.IsFenValid(test_fen), false);

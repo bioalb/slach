@@ -356,9 +356,9 @@ public:
         TS_ASSERT_EQUALS(squares[99]->GetFile(), '0');
         TS_ASSERT_EQUALS(squares[99]->GetRank(), '0');
         TS_ASSERT_EQUALS(squares[99]->IsCoordinatePrintable(), false);
+
+        //coverage
+        TS_ASSERT_EQUALS(my_cb.GetPlayableChessBoard()->GetSquares().size(), 64u);
     }
-
-
-
 };
 #endif

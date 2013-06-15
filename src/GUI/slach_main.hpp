@@ -13,7 +13,7 @@ public:
     virtual bool OnInit();
 };
 
-IMPLEMENT_APP(slach_main);
+IMPLEMENT_APP(slach_main)
 
 
 

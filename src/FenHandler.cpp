@@ -43,24 +43,13 @@ bool slach::FenHandler::IsFenValid(const std::string &rFenString) const
             }
             continue;//this one is a slash, no need to do anything, go to next loop.
         }
-        if (counter_between_slashes > 8u)
-        {
-            ret = false;
-            break;
-        }
+
         //look for the last space after the position
         if ( (slash_counter == 7u) && (rFenString[i] == ' ') )
         {
-            if (counter_between_slashes==8u)
-            {
-                end_of_piece_position = i;
-                break;
-            }
-            else
-            {
-                ret = false;
-                break;
-            }
+            assert(counter_between_slashes==8u);
+            end_of_piece_position = i;
+            break;
         }
         if ( isdigit (rFenString[i]))//if it is a number
         {
