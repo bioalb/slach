@@ -71,7 +71,11 @@ public:
     void AddPosition(std::string fenPosition);
 
     /**
+     * Returns a fen string form the list of strings.
      *
+     * @param moveNumber the move number corresponding to the position. It returns the last position if moveNumber
+     *                   is greater than the size of the move list
+     * @param colour the colour to move
      */
     std::string FetchFromFenList(unsigned moveNumber, Colour colour);
 };

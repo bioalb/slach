@@ -167,7 +167,9 @@ public:
     /**
      * Resets the chessboard to the move number moveNumber
      *
-     * @param moveNumber the move number we want to go back to
+     * @param moveNumber the move number we want to go back to.
+     *          This is intended to be 1 at the start of the game. If a number greater than the current move numbe ris supplied,
+     *          than the latest position is set (i.e., no effect).
      * @param colour the colour to move
      */
     void ResetToMoveNumber(unsigned moveNumber, slach::Colour colour);

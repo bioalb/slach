@@ -35,13 +35,34 @@ void slach::Game::AddMove(Move* move, std::string ambiguityPrefix, std::string s
 
 std::string slach::Game::FetchFromFenList(unsigned moveNumber, Colour colour)
 {
+    if (moveNumber==0)//weird case, it should never happen, moveNumber should start from one
+    {
+        if (colour == WHITE)
+        {
+            return mListOfFenPositions[0];
+        }
+        else
+        {
+            return mListOfFenPositions[1];
+        }
+    }
+
     unsigned index = moveNumber*2;
+
     if (colour == WHITE)
     {
-        return mListOfFenPositions[index-2];
+        if ((index - 2)>=mListOfFenPositions.size())
+        {
+            return mListOfFenPositions.back();
+        }
+        return mListOfFenPositions[index - 2];
     }
     else
     {
+        if ((index - 1)>=mListOfFenPositions.size())
+        {
+            return mListOfFenPositions.back();
+        }
         return mListOfFenPositions[index-1];
     }
 }

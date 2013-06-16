@@ -261,5 +261,37 @@ public:
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 2u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat()[1], "O-O-O");
     }
+
+    void TestFetchFromlist()
+    {
+        std::string initial = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        std::string after_d2_d4 = "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq d3 0 1";
+        std::string after_e7_e5 = "rnbqkbnr/pppp1ppp/8/4p3/3P4/8/PPP1PPPP/RNBQKBNR w KQkq e6 0 2";
+        std::string after_d4_takes_e5 = "rnbqkbnr/pppp1ppp/8/4P3/8/8/PPP1PPPP/RNBQKBNR b KQkq - 0 2";
+        std::string after_bishop_b4_check = "rnbqk1nr/pppp1ppp/8/4P3/1b6/8/PPP1PPPP/RNBQKBNR w KQkq - 1 3";
+        std::string after_c2c3 =  "rnbqk1nr/pppp1ppp/8/4P3/1b6/2P5/PP2PPPP/RNBQKBNR b KQkq - 0 3";
+
+        slach::Game my_game;
+        my_game.AddPosition(initial);
+        my_game.AddPosition(after_d2_d4);
+        my_game.AddPosition(after_e7_e5);
+        my_game.AddPosition(after_d4_takes_e5);
+        my_game.AddPosition(after_bishop_b4_check);
+        my_game.AddPosition(after_c2c3);
+
+        //cover the weird case when you pas sin 0...behaves like a one.
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(0u,slach::WHITE), initial);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(0u,slach::BLACK), after_d2_d4);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(1u,slach::WHITE), initial);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(1u,slach::BLACK), after_d2_d4);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(2u,slach::WHITE), after_e7_e5);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(2u,slach::BLACK), after_d4_takes_e5);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(3u,slach::WHITE), after_bishop_b4_check);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(3u,slach::BLACK), after_c2c3);
+
+        //over the size
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(4u,slach::WHITE), after_c2c3);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(4u,slach::BLACK), after_c2c3);
+    }
 };
 #endif
