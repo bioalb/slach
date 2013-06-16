@@ -141,7 +141,7 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
         //some useful moves first
         slach::Move white_castle_kingside(squares[4],squares[6]);//e1-g1
         slach::Move white_castle_queenside(squares[4], squares[2]);//e1-c1
-        slach::Move black_castle_kingside(squares[60], squares[62]);//e8-g1
+        slach::Move black_castle_kingside(squares[60], squares[62]);//e8-g8
         slach::Move black_castle_queenside(squares[60], squares[58]);//e8-c8
 
         //this position is stored in test/data/test_position_4.png for reference

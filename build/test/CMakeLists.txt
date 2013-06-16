@@ -37,13 +37,13 @@ ADD_EXECUTABLE(SINGLE_TEST ${testfiledir}/single_test_runner.cpp ${source_files}
                       
 add_custom_command(OUTPUT ${testfiledir}/test_runner.cpp
                    COMMAND ${testfiledir}/cxxtest/bin/cxxtestgen --error-printer -o ${testfiledir}/test_runner.cpp ${all_test_files}
-                   DEPENDS 
+                   DEPENDS ${all_test_files}
                    COMMENT "running cxxtestgen now for all tests..."
                    VERBATIM)
 
 add_custom_command(OUTPUT ${testfiledir}/single_test_runner.cpp
                    COMMAND ${testfiledir}/cxxtest/bin/cxxtestgen --error-printer -o ${testfiledir}/single_test_runner.cpp ${single_test_to_run}
-                   DEPENDS                                                              
+                   DEPENDS ${all_test_files}                                                            
                    COMMENT "running cxxtestgen now for single file..."
                    VERBATIM)              
 
