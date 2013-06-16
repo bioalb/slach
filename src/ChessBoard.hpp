@@ -67,16 +67,16 @@ private:
     slach::PieceType mBlackPromotionPiece;
 
     /**
-     * Helper method that does two things:
-     *
-     * 1) determine if the move is a special move.
-     * 2) if it is a special move, it re-arranges the squares accordingly. If not it does nothing.
+     * Helper method that does the following:
+     * - it re-arranges the squares according to the special move.
+     * - updates castling rights accordingly
      *
      * @param rMove (input) the move to be processed
      * @param rCastlingRights (output) will contain castling rights after this move
-     * @return the type of move that this method found the move to be
      */
-    slach::SpecialMoveType ProcessSpecialMove(const Move& rMove, std::vector<CastlingRights>& rCastlingRights);
+    void ProcessSpecialMove(const Move& rMove, std::vector<CastlingRights>& rCastlingRights);
+
+    void MoveThePieces(const Move& rMove);
 
 public:
 

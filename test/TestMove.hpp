@@ -34,6 +34,10 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(b1_c3.IsSpecialMove(), false);
         TS_ASSERT_EQUALS(b1_c3.IsWhitePromoting(), false);
         TS_ASSERT_EQUALS(b1_c3.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(b1_c3.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(b1_c3.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(b1_c3.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(b1_c3.IsQueenSideBlackRookMoving(), false);
     }
 
     void TestCastling()
@@ -81,6 +85,10 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(white_castle_kingside.IsSpecialMove(), true);
         TS_ASSERT_EQUALS(white_castle_kingside.IsWhitePromoting(), false);
         TS_ASSERT_EQUALS(white_castle_kingside.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(white_castle_kingside.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(white_castle_kingside.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(white_castle_kingside.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(white_castle_kingside.IsQueenSideBlackRookMoving(), false);
 
         TS_ASSERT_EQUALS(white_castle_queenside.IsWhiteCastlingKingSide(), false);
         TS_ASSERT_EQUALS(white_castle_queenside.IsWhiteCastlingQueenSide(), true);
@@ -89,6 +97,10 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(white_castle_queenside.IsSpecialMove(), true);
         TS_ASSERT_EQUALS(white_castle_queenside.IsWhitePromoting(), false);
         TS_ASSERT_EQUALS(white_castle_queenside.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(white_castle_queenside.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(white_castle_queenside.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(white_castle_queenside.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(white_castle_queenside.IsQueenSideBlackRookMoving(), false);
 
         TS_ASSERT_EQUALS(black_castle_kingside.IsWhiteCastlingKingSide(), false);
         TS_ASSERT_EQUALS(black_castle_kingside.IsWhiteCastlingQueenSide(), false);
@@ -97,6 +109,10 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(black_castle_kingside.IsSpecialMove(), true);
         TS_ASSERT_EQUALS(black_castle_kingside.IsWhitePromoting(), false);
         TS_ASSERT_EQUALS(black_castle_kingside.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(black_castle_kingside.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(black_castle_kingside.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(black_castle_kingside.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(black_castle_kingside.IsQueenSideBlackRookMoving(), false);
 
         TS_ASSERT_EQUALS(black_castle_queenside.IsWhiteCastlingKingSide(), false);
         TS_ASSERT_EQUALS(black_castle_queenside.IsWhiteCastlingQueenSide(), false);
@@ -105,6 +121,10 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(black_castle_queenside.IsSpecialMove(), true);
         TS_ASSERT_EQUALS(black_castle_queenside.IsWhitePromoting(), false);
         TS_ASSERT_EQUALS(black_castle_queenside.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(black_castle_queenside.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(black_castle_queenside.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(black_castle_queenside.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(black_castle_queenside.IsQueenSideBlackRookMoving(), false);
     }
 
     void TestPseudoCastling()
@@ -141,6 +161,10 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(fake_white_castle_kingside.IsSpecialMove(), false);
         TS_ASSERT_EQUALS(fake_white_castle_kingside.IsWhitePromoting(), false);
         TS_ASSERT_EQUALS(fake_white_castle_kingside.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(fake_white_castle_kingside.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(fake_white_castle_kingside.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(fake_white_castle_kingside.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(fake_white_castle_kingside.IsQueenSideBlackRookMoving(), false);
 
         TS_ASSERT_EQUALS(fake_white_castle_queenside.IsWhiteCastlingKingSide(), false);
         TS_ASSERT_EQUALS(fake_white_castle_queenside.IsWhiteCastlingQueenSide(), false);
@@ -149,6 +173,10 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(fake_white_castle_queenside.IsSpecialMove(), false);
         TS_ASSERT_EQUALS(fake_white_castle_queenside.IsWhitePromoting(), false);
         TS_ASSERT_EQUALS(fake_white_castle_queenside.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(fake_white_castle_kingside.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(fake_white_castle_kingside.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(fake_white_castle_kingside.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(fake_white_castle_kingside.IsQueenSideBlackRookMoving(), false);
 
         TS_ASSERT_EQUALS(fake_black_castle_kingside.IsWhiteCastlingKingSide(), false);
         TS_ASSERT_EQUALS(fake_black_castle_kingside.IsWhiteCastlingQueenSide(), false);
@@ -157,6 +185,10 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(fake_black_castle_kingside.IsSpecialMove(), false);
         TS_ASSERT_EQUALS(fake_black_castle_kingside.IsWhitePromoting(), false);
         TS_ASSERT_EQUALS(fake_black_castle_kingside.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(fake_white_castle_kingside.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(fake_white_castle_kingside.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(fake_white_castle_kingside.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(fake_white_castle_kingside.IsQueenSideBlackRookMoving(), false);
 
         TS_ASSERT_EQUALS(fake_black_castle_queenside.IsWhiteCastlingKingSide(), false);
         TS_ASSERT_EQUALS(fake_black_castle_queenside.IsWhiteCastlingQueenSide(), false);
@@ -165,6 +197,10 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(fake_black_castle_queenside.IsSpecialMove(), false);
         TS_ASSERT_EQUALS(fake_black_castle_queenside.IsWhitePromoting(), false);
         TS_ASSERT_EQUALS(fake_black_castle_queenside.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(fake_white_castle_kingside.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(fake_white_castle_kingside.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(fake_white_castle_kingside.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(fake_white_castle_kingside.IsQueenSideBlackRookMoving(), false);
     }
 
     void TestPromotions()
@@ -209,6 +245,10 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(white_promotes_a7_a8.IsSpecialMove(), true);
         TS_ASSERT_EQUALS(white_promotes_a7_a8.IsWhitePromoting(), true);
         TS_ASSERT_EQUALS(white_promotes_a7_a8.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(white_promotes_a7_a8.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(white_promotes_a7_a8.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(white_promotes_a7_a8.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(white_promotes_a7_a8.IsQueenSideBlackRookMoving(), false);
 
         TS_ASSERT_EQUALS(white_pawn_move.IsWhiteCastlingKingSide(), false);
         TS_ASSERT_EQUALS(white_pawn_move.IsWhiteCastlingQueenSide(), false);
@@ -217,6 +257,10 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(white_pawn_move.IsSpecialMove(), false);
         TS_ASSERT_EQUALS(white_pawn_move.IsWhitePromoting(), false);
         TS_ASSERT_EQUALS(white_pawn_move.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(white_pawn_move.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(white_pawn_move.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(white_pawn_move.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(white_pawn_move.IsQueenSideBlackRookMoving(), false);
 
         TS_ASSERT_EQUALS(black_pawn_promotes_b2_b1.IsWhiteCastlingKingSide(), false);
         TS_ASSERT_EQUALS(black_pawn_promotes_b2_b1.IsWhiteCastlingQueenSide(), false);
@@ -225,6 +269,10 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(black_pawn_promotes_b2_b1.IsSpecialMove(), true);
         TS_ASSERT_EQUALS(black_pawn_promotes_b2_b1.IsWhitePromoting(), false);
         TS_ASSERT_EQUALS(black_pawn_promotes_b2_b1.IsBlackPromoting(), true);
+        TS_ASSERT_EQUALS(black_pawn_promotes_b2_b1.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(black_pawn_promotes_b2_b1.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(black_pawn_promotes_b2_b1.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(black_pawn_promotes_b2_b1.IsQueenSideBlackRookMoving(), false);
 
         TS_ASSERT_EQUALS(black_pawn_moves.IsWhiteCastlingKingSide(), false);
         TS_ASSERT_EQUALS(black_pawn_moves.IsWhiteCastlingQueenSide(), false);
@@ -233,6 +281,10 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(black_pawn_moves.IsSpecialMove(), false);
         TS_ASSERT_EQUALS(black_pawn_moves.IsWhitePromoting(), false);
         TS_ASSERT_EQUALS(black_pawn_moves.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(black_pawn_moves.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(black_pawn_moves.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(black_pawn_moves.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(black_pawn_moves.IsQueenSideBlackRookMoving(), false);
     }
 
     void TestPseudoPromotions()
@@ -267,6 +319,10 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(white_pseudo_promotes_a7_a8.IsSpecialMove(), false);
         TS_ASSERT_EQUALS(white_pseudo_promotes_a7_a8.IsWhitePromoting(), false);
         TS_ASSERT_EQUALS(white_pseudo_promotes_a7_a8.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(white_pseudo_promotes_a7_a8.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(white_pseudo_promotes_a7_a8.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(white_pseudo_promotes_a7_a8.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(white_pseudo_promotes_a7_a8.IsQueenSideBlackRookMoving(), false);
 
         TS_ASSERT_EQUALS(black_pseudo_promotes_b2_b1.IsWhiteCastlingKingSide(), false);
         TS_ASSERT_EQUALS(black_pseudo_promotes_b2_b1.IsWhiteCastlingQueenSide(), false);
@@ -275,7 +331,178 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(black_pseudo_promotes_b2_b1.IsSpecialMove(), false);
         TS_ASSERT_EQUALS(black_pseudo_promotes_b2_b1.IsWhitePromoting(), false);
         TS_ASSERT_EQUALS(black_pseudo_promotes_b2_b1.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(black_pseudo_promotes_b2_b1.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(black_pseudo_promotes_b2_b1.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(black_pseudo_promotes_b2_b1.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(black_pseudo_promotes_b2_b1.IsQueenSideBlackRookMoving(), false);
+    }
 
+    void TestCornerRookMoves()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            if ((i==0u) || (i==7u))//white rooks
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_ROOK);
+            }
+            else if ((i==56u) || (i==63u))//black rooks
+            {
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_ROOK);
+            }
+            else if (i==4u)//white king
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_KING);
+            }
+            else if (i==60u)//black king
+            {
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_KING);
+            }
+            else
+            {
+                squares[i]->SetPieceOnThisSquare(slach::NO_PIECE);
+            }
+        }
+
+        slach::Move a1_a2(squares[0],squares[8]);
+        slach::Move h1_h2(squares[7], squares[15]);
+        slach::Move a8_a7(squares[56], squares[48]);
+        slach::Move h8_g8(squares[63], squares[62]);
+
+        TS_ASSERT_EQUALS(a1_a2.IsWhiteCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsWhiteCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsBlackCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsBlackCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsSpecialMove(), true);
+        TS_ASSERT_EQUALS(a1_a2.IsWhitePromoting(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsQueenSideWhiteRookMoving(), true);
+        TS_ASSERT_EQUALS(a1_a2.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsQueenSideBlackRookMoving(), false);
+
+        TS_ASSERT_EQUALS(h1_h2.IsWhiteCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsWhiteCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsBlackCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsBlackCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsSpecialMove(), true);
+        TS_ASSERT_EQUALS(h1_h2.IsWhitePromoting(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsKingSideWhiteRookMoving(), true);
+        TS_ASSERT_EQUALS(h1_h2.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsQueenSideBlackRookMoving(), false);
+
+        TS_ASSERT_EQUALS(a8_a7.IsWhiteCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsWhiteCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsBlackCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsBlackCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsSpecialMove(), true);
+        TS_ASSERT_EQUALS(a8_a7.IsWhitePromoting(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsQueenSideBlackRookMoving(), true);
+
+        TS_ASSERT_EQUALS(h8_g8.IsWhiteCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsWhiteCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsBlackCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsBlackCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsSpecialMove(), true);
+        TS_ASSERT_EQUALS(h8_g8.IsWhitePromoting(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsKingSideBlackRookMoving(), true);
+        TS_ASSERT_EQUALS(h8_g8.IsQueenSideBlackRookMoving(), false);
+    }
+
+    void PseudoTestCornerRookMoves()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            if ((i==0u) || (i==7u))//white queen, so we make sure the method flags only rooks
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_QUEEN);
+            }
+            else if ((i==56u) || (i==63u))//black queens so we make sure the method flags only rooks
+            {
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_QUEEN);
+            }
+            else if (i==4u)//white king
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_KING);
+            }
+            else if (i==60u)//black king
+            {
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_KING);
+            }
+            else
+            {
+                squares[i]->SetPieceOnThisSquare(slach::NO_PIECE);
+            }
+        }
+
+        slach::Move a1_a2(squares[0],squares[8]);
+        slach::Move h1_h2(squares[7], squares[15]);
+        slach::Move a8_a7(squares[56], squares[48]);
+        slach::Move h8_g8(squares[63], squares[62]);
+
+        TS_ASSERT_EQUALS(a1_a2.IsWhiteCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsWhiteCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsBlackCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsBlackCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsSpecialMove(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsWhitePromoting(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(a1_a2.IsQueenSideBlackRookMoving(), false);
+
+        TS_ASSERT_EQUALS(h1_h2.IsWhiteCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsWhiteCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsBlackCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsBlackCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsSpecialMove(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsWhitePromoting(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(h1_h2.IsQueenSideBlackRookMoving(), false);
+
+        TS_ASSERT_EQUALS(a8_a7.IsWhiteCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsWhiteCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsBlackCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsBlackCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsSpecialMove(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsWhitePromoting(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(a8_a7.IsQueenSideBlackRookMoving(), false);
+
+        TS_ASSERT_EQUALS(h8_g8.IsWhiteCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsWhiteCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsBlackCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsBlackCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsSpecialMove(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsWhitePromoting(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(h8_g8.IsQueenSideBlackRookMoving(), false);
     }
 };
 #endif //TESTMOVE_HPP_

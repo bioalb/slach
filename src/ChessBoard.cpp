@@ -134,14 +134,14 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
     	turn_to_move = slach::BLACK;//white has moved, black's turn
     }
 
-    SpecialMoveType special_move_type = ProcessSpecialMove(rMove, castling_rights);
-
-    if (special_move_type == ORDINARY_MOVE)
+    if (rMove.IsSpecialMove() == true)
     {
-		//Now move the pieces
-		PieceType origin_piece = mSquares[origin_index]->GetPieceOnThisSquare();
-		mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);//no more piece here
-		mSquares[destination_index]->SetPieceOnThisSquare(origin_piece);
+        ProcessSpecialMove(rMove, castling_rights);
+    }
+    else
+    {
+        //Now move the pieces
+        MoveThePieces(rMove);
     } //otherwise the special move method above  would have processed it
 
 
@@ -156,6 +156,15 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
     mpFenHandler->SetPositionFromFen(mCurrentFenPosition, mSquares);
 }
 
+void  slach::ChessBoard::MoveThePieces(const Move& rMove)
+{
+    unsigned origin_index = rMove.GetOrigin()->GetIndexFromA1();
+    unsigned destination_index = rMove.GetDestination()->GetIndexFromA1();
+
+    PieceType origin_piece = mSquares[origin_index]->GetPieceOnThisSquare();
+    mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);//no more piece here
+    mSquares[destination_index]->SetPieceOnThisSquare(origin_piece);
+}
 
 int slach::ChessBoard::SetFenPosition(const std::string &rFenPosition)
 {
@@ -178,56 +187,51 @@ slach::Colour slach::ChessBoard::WhosTurnIsIt() const
     return mpFenHandler->WhosTurnIsIt();
 }
 
-slach::SpecialMoveType slach::ChessBoard::ProcessSpecialMove(const Move& rMove, std::vector<CastlingRights>& rCastlingRights)
+void slach::ChessBoard::ProcessSpecialMove(const Move& rMove, std::vector<CastlingRights>& rCastlingRights)
 {
     unsigned origin_index = rMove.GetOrigin()->GetIndexFromA1();
     unsigned destination_index = rMove.GetDestination()->GetIndexFromA1();
 
-    SpecialMoveType ret =  ORDINARY_MOVE;
-
-    if (mSquares[origin_index]->GetPieceOnThisSquare() == WHITE_KING)
+    if (rMove.IsWhiteCastlingKingSide())
     {
-        //check for e1-g1
-        if (origin_index == 4u && destination_index==6u)
-        {
-            mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
-            mSquares[destination_index]->SetPieceOnThisSquare(WHITE_KING);
-            mSquares[origin_index+1]->SetPieceOnThisSquare(WHITE_ROOK);
-            mSquares[7]->SetPieceOnThisSquare(NO_PIECE);//h1
-            ret = WHITE_CASTLE_KINGSIDE;
-        }
-        else if (origin_index == 4u && destination_index==2u) //e1-c1
-        {
-            mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
-            mSquares[destination_index]->SetPieceOnThisSquare(WHITE_KING);
-            mSquares[origin_index-1]->SetPieceOnThisSquare(WHITE_ROOK);
-            mSquares[0]->SetPieceOnThisSquare(NO_PIECE);//a1
-            ret = WHITE_CASTLE_QUEENSIDE;
-        }
+        mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
+        mSquares[destination_index]->SetPieceOnThisSquare(WHITE_KING);
+        mSquares[origin_index+1]->SetPieceOnThisSquare(WHITE_ROOK);
+        mSquares[7]->SetPieceOnThisSquare(NO_PIECE);//h1
 
         //white can't castle anymore anyway
         DeleteCastlingRights(WHITE_KINGSIDE, rCastlingRights);
         DeleteCastlingRights(WHITE_QUEENSIDE, rCastlingRights);
     }
-    else if (mSquares[origin_index]->GetPieceOnThisSquare() == BLACK_KING)
+    else if (rMove.IsWhiteCastlingQueenSide())
     {
-        //check for e8-g8
-        if (origin_index == 60u && destination_index==62u)
-        {
-            mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
-            mSquares[destination_index]->SetPieceOnThisSquare(BLACK_KING);
-            mSquares[origin_index+1]->SetPieceOnThisSquare(BLACK_ROOK);
-            mSquares[63]->SetPieceOnThisSquare(NO_PIECE);//h8
-            ret = BLACK_CASTLE_KINGSIDE;
-        }
-        else if (origin_index == 60u && destination_index==58u) //e8-c8
-        {
-            mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
-            mSquares[destination_index]->SetPieceOnThisSquare(BLACK_KING);
-            mSquares[origin_index-1]->SetPieceOnThisSquare(BLACK_ROOK);
-            mSquares[56]->SetPieceOnThisSquare(NO_PIECE);//a8
-            ret = BLACK_CASTLE_QUEENSIDE;
-        }
+        mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
+        mSquares[destination_index]->SetPieceOnThisSquare(WHITE_KING);
+        mSquares[origin_index-1]->SetPieceOnThisSquare(WHITE_ROOK);
+        mSquares[0]->SetPieceOnThisSquare(NO_PIECE);//a1
+
+        //white can't castle anymore anyway
+        DeleteCastlingRights(WHITE_KINGSIDE, rCastlingRights);
+        DeleteCastlingRights(WHITE_QUEENSIDE, rCastlingRights);
+    }
+    else if (rMove.IsBlackCastlingKingSide())
+    {
+        mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
+        mSquares[destination_index]->SetPieceOnThisSquare(BLACK_KING);
+        mSquares[origin_index+1]->SetPieceOnThisSquare(BLACK_ROOK);
+        mSquares[63]->SetPieceOnThisSquare(NO_PIECE);//h8
+
+        //black can't castle anymore anyway
+        DeleteCastlingRights(BLACK_KINGSIDE, rCastlingRights);
+        DeleteCastlingRights(BLACK_QUEENSIDE, rCastlingRights);
+    }
+    else if (rMove.IsBlackCastlingQueenSide())
+    {
+        mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
+        mSquares[destination_index]->SetPieceOnThisSquare(BLACK_KING);
+        mSquares[origin_index-1]->SetPieceOnThisSquare(BLACK_ROOK);
+        mSquares[56]->SetPieceOnThisSquare(NO_PIECE);//a8
+
         //black can't castle anymore anyway
         DeleteCastlingRights(BLACK_KINGSIDE, rCastlingRights);
         DeleteCastlingRights(BLACK_QUEENSIDE, rCastlingRights);
@@ -237,10 +241,12 @@ slach::SpecialMoveType slach::ChessBoard::ProcessSpecialMove(const Move& rMove, 
 		if (origin_index ==0u)//a1
 		{
 			DeleteCastlingRights(WHITE_QUEENSIDE, rCastlingRights);
+			MoveThePieces(rMove);
 		}
 		if (origin_index ==7u)//h1
 		{
 			DeleteCastlingRights(WHITE_KINGSIDE, rCastlingRights);
+			MoveThePieces(rMove);
 		}
     }
     else if (mSquares[origin_index]->GetPieceOnThisSquare() == BLACK_ROOK)
@@ -248,29 +254,28 @@ slach::SpecialMoveType slach::ChessBoard::ProcessSpecialMove(const Move& rMove, 
 		if (origin_index == 56u)//a8
 		{
 			DeleteCastlingRights(BLACK_QUEENSIDE, rCastlingRights);
+			MoveThePieces(rMove);
 		}
 		if (origin_index ==63)//h8
 		{
 			DeleteCastlingRights(BLACK_KINGSIDE, rCastlingRights);
+			MoveThePieces(rMove);
 		}
     }
-    else if ((mSquares[origin_index]->GetPieceOnThisSquare() == WHITE_PAWN) &&
-             (mSquares[destination_index]->GetIndexFromA1() > 55u) &&
-             (mSquares[destination_index]->GetIndexFromA1() < 63u))
+    else if (rMove.IsWhitePromoting())
     {
         mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
         mSquares[destination_index]->SetPieceOnThisSquare(mWhitePromotionPiece);
-        ret = WHITEPAWN_PROMOTES;
     }
-    else if ((mSquares[origin_index]->GetPieceOnThisSquare() == BLACK_PAWN) &&
-             (mSquares[destination_index]->GetIndexFromA1() > 0u) &&
-             (mSquares[destination_index]->GetIndexFromA1() < 8u))
+    else if (rMove.IsBlackPromoting())
     {
         mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
         mSquares[destination_index]->SetPieceOnThisSquare(mBlackPromotionPiece);
-        ret = BLACKPAWN_PROMOTES;
     }
-    return ret;
+    else
+    {
+        NEVER_REACHED;
+    }
 }
 
 

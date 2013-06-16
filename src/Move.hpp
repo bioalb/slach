@@ -96,6 +96,31 @@ public :
      */
     bool IsBlackPromoting() const;
 
+    /**
+     * Returns true if the move indicates that white
+     * intends to move the rook on h1
+     */
+    bool IsKingSideWhiteRookMoving() const;
+
+    /**
+     * Returns true if the move indicates that white
+     * intends to move the rook on a1
+     */
+    bool IsQueenSideWhiteRookMoving() const;
+
+    /**
+     * Returns true if the move indicates that black
+     * intends to move the rook on h8
+     */
+    bool IsKingSideBlackRookMoving() const;
+
+    /**
+     * Returns true if the move indicates that black
+     * intends to move the rook on a8
+     */
+    bool IsQueenSideBlackRookMoving() const;
+
+
 };
 }//namespace slach
 #endif //_MOVE_HPP_

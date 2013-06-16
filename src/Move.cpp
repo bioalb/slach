@@ -81,7 +81,12 @@ bool slach::Move::IsSpecialMove() const
             IsWhiteCastlingQueenSide() ||
             IsBlackCastlingQueenSide() ||
             IsWhitePromoting() ||
-            IsBlackPromoting());
+            IsBlackPromoting() ||
+            IsKingSideWhiteRookMoving() ||
+            IsQueenSideWhiteRookMoving() ||
+            IsKingSideBlackRookMoving() ||
+            IsQueenSideBlackRookMoving()
+            );
 }
 bool slach::Move::IsWhitePromoting() const
 {
@@ -99,6 +104,58 @@ bool slach::Move::IsBlackPromoting() const
 {
     if ((mpOrigin->GetPieceOnThisSquare()==BLACK_PAWN)&&
         (mpOrigin->IsSecondRank()))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool slach::Move::IsKingSideWhiteRookMoving() const
+{
+    if ((mpOrigin->GetPieceOnThisSquare()==WHITE_ROOK)&&
+        (mpOrigin->GetIndexFromA1()==7u))//h1
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool slach::Move::IsQueenSideWhiteRookMoving() const
+{
+    if ((mpOrigin->GetPieceOnThisSquare()==WHITE_ROOK)&&
+        (mpOrigin->GetIndexFromA1()==0u))//a1
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool slach::Move::IsKingSideBlackRookMoving() const
+{
+    if ((mpOrigin->GetPieceOnThisSquare()==BLACK_ROOK)&&
+        (mpOrigin->GetIndexFromA1()==63u))//h8
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool slach::Move::IsQueenSideBlackRookMoving() const
+{
+    if ((mpOrigin->GetPieceOnThisSquare()==BLACK_ROOK)&&
+        (mpOrigin->GetIndexFromA1()==56u))//h1
     {
         return true;
     }
