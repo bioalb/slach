@@ -10,24 +10,47 @@ namespace slach
 {
 
 /**
- * The MOVE class
+ * The MOVE class. This class holds two pointers to teh roigin and destination squares of this move.
+ * It makes available some utility methods to figure out the nature of the move
+ * (e.g., castling, promotion, etc).
  */
 class Move
 {
 
 private :
 
+    /**Cache for the pointer too the origin square*/
     Square* mpOrigin;
+    /**Cache for the pointer too the destination square*/
     Square* mpDestination;
 
 public :
 
+    /** Default constructor*/
     Move() = default;
+
+    /**
+     * Constructor
+     *
+     * @param pOrigin pointer to the origin square
+     * @param pDestination pointer to the destinations quare
+     */
     Move(Square* pOrigin, Square* pDestination);
 
+    /**
+     * Destructor
+     *
+     */
     ~Move();
 
+    /**
+     * Access method for the origin square
+     */
     Square* GetOrigin() const;
+
+    /**
+     * Access method for the destination square
+     */
     Square* GetDestination() const;
 
     /**
@@ -74,6 +97,6 @@ public :
     bool IsBlackPromoting() const;
 
 };
-}
+}//namespace slach
 #endif //_MOVE_HPP_
 
