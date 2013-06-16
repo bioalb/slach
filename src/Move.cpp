@@ -2,9 +2,7 @@
 
 slach::Move::Move(Square* pOrigin, Square* pDestination)
     : mpOrigin(pOrigin),
-      mpDestination(pDestination),
-      mAmbiguityPrefix(""),
-      mSuffix("")
+      mpDestination(pDestination)
 {
 }
 
@@ -166,7 +164,7 @@ bool slach::Move::IsQueenSideBlackRookMoving() const
     }
 }
 
-std::string slach::Move::GetMoveInAlgebraicFormat()
+std::string slach::Move::GetMoveInAlgebraicFormat(std::string ambiguityPrefix, std::string suffix)
 {
     if (IsBlackCastlingKingSide() || IsWhiteCastlingKingSide())
     {
@@ -223,6 +221,6 @@ std::string slach::Move::GetMoveInAlgebraicFormat()
        {
            promotion_suffix = "=Q";
        }
-       return (piece_code + mAmbiguityPrefix + capture_symbol + mpDestination->GetFile() + mpDestination->GetRank() + promotion_suffix + mSuffix);
+       return (piece_code + ambiguityPrefix + capture_symbol + mpDestination->GetFile() + mpDestination->GetRank() + promotion_suffix + suffix);
     }
 }

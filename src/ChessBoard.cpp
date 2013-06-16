@@ -20,7 +20,7 @@ slach::ChessBoard::ChessBoard()
 
     mpFenHandler = new FenHandler();
     mpLegalMoveChecker = new LegalMoveChecker();
-
+    mpGame = new Game();
 }
 
 slach::ChessBoard::~ChessBoard()
@@ -31,6 +31,7 @@ slach::ChessBoard::~ChessBoard()
     }
     delete mpFenHandler;
     delete mpLegalMoveChecker;
+    delete mpGame;
 }
 
 std::vector<slach::Square* > slach::ChessBoard::GetSquares() const
@@ -38,10 +39,17 @@ std::vector<slach::Square* > slach::ChessBoard::GetSquares() const
     return mSquares;
 }
 
+void slach::ChessBoard::ResetToMoveNumber(unsigned moveNumber, slach::Colour colour)
+{
+    mCurrentFenPosition = mpGame->FetchFromFenList(moveNumber, colour);
+    mpFenHandler->SetPositionFromFen(mCurrentFenPosition, mSquares);
+}
+
 void slach::ChessBoard::SetupInitialChessPosition()
 {
     mCurrentFenPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     mpFenHandler->SetPositionFromFen(mCurrentFenPosition, mSquares);
+    mpGame->AddPosition(mCurrentFenPosition);
 }
 
 void slach::ChessBoard::SetupChessBoard()
@@ -154,6 +162,7 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
 
     //this line will update squares and all other details within the fen handler
     mpFenHandler->SetPositionFromFen(mCurrentFenPosition, mSquares);
+    mpGame->AddPosition(mCurrentFenPosition);
 }
 
 void  slach::ChessBoard::MoveThePieces(const Move& rMove)

@@ -658,6 +658,15 @@ public:
 
         std::string after_c2c3 =  "rnbqk1nr/pppp1ppp/8/4P3/1b6/2P5/PP2PPPP/RNBQKBNR b KQkq - 0 3";
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_c2c3);
+
+        ////// Trying to reste to move 2 (white to move).
+        my_cb.ResetToMoveNumber(2u, slach::WHITE);
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_e7_e5);
+        TS_ASSERT_EQUALS(squares[52]->GetPieceOnThisSquare(), slach::NO_PIECE);
+        TS_ASSERT_EQUALS(squares[36]->GetPieceOnThisSquare(), slach::BLACK_PAWN);
+        //bishop b4 not yet played...
+        TS_ASSERT_EQUALS(squares[61]->GetPieceOnThisSquare(), slach::BLACK_BISHOP);//58
+        TS_ASSERT_EQUALS(squares[25]->GetPieceOnThisSquare(), slach::NO_PIECE);//b4
     }
 
     void testSettingFenAndCastling()

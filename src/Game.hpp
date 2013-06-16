@@ -27,6 +27,11 @@ private:
      */
     std::vector<std::string> mMoveListAlgFormat;
 
+    /**
+     * Stores the list of positions in this game
+     */
+    std::vector<std::string> mListOfFenPositions;
+
 public:
     /**
      * Constructor
@@ -62,6 +67,13 @@ public:
      * @param suffix will go after all, can be used, for example for the check sign (+) or the mate (++).
      */
     void AddMove(Move* move, std::string ambiguityPrefix = "", std::string suffix = "");
+
+    void AddPosition(std::string fenPosition);
+
+    /**
+     *
+     */
+    std::string FetchFromFenList(unsigned moveNumber, Colour colour);
 };
 
 }//namespace slach

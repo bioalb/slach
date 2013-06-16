@@ -63,6 +63,9 @@ private:
     /**A pointer to an EngineInterface object. Initialised in constructor*/
     LegalMoveChecker* mpLegalMoveChecker;
 
+    /**A pointer to the game object being played on this board*/
+    Game* mpGame;
+
     slach::PieceType mWhitePromotionPiece;
     slach::PieceType mBlackPromotionPiece;
 
@@ -76,6 +79,12 @@ private:
      */
     void ProcessSpecialMove(const Move& rMove, std::vector<CastlingRights>& rCastlingRights);
 
+    /**
+     * Helper method that actually moves the pieces according to rMove.
+     * No check is performed. Special Moves are taken care of by another method (ProcessSpecialMove)
+     *
+     * @param rMove the move to be performed
+     */
     void MoveThePieces(const Move& rMove);
 
 public:
@@ -147,7 +156,22 @@ public:
      */
     std::string GetCurrentFenPosition() const;
 
+    /**
+     * Allows ot set a promotion piece different from the queen.
+     * It throws an exception if you set a pawn
+     *
+     * @param piece the promotion piece. Colour will be assigned automatically
+     */
     void SetPromotionPiece(slach::PieceType piece);
+
+    /**
+     * Resets the chessboard to the move number moveNumber
+     *
+     * @param moveNumber the move number we want to go back to
+     * @param colour the colour to move
+     */
+    void ResetToMoveNumber(unsigned moveNumber, slach::Colour colour);
+
 };
 
 }//namespace slach
