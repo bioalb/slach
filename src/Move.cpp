@@ -2,9 +2,10 @@
 
 slach::Move::Move(Square* pOrigin, Square* pDestination)
     : mpOrigin(pOrigin),
-      mpDestination(pDestination)
+      mpDestination(pDestination),
+      mAmbiguityPrefix(""),
+      mSuffix("")
 {
-
 }
 
 slach::Move::~Move()
@@ -162,5 +163,66 @@ bool slach::Move::IsQueenSideBlackRookMoving() const
     else
     {
         return false;
+    }
+}
+
+std::string slach::Move::GetMoveInAlgebraicFormat()
+{
+    if (IsBlackCastlingKingSide() || IsWhiteCastlingKingSide())
+    {
+        return "O-O";
+    }
+    else if (IsBlackCastlingQueenSide() || IsWhiteCastlingQueenSide())
+    {
+        return "O-O-O";
+    }
+    else//normal move
+    {
+        slach::PieceType origin_piece = mpOrigin->GetPieceOnThisSquare();
+        std::string piece_code = "";
+
+        if (IsBishop(origin_piece))
+        {
+            piece_code="B";
+        }
+        else if (IsQueen(origin_piece))
+        {
+            piece_code = "Q";
+        }
+        else if (IsKing(origin_piece))
+        {
+            piece_code = "K";
+        }
+        else if(IsKnight(origin_piece))
+        {
+            piece_code = "N";
+        }
+        else if(IsRook(origin_piece))
+        {
+            piece_code = "R";
+        }
+        else if (IsPawn(origin_piece))
+        {
+            piece_code = "";
+        }
+
+       //work out the presence of the capture symbol
+       std::string capture_symbol = "";
+       if (mpDestination->GetPieceOnThisSquare()!=NO_PIECE)
+       {
+           capture_symbol = "x";
+           //if a pawn is capturing, the origin file must be included
+           if ( (origin_piece == BLACK_PAWN) || (origin_piece == WHITE_PAWN) )
+           {
+               piece_code = mpOrigin->GetFile();
+           }
+       }
+
+       std::string promotion_suffix = "";
+       if (IsBlackPromoting() || IsWhitePromoting())
+       {
+           promotion_suffix = "=Q";
+       }
+       return (piece_code + mAmbiguityPrefix + capture_symbol + mpDestination->GetFile() + mpDestination->GetRank() + promotion_suffix + mSuffix);
     }
 }

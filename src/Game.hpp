@@ -7,9 +7,6 @@
 #include "Move.hpp"
 #include "Square.hpp"
 
-
-class TestGame;//forward declaration, for testing and accessing protected methods
-
 namespace slach
 {
 
@@ -18,7 +15,6 @@ namespace slach
  */
 class Game
 {
-    friend class ::TestGame; //for testing
 private:
 
     /**
@@ -30,21 +26,6 @@ private:
      * Stores the list of in algebraic format (for easy pgn output)
      */
     std::vector<std::string> mMoveListAlgFormat;
-
-    /**
-     * Stores the fact that a move is a special move, initialised to ORDINARY_MOVE in conmstructor
-     */
-    SpecialMoveType mSpecialMove;
-
-protected:
-
-    /**
-     * Helper method that figures out the type of special move we are dealing with.
-     *  It will assign the proper value to mSpecialMove
-     *
-     * @param rMove the move we wish to analyze
-     */
-    void DetermineSpecialMove(Move* pMove);
 
 public:
     /**
@@ -81,9 +62,6 @@ public:
      * @param suffix will go after all, can be used, for example for the check sign (+) or the mate (++).
      */
     void AddMove(Move* move, std::string ambiguityPrefix = "", std::string suffix = "");
-
-    slach::SpecialMoveType GetSpecialMoveType() const;
-
 };
 
 }//namespace slach

@@ -24,6 +24,9 @@ private :
     /**Cache for the pointer too the destination square*/
     Square* mpDestination;
 
+    std::string mAmbiguityPrefix;
+    std::string mSuffix;
+
 public :
 
     /**
@@ -116,6 +119,11 @@ public :
      * intends to move the rook on a8
      */
     bool IsQueenSideBlackRookMoving() const;
+
+    /**
+     * Returns the algebraic format of this move
+     */
+    std::string GetMoveInAlgebraicFormat();
 
 
 };
