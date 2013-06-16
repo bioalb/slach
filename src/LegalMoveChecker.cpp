@@ -264,27 +264,27 @@ std::vector<unsigned> slach::LegalMoveChecker::GetAttackers(Square* attacked, co
 bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& rSquares,
             const Move& rMove, Colour turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex)
 {
-    PieceType origin_piece = rMove.first->GetPieceOnThisSquare();
+    PieceType origin_piece = rMove.GetOrigin()->GetPieceOnThisSquare();
     //NOT YOUR TURN!
     if (IsPieceSameAsTurn(origin_piece, turn) == false)
     {
         return false;
     }
 
-    std::vector<unsigned> pseudo_destinations = GetPseudoLegalMovesSquaresFromOrigin(rMove.first, rSquares, castlingRights,enpassantIindex);
+    std::vector<unsigned> pseudo_destinations = GetPseudoLegalMovesSquaresFromOrigin(rMove.GetOrigin(), rSquares, castlingRights,enpassantIindex);
     std::sort (pseudo_destinations.begin(), pseudo_destinations.end());
-    if (std::binary_search (pseudo_destinations.begin(), pseudo_destinations.end(), rMove.second->GetIndexFromA1()) == true)
+    if (std::binary_search (pseudo_destinations.begin(), pseudo_destinations.end(), rMove.GetDestination()->GetIndexFromA1()) == true)
     {
     	// sync tempSquares board with what we want to check
     	for (unsigned  i = 0; i < rSquares.size(); ++i)
     	{
     		mTempSquares[i]->SetPieceOnThisSquare( rSquares[i]->GetPieceOnThisSquare() );
     	}
-    	unsigned origin_index = rMove.first->GetIndexFromA1();
-    	unsigned dest_index = rMove.second->GetIndexFromA1();
+    	unsigned origin_index = rMove.GetOrigin()->GetIndexFromA1();
+    	unsigned dest_index = rMove.GetDestination()->GetIndexFromA1();
     	//make the move on temp squares
     	mTempSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
-    	mTempSquares[dest_index]->SetPieceOnThisSquare(rMove.first->GetPieceOnThisSquare());
+    	mTempSquares[dest_index]->SetPieceOnThisSquare(rMove.GetOrigin()->GetPieceOnThisSquare());
 
 
     	//look for the king

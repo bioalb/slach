@@ -26,13 +26,9 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
         std::string all_castle_allowed = "r3k2r/pppbqppp/2np1n2/2b1p3/2B1P3/2NP1N2/PPPBQPPP/R3K2R w KQkq - 4 8";
         my_cb.SetFenPosition(all_castle_allowed);
 
-        slach::Move white_castle_queenside;
-        white_castle_queenside.first = squares[4];//e1
-        white_castle_queenside.second = squares[2];//c1
+        slach::Move white_castle_queenside (squares[4],squares[2]);//e1c1
 
-        slach::Move white_castle_kingside;
-        white_castle_kingside.first = squares[4];//e1
-        white_castle_kingside.second = squares[6];//g1
+        slach::Move white_castle_kingside( squares[4],squares[6]);//e1-g1
 
         TS_ASSERT_EQUALS(my_cb.IsLegalMove(white_castle_queenside), true);
         TS_ASSERT_EQUALS(my_cb.IsLegalMove(white_castle_kingside), true);
@@ -52,13 +48,9 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
 
         TS_ASSERT_EQUALS (my_cb.GetCurrentFenPosition(), "r3k2r/pppbqppp/2np1n2/2b1p3/2B1P3/2NP1N2/PPPBQPPP/2KR3R b kq - 5 8");
 
-        slach::Move black_castle_queenside;
-        black_castle_queenside.first = squares[60];//e8
-        black_castle_queenside.second = squares[58];//c8
+        slach::Move black_castle_queenside( squares[60], squares[58]);//e8-c8
 
-        slach::Move black_castle_kingside;
-        black_castle_kingside.first = squares[60];//e8
-        black_castle_kingside.second = squares[62];//g8
+        slach::Move black_castle_kingside( squares[60],squares[62]);//e8-g8
 
         TS_ASSERT_EQUALS(my_cb.IsLegalMove(black_castle_queenside), true);
         TS_ASSERT_EQUALS(my_cb.IsLegalMove(black_castle_kingside), true);
@@ -90,13 +82,9 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
         std::string all_castle_allowed = "r3k2r/pppbqppp/2np1n2/2b1p3/2B1P3/2NP1N2/PPPBQPPP/R3K2R w KQkq - 4 8";
         my_cb.SetFenPosition(all_castle_allowed);
 
-        slach::Move white_castle_queenside;
-        white_castle_queenside.first = squares[4];//e1
-        white_castle_queenside.second = squares[2];//c1
+        slach::Move white_castle_queenside(squares[4],squares[2]);//e1-c1
 
-        slach::Move white_castle_kingside;
-        white_castle_kingside.first = squares[4];//e1
-        white_castle_kingside.second = squares[6];//g1
+        slach::Move white_castle_kingside(squares[4], squares[6]);//e1-g1
 
         TS_ASSERT_EQUALS(my_cb.IsLegalMove(white_castle_queenside), true);
         TS_ASSERT_EQUALS(my_cb.IsLegalMove(white_castle_kingside), true);
@@ -116,13 +104,9 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
 
         TS_ASSERT_EQUALS (my_cb.GetCurrentFenPosition(), "r3k2r/pppbqppp/2np1n2/2b1p3/2B1P3/2NP1N2/PPPBQPPP/R4RK1 b kq - 5 8");
 
-        slach::Move black_castle_queenside;
-        black_castle_queenside.first = squares[60];//e8
-        black_castle_queenside.second = squares[58];//c8
+        slach::Move black_castle_queenside(squares[60], squares[58]);//e8c8
 
-        slach::Move black_castle_kingside;
-        black_castle_kingside.first = squares[60];//e8
-        black_castle_kingside.second = squares[62];//g8
+        slach::Move black_castle_kingside(squares[60], squares[62]);//e8-g8
 
         TS_ASSERT_EQUALS(my_cb.IsLegalMove(black_castle_queenside), true);
         TS_ASSERT_EQUALS(my_cb.IsLegalMove(black_castle_kingside), true);
@@ -155,21 +139,10 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(squares.size(), 64u);
 
         //some useful moves first
-        slach::Move white_castle_kingside;
-        white_castle_kingside.first = squares[4];//e1
-        white_castle_kingside.second = squares[6];//g1
-
-        slach::Move white_castle_queenside;
-        white_castle_queenside.first = squares[4];//e1
-        white_castle_queenside.second = squares[2];//c1
-
-        slach::Move black_castle_kingside;
-        black_castle_kingside.first = squares[60];//e8
-        black_castle_kingside.second = squares[62];//g1
-
-        slach::Move black_castle_queenside;
-        black_castle_queenside.first = squares[60];//e8
-        black_castle_queenside.second = squares[58];//c8
+        slach::Move white_castle_kingside(squares[4],squares[6]);//e1-g1
+        slach::Move white_castle_queenside(squares[4], squares[2]);//e1-c1
+        slach::Move black_castle_kingside(squares[60], squares[62]);//e8-g1
+        slach::Move black_castle_queenside(squares[60], squares[58]);//e8-c8
 
         //this position is stored in test/data/test_position_4.png for reference
         std::string all_castle_allowed = "r3k2r/pppq1ppp/2np1n2/2b1p1B1/2B1P1b1/2NP1N2/PPPQ1PPP/R3K2R w KQkq - 6 8";
@@ -180,9 +153,7 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(false, my_cb.IsLegalMove(black_castle_kingside));//could, but not his turn
         TS_ASSERT_EQUALS(false, my_cb.IsLegalMove(black_castle_queenside));//could, but not his turn
 
-        slach::Move q_rook_move_white;//loss of castling rights queenside
-        q_rook_move_white.first = squares[0];//a1
-        q_rook_move_white.second = squares[1];//b1
+        slach::Move q_rook_move_white(squares[0],squares[1] );//a1-b1oss of castling rights queenside
 
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(q_rook_move_white));
 		my_cb.MakeThisMove(q_rook_move_white);
@@ -196,9 +167,7 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(black_castle_queenside));
 
         //Black's turn, moves a8-b8
-        slach::Move q_rook_move_black;//loss of castling rights queenside
-        q_rook_move_black.first = squares[56];//a8
-        q_rook_move_black.second = squares[57];//b8
+        slach::Move q_rook_move_black(squares[56],squares[57] );//a8-b8 loss of castling rights queenside
 
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(q_rook_move_black));
 		my_cb.MakeThisMove(q_rook_move_black);
@@ -212,9 +181,7 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(false, my_cb.IsLegalMove(black_castle_queenside));//not his turn
 
         //white's turn, moves rook back to a1
-        slach::Move rook_back_to_a1;
-        rook_back_to_a1.first = squares[1];//b1
-        rook_back_to_a1.second = squares[0];//a1
+        slach::Move rook_back_to_a1(squares[1], squares[0]);//b1-a1
 
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(rook_back_to_a1));
 		my_cb.MakeThisMove(rook_back_to_a1);
@@ -228,9 +195,7 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(false, my_cb.IsLegalMove(black_castle_queenside));//rook not in place
 
         //black's move rook back to a8
-        slach::Move rook_back_to_a8;
-        rook_back_to_a8.first = squares[57];//b8
-        rook_back_to_a8.second = squares[56];//a8
+        slach::Move rook_back_to_a8(squares[57], squares[56]);//b8-a8
 
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(rook_back_to_a8));
 		my_cb.MakeThisMove(rook_back_to_a8);
@@ -244,9 +209,7 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(false, my_cb.IsLegalMove(black_castle_queenside));//not his turn
 
         //white's move the kingside rook
-        slach::Move k_rook_move_white;//loss of castling rights kingside
-        k_rook_move_white.first = squares[7];//h1
-        k_rook_move_white.second = squares[6];//g1
+        slach::Move k_rook_move_white(squares[7], squares[6]);//h1-g1 loss of castling rights kingside
 
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(k_rook_move_white));
 		my_cb.MakeThisMove(k_rook_move_white);
@@ -260,9 +223,7 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(false, my_cb.IsLegalMove(black_castle_queenside));//rook in place but no rights
 
         //black's move his kingside rook
-        slach::Move k_rook_move_black;//loss of castling rights kingside
-        k_rook_move_black.first = squares[63];//h8
-        k_rook_move_black.second = squares[62];//g8
+        slach::Move k_rook_move_black(squares[63], squares[62]);//h8-g8 loss of castling rights kingside
 
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(k_rook_move_black));
 		my_cb.MakeThisMove(k_rook_move_black);
@@ -276,9 +237,7 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(false, my_cb.IsLegalMove(black_castle_queenside));//not his turn
 
         //white's move the kingside rook BACK to h1
-        slach::Move k_rook_move_white_back_to_h1;
-        k_rook_move_white_back_to_h1.first = squares[6];//g1
-        k_rook_move_white_back_to_h1.second = squares[7];//h1
+        slach::Move k_rook_move_white_back_to_h1( squares[6],squares[7]);//g1-h1
 
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(k_rook_move_white_back_to_h1));
 		my_cb.MakeThisMove(k_rook_move_white_back_to_h1);
@@ -292,9 +251,7 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(false, my_cb.IsLegalMove(black_castle_queenside));//rook in place but no rights
 
         //black's move his kingside rook BACK to h8
-        slach::Move k_rook_move_black_back_to_h8;
-        k_rook_move_black_back_to_h8.first = squares[62];//g8
-        k_rook_move_black_back_to_h8.second = squares[63];//h8
+        slach::Move k_rook_move_black_back_to_h8(squares[62],squares[63]);//g8-h8
 
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(k_rook_move_black_back_to_h8));
 		my_cb.MakeThisMove(k_rook_move_black_back_to_h8);
@@ -308,9 +265,7 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(false, my_cb.IsLegalMove(black_castle_queenside));//not his turn
 
         //some move by white
-        slach::Move a2_a3;
-        a2_a3.first = squares[8];//a2
-        a2_a3.second = squares[16];//a3
+        slach::Move a2_a3(squares[8], squares[16]);//a2-a3
 
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(a2_a3));
 		my_cb.MakeThisMove(a2_a3);
@@ -337,9 +292,7 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
        std::string fen_poistion = "4k3/2P1P1P1/3K3P/p4b2/8/P7/1p6/8 b - - 0 59";
        my_cb.SetFenPosition(fen_poistion);
        //black's turn move is b2-b1 (promotes queen)
-       slach::Move b2_b1;
-       b2_b1.first = squares[9];//b2
-       b2_b1.second = squares[1];//b1
+       slach::Move b2_b1(squares[9],squares[1]);//b2-b1
 
        TS_ASSERT_EQUALS(my_cb.IsLegalMove(b2_b1), true);
        my_cb.MakeThisMove(b2_b1);
@@ -351,9 +304,7 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
        TS_ASSERT_EQUALS(after_black_promotion, my_cb.GetCurrentFenPosition());
 
        //white's turn, also promotes with c7-c8 /// NOTE FOR LATER:g7 g8 here is checkmate
-       slach::Move c7_c8;
-       c7_c8.first = squares[50];//c7
-       c7_c8.second = squares[58];//c8
+       slach::Move c7_c8( squares[50],squares[58]);//c7-c8
 
        TS_ASSERT_EQUALS(my_cb.IsLegalMove(c7_c8), true);
        my_cb.MakeThisMove(c7_c8);
@@ -365,9 +316,7 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
        TS_ASSERT_EQUALS(after_white_promotion, my_cb.GetCurrentFenPosition());
 
        //black's turn, bishop captures queen f5-c8
-       slach::Move f5_c8;
-       f5_c8.first = squares[37];//f5
-       f5_c8.second = squares[58];//c8
+       slach::Move f5_c8(squares[37], squares[58]);//f5-c8
 
        TS_ASSERT_EQUALS(my_cb.IsLegalMove(f5_c8), true);
        my_cb.MakeThisMove(f5_c8);
@@ -379,9 +328,7 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
        TS_ASSERT_EQUALS(after_bishop_capture, my_cb.GetCurrentFenPosition());
 
        //white's turn--> promotes on g8 but get a knight!
-       slach::Move g7_g8;
-       g7_g8.first = squares[54];//g7
-       g7_g8.second = squares[62];//g8
+       slach::Move g7_g8( squares[54],squares[62]);//g7-g8
 
        my_cb.SetPromotionPiece(slach::WHITE_KNIGHT);
        TS_ASSERT_EQUALS(my_cb.IsLegalMove(g7_g8), true);

@@ -327,9 +327,7 @@ public:
         TS_ASSERT_EQUALS(squares[12]->GetPieceOnThisSquare(),slach::WHITE_PAWN);
         TS_ASSERT_EQUALS(squares[20]->GetPieceOnThisSquare(),slach::NO_PIECE);
 
-        slach::Move non_capturing_move;
-        non_capturing_move.first = squares[12];
-        non_capturing_move.second = squares[20];
+        slach::Move non_capturing_move(squares[12], squares[20]);
 
         //make the move e2-e3
         my_cb.MakeThisMove(non_capturing_move);
@@ -347,9 +345,7 @@ public:
 
         //capturing move a2 takes a7 (a fake one, but does not matter here)
 
-        slach::Move capturing_move;
-        capturing_move.first = squares[8];//a2
-        capturing_move.second = squares[48];//a7
+        slach::Move capturing_move( squares[8], squares[48]);//a7
 
         TS_ASSERT_EQUALS(squares[8]->GetPieceOnThisSquare(),slach::WHITE_PAWN);//a2, white pawn
         TS_ASSERT_EQUALS(squares[48]->GetPieceOnThisSquare(),slach::BLACK_PAWN);//a7, black pawn
@@ -578,9 +574,7 @@ public:
 
         std::vector<slach::Square*> squares = my_cb.GetSquares();
         //now make a valid move f1-g1
-        slach::Move f1_g1;
-        f1_g1.first = squares[5];
-        f1_g1.second = squares[6];
+        slach::Move f1_g1(squares[5], squares[6]);
 
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(f1_g1));
         my_cb.MakeThisMove(f1_g1);
@@ -606,9 +600,7 @@ public:
         CheckInitialPosition(squares);
 
         /////Initial position done, move d2-d4 now
-        slach::Move d2_d4;
-        d2_d4.first = squares[11];//d2
-        d2_d4.second = squares[27];//d4
+        slach::Move d2_d4(squares[11], squares[27]);//d2-d4
 
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(d2_d4));
         my_cb.MakeThisMove(d2_d4);
@@ -619,9 +611,7 @@ public:
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_d2_d4);
 
         //////Black now moves e7-e5
-        slach::Move e7_e5;
-        e7_e5.first = squares[52];//e7
-        e7_e5.second = squares[36];//e5
+        slach::Move e7_e5(squares[52],squares[36]);//e7-e5
 
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(e7_e5));
         my_cb.MakeThisMove(e7_e5);
@@ -632,9 +622,7 @@ public:
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_e7_e5);
 
         ///white captures the pawn on e5
-        slach::Move d4_takes_e5;
-        d4_takes_e5.first = squares[27];//d4
-        d4_takes_e5.second = squares[36];//e5
+        slach::Move d4_takes_e5(squares[27], squares[36]);//d4-e5
 
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(d4_takes_e5));
         my_cb.MakeThisMove(d4_takes_e5);
@@ -645,9 +633,7 @@ public:
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_d4_takes_e5);
 
         ///black plays bishop b4 check
-        slach::Move bishop_b4_check;
-        bishop_b4_check.first = squares[61];//f8
-        bishop_b4_check.second = squares[25];//b4
+        slach::Move bishop_b4_check(squares[61], squares[25]);//f8-b4
 
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(bishop_b4_check));
         my_cb.MakeThisMove(bishop_b4_check);
@@ -658,16 +644,12 @@ public:
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_bishop_b4_check);
 
         ///now white tries an illegal move (h2-h4) it's under check and not allowed
-        slach::Move illegal_h2_h4;
-        illegal_h2_h4.first = squares[15];//h2
-        illegal_h2_h4.second = squares[31];//h4
+        slach::Move illegal_h2_h4( squares[15], squares[31]);//h2-h4
 
         TS_ASSERT_EQUALS(false, my_cb.IsLegalMove(illegal_h2_h4));
 
         // a legal move is c2-c3...
-        slach::Move c2_c3;
-        c2_c3.first = squares[10];//c2
-        c2_c3.second = squares[18];//c3
+        slach::Move c2_c3 (squares[10],squares[18]);//c2-c3
 
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(c2_c3));
         my_cb.MakeThisMove(c2_c3);
@@ -693,10 +675,7 @@ public:
         TS_ASSERT_EQUALS(before_castling, my_cb.GetCurrentFenPosition());
 
         // e1-g1 (castling)
-        slach::Move castle_kingside;
-        castle_kingside.first = squares[4];//e1
-        castle_kingside.second = squares[6];//g1
-
+        slach::Move castle_kingside (squares[4],squares[6]);//e1-g1
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(castle_kingside));
         my_cb.MakeThisMove(castle_kingside);
 

@@ -28,6 +28,7 @@ ADD_EXECUTABLE(slach   ${srcdir}/Exception.cpp
                        ${srcdir}/Game.cpp
                        ${srcdir}/FenHandler.cpp
                        ${srcdir}/Square.cpp
+                       ${srcdir}/Move.cpp
                        ${srcdir}/EngineInterface.cpp
                        ${srcdir}/LegalMoveChecker.cpp
                        ${srcdir}/ChessBoard.cpp

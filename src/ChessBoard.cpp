@@ -90,8 +90,8 @@ bool slach::ChessBoard::IsLegalMove(const Move& rMove) const
 
 void slach::ChessBoard::MakeThisMove(const Move& rMove)
 {
-    unsigned origin_index = rMove.first->GetIndexFromA1();
-    unsigned destination_index = rMove.second->GetIndexFromA1();
+    unsigned origin_index = rMove.GetOrigin()->GetIndexFromA1();
+    unsigned destination_index = rMove.GetDestination()->GetIndexFromA1();
 
     std::vector<CastlingRights> castling_rights = mpFenHandler->GetLatestCastlingRights();
     unsigned full_move_clock = mpFenHandler->GetFullMoveClock();
@@ -180,8 +180,8 @@ slach::Colour slach::ChessBoard::WhosTurnIsIt() const
 
 slach::SpecialMoveType slach::ChessBoard::ProcessSpecialMove(const Move& rMove, std::vector<CastlingRights>& rCastlingRights)
 {
-    unsigned origin_index = rMove.first->GetIndexFromA1();
-    unsigned destination_index = rMove.second->GetIndexFromA1();
+    unsigned origin_index = rMove.GetOrigin()->GetIndexFromA1();
+    unsigned destination_index = rMove.GetDestination()->GetIndexFromA1();
 
     SpecialMoveType ret =  ORDINARY_MOVE;
 

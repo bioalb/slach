@@ -24,8 +24,8 @@ std::vector<std::string> slach::Game::GetMoveListAlgebraicFormat() const
 
 void slach::Game::DetermineSpecialMove(const Move& rMove)
 {
-    Square* p_origin = rMove.first;
-    Square* p_destination = rMove.second;
+    Square* p_origin = rMove.GetOrigin();
+    Square* p_destination = rMove.GetDestination();
 
     if ( (p_origin->GetFile()=='e' && p_origin->GetRank()=='1') &&
          (p_destination->GetFile()=='g' && p_destination->GetRank()=='1'))
@@ -52,8 +52,8 @@ void slach::Game::DetermineSpecialMove(const Move& rMove)
 void slach::Game::AddMove(const Move& move, std::string ambiguityPrefix, std::string suffix)
 {
 
-    Square* p_origin = move.first;
-    Square* p_destination = move.second;
+    Square* p_origin = move.GetOrigin();
+    Square* p_destination = move.GetDestination();
 
     slach::PieceType origin_piece = p_origin->GetPieceOnThisSquare();
     bool empty_origin_square = false;

@@ -31,16 +31,14 @@ public:
         sq2.SetRank('4');
         sq2.SetPieceOnThisSquare(slach::NO_PIECE);
 
-        slach::Move bishop_e4_move;
-        bishop_e4_move.first = &sq1;
-        bishop_e4_move.second = &sq2;
+        slach::Move bishop_e4_move(&sq1, &sq2);
 
         gm.AddMove(bishop_e4_move);
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 1u);
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].first->GetFile(),'a');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].first->GetRank(),'1');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].second->GetFile(),'e');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].second->GetRank(),'4');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetOrigin()->GetFile(),'a');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetOrigin()->GetRank(),'1');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetDestination()->GetFile(),'e');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetDestination()->GetRank(),'4');
 
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 1u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat()[0], "Be4");
@@ -62,16 +60,14 @@ public:
         sq2.SetRank('4');
         sq2.SetPieceOnThisSquare(slach::NO_PIECE);
 
-        slach::Move a4_move;
-        a4_move.first = &sq1;
-        a4_move.second = &sq2;
+        slach::Move a4_move(&sq1, &sq2);
 
         gm.AddMove(a4_move);
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 1u);
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].first->GetFile(),'a');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].first->GetRank(),'2');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].second->GetFile(),'a');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].second->GetRank(),'4');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetOrigin()->GetFile(),'a');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetOrigin()->GetRank(),'2');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetDestination()->GetFile(),'a');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetDestination()->GetRank(),'4');
 
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 1u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat()[0], "a4");
@@ -93,16 +89,14 @@ public:
         sq2.SetRank('4');
         sq2.SetPieceOnThisSquare(slach::WHITE_BISHOP);
 
-        slach::Move queen_takes_bishop;
-        queen_takes_bishop.first = &sq1;
-        queen_takes_bishop.second = &sq2;
+        slach::Move queen_takes_bishop(&sq1, &sq2);
 
         gm.AddMove(queen_takes_bishop);
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 1u);
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].first->GetFile(),'a');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].first->GetRank(),'2');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].second->GetFile(),'a');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].second->GetRank(),'4');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetOrigin()->GetFile(),'a');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetOrigin()->GetRank(),'2');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetDestination()->GetFile(),'a');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetDestination()->GetRank(),'4');
 
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 1u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat()[0], "Qxa4");
@@ -125,16 +119,14 @@ public:
         sq2.SetRank('3');
         sq2.SetPieceOnThisSquare(slach::WHITE_BISHOP);
 
-        slach::Move pawn_takes_bishop;
-        pawn_takes_bishop.first = &sq1;
-        pawn_takes_bishop.second = &sq2;
+        slach::Move pawn_takes_bishop(&sq1,&sq2);
 
         gm.AddMove(pawn_takes_bishop);
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 1u);
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].first->GetFile(),'a');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].first->GetRank(),'2');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].second->GetFile(),'b');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].second->GetRank(),'3');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetOrigin()->GetFile(),'a');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetOrigin()->GetRank(),'2');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetDestination()->GetFile(),'b');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetDestination()->GetRank(),'3');
 
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 1u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat()[0], "axb3");
@@ -156,9 +148,7 @@ public:
         sq2.SetRank('1');
         sq2.SetPieceOnThisSquare(slach::NO_PIECE);
 
-        slach::Move castle_white;
-        castle_white.first = &sq1;
-        castle_white.second = &sq2;
+        slach::Move castle_white(&sq1,&sq2);
 
         gm.DetermineSpecialMove(castle_white);
         slach::SpecialMoveType mt = gm.GetSpecialMoveType();
@@ -166,10 +156,10 @@ public:
 
         gm.AddMove(castle_white);
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 1u);
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].first->GetFile(),'e');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].first->GetRank(),'1');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].second->GetFile(),'g');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].second->GetRank(),'1');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetOrigin()->GetFile(),'e');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetOrigin()->GetRank(),'1');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetDestination()->GetFile(),'g');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetDestination()->GetRank(),'1');
 
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 1u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat()[0], "O-O");
@@ -184,9 +174,7 @@ public:
         sq4.SetRank('8');
         sq4.SetPieceOnThisSquare(slach::NO_PIECE);
 
-        slach::Move castle_black;
-        castle_black.first = &sq3;
-        castle_black.second = &sq4;
+        slach::Move castle_black(&sq3, &sq4);
 
         gm.DetermineSpecialMove(castle_black);
         slach::SpecialMoveType mt2 = gm.GetSpecialMoveType();
@@ -194,10 +182,10 @@ public:
 
         gm.AddMove(castle_black);
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 2u);
-        TS_ASSERT_EQUALS(gm.GetMoveList()[1].first->GetFile(),'e');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[1].first->GetRank(),'8');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[1].second->GetFile(),'g');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[1].second->GetRank(),'8');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[1].GetOrigin()->GetFile(),'e');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[1].GetOrigin()->GetRank(),'8');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[1].GetDestination()->GetFile(),'g');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[1].GetDestination()->GetRank(),'8');
 
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 2u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat()[1], "O-O");
@@ -206,10 +194,10 @@ public:
         // this is because the helper method is called by AddMove internally as well.
         gm.AddMove(castle_white);
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 3u);
-        TS_ASSERT_EQUALS(gm.GetMoveList()[2].first->GetFile(),'e');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[2].first->GetRank(),'1');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[2].second->GetFile(),'g');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[2].second->GetRank(),'1');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[2].GetOrigin()->GetFile(),'e');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[2].GetOrigin()->GetRank(),'1');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[2].GetDestination()->GetFile(),'g');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[2].GetDestination()->GetRank(),'1');
 
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 3u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat()[2], "O-O");
@@ -232,9 +220,7 @@ public:
         sq2.SetRank('1');
         sq2.SetPieceOnThisSquare(slach::NO_PIECE);
 
-        slach::Move castle_white;
-        castle_white.first = &sq1;
-        castle_white.second = &sq2;
+        slach::Move castle_white(&sq1, &sq2);
 
         gm.DetermineSpecialMove(castle_white);
         slach::SpecialMoveType mt = gm.GetSpecialMoveType();
@@ -242,10 +228,10 @@ public:
 
         gm.AddMove(castle_white);
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 1u);
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].first->GetFile(),'e');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].first->GetRank(),'1');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].second->GetFile(),'c');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[0].second->GetRank(),'1');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetOrigin()->GetFile(),'e');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetOrigin()->GetRank(),'1');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetDestination()->GetFile(),'c');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[0].GetDestination()->GetRank(),'1');
 
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 1u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat()[0], "O-O-O");
@@ -260,9 +246,7 @@ public:
         sq4.SetRank('8');
         sq4.SetPieceOnThisSquare(slach::NO_PIECE);
 
-        slach::Move castle_black;
-        castle_black.first = &sq3;
-        castle_black.second = &sq4;
+        slach::Move castle_black(&sq3,&sq4);
 
         gm.DetermineSpecialMove(castle_black);
         slach::SpecialMoveType mt2 = gm.GetSpecialMoveType();
@@ -270,10 +254,10 @@ public:
 
         gm.AddMove(castle_black);
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 2u);
-        TS_ASSERT_EQUALS(gm.GetMoveList()[1].first->GetFile(),'e');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[1].first->GetRank(),'8');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[1].second->GetFile(),'c');
-        TS_ASSERT_EQUALS(gm.GetMoveList()[1].second->GetRank(),'8');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[1].GetOrigin()->GetFile(),'e');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[1].GetOrigin()->GetRank(),'8');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[1].GetDestination()->GetFile(),'c');
+        TS_ASSERT_EQUALS(gm.GetMoveList()[1].GetDestination()->GetRank(),'8');
 
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat().size(), 2u);
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat()[1], "O-O-O");

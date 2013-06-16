@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "SlachTypes.hpp"
+#include "Move.hpp"
 #include "Square.hpp"
 
 
@@ -11,12 +12,6 @@ class TestGame;//forward declaration, for testing and accessing protected method
 
 namespace slach
 {
-
-/**
- * Typedef for a move as a pair of square objects
- * the first is the origin square, the second is the destination square
- */
-typedef std::pair<Square*,Square*> Move;
 
 /**
  * The game class

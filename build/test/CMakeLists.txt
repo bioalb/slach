@@ -12,6 +12,7 @@ SET (source_files ${srcdir}/Exception.cpp
                   ${srcdir}/ChessBoard.cpp
                   ${srcdir}/ChessBoardWithBorders.cpp
                   ${srcdir}/Square.cpp
+                  ${srcdir}/Move.cpp
                   ${srcdir}/EngineInterface.cpp
                   ${srcdir}/LegalMoveChecker.cpp)
                  
@@ -21,6 +22,7 @@ SET (all_test_files ${testfiledir}/TestChessboardWithBorders.hpp
                     ${testfiledir}/TestChessBoard.hpp
                     ${testfiledir}/TestChessBoardSpecialMoves.hpp
                     ${testfiledir}/TestSquare.hpp
+                    ${testfiledir}/TestMove.hpp
                     ${testfiledir}/TestFenHandler.hpp
                     ${testfiledir}/TestGame.hpp
                     ${testfiledir}/TestEngineInterface.hpp

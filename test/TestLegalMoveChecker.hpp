@@ -590,32 +590,16 @@ public:
         TS_ASSERT_EQUALS(black_that_attacks_c7.size(), 0u);//c7, zero attacker from black
 
         //this would be legal, but it is not black's turn'
-        slach::Move black_move_not_his_turn;
-        black_move_not_his_turn.first = squares[0];//a1
-        black_move_not_his_turn.second = squares[1];//b1
+        slach::Move black_move_not_his_turn(squares[0], squares[1]);//a1-b1
 
         TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, black_move_not_his_turn, turn,castling_rights,enpassant_index ));
 
         //white's turn
-        slach::Move queen_pseudo_illegal_move;
-        queen_pseudo_illegal_move.first = squares[49];//b7
-        queen_pseudo_illegal_move.second = squares[3];//d1, queen can't go here from b7
-
-        slach::Move queen_pseudo_legal_move_leaves_king_on_check;
-        queen_pseudo_legal_move_leaves_king_on_check.first = squares[49];//b7
-        queen_pseudo_legal_move_leaves_king_on_check.second = squares[9];//b2,would be legal, but white king in check
-
-        slach::Move queen_legal_move;
-        queen_legal_move.first = squares[49];//b7
-        queen_legal_move.second = squares[1];//b1
-
-        slach::Move king_legal_move;
-        king_legal_move.first = squares[4];//e1
-        king_legal_move.second = squares[12];//e2
-
-        slach::Move king_illegal_move;//still in check
-        king_illegal_move.first = squares[4];//e1
-        king_illegal_move.second = squares[3];//d1
+        slach::Move queen_pseudo_illegal_move(squares[49],squares[3]);//b7-d1, queen can't go here from b7
+        slach::Move queen_pseudo_legal_move_leaves_king_on_check(squares[49], squares[9]);//b7-b2,would be legal, but white king in check
+        slach::Move queen_legal_move(squares[49],squares[1]);//b7-b1, shielding the check
+        slach::Move king_legal_move(squares[4],squares[12]);//e1-e2 away from check
+        slach::Move king_illegal_move( squares[4], squares[3]);//e1-d1 still in check
 
         TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, queen_pseudo_illegal_move, turn,castling_rights,enpassant_index ));
         TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, queen_pseudo_legal_move_leaves_king_on_check, turn,castling_rights,enpassant_index ));
@@ -670,17 +654,9 @@ public:
 
         slach::LegalMoveChecker generator;
 
-        slach::Move rook_shield_but_it_is_double_check;
-        rook_shield_but_it_is_double_check.first = squares[58];//c8
-        rook_shield_but_it_is_double_check.second = squares[18];//c3
-
-        slach::Move king_illegal_move;//still in check
-        king_illegal_move.first = squares[4];//e1
-        king_illegal_move.second = squares[11];//d2
-
-        slach::Move king_legal_move;//
-        king_legal_move.first = squares[4];//e1
-        king_legal_move.second = squares[13];//f2
+        slach::Move rook_shield_but_it_is_double_check(squares[58], squares[18]);//c8-c3
+        slach::Move king_illegal_move(squares[4], squares[11]);//e1-d2 still in check
+        slach::Move king_legal_move(squares[4], squares[13]);//e1-f2
 
         TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, rook_shield_but_it_is_double_check, turn,castling_rights,enpassant_index ));
         TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, king_illegal_move, turn,castling_rights,enpassant_index ));
@@ -733,14 +709,8 @@ public:
 
         slach::LegalMoveChecker generator;
 
-        slach::Move castling_kingside;
-        castling_kingside.first = squares[4];//e1
-        castling_kingside.second = squares[6];//g1
-
-        slach::Move castling_queenside;
-        castling_queenside.first = squares[4];//e1
-        castling_queenside.second = squares[2];//c1
-
+        slach::Move castling_kingside(squares[4],squares[6]);//e1-g1
+        slach::Move castling_queenside(squares[4],squares[2]);//e1-c1
 
         TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index ));
         TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index ));
@@ -796,13 +766,8 @@ public:
 
 		slach::LegalMoveChecker generator;
 
-		slach::Move castling_kingside;
-		castling_kingside.first = squares[60];//e8
-		castling_kingside.second = squares[62];//g8
-
-		slach::Move castling_queenside;
-		castling_queenside.first = squares[60];//e8
-		castling_queenside.second = squares[58];//c8
+		slach::Move castling_kingside(squares[60],squares[62]);//e8-g8
+		slach::Move castling_queenside(squares[60],squares[58]);//e8-c8
 
 		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index ));
 		TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index ));
@@ -858,13 +823,8 @@ public:
 
         slach::LegalMoveChecker generator;
 
-        slach::Move castling_kingside;
-        castling_kingside.first = squares[4];//e1
-        castling_kingside.second = squares[6];//g1
-
-        slach::Move castling_queenside;
-        castling_queenside.first = squares[4];//e1
-        castling_queenside.second = squares[2];//c1
+        slach::Move castling_kingside (squares[4],squares[6]);//e1-g1
+        slach::Move castling_queenside(squares[4],squares[2]);//e1-c1
 
         TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index ));
         TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index ));
@@ -920,13 +880,8 @@ public:
 
 		slach::LegalMoveChecker generator;
 
-		slach::Move castling_kingside;
-		castling_kingside.first = squares[60];//e8
-		castling_kingside.second = squares[62];//g8
-
-		slach::Move castling_queenside;
-		castling_queenside.first = squares[60];//e8
-		castling_queenside.second = squares[58];//c8
+		slach::Move castling_kingside(squares[60], squares[62]);//e8-g8
+		slach::Move castling_queenside(squares[60],squares[58]);//e8-c8
 
 		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index ));
 		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index ));
