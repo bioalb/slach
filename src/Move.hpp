@@ -26,9 +26,6 @@ private :
 
 public :
 
-    /** Default constructor*/
-    Move() = default;
-
     /**
      * Constructor
      *

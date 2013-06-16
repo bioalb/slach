@@ -12,7 +12,7 @@ slach::Game::~Game()
 
 }
 
-std::vector<slach::Move> slach::Game::GetMoveList() const
+std::vector<slach::Move*> slach::Game::GetMoveList() const
 {
     return mMoveList;
 }
@@ -22,10 +22,10 @@ std::vector<std::string> slach::Game::GetMoveListAlgebraicFormat() const
     return mMoveListAlgFormat;
 }
 
-void slach::Game::DetermineSpecialMove(const Move& rMove)
+void slach::Game::DetermineSpecialMove(Move* pMove)
 {
-    Square* p_origin = rMove.GetOrigin();
-    Square* p_destination = rMove.GetDestination();
+    Square* p_origin = pMove->GetOrigin();
+    Square* p_destination = pMove->GetDestination();
 
     if ( (p_origin->GetFile()=='e' && p_origin->GetRank()=='1') &&
          (p_destination->GetFile()=='g' && p_destination->GetRank()=='1'))
@@ -49,11 +49,11 @@ void slach::Game::DetermineSpecialMove(const Move& rMove)
     }
 }
 
-void slach::Game::AddMove(const Move& move, std::string ambiguityPrefix, std::string suffix)
+void slach::Game::AddMove(Move* move, std::string ambiguityPrefix, std::string suffix)
 {
 
-    Square* p_origin = move.GetOrigin();
-    Square* p_destination = move.GetDestination();
+    Square* p_origin = move->GetOrigin();
+    Square* p_destination = move->GetDestination();
 
     slach::PieceType origin_piece = p_origin->GetPieceOnThisSquare();
     bool empty_origin_square = false;
