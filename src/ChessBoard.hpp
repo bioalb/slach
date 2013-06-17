@@ -172,7 +172,7 @@ public:
      *          than the latest position is set (i.e., no effect).
      * @param colour the colour to move
      */
-    void ResetToMoveNumber(unsigned moveNumber, slach::Colour colour);
+    void ResetToMoveNumber(int moveNumber, slach::Colour colour);
 
 };
 

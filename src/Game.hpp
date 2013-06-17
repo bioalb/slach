@@ -71,13 +71,20 @@ public:
     void AddPosition(std::string fenPosition);
 
     /**
-     * Returns a fen string form the list of strings.
+     * Returns a fen string form the list of strings. It does not throw any exceptions
+     *
+     * IF the fen list is empty, it returns an empty string, whatever you pass in.
+     * If the fen list has one element only, it returns that one, no matter what you pass in.
+     * If you pass in a move number that hasn't been played yet, it returns the last fen of the colour to move that is in the list.
+     *
+     * In all other cases, it returns the fen string correspnding to the move number you pass in and
+     * the colour to move.
      *
      * @param moveNumber the move number corresponding to the position. It returns the last position if moveNumber
      *                   is greater than the size of the move list
-     * @param colour the colour to move
+     * @param toMove the colour to move
      */
-    std::string FetchFromFenList(unsigned moveNumber, Colour colour);
+    std::string FetchFromFenList(int moveNumber, Colour toMove);
 };
 
 }//namespace slach

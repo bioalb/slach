@@ -33,37 +33,68 @@ void slach::Game::AddMove(Move* move, std::string ambiguityPrefix, std::string s
     mMoveListAlgFormat.push_back(move->GetMoveInAlgebraicFormat(ambiguityPrefix, suffix));
 }
 
-std::string slach::Game::FetchFromFenList(unsigned moveNumber, Colour colour)
+std::string slach::Game::FetchFromFenList(int moveNumber, Colour toMove)
 {
-    if (moveNumber==0)//weird case, it should never happen, moveNumber should start from one
-    {
-        if (colour == WHITE)
-        {
-            return mListOfFenPositions[0];
-        }
-        else
-        {
-            return mListOfFenPositions[1];
-        }
-    }
+	if (mListOfFenPositions.size() == 0u)
+	{
+		return "";//empty string
+	}
+	else if (mListOfFenPositions.size() == 1u)
+	{
+		return mListOfFenPositions[0];
+	}
+	else
+	{
+		if (moveNumber<=0)//weird case, it should never happen, moveNumber should start from one
+		{
+			if (toMove == WHITE)
+			{
+				return mListOfFenPositions[0];
+			}
+			else
+			{
+				return mListOfFenPositions[1];
+			}
+		}
 
-    unsigned index = moveNumber*2;
+		unsigned index = moveNumber*2;
 
-    if (colour == WHITE)
-    {
-        if ((index - 2)>=mListOfFenPositions.size())
-        {
-            return mListOfFenPositions.back();
-        }
-        return mListOfFenPositions[index - 2];
-    }
-    else
-    {
-        if ((index - 1)>=mListOfFenPositions.size())
-        {
-            return mListOfFenPositions.back();
-        }
-        return mListOfFenPositions[index-1];
-    }
+		if (toMove == WHITE)
+		{
+			if ((index - 2)>=mListOfFenPositions.size())
+			{
+				if (mListOfFenPositions.size()%2==0)
+				{
+					return mListOfFenPositions[mListOfFenPositions.size()-2];
+				}
+				else
+				{
+					return mListOfFenPositions.back();
+				}
+			}
+			else
+			{
+				return mListOfFenPositions[index - 2];
+			}
+		}
+		else
+		{
+			if ((index - 1)>=mListOfFenPositions.size())
+			{
+			    if (mListOfFenPositions.size()%2==0)
+			    {
+				    return mListOfFenPositions.back();
+			    }
+			    else
+			    {
+				    return mListOfFenPositions[mListOfFenPositions.size()-2];
+			    }
+			}
+			else
+			{
+				return mListOfFenPositions[index-1];
+			}
+		}
+	}
 }
 

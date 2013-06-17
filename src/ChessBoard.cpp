@@ -39,7 +39,7 @@ std::vector<slach::Square* > slach::ChessBoard::GetSquares() const
     return mSquares;
 }
 
-void slach::ChessBoard::ResetToMoveNumber(unsigned moveNumber, slach::Colour colour)
+void slach::ChessBoard::ResetToMoveNumber(int moveNumber, slach::Colour colour)
 {
     mCurrentFenPosition = mpGame->FetchFromFenList(moveNumber, colour);
     mpFenHandler->SetPositionFromFen(mCurrentFenPosition, mSquares);

@@ -272,11 +272,33 @@ public:
         std::string after_c2c3 =  "rnbqk1nr/pppp1ppp/8/4P3/1b6/2P5/PP2PPPP/RNBQKBNR b KQkq - 0 3";
 
         slach::Game my_game;
+
+        //fen list is of zero length. Check that we return an empty string
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(4u,slach::WHITE), "");
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(4u,slach::BLACK), "");
+
         my_game.AddPosition(initial);
+
+        //fen list is of length 1. Check that we return the only string, no matter what
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(1u,slach::WHITE), initial);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(1u,slach::BLACK), initial);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(2u,slach::WHITE), initial);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(2u,slach::BLACK), initial);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(22u,slach::WHITE), initial);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(22u,slach::BLACK), initial);
+
         my_game.AddPosition(after_d2_d4);
         my_game.AddPosition(after_e7_e5);
         my_game.AddPosition(after_d4_takes_e5);
         my_game.AddPosition(after_bishop_b4_check);
+
+        //over the size last was white to move
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(4u,slach::WHITE), after_bishop_b4_check);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(4u,slach::BLACK), after_d4_takes_e5);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(24u,slach::WHITE), after_bishop_b4_check);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(24u,slach::BLACK), after_d4_takes_e5);
+
+
         my_game.AddPosition(after_c2c3);
 
         //cover the weird case when you pas sin 0...behaves like a one.
@@ -289,9 +311,11 @@ public:
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(3u,slach::WHITE), after_bishop_b4_check);
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(3u,slach::BLACK), after_c2c3);
 
-        //over the size
-        TS_ASSERT_EQUALS(my_game.FetchFromFenList(4u,slach::WHITE), after_c2c3);
+        //over the size last was black to move
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(4u,slach::WHITE), after_bishop_b4_check);
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(4u,slach::BLACK), after_c2c3);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(24u,slach::WHITE), after_bishop_b4_check);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(24u,slach::BLACK), after_c2c3);
     }
 };
 #endif
