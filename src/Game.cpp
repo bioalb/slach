@@ -12,7 +12,7 @@ slach::Game::~Game()
 
 }
 
-std::vector<slach::Move*> slach::Game::GetMoveList() const
+std::vector<slach::Move> slach::Game::GetMoveList() const
 {
     return mMoveList;
 }
@@ -27,10 +27,10 @@ void slach::Game::AddPosition(std::string fenPosition)
     mListOfFenPositions.push_back(fenPosition);
 }
 
-void slach::Game::AddMove(Move* move, std::string ambiguityPrefix, std::string suffix)
+void slach::Game::AddMove(const Move& rMove, std::string ambiguityPrefix, std::string suffix)
 {
-    mMoveList.push_back(move);
-    mMoveListAlgFormat.push_back(move->GetMoveInAlgebraicFormat(ambiguityPrefix, suffix));
+    mMoveList.push_back(rMove);
+    mMoveListAlgFormat.push_back(rMove.GetMoveInAlgebraicFormat(ambiguityPrefix, suffix));
 }
 
 std::string slach::Game::FetchFromFenList(int moveNumber, Colour toMove)

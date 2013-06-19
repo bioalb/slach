@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Move.hpp"
 
 slach::Move::Move(Square* pOrigin, Square* pDestination)
@@ -164,7 +165,7 @@ bool slach::Move::IsQueenSideBlackRookMoving() const
     }
 }
 
-std::string slach::Move::GetMoveInAlgebraicFormat(std::string ambiguityPrefix, std::string suffix)
+std::string slach::Move::GetMoveInAlgebraicFormat(std::string ambiguityPrefix, std::string suffix) const
 {
     if (IsBlackCastlingKingSide() || IsWhiteCastlingKingSide())
     {
@@ -206,7 +207,7 @@ std::string slach::Move::GetMoveInAlgebraicFormat(std::string ambiguityPrefix, s
 
        //work out the presence of the capture symbol
        std::string capture_symbol = "";
-       if (mpDestination->GetPieceOnThisSquare()!=NO_PIECE)
+       if (!(mpDestination->GetPieceOnThisSquare()==NO_PIECE))
        {
            capture_symbol = "x";
            //if a pawn is capturing, the origin file must be included

@@ -20,7 +20,7 @@ private:
     /**
      * Stores the list of moves
      */
-    std::vector<Move*> mMoveList;
+    std::vector<Move> mMoveList;
 
     /**
      * Stores the list of in algebraic format (for easy pgn output)
@@ -46,7 +46,7 @@ public:
     /**
      * Access method for the variable containing the move list
      */
-    std::vector<slach::Move*> GetMoveList() const;
+    std::vector<slach::Move> GetMoveList() const;
 
     /**
      * Access method for the variable containing the move list in algebraic format
@@ -66,7 +66,7 @@ public:
      *                         coordinate (e.g., Rad1, the a rook to d1. Can also be used for the X capture sign)
      * @param suffix will go after all, can be used, for example for the check sign (+) or the mate (++).
      */
-    void AddMove(Move* move, std::string ambiguityPrefix = "", std::string suffix = "");
+    void AddMove(const Move& rMove, std::string ambiguityPrefix = "", std::string suffix = "");
 
     void AddPosition(std::string fenPosition);
 

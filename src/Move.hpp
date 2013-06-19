@@ -26,6 +26,8 @@ private :
 
 public :
 
+    Move() = default;
+
     /**
      * Constructor
      *
@@ -120,7 +122,7 @@ public :
     /**
      * Returns the algebraic format of this move
      */
-    std::string GetMoveInAlgebraicFormat(std::string ambiguityPrefix = "", std::string suffix = "");
+    std::string GetMoveInAlgebraicFormat(std::string ambiguityPrefix = "", std::string suffix = "") const;
 
 
 };
