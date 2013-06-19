@@ -659,7 +659,22 @@ public:
         std::string after_c2c3 =  "rnbqk1nr/pppp1ppp/8/4P3/1b6/2P5/PP2PPPP/RNBQKBNR b KQkq - 0 3";
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_c2c3);
 
-        ////// Trying to reste to move 2 (white to move).
+        slach::Game* p_game =  my_cb.GetGame();
+        TS_ASSERT_EQUALS(p_game->GetMoveList().size(), 5u);
+        TS_ASSERT_EQUALS(p_game->GetMoveListAlgebraicFormat().size(), 5u);
+
+        TS_ASSERT_EQUALS(p_game->GetMoveListAlgebraicFormat()[0], "d4");
+        TS_ASSERT_EQUALS(p_game->GetMoveListAlgebraicFormat()[1], "e5");
+        TS_ASSERT_EQUALS(p_game->GetMoveListAlgebraicFormat()[2], "dxe5");
+        TS_ASSERT_EQUALS(p_game->GetMoveListAlgebraicFormat()[3], "Bb4+");
+        TS_ASSERT_EQUALS(p_game->GetMoveListAlgebraicFormat()[4], "c3");
+
+        TS_ASSERT_EQUALS(p_game->GetMoveList()[0]->GetOrigin()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(p_game->GetMoveList()[0]->GetOrigin()->GetRank(), '2');
+        TS_ASSERT_EQUALS(p_game->GetMoveList()[0]->GetDestination()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(p_game->GetMoveList()[0]->GetDestination()->GetRank(), '4');
+
+        ////// Trying to reset to move 2 (white to move).
         my_cb.ResetToMoveNumber(2u, slach::WHITE);
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_e7_e5);
         TS_ASSERT_EQUALS(squares[52]->GetPieceOnThisSquare(), slach::NO_PIECE);

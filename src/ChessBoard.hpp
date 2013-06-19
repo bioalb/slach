@@ -174,6 +174,8 @@ public:
      */
     void ResetToMoveNumber(int moveNumber, slach::Colour colour);
 
+    Game* GetGame() const;
+
 };
 
 }//namespace slach

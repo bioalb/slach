@@ -96,6 +96,11 @@ bool slach::ChessBoard::IsLegalMove(const Move& rMove) const
                                                      mpFenHandler->GetEnPassantSquareIndex() );
 }
 
+slach::Game* slach::ChessBoard::GetGame() const
+{
+	return mpGame;
+}
+
 void slach::ChessBoard::MakeThisMove(const Move& rMove)
 {
     unsigned origin_index = rMove.GetOrigin()->GetIndexFromA1();
@@ -163,6 +168,7 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
     //this line will update squares and all other details within the fen handler
     mpFenHandler->SetPositionFromFen(mCurrentFenPosition, mSquares);
     mpGame->AddPosition(mCurrentFenPosition);
+    mpGame->AddMove(&rMove);
 }
 
 void  slach::ChessBoard::MoveThePieces(const Move& rMove)
