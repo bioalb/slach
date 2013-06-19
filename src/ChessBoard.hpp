@@ -63,6 +63,8 @@ private:
     /**A pointer to an EngineInterface object. Initialised in constructor*/
     LegalMoveChecker* mpLegalMoveChecker;
 
+    bool  mMoveGivesCheck;
+
     /**A pointer to the game object being played on this board*/
     Game* mpGame;
 
@@ -121,7 +123,7 @@ public:
      */
     std::vector<slach::Square* > GetSquares() const;
 
-    bool IsLegalMove(const Move& rMove) const;
+    bool IsLegalMove(const Move& rMove);
 
     /**
      * Updates the current position (vector mSquares) with the move that is passed in.
@@ -174,6 +176,12 @@ public:
      */
     void ResetToMoveNumber(int moveNumber, slach::Colour colour);
 
+    /**
+     * Access method for the variable storing the info on the
+     * game being played on this board.
+     *
+     * @return a pointer to the game.
+     */
     Game* GetGame() const;
 
 };

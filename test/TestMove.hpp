@@ -39,6 +39,9 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(b1_c3.IsKingSideBlackRookMoving(), false);
         TS_ASSERT_EQUALS(b1_c3.IsQueenSideBlackRookMoving(), false);
         TS_ASSERT_EQUALS(b1_c3.GetMoveInAlgebraicFormat(), "Nc3");
+
+        //cover the default constructor
+        slach::Move def_constr;
     }
 
     void TestCastling()

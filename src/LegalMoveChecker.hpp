@@ -102,10 +102,11 @@ public :
      * @param turn the turn to move : SLACH::WHITE or SLACH::BLACK.
      * @param castlingRights a vector with the castling rights
      * @param enpassantIindex any index of square where there is an en-passant capture possibility.
+     * @param givesCheck (output) this will contain true or false whether the moves gives check or not.
      * @return true if the move is legal, false otherwise.
      */
     bool IsMoveLegalInPosition(const std::vector<Square*>& rSquares,
-            const Move& rMove, Colour turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex);
+            const Move& rMove, Colour turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex, bool& givesCheck);
 
 
 };

@@ -17,7 +17,7 @@ slach::ChessBoard::ChessBoard()
 
     mWhitePromotionPiece = WHITE_QUEEN;
     mBlackPromotionPiece = BLACK_QUEEN;
-
+    mMoveGivesCheck = false;
     mpFenHandler = new FenHandler();
     mpLegalMoveChecker = new LegalMoveChecker();
     mpGame = new Game();
@@ -87,13 +87,14 @@ void slach::ChessBoard::SetupChessBoard()
     }
 }
 
-bool slach::ChessBoard::IsLegalMove(const Move& rMove) const
+bool slach::ChessBoard::IsLegalMove(const Move& rMove)
 {
     return mpLegalMoveChecker->IsMoveLegalInPosition(mSquares,
                                                      rMove,
                                                      mpFenHandler->WhosTurnIsIt(),
                                                      mpFenHandler->GetLatestCastlingRights(),
-                                                     mpFenHandler->GetEnPassantSquareIndex() );
+                                                     mpFenHandler->GetEnPassantSquareIndex(),
+                                                     mMoveGivesCheck);
 }
 
 slach::Game* slach::ChessBoard::GetGame() const
@@ -107,7 +108,14 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
     unsigned destination_index = rMove.GetDestination()->GetIndexFromA1();
 
     //legal move, add it to the game
-    mpGame->AddMove(rMove);
+    if (mMoveGivesCheck == true)
+    {
+        mpGame->AddMove(rMove,"","+");
+    }
+    else
+    {
+        mpGame->AddMove(rMove);
+    }
 
     std::vector<CastlingRights> castling_rights = mpFenHandler->GetLatestCastlingRights();
     unsigned full_move_clock = mpFenHandler->GetFullMoveClock();

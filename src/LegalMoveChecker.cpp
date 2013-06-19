@@ -262,7 +262,7 @@ std::vector<unsigned> slach::LegalMoveChecker::GetAttackers(Square* attacked, co
 }
 
 bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& rSquares,
-            const Move& rMove, Colour turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex)
+            const Move& rMove, Colour turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex, bool& givesCheck)
 {
     PieceType origin_piece = rMove.GetOrigin()->GetPieceOnThisSquare();
     //NOT YOUR TURN!
@@ -289,15 +289,34 @@ bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& 
 
     	//look for the king
     	unsigned king_location = 64;
+    	unsigned enemy_king_location = 64;
     	for (unsigned  i = 0; i < mTempSquares.size(); ++i)
     	{
     		if ( IsKing (mTempSquares[i]->GetPieceOnThisSquare() ) &&
     		     IsPieceSameAsTurn(mTempSquares[i]->GetPieceOnThisSquare(), turn) )
     		{
     			king_location = i;
-    			break;
     		}
+            if ( IsKing (mTempSquares[i]->GetPieceOnThisSquare() ) &&
+                 ! (IsPieceSameAsTurn(mTempSquares[i]->GetPieceOnThisSquare(), turn)) )
+            {
+                enemy_king_location = i;
+            }
     	}
+
+    	if (enemy_king_location == 64)//case of no king on the board, only for testing
+    	{
+    	    givesCheck = false;
+    	}
+    	else if (GetAttackers(mTempSquares[enemy_king_location], mTempSquares, turn).size() > 0)
+    	{
+    	    givesCheck = true;
+    	}
+    	else
+    	{
+    	    givesCheck = false;
+    	}
+
     	if (king_location==64)
     	{
     		return true;//only for testing... case where there is no king on the board
