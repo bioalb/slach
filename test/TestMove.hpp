@@ -390,6 +390,8 @@ class TestMove : public CxxTest::TestSuite
         slach::Move h1_h2(squares[7], squares[15]);
         slach::Move a8_a7(squares[56], squares[48]);
         slach::Move h8_g8(squares[63], squares[62]);
+        slach::Move a8_a1(squares[56], squares[0]);
+        slach::Move a1_a8(squares[0], squares[56]);
 
         TS_ASSERT_EQUALS(a1_a2.IsWhiteCastlingKingSide(), false);
         TS_ASSERT_EQUALS(a1_a2.IsWhiteCastlingQueenSide(), false);
@@ -442,6 +444,32 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(h8_g8.IsKingSideBlackRookMoving(), true);
         TS_ASSERT_EQUALS(h8_g8.IsQueenSideBlackRookMoving(), false);
         TS_ASSERT_EQUALS(h8_g8.GetMoveInAlgebraicFormat(), "Rg8");
+
+        TS_ASSERT_EQUALS(a8_a1.IsWhiteCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(a8_a1.IsWhiteCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(a8_a1.IsBlackCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(a8_a1.IsBlackCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(a8_a1.IsSpecialMove(), true);
+        TS_ASSERT_EQUALS(a8_a1.IsWhitePromoting(), false);
+        TS_ASSERT_EQUALS(a8_a1.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(a8_a1.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(a8_a1.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(a8_a1.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(a8_a1.IsQueenSideBlackRookMoving(), true);
+        TS_ASSERT_EQUALS(a8_a1.GetMoveInAlgebraicFormat(), "Rxa1");
+
+        TS_ASSERT_EQUALS(a1_a8.IsWhiteCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(a1_a8.IsWhiteCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(a1_a8.IsBlackCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(a1_a8.IsBlackCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(a1_a8.IsSpecialMove(), true);
+        TS_ASSERT_EQUALS(a1_a8.IsWhitePromoting(), false);
+        TS_ASSERT_EQUALS(a1_a8.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(a1_a8.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(a1_a8.IsQueenSideWhiteRookMoving(), true);
+        TS_ASSERT_EQUALS(a1_a8.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(a1_a8.IsQueenSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(a1_a8.GetMoveInAlgebraicFormat(), "Rxa8");
     }
 
     void TestPseudoCornerRookMoves()

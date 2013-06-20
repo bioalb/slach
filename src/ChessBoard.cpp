@@ -261,31 +261,25 @@ void slach::ChessBoard::ProcessSpecialMove(const Move& rMove, std::vector<Castli
         DeleteCastlingRights(BLACK_KINGSIDE, rCastlingRights);
         DeleteCastlingRights(BLACK_QUEENSIDE, rCastlingRights);
     }
-    else if (mSquares[origin_index]->GetPieceOnThisSquare() == WHITE_ROOK)
+    else if (rMove.IsKingSideWhiteRookMoving())
     {
-		if (origin_index ==0u)//a1
-		{
-			DeleteCastlingRights(WHITE_QUEENSIDE, rCastlingRights);
-			MoveThePieces(rMove);
-		}
-		if (origin_index ==7u)//h1
-		{
-			DeleteCastlingRights(WHITE_KINGSIDE, rCastlingRights);
-			MoveThePieces(rMove);
-		}
+		DeleteCastlingRights(WHITE_KINGSIDE, rCastlingRights);
+		MoveThePieces(rMove);
     }
-    else if (mSquares[origin_index]->GetPieceOnThisSquare() == BLACK_ROOK)
+    else if (rMove.IsQueenSideWhiteRookMoving())
     {
-		if (origin_index == 56u)//a8
-		{
-			DeleteCastlingRights(BLACK_QUEENSIDE, rCastlingRights);
-			MoveThePieces(rMove);
-		}
-		if (origin_index ==63)//h8
-		{
-			DeleteCastlingRights(BLACK_KINGSIDE, rCastlingRights);
-			MoveThePieces(rMove);
-		}
+		DeleteCastlingRights(WHITE_QUEENSIDE, rCastlingRights);
+		MoveThePieces(rMove);
+    }
+    else if (rMove.IsKingSideBlackRookMoving())
+    {
+		DeleteCastlingRights(BLACK_KINGSIDE, rCastlingRights);
+		MoveThePieces(rMove);
+    }
+    else if(rMove.IsQueenSideBlackRookMoving())
+    {
+		DeleteCastlingRights(BLACK_QUEENSIDE, rCastlingRights);
+		MoveThePieces(rMove);
     }
     else if (rMove.IsWhitePromoting())
     {
