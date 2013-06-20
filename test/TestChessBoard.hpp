@@ -709,6 +709,26 @@ public:
 
         std::string after_castling = "r1bqk1nr/pppp1ppp/2n5/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 5 4";
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_castling);
+
+        ///reset the FEN as before castling...
+        //this one is after 1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 (Giuoco piano) ... now white can castle kingside, it is white's turn
+
+        rc = my_cb.SetFenPosition(before_castling);
+        TS_ASSERT_EQUALS(rc,0);
+        TS_ASSERT_EQUALS(before_castling, my_cb.GetCurrentFenPosition());
+
+        // e1-f1 (whote king moves)
+        slach::Move e1_f1 (squares[4],squares[5]);//e1-f1
+        TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(e1_f1));
+        my_cb.MakeThisMove(e1_f1);
+
+        TS_ASSERT_EQUALS(squares[4]->GetPieceOnThisSquare(), slach::NO_PIECE);//e1
+        TS_ASSERT_EQUALS(squares[5]->GetPieceOnThisSquare(), slach::WHITE_KING);//f1 --> rook
+        TS_ASSERT_EQUALS(squares[6]->GetPieceOnThisSquare(), slach::NO_PIECE);//g1
+        TS_ASSERT_EQUALS(squares[7]->GetPieceOnThisSquare(), slach::WHITE_ROOK);//h1
+
+        std::string after_e1_f1 = "r1bqk1nr/pppp1ppp/2n5/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1K1R b kq - 5 4";
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_e1_f1);
     }
 };
 
