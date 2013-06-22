@@ -120,6 +120,18 @@ public :
     bool IsQueenSideBlackRookMoving() const;
 
     /**
+     * Returns true if the move indicates that the white king is about to move
+     * Returns true if the white king is about to move, anywhere
+     */
+    bool IsWhiteKingMoving() const;
+
+    /**
+     * Returns true if the move indicates that the black king is about to move
+     * Returns true if the black king is about to move, anywhere
+     */
+    bool IsBlackKingMoving() const;
+
+    /**
      * Returns the algebraic format of this move
      */
     std::string GetMoveInAlgebraicFormat(std::string ambiguityPrefix = "", std::string suffix = "") const;

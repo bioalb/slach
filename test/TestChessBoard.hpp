@@ -717,18 +717,34 @@ public:
         TS_ASSERT_EQUALS(rc,0);
         TS_ASSERT_EQUALS(before_castling, my_cb.GetCurrentFenPosition());
 
-        // e1-f1 (whote king moves)
+        TS_ASSERT_EQUALS(squares[4]->GetPieceOnThisSquare(), slach::WHITE_KING);//e1, king
+        TS_ASSERT_EQUALS(squares[5]->GetPieceOnThisSquare(), slach::NO_PIECE);//
+        TS_ASSERT_EQUALS(squares[6]->GetPieceOnThisSquare(), slach::NO_PIECE);//g1
+        TS_ASSERT_EQUALS(squares[7]->GetPieceOnThisSquare(), slach::WHITE_ROOK);//h1
+
+        // e1-f1 (white king moves)
         slach::Move e1_f1 (squares[4],squares[5]);//e1-f1
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(e1_f1));
         my_cb.MakeThisMove(e1_f1);
 
         TS_ASSERT_EQUALS(squares[4]->GetPieceOnThisSquare(), slach::NO_PIECE);//e1
-        TS_ASSERT_EQUALS(squares[5]->GetPieceOnThisSquare(), slach::WHITE_KING);//f1 --> rook
+        TS_ASSERT_EQUALS(squares[5]->GetPieceOnThisSquare(), slach::WHITE_KING);//f1
         TS_ASSERT_EQUALS(squares[6]->GetPieceOnThisSquare(), slach::NO_PIECE);//g1
         TS_ASSERT_EQUALS(squares[7]->GetPieceOnThisSquare(), slach::WHITE_ROOK);//h1
 
         std::string after_e1_f1 = "r1bqk1nr/pppp1ppp/2n5/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1K1R b kq - 5 4";
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_e1_f1);
+
+        // e8-e7 (black king moves)
+        slach::Move e8_e7 (squares[60],squares[52]);//e8-e7
+        TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(e8_e7));
+        my_cb.MakeThisMove(e8_e7);
+
+        TS_ASSERT_EQUALS(squares[60]->GetPieceOnThisSquare(), slach::NO_PIECE);//e8
+        TS_ASSERT_EQUALS(squares[52]->GetPieceOnThisSquare(), slach::BLACK_KING);//e7
+
+        std::string after_e8_e7 = "r1bq2nr/ppppkppp/2n5/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1K1R w - - 6 5";
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_e8_e7);
     }
 };
 

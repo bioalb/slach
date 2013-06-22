@@ -22,6 +22,30 @@ slach::Square* slach::Move::GetDestination() const
     return mpDestination;
 }
 
+bool slach::Move::IsWhiteKingMoving() const
+{
+    if (mpOrigin->GetPieceOnThisSquare()==WHITE_KING)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool slach::Move::IsBlackKingMoving() const
+{
+    if (mpOrigin->GetPieceOnThisSquare()==BLACK_KING)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 bool slach::Move::IsWhiteCastlingKingSide() const
 {
     if ((mpOrigin->GetIndexFromA1()==4u) &&
@@ -85,7 +109,9 @@ bool slach::Move::IsSpecialMove() const
             IsKingSideWhiteRookMoving() ||
             IsQueenSideWhiteRookMoving() ||
             IsKingSideBlackRookMoving() ||
-            IsQueenSideBlackRookMoving()
+            IsQueenSideBlackRookMoving() ||
+            IsBlackKingMoving() ||
+            IsWhiteKingMoving()
             );
 }
 bool slach::Move::IsWhitePromoting() const
