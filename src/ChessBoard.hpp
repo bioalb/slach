@@ -86,8 +86,9 @@ private:
      * No check is performed. Special Moves are taken care of by another method (ProcessSpecialMove)
      *
      * @param rMove the move to be performed
+     * @param colour the colour that is capturing enpassant
      */
-    void MoveThePieces(const Move& rMove);
+    void MoveThePieces(const Move& rMove, slach::Colour toMove = slach::WHITE);
 
 public:
 

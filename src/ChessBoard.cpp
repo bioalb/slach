@@ -147,17 +147,6 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
     	half_move_clock++;
     }
 
-    //update turn to move and move counter
-    if (turn_to_move == slach::BLACK)
-    {
-    	turn_to_move = slach::WHITE;//black has moved, white's turn
-    	full_move_clock++;//black has moved, increment move clock
-    }
-    else //it was white's turn
-    {
-    	turn_to_move = slach::BLACK;//white has moved, black's turn
-    }
-
     if (rMove.IsSpecialMove() == true)
     {
         ProcessSpecialMove(rMove, castling_rights);
@@ -165,9 +154,19 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
     else
     {
         //Now move the pieces
-        MoveThePieces(rMove);
+        MoveThePieces(rMove,turn_to_move);
     } //otherwise the special move method above  would have processed it
 
+    //update turn to move and move counter
+    if (turn_to_move == slach::BLACK)
+    {
+        turn_to_move = slach::WHITE;//black has moved, white's turn
+        full_move_clock++;//black has moved, increment move clock
+    }
+    else //it was white's turn
+    {
+        turn_to_move = slach::BLACK;//white has moved, black's turn
+    }
 
     //get a valid fen for the new position and update the member variable
     mCurrentFenPosition = mpFenHandler->GetFenFromPosition(mSquares, turn_to_move,
@@ -181,12 +180,43 @@ void slach::ChessBoard::MakeThisMove(const Move& rMove)
     mpGame->AddPosition(mCurrentFenPosition);
 }
 
-void  slach::ChessBoard::MoveThePieces(const Move& rMove)
+void  slach::ChessBoard::MoveThePieces(const Move& rMove, slach::Colour toMove)
 {
     unsigned origin_index = rMove.GetOrigin()->GetIndexFromA1();
     unsigned destination_index = rMove.GetDestination()->GetIndexFromA1();
-
     PieceType origin_piece = mSquares[origin_index]->GetPieceOnThisSquare();
+
+    //check if it enpassant
+    if (IsPawn(origin_piece) &&
+        (abs(destination_index - origin_index) != 8) &&
+        (abs(destination_index - origin_index) != 16) &&
+         mSquares[destination_index]->GetPieceOnThisSquare() == NO_PIECE)
+    {
+        if (toMove == WHITE)
+        {
+            if (abs(destination_index-origin_index) == 7)//enpassant on the left
+            {
+                mSquares[origin_index-1]-> SetPieceOnThisSquare(NO_PIECE);
+            }
+            else
+            {
+                mSquares[origin_index+1]-> SetPieceOnThisSquare(NO_PIECE);
+            }
+        }
+        else //black
+        {
+            if (abs(destination_index-origin_index) == 9)//enpassant on the left
+            {
+                mSquares[origin_index-1]-> SetPieceOnThisSquare(NO_PIECE);
+            }
+            else
+            {
+                mSquares[origin_index+1]-> SetPieceOnThisSquare(NO_PIECE);
+            }
+        }
+    }
+
+
     mSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);//no more piece here
     mSquares[destination_index]->SetPieceOnThisSquare(origin_piece);
 }
