@@ -24,9 +24,30 @@ private :
     /**Cache for the pointer too the destination square*/
     Square* mpDestination;
 
+
 public :
 
-    Move() = default;
+    /**
+     * Default constructor. Initializes
+     * the two pointers to NULL
+     */
+    Move();
+
+    /**
+     * Copy constructor. It simply assigns
+     * the pointers to origin and destination.
+     *
+     * @param move: the move to be copied.
+     */
+    Move (const Move& move);
+
+    /**
+     * Overload  = operator. It assigns
+     * the pointers to origin and destination.
+     *
+     * @param from the move we want to be assigned from.
+     */
+    Move& operator=(const Move& from);
 
     /**
      * Constructor

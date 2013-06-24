@@ -13,6 +13,8 @@
 
 
 slach::EngineInterface::EngineInterface()
+  : mFenString(""),
+    mpStockfishPosition (new Position())
 {
     UCI::init(Options);
     Bitboards::init();
@@ -22,7 +24,6 @@ slach::EngineInterface::EngineInterface()
     Eval::init();
     //Threads.init();
     TT.set_size(Options["Hash"]);
-    mpStockfishPosition = new Position();
 }
 
 slach::EngineInterface::~EngineInterface()

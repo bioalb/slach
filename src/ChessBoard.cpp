@@ -6,6 +6,12 @@
 #include "Exception.hpp"
 
 slach::ChessBoard::ChessBoard()
+  : mpFenHandler(new FenHandler() ),
+    mpLegalMoveChecker (new LegalMoveChecker() ),
+    mMoveGivesCheck(false),
+    mpGame(new Game()),
+    mWhitePromotionPiece(WHITE_QUEEN),
+    mBlackPromotionPiece(BLACK_QUEEN)
 {
     //allocate memory for the vectors
     mSquares.resize(gChessBoardSize);
@@ -14,13 +20,6 @@ slach::ChessBoard::ChessBoard()
     {
         mSquares[i] = new Square();
     }
-
-    mWhitePromotionPiece = WHITE_QUEEN;
-    mBlackPromotionPiece = BLACK_QUEEN;
-    mMoveGivesCheck = false;
-    mpFenHandler = new FenHandler();
-    mpLegalMoveChecker = new LegalMoveChecker();
-    mpGame = new Game();
 }
 
 slach::ChessBoard::~ChessBoard()

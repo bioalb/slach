@@ -1,15 +1,37 @@
 #include <iostream>
 #include "Move.hpp"
 
+slach::Move::Move()
+    : mpOrigin(NULL),
+      mpDestination(NULL)
+{
+}
+
 slach::Move::Move(Square* pOrigin, Square* pDestination)
     : mpOrigin(pOrigin),
       mpDestination(pDestination)
 {
 }
 
+slach::Move::Move (const Move& move)
+  :mpOrigin (move.GetOrigin()),
+   mpDestination (move.GetDestination() )
+{
+}
+
+slach::Move& slach::Move::operator=(const Move& from)
+{
+    if (this != &from)
+    {
+       mpOrigin = from.GetOrigin();
+       mpDestination = from.GetDestination();
+    }
+
+    return *this;
+}
+
 slach::Move::~Move()
 {
-
 }
 
 slach::Square* slach::Move::GetOrigin() const

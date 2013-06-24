@@ -26,16 +26,6 @@ class LegalMoveChecker
 
 private :
 
-	/**
-	 * This is a second chessboard that is created in the constructor
-	 * as empty. When checking for discovered checks,
-	 * this is used to simulate the move and check whether the king
-	 * is in check AFTER the move. We need this because
-	 * we can''t "take back" the move if it is not legal
-	 * as it would look ugly in the GUI.
-	 */
-    std::vector<Square*> mTempSquares;
-
     /**
      * Cache for the offsets of the various pieces.
      */
@@ -45,6 +35,16 @@ private :
      * Cache for the offsets of the pawn captures
      */
     std::vector<int> mPawnCaptureOffsets;
+
+	/**
+	 * This is a second chessboard that is created in the constructor
+	 * as empty. When checking for discovered checks,
+	 * this is used to simulate the move and check whether the king
+	 * is in check AFTER the move. We need this because
+	 * we can''t "take back" the move if it is not legal
+	 * as it would look ugly in the GUI.
+	 */
+    std::vector<Square*> mTempSquares;
 
 protected :
 

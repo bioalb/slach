@@ -2,10 +2,10 @@
 #include "Exception.hpp"
 
 slach::Game::Game()
+  : mMoveList {},
+    mMoveListAlgFormat {},
+    mListOfFenPositions {}
 {
-    mMoveList.resize(0u);
-    mMoveListAlgFormat.resize(0u);
-    mListOfFenPositions.resize(0);
 }
 slach::Game::~Game()
 {

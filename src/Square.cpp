@@ -4,16 +4,17 @@
 #include "Exception.hpp"
 
 slach::Square::Square()
+  : mIsBorderSquare(false),
+	mIsCornerSquare(false),
+    mIsLightSquare(false),
+    mIsDarkSquare(false),
+    mIsCoordinatePrintable(false),
+    mFile('0'),
+    mRank('0'),
+    mPieceOnThisSquare(NO_PIECE),
+    mIndexFromA1(UINT_MAX)
 {
-    mIsBorderSquare = false;
-    mIsCornerSquare = false;
-    mIsLightSquare = false;
-    mIsDarkSquare = false;
-    mIsCoordinatePrintable = false;
-    mFile = '0';
-    mRank = '0';
-    mPieceOnThisSquare = NO_PIECE;
-    mIndexFromA1 = UINT_MAX;
+
 }
 
 slach::Square::~Square()

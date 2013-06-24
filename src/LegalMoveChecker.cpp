@@ -5,17 +5,16 @@
 
 
 slach::LegalMoveChecker::LegalMoveChecker()
+ : 	mOffsets {
+			{  -33, -31, -18, -14, 14, 18, 31, 33, 0 }, // Knight
+			{ -17, -15, 15, 17, 0 },                    // Bishop
+			{ -16, -1, 1, 16, 0 },                      // Rook
+			{ -17, -16, -15, -1, 1, 15, 16, 17, 0 },    // Queen
+			{ -17, -16, -15, -1, 1, 15, 16, 17, 0 }     // King
+			},
+	mPawnCaptureOffsets { 15, 17 },
+	mTempSquares {}
 {
-	mOffsets = {
-	{  -33, -31, -18, -14, 14, 18, 31, 33, 0 }, // Knight
-	{ -17, -15, 15, 17, 0 },                    // Bishop
-	{ -16, -1, 1, 16, 0 },                      // Rook
-	{ -17, -16, -15, -1, 1, 15, 16, 17, 0 },    // Queen
-	{ -17, -16, -15, -1, 1, 15, 16, 17, 0 }     // King
-	};
-
-	mPawnCaptureOffsets = { 15, 17 };
-
 	mTempSquares.resize(64u);
 	for (unsigned i = 0; i < mTempSquares.size(); ++i)
 	{

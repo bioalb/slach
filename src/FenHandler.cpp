@@ -7,11 +7,11 @@
 #include "FenHandler.hpp"
 
 slach::FenHandler::FenHandler()
+  : mEnPassantSquare(64u),
+    mHalfMoveClock(0u),
+    mFullMoveClock(0u),
+    mTurnToMove(WHITE)
 {
-    mEnPassantSquare = 64u;
-    mHalfMoveClock = 0u;
-    mFullMoveClock = 0u;
-    mTurnToMove = WHITE;
 }
 
 slach::FenHandler::~FenHandler()
