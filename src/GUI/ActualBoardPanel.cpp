@@ -55,7 +55,7 @@ slach_gui::ActualBoardPanel::~ActualBoardPanel()
     {
         delete mSquarePanels[i];
     }
-    delete mpChessBoard;
+    delete mpChessBoardWithBorders;
 }
 
 void slach_gui::ActualBoardPanel::LoadSvgPieces()
