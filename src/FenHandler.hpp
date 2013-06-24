@@ -56,11 +56,6 @@ class FenHandler
      */
     std::string GetLetterFromPiece(PieceType piece) const;
 
-    /**
-     * Stores the turn to move,Set upon calling SetPositionFromFen
-     */
-    Colour mTurnToMove;
-
     /**Stores the castling rights. Set upon calling SetPositionFromFen*/
     std::vector<CastlingRights> mCastlingRights;
     /**
@@ -73,6 +68,11 @@ class FenHandler
     unsigned mHalfMoveClock;
     /**Stores the full-move clock Set upon calling SetPositionFromFen*/
     unsigned mFullMoveClock;
+
+    /**
+     * Stores the turn to move,Set upon calling SetPositionFromFen
+     */
+    Colour mTurnToMove;
 
   protected:
     /**
