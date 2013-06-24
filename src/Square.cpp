@@ -193,3 +193,27 @@ bool slach::Square::IsSeventhRank() const
         return false;
     }
 }
+
+bool slach::Square::IsThirdRank() const
+{
+    if ( (mIndexFromA1 >15) &&  (mIndexFromA1 < 24) )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool slach::Square::IsSixthRank() const
+{
+    if ( (mIndexFromA1 >39) &&  (mIndexFromA1 < 48) )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}

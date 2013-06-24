@@ -79,9 +79,40 @@ public :
     /**
      * Returns true if the move is a special move.
      * Special moves are defined by being either castling
-     * or promotions
+     * or promotions or moves that affects castling rights
+     * (e.g., king moving, rook moving from initial position).
      */
     bool IsSpecialMove() const;
+
+    /**
+     * Returns true if the move requires special handling by the GUI.
+     * This means that it is not a simple move where
+     * you shift a piece from a square (origin) to a destination.
+     *
+     * Moves that require special handling involve other squares as well.
+     * This includes:
+     *
+     *  - castling (need to move the rook as well)
+     *  - promotion (need to change nature of moving piece)
+     *  - en-passant capture (need to remove the capture pawn which is not on the destination square)
+     */
+    bool DoesMoveRequireSpecialGuiHandling() const;
+
+    /**
+     * Returns true if white his move black is trying
+     * to capture en-passant.
+     *
+     * No legality (not even pseudo-legality) check is made here.
+     */
+    bool IsWhiteCapturingEnPassant() const;
+
+    /**
+     * Returns true if black his move black is trying
+     * to capture en-passant.
+     *
+     * No legality (not even pseudo-legality) check is made here.
+     */
+    bool IsBlackCapturingEnPassant() const;
 
     /**
      * Returns true if the move indicates that white

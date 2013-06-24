@@ -247,6 +247,22 @@ public:
      * @return true if the square is on the second rank
      */
     bool IsSecondRank() const;
+
+    /**
+     * Determines if the square is on the third rank
+     * it does so by examining the Index from A1, NOT the variable mRank
+     *
+     * @return true if the square is on the third rank
+     */
+    bool IsThirdRank() const;
+
+    /**
+     * Determines if the square is on the sixth rank
+     * it does so by examining the Index from A1, NOT the variable mRank
+     *
+     * @return true if the square is on the sixth rank
+     */
+    bool IsSixthRank() const;
 };
 
 }//namespace slach

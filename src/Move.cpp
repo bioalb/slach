@@ -191,6 +191,51 @@ bool slach::Move::IsQueenSideBlackRookMoving() const
     }
 }
 
+bool slach::Move::DoesMoveRequireSpecialGuiHandling() const
+{
+    return (IsWhiteCastlingKingSide() ||
+            IsBlackCastlingKingSide() ||
+            IsWhiteCastlingQueenSide() ||
+            IsBlackCastlingQueenSide() ||
+            IsWhitePromoting() ||
+            IsBlackPromoting() ||
+            IsWhiteCapturingEnPassant() ||
+            IsBlackCapturingEnPassant()
+            );
+}
+
+bool slach::Move::IsWhiteCapturingEnPassant() const
+{
+	if (mpOrigin->GetPieceOnThisSquare() == WHITE_PAWN &&
+		mpDestination->GetPieceOnThisSquare() == NO_PIECE &&
+		mpDestination->IsSixthRank() &&
+		(abs(mpDestination->GetIndexFromA1() - mpOrigin->GetIndexFromA1()) == 7 ||
+		 abs(mpDestination->GetIndexFromA1() - mpOrigin->GetIndexFromA1()) == 9)  )
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool slach::Move::IsBlackCapturingEnPassant() const
+{
+	if (mpOrigin->GetPieceOnThisSquare() == BLACK_PAWN &&
+		mpDestination->GetPieceOnThisSquare() == NO_PIECE &&
+		mpDestination->IsThirdRank() &&
+		(abs(mpDestination->GetIndexFromA1() - mpOrigin->GetIndexFromA1()) == 7 ||
+		 abs(mpDestination->GetIndexFromA1() - mpOrigin->GetIndexFromA1()) == 9)  )
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 std::string slach::Move::GetMoveInAlgebraicFormat(std::string ambiguityPrefix, std::string suffix) const
 {
     if (IsBlackCastlingKingSide() || IsWhiteCastlingKingSide())
@@ -233,7 +278,9 @@ std::string slach::Move::GetMoveInAlgebraicFormat(std::string ambiguityPrefix, s
 
        //work out the presence of the capture symbol
        std::string capture_symbol = "";
-       if (!(mpDestination->GetPieceOnThisSquare()==NO_PIECE))
+       if (!(mpDestination->GetPieceOnThisSquare()==NO_PIECE) ||
+		   IsBlackCapturingEnPassant() ||
+		   IsWhiteCapturingEnPassant() )
        {
            capture_symbol = "x";
            //if a pawn is capturing, the origin file must be included

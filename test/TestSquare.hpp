@@ -49,6 +49,8 @@ public:
         TS_ASSERT_EQUALS(sq1.Getx88Index(), 48);
         TS_ASSERT_EQUALS(sq1.IsSecondRank(), false);
         TS_ASSERT_EQUALS(sq1.IsSeventhRank(), false);
+        TS_ASSERT_EQUALS(sq1.IsThirdRank(), false);
+        TS_ASSERT_EQUALS(sq1.IsSixthRank(), false);
 
 
         sq1.SetIndexFromA1(25u);//b4
@@ -60,10 +62,26 @@ public:
         sq1.SetIndexFromA1(9u);//b2
         TS_ASSERT_EQUALS(sq1.IsSecondRank(), true);
         TS_ASSERT_EQUALS(sq1.IsSeventhRank(), false);
+        TS_ASSERT_EQUALS(sq1.IsThirdRank(), false);
+        TS_ASSERT_EQUALS(sq1.IsSixthRank(), false);
 
         sq1.SetIndexFromA1(55u);//h7
         TS_ASSERT_EQUALS(sq1.IsSecondRank(), false);
         TS_ASSERT_EQUALS(sq1.IsSeventhRank(), true);
+        TS_ASSERT_EQUALS(sq1.IsThirdRank(), false);
+        TS_ASSERT_EQUALS(sq1.IsSixthRank(), false);
+
+        sq1.SetIndexFromA1(23u);//h3
+        TS_ASSERT_EQUALS(sq1.IsSecondRank(), false);
+        TS_ASSERT_EQUALS(sq1.IsSeventhRank(), false);
+        TS_ASSERT_EQUALS(sq1.IsThirdRank(), true);
+        TS_ASSERT_EQUALS(sq1.IsSixthRank(), false);
+
+        sq1.SetIndexFromA1(41u);//b6
+        TS_ASSERT_EQUALS(sq1.IsSecondRank(), false);
+        TS_ASSERT_EQUALS(sq1.IsSeventhRank(), false);
+        TS_ASSERT_EQUALS(sq1.IsThirdRank(), false);
+        TS_ASSERT_EQUALS(sq1.IsSixthRank(), true);
 
         sq1.SetAsLightSquare();
         TS_ASSERT_EQUALS(sq1.IsLightSquare(), true);
