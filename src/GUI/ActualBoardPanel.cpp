@@ -116,28 +116,29 @@ void slach_gui::ActualBoardPanel::SetDestinationSquare(SquarePanel* pDestination
     slach::Move candidate_move(mpOriginSquarePanel->GetSquare(), mpDestinationSquarePanel->GetSquare());
     if (mpChessBoard->IsLegalMove(candidate_move)==true)
     {
-        //update underlying chessboard
-        mpChessBoard->MakeThisMove(candidate_move);
-        for (unsigned i = 0; i  < mSquarePanels.size(); ++i)
+        if (candidate_move.DoesMoveRequireSpecialGuiHandling())
         {
-            slach::PieceType piece = mSquarePanels[i]->GetSquare()->GetPieceOnThisSquare();
-            mSquarePanels[i]->PaintBackground();
-            if (piece == slach::NO_PIECE)
-            {
-                mSquarePanels[i]->PaintBackground();
-            }
-            else
-            {
-                mSquarePanels[i]->PaintPiece();
-            }
+            mpChessBoard->MakeThisMove(candidate_move);
+            mpOriginSquarePanel->PaintBackground();
+            mpDestinationSquarePanel->PaintBackground();
+            mpDestinationSquarePanel->PaintPiece();
+
+			for (unsigned i = 0; i  < mSquarePanels.size(); ++i)
+			{
+				if (! ( mpChessBoardWithBorders->GetSquares()[i]->IsBorderSquare()))
+				{
+					mSquarePanels[i]->PaintBackground();
+					mSquarePanels[i]->PaintPiece();
+				}
+			}
         }
-//        mpOriginSquarePanel->PaintBackground();
-//        mpDestinationSquarePanel->PaintBackground();
-//        slach::PieceType origin_piece  = mpOriginSquarePanel->GetSquare()->GetPieceOnThisSquare();
-//        mpDestinationSquarePanel->GetSquare()->SetPieceOnThisSquare(origin_piece);
-//        mpDestinationSquarePanel->PaintPiece();
-        //update underlying chessboard
-        //mpChessBoard->MakeThisMove(candidate_move);
+        else
+        {
+            mpChessBoard->MakeThisMove(candidate_move);
+            mpOriginSquarePanel->PaintBackground();
+            mpDestinationSquarePanel->PaintBackground();
+            mpDestinationSquarePanel->PaintPiece();
+        }
     }
     else
     {
