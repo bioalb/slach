@@ -536,6 +536,7 @@ public:
         std::string too_long = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R/8/8/8/8 b KQkq - 1 2";
         int rc = my_cb.SetFenPosition(too_long);
         TS_ASSERT_EQUALS(rc,1);
+        TS_ASSERT_EQUALS(my_cb.WhosTurnIsIt(), slach::WHITE);//invalid fen not applied, still white's turn
 
         std::string too_short = "rnbqkbnr/pp1ppppp/ b KQkq - 1 2";
         rc = my_cb.SetFenPosition(too_short);

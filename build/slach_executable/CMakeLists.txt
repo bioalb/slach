@@ -26,6 +26,7 @@ link_directories (/usr/lib/i386-linux-gnu ${CMAKE_SOURCE_DIR}/build/lib)
 
 ADD_EXECUTABLE(slach   ${srcdir}/Exception.cpp
                        ${srcdir}/Game.cpp
+                       ${srcdir}/Position.cpp
                        ${srcdir}/FenHandler.cpp
                        ${srcdir}/Square.cpp
                        ${srcdir}/Move.cpp

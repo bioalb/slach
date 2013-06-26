@@ -64,9 +64,8 @@ public:
      * @param move: the move to be added to the list
      * @param ambiguityPrefix: to go in algebraic notation between the piece code and the destination
      *                         coordinate (e.g., Rad1, the a rook to d1. Can also be used for the X capture sign)
-     * @param suffix will go after all, can be used, for example for the check sign (+) or the mate (++).
      */
-    void AddMove(const Move& rMove, std::string ambiguityPrefix = "", std::string suffix = "");
+    void AddMove(const Move& rMove, std::string ambiguityPrefix = "");
 
     void AddPosition(std::string fenPosition);
 

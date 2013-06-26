@@ -5,9 +5,7 @@
 #include <string>
 #include "Square.hpp"
 #include "Game.hpp"
-#include "FenHandler.hpp"
-#include "EngineInterface.hpp"
-#include "LegalMoveChecker.hpp"
+#include "Position.hpp"
 
 /**
  *
@@ -54,41 +52,11 @@ private:
      */
     std::vector<Square* > mSquares;
 
-    /**Stores the current position on this chessboard in FEN format*/
-    std::string mCurrentFenPosition;
-
-    /**A pointer to a FenHandler object. Initialised in constructor*/
-    FenHandler* mpFenHandler;
-
-    /**A pointer to an EngineInterface object. Initialised in constructor*/
-    LegalMoveChecker* mpLegalMoveChecker;
-
-    bool  mMoveGivesCheck;
+    Position* mpPosition;
 
     /**A pointer to the game object being played on this board*/
     Game* mpGame;
 
-    slach::PieceType mWhitePromotionPiece;
-    slach::PieceType mBlackPromotionPiece;
-
-    /**
-     * Helper method that does the following:
-     * - it re-arranges the squares according to the special move.
-     * - updates castling rights accordingly
-     *
-     * @param rMove (input) the move to be processed
-     * @param rCastlingRights (output) will contain castling rights after this move
-     */
-    void ProcessSpecialMove(const Move& rMove, std::vector<CastlingRights>& rCastlingRights);
-
-    /**
-     * Helper method that actually moves the pieces according to rMove.
-     * No check is performed. Special Moves are taken care of by another method (ProcessSpecialMove)
-     *
-     * @param rMove the move to be performed
-     * @param colour the colour that is capturing enpassant
-     */
-    void MoveThePieces(const Move& rMove, slach::Colour toMove = slach::WHITE);
 
 public:
 
@@ -124,7 +92,7 @@ public:
      */
     std::vector<slach::Square* > GetSquares() const;
 
-    bool IsLegalMove(const Move& rMove);
+    bool IsLegalMove(Move& rMove);
 
     /**
      * Updates the current position (vector mSquares) with the move that is passed in.
@@ -132,7 +100,7 @@ public:
      *
      * @param rMove reference to the move we wish to make
      */
-    void MakeThisMove(const Move& rMove);
+    void MakeThisMove(Move& rMove);
 
     /**
      * Modifies the pieces position on the chessboard according to the given FEN position.
@@ -159,13 +127,6 @@ public:
      */
     std::string GetCurrentFenPosition() const;
 
-    /**
-     * Allows ot set a promotion piece different from the queen.
-     * It throws an exception if you set a pawn
-     *
-     * @param piece the promotion piece. Colour will be assigned automatically
-     */
-    void SetPromotionPiece(slach::PieceType piece);
 
     /**
      * Resets the chessboard to the move number moveNumber
@@ -185,6 +146,13 @@ public:
      */
     Game* GetGame() const;
 
+    /**
+     * Allows ot set a promotion piece different from the queen.
+     * It throws an exception if you set a pawn
+     *
+     * @param piece the promotion piece. Colour will be assigned automatically
+     */
+    void SetPromotionPiece(slach::PieceType piece);
 };
 
 }//namespace slach

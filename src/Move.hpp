@@ -24,6 +24,7 @@ private :
     /**Cache for the pointer too the destination square*/
     Square* mpDestination;
 
+    bool mGivesCheck;
 
 public :
 
@@ -186,7 +187,11 @@ public :
     /**
      * Returns the algebraic format of this move
      */
-    std::string GetMoveInAlgebraicFormat(std::string ambiguityPrefix = "", std::string suffix = "") const;
+    std::string GetMoveInAlgebraicFormat(std::string ambiguityPrefix = "") const;
+
+    void GivesCheck(bool gives = true);
+
+    bool DoesMoveGiceCheck() const;
 
 
 };

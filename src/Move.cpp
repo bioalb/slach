@@ -3,19 +3,22 @@
 
 slach::Move::Move()
     : mpOrigin(NULL),
-      mpDestination(NULL)
+      mpDestination(NULL),
+      mGivesCheck(false)
 {
 }
 
 slach::Move::Move(Square* pOrigin, Square* pDestination)
     : mpOrigin(pOrigin),
-      mpDestination(pDestination)
+      mpDestination(pDestination),
+      mGivesCheck(false)
 {
 }
 
 slach::Move::Move (const Move& move)
   :mpOrigin (move.GetOrigin()),
-   mpDestination (move.GetDestination() )
+   mpDestination (move.GetDestination() ),
+   mGivesCheck(move.DoesMoveGiceCheck())
 {
 }
 
@@ -258,7 +261,17 @@ bool slach::Move::IsBlackCapturingEnPassant() const
 	}
 }
 
-std::string slach::Move::GetMoveInAlgebraicFormat(std::string ambiguityPrefix, std::string suffix) const
+bool slach::Move::DoesMoveGiceCheck() const
+{
+	return mGivesCheck;
+}
+
+void slach::Move::GivesCheck(bool gives)
+{
+	mGivesCheck = gives;
+}
+
+std::string slach::Move::GetMoveInAlgebraicFormat(std::string ambiguityPrefix) const
 {
     if (IsBlackCastlingKingSide() || IsWhiteCastlingKingSide())
     {
@@ -316,6 +329,12 @@ std::string slach::Move::GetMoveInAlgebraicFormat(std::string ambiguityPrefix, s
        if (IsBlackPromoting() || IsWhitePromoting())
        {
            promotion_suffix = "=Q";
+       }
+
+       std::string suffix;
+       if (mGivesCheck == true)
+       {
+    	   suffix = "+";
        }
        return (piece_code + ambiguityPrefix + capture_symbol + mpDestination->GetFile() + mpDestination->GetRank() + promotion_suffix + suffix);
     }

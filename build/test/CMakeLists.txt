@@ -8,6 +8,7 @@ include_directories(. ${srcdir}
 
 SET (source_files ${srcdir}/Exception.cpp
                   ${srcdir}/Game.cpp
+                  ${srcdir}/Position.cpp
                   ${srcdir}/FenHandler.cpp
                   ${srcdir}/ChessBoard.cpp
                   ${srcdir}/ChessBoardWithBorders.cpp
@@ -21,6 +22,7 @@ SET (single_test_to_run ${testfiledir}/TestChessBoard.hpp)
 SET (all_test_files ${testfiledir}/TestChessboardWithBorders.hpp 
                     ${testfiledir}/TestChessBoard.hpp
                     ${testfiledir}/TestChessBoardSpecialMoves.hpp
+                    ${testfiledir}/TestPosition.hpp
                     ${testfiledir}/TestSquare.hpp
                     ${testfiledir}/TestMove.hpp
                     ${testfiledir}/TestFenHandler.hpp
