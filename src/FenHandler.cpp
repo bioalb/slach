@@ -641,12 +641,7 @@ std::string slach::FenHandler::GetLetterFromPiece(PieceType piece) const
     }
 
 }
-std::string slach::FenHandler::GetFenFromPosition(const std::vector<Square* > &rSquares,
-        Colour turnToMove,
-        std::vector<CastlingRights> castlingRights,
-        unsigned indexOfEnPassant,
-        unsigned halfMoveClock,
-        unsigned fullMoveNumber) const
+std::string slach::FenHandler::GetFenFromPosition(const std::vector<Square* > &rSquares,const FenPositionFeatures& positionFeatures) const
 {
     unsigned sq_counter = 63u - 8u + 1u;//56-->a8
     unsigned empty_sq_counter = 0u;
@@ -689,7 +684,7 @@ std::string slach::FenHandler::GetFenFromPosition(const std::vector<Square* > &r
     }
 
     //Append turn to move
-    if (turnToMove==WHITE)
+    if (positionFeatures.mTurnToMove==WHITE)
     {
         ret.append(" w ");
     }
@@ -699,27 +694,27 @@ std::string slach::FenHandler::GetFenFromPosition(const std::vector<Square* > &r
     }
 
     //append castling rights no spaces either before or after
-    if (castlingRights.size()==0)
+    if (positionFeatures.mCastlingRights.size()==0)
     {
         ret.append("-");
     }
     else
     {
-        for (unsigned i = 0; i < castlingRights.size(); ++i)
+        for (unsigned i = 0; i <positionFeatures.mCastlingRights.size(); ++i)
         {
-            if (castlingRights[i] == WHITE_KINGSIDE)
+            if (positionFeatures.mCastlingRights[i] == WHITE_KINGSIDE)
             {
                 ret.append("K");
             }
-            if (castlingRights[i] == BLACK_KINGSIDE)
+            if (positionFeatures.mCastlingRights[i] == BLACK_KINGSIDE)
             {
                 ret.append("k");
             }
-            if (castlingRights[i] == WHITE_QUEENSIDE)
+            if (positionFeatures.mCastlingRights[i] == WHITE_QUEENSIDE)
             {
                 ret.append("Q");
             }
-            if (castlingRights[i] == BLACK_QUEENSIDE)
+            if (positionFeatures.mCastlingRights[i] == BLACK_QUEENSIDE)
             {
                 ret.append("q");
             }
@@ -727,52 +722,27 @@ std::string slach::FenHandler::GetFenFromPosition(const std::vector<Square* > &r
     }
 
     //append en-passant, spaces all around
-    if (indexOfEnPassant > 63)
+    if (positionFeatures.mIndexOfEnpassant > 63)
     {
         ret.append(" - ");
     }
     else
     {
         ret.append(" ");
-        ret.append(rSquares[indexOfEnPassant]->GetFileAsString());
-        ret.append(rSquares[indexOfEnPassant]->GetRankAsString());
+        ret.append(rSquares[positionFeatures.mIndexOfEnpassant]->GetFileAsString());
+        ret.append(rSquares[positionFeatures.mIndexOfEnpassant]->GetRankAsString());
         ret.append(" ");
     }
 
     //append half move counter
     std::stringstream hm_SS;
-    hm_SS << halfMoveClock;
+    hm_SS << positionFeatures.mHalfMoveClockSinceLastPawnMove;
     ret.append(hm_SS.str());
 
     ret.append(" ");
 
     std::stringstream fm_SS;
-    fm_SS << fullMoveNumber;
+    fm_SS << positionFeatures.mMoveCounter;
     ret.append(fm_SS.str());
     return ret;
 }
-
-//slach::Colour slach::FenHandler::WhosTurnIsIt() const
-//{
-//    return mTurnToMove;
-//}
-//
-//std::vector<slach::CastlingRights> slach::FenHandler::GetLatestCastlingRights() const
-//{
-//    return mCastlingRights;
-//}
-//
-//unsigned slach::FenHandler::GetEnPassantSquareIndex() const
-//{
-//    return mEnPassantSquare;
-//}
-//
-//unsigned slach::FenHandler::GetHalfMoveClock() const
-//{
-//    return mHalfMoveClock;
-//}
-//
-//unsigned slach::FenHandler::GetFullMoveClock() const
-//{
-//    return mFullMoveClock;
-//}

@@ -15,13 +15,11 @@ class Position
 
 private :
 
+    /**Cache for the features of a fen position other than the pieces*/
 	FenPositionFeatures mPositionFeatures;
+
+	/**Cache for the fen string corresponding to this position*/
 	std::string mCurrentFenPosition;
-//	Colour mToMove;
-//	unsigned mMoveNumber;
-//	unsigned mHalfMovesSinceLastPawnMove;
-//	unsigned mEnPassantSquareindex;
-//	std::vector<CastlingRights> mCastlingRights;
 
     /**A pointer to a FenHandler object. Initialised in constructor*/
     FenHandler* mpFenHandler;
@@ -29,6 +27,7 @@ private :
     /**A pointer to an EngineInterface object. Initialised in constructor*/
     LegalMoveChecker* mpLegalMoveChecker;
 
+    /**Needed for storing whether a move gives check or not from this position*/
     bool  mMoveGivesCheck;
     slach::PieceType mWhitePromotionPiece;
     slach::PieceType mBlackPromotionPiece;

@@ -627,7 +627,15 @@ public:
         std::vector<slach::CastlingRights> empty_vec;
 
         slach::FenHandler handler;
-        std::string calculated_fen = handler.GetFenFromPosition(squares,slach::BLACK,empty_vec,64,4,40u);
+
+        slach::FenPositionFeatures pos_features;
+        pos_features.mCastlingRights = {};
+        pos_features.mTurnToMove = slach::BLACK;
+        pos_features.mHalfMoveClockSinceLastPawnMove = 4;
+        pos_features.mMoveCounter = 40u;
+        //the enpassant is not set. it should be 64 --> no enpassant
+
+        std::string calculated_fen = handler.GetFenFromPosition(squares,pos_features);
         std::string valid_fen = "8/p6k/1p2b3/3pPpPP/8/4P3/PPP1K3/8 b - - 4 40";
 
         TS_ASSERT_EQUALS(calculated_fen, valid_fen);
@@ -713,7 +721,15 @@ public:
         unsigned enpassant_index = 20u;//e3
         squares[enpassant_index]->SetFile('e');
         squares[enpassant_index]->SetRank('3');
-        std::string calculated_fen = handler.GetFenFromPosition(squares,slach::BLACK,cr,enpassant_index,0,1);
+
+        slach::FenPositionFeatures pos_features;
+        pos_features.mCastlingRights = {slach::WHITE_KINGSIDE, slach::WHITE_QUEENSIDE, slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
+        pos_features.mTurnToMove = slach::BLACK;
+        pos_features.mHalfMoveClockSinceLastPawnMove = 0;
+        pos_features.mMoveCounter = 1u;
+        pos_features.mIndexOfEnpassant = enpassant_index;
+
+        std::string calculated_fen = handler.GetFenFromPosition(squares,pos_features);
         //initial position after 1. e4 (from wikipedia)
         std::string valid_fen = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
 
@@ -724,8 +740,6 @@ public:
         {
             delete squares[i];
         }
-
-
     }
 
 

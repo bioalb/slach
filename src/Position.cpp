@@ -103,12 +103,7 @@ void slach::Position::UpdatePositionWithMove(slach::Move& rMove, std::vector<Squ
     }
 
     //get a valid fen for the new position
-    mCurrentFenPosition = mpFenHandler->GetFenFromPosition(rSquares,
-    		mPositionFeatures.mTurnToMove,
-    		mPositionFeatures.mCastlingRights,
-    		mPositionFeatures.mIndexOfEnpassant,
-    		mPositionFeatures.mHalfMoveClockSinceLastPawnMove,
-    		mPositionFeatures.mMoveCounter);
+    mCurrentFenPosition = mpFenHandler->GetFenFromPosition(rSquares,mPositionFeatures);
 
     //this line will update squares and all other details within the fen handler
     //mpFenHandler->SetPositionFromFen(mCurrentFenPosition, rSquares, mPositionFeatures);

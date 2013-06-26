@@ -56,24 +56,6 @@ class FenHandler
      */
     std::string GetLetterFromPiece(PieceType piece) const;
 
-//    /**Stores the castling rights. Set upon calling SetPositionFromFen*/
-//    std::vector<CastlingRights> mCastlingRights;
-//    /**
-//     * Stores the index of the en-passant square, if any. Set upon calling SetPositionFromFen.
-//     * It refers to the index of a square on a chessboard starting from A1 (0->63).
-//     * If there is no en-passant, its value is 64 (out of the chessboard)
-//     */
-//    unsigned mEnPassantSquare;
-//    /**Stores the half-move clock Set upon calling SetPositionFromFen*/
-//    unsigned mHalfMoveClock;
-//    /**Stores the full-move clock Set upon calling SetPositionFromFen*/
-//    unsigned mFullMoveClock;
-//
-//    /**
-//     * Stores the turn to move,Set upon calling SetPositionFromFen
-//     */
-//    Colour mTurnToMove;
-
   protected:
     /**
      * Helper method that checks whether the string is a valid FEN string or not.
@@ -135,12 +117,7 @@ class FenHandler
      *
      * @param pEnPassantSquare the en-passant square. Pass NULL (default) if there is none (- will be printed)
      */
-    std::string GetFenFromPosition(const std::vector<Square* > &rSquares,
-            Colour turnToMove,
-            std::vector<CastlingRights> castlingRights,
-            unsigned indexOfEnPassant = 64u,
-            unsigned halfMoveClock = 0,
-            unsigned fullMoveNumber = 0) const;
+    std::string GetFenFromPosition(const std::vector<Square* > &rSquares, const FenPositionFeatures& positionFeatures) const;
 
     /**
      * Access method for the variable mTurnToMove. Refers to the last valid fen that
