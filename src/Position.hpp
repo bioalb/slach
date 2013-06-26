@@ -52,11 +52,34 @@ private :
 
 public :
 
+    /**
+     * Constructor
+     */
 	Position();
+
+	/**
+	 * Destructor
+	 */
 	~Position();
 
+	/**
+	 * Sets the position according to fenPosition. When you call this method,
+	 * the member variable that stores the features of the position. Also, the picees
+	 * are arranged on the squares pointed by the vector in rSquares
+	 *
+	 * @param  fenPosition (input) the FEN position we wish to set.
+	 * @param rSquares (output) vectror of pointers to square. The squares will be occupied by the correct pieces
+	 * @return 0 if the fen is valid and the pieces have been moved, non-zero otherwise.
+	 */
 	int SetFromFen(const std::string& fenPosition, std::vector<Square*>& rSquares);
 
+	/**
+	 * Returns true of the move is legal in the current position.
+	 * The move object itself is changed if this method figures that the move is giving check.
+	 *
+	 * @param rMove the move we wish to check.
+	 * @param rSquares the squares that describe the position.
+	 */
 	bool IsMoveLegal(Move& rMove, std::vector<Square*>& rSquares);
 
 	void UpdatePositionWithMove(Move& rMove, std::vector<Square*>& rSquares);

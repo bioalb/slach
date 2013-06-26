@@ -25,12 +25,6 @@ int slach::Position::SetFromFen(const std::string& rFenPosition, std::vector<Squ
      {
     	 mCurrentFenPosition = rFenPosition;
     	 mPositionFeatures = temp;
-//         mCurrentFenPosition = rFenPosition;
-//         mCastlingRights = mPositionFeatures.mCastlingRights;
-//         mMoveNumber = mPositionFeatures.mMoveCounter;
-//         mHalfMovesSinceLastPawnMove = mPositionFeatures.mHalfMoveClockSinceLastPawnMove;
-//         mEnPassantSquareindex = mPositionFeatures.mIndexOfEnpassant;
-//         mToMove = mPositionFeatures.mTurnToMove;
      }
      return rc;
 }
@@ -104,9 +98,6 @@ void slach::Position::UpdatePositionWithMove(slach::Move& rMove, std::vector<Squ
 
     //get a valid fen for the new position
     mCurrentFenPosition = mpFenHandler->GetFenFromPosition(rSquares,mPositionFeatures);
-
-    //this line will update squares and all other details within the fen handler
-    //mpFenHandler->SetPositionFromFen(mCurrentFenPosition, rSquares, mPositionFeatures);
 }
 
 slach::Colour slach::Position::GetTurnToMove() const
