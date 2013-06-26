@@ -15,12 +15,13 @@ class Position
 
 private :
 
+	FenPositionFeatures mPositionFeatures;
 	std::string mCurrentFenPosition;
-	Colour mToMove;
-	unsigned mMoveNumber;
-	unsigned mHalfMovesSinceLastPawnMove;
-	unsigned mEnPassantSquareindex;
-	std::vector<CastlingRights> mCastlingRights;
+//	Colour mToMove;
+//	unsigned mMoveNumber;
+//	unsigned mHalfMovesSinceLastPawnMove;
+//	unsigned mEnPassantSquareindex;
+//	std::vector<CastlingRights> mCastlingRights;
 
     /**A pointer to a FenHandler object. Initialised in constructor*/
     FenHandler* mpFenHandler;

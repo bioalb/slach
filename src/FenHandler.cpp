@@ -7,10 +7,6 @@
 #include "FenHandler.hpp"
 
 slach::FenHandler::FenHandler()
-  : mEnPassantSquare(64u),
-    mHalfMoveClock(0u),
-    mFullMoveClock(0u),
-    mTurnToMove(WHITE)
 {
 }
 
@@ -357,7 +353,7 @@ unsigned slach::FenHandler::GetIndexFromCoordinates(const char &rFile, const cha
     }
     return 64u;
 }
-int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::vector<Square* > &rSquares)
+int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::vector<Square* > &rSquares,FenPositionFeatures& positionFeatures)
 {
     int rc = 0;//return code, initialise at 0
 
@@ -451,13 +447,13 @@ int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::ve
                 assert(rFenString[i]=='b' || rFenString[i]=='w');//assume valid fen
                 if (rFenString[i]=='b')
                 {
-                    mTurnToMove = BLACK;
+                	positionFeatures.mTurnToMove = BLACK;
                     end_of_colour = i;
                     break;
                 }
                 else
                 {
-                    mTurnToMove = WHITE;
+                	positionFeatures.mTurnToMove = WHITE;
                     end_of_colour = i;
                     break;
                 }
@@ -465,7 +461,7 @@ int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::ve
         }
 
         //castling rights
-        mCastlingRights.resize(0);
+        positionFeatures.mCastlingRights = {};
         unsigned end_of_castling_rights = end_of_colour;
         bool castling_rights_started = false;
         for (unsigned i = end_of_colour+1; i < rFenString.length(); ++i)
@@ -479,25 +475,25 @@ int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::ve
                 castling_rights_started = true;
                 if (rFenString[i]=='-')
                 {
-                    mCastlingRights.resize(0);
+                	positionFeatures.mCastlingRights = {};
                     end_of_castling_rights = i;
                     break;
                 }
                 else if (rFenString[i]=='K')
                 {
-                    mCastlingRights.push_back(WHITE_KINGSIDE);
+                	positionFeatures.mCastlingRights.push_back(WHITE_KINGSIDE);
                 }
                 else if (rFenString[i]=='k')
                 {
-                    mCastlingRights.push_back(BLACK_KINGSIDE);
+                	positionFeatures.mCastlingRights.push_back(BLACK_KINGSIDE);
                 }
                 else if (rFenString[i]=='Q')
                 {
-                    mCastlingRights.push_back(WHITE_QUEENSIDE);
+                	positionFeatures.mCastlingRights.push_back(WHITE_QUEENSIDE);
                 }
                 else if (rFenString[i]=='q')
                 {
-                    mCastlingRights.push_back(BLACK_QUEENSIDE);
+                	positionFeatures.mCastlingRights.push_back(BLACK_QUEENSIDE);
                 }
                 else if (rFenString[i]==' ')
                 {
@@ -521,7 +517,7 @@ int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::ve
             {
                 if (rFenString[i]=='-')
                 {
-                    mEnPassantSquare = 64u;
+                	positionFeatures.mIndexOfEnpassant = 64u;
                     end_of_enpassant = i;
                     no_enpassant = true;
                     break;
@@ -547,7 +543,7 @@ int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::ve
         }
         if (no_enpassant == false)
         {
-            mEnPassantSquare = GetIndexFromCoordinates(file, rank);
+        	positionFeatures.mIndexOfEnpassant = GetIndexFromCoordinates(file, rank);
         }
 
         //clocks, half move and full move
@@ -556,7 +552,7 @@ int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::ve
         {
             if ( isdigit (rFenString[i]) )
             {
-                mHalfMoveClock =   atoi (&rFenString[i]);
+            	positionFeatures.mHalfMoveClockSinceLastPawnMove =   atoi (&rFenString[i]);
                 end_of_half_move = i;
                 break;
             }
@@ -581,7 +577,7 @@ int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::ve
         {
             if ( isdigit (rFenString[i]) )
             {
-                mFullMoveClock = atoi (&rFenString[i]);
+            	positionFeatures.mMoveCounter = atoi (&rFenString[i]);
                 break;
             }
             else
@@ -648,7 +644,7 @@ std::string slach::FenHandler::GetLetterFromPiece(PieceType piece) const
 std::string slach::FenHandler::GetFenFromPosition(const std::vector<Square* > &rSquares,
         Colour turnToMove,
         std::vector<CastlingRights> castlingRights,
-        Square* pEnPassantSquare,
+        unsigned indexOfEnPassant,
         unsigned halfMoveClock,
         unsigned fullMoveNumber) const
 {
@@ -731,15 +727,15 @@ std::string slach::FenHandler::GetFenFromPosition(const std::vector<Square* > &r
     }
 
     //append en-passant, spaces all around
-    if (pEnPassantSquare==NULL)
+    if (indexOfEnPassant > 63)
     {
         ret.append(" - ");
     }
     else
     {
         ret.append(" ");
-        ret.append(pEnPassantSquare->GetFileAsString());
-        ret.append(pEnPassantSquare->GetRankAsString());
+        ret.append(rSquares[indexOfEnPassant]->GetFileAsString());
+        ret.append(rSquares[indexOfEnPassant]->GetRankAsString());
         ret.append(" ");
     }
 
@@ -756,27 +752,27 @@ std::string slach::FenHandler::GetFenFromPosition(const std::vector<Square* > &r
     return ret;
 }
 
-slach::Colour slach::FenHandler::WhosTurnIsIt() const
-{
-    return mTurnToMove;
-}
-
-std::vector<slach::CastlingRights> slach::FenHandler::GetLatestCastlingRights() const
-{
-    return mCastlingRights;
-}
-
-unsigned slach::FenHandler::GetEnPassantSquareIndex() const
-{
-    return mEnPassantSquare;
-}
-
-unsigned slach::FenHandler::GetHalfMoveClock() const
-{
-    return mHalfMoveClock;
-}
-
-unsigned slach::FenHandler::GetFullMoveClock() const
-{
-    return mFullMoveClock;
-}
+//slach::Colour slach::FenHandler::WhosTurnIsIt() const
+//{
+//    return mTurnToMove;
+//}
+//
+//std::vector<slach::CastlingRights> slach::FenHandler::GetLatestCastlingRights() const
+//{
+//    return mCastlingRights;
+//}
+//
+//unsigned slach::FenHandler::GetEnPassantSquareIndex() const
+//{
+//    return mEnPassantSquare;
+//}
+//
+//unsigned slach::FenHandler::GetHalfMoveClock() const
+//{
+//    return mHalfMoveClock;
+//}
+//
+//unsigned slach::FenHandler::GetFullMoveClock() const
+//{
+//    return mFullMoveClock;
+//}

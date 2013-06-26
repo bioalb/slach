@@ -25,6 +25,36 @@ enum SpecialMoveType
     ORDINARY_MOVE
 };
 
+enum CastlingRights
+{
+    WHITE_KINGSIDE = 0,
+    WHITE_QUEENSIDE,
+    BLACK_KINGSIDE,
+    BLACK_QUEENSIDE
+};
+
+enum Colour
+{
+    WHITE = 0,
+    BLACK
+};
+
+struct FenPositionFeatures
+{
+	unsigned mMoveCounter;
+	unsigned mHalfMoveClockSinceLastPawnMove;
+	unsigned mIndexOfEnpassant;
+	std::vector<CastlingRights> mCastlingRights;
+	Colour mTurnToMove;
+
+	FenPositionFeatures()
+	   : mMoveCounter(1),
+	     mHalfMoveClockSinceLastPawnMove(0),
+	     mIndexOfEnpassant(64),
+	     mCastlingRights{WHITE_KINGSIDE,WHITE_QUEENSIDE, BLACK_KINGSIDE, BLACK_QUEENSIDE },
+	     mTurnToMove(WHITE)
+	{}
+};
 /**
  * Type for a piece on the chessboard
  */
@@ -45,11 +75,7 @@ enum PieceType
     NO_PIECE
 };
 
-enum Colour
-{
-    WHITE = 0,
-    BLACK
-};
+
 
 inline Colour OppositeColour(Colour col)
 {
@@ -146,13 +172,7 @@ inline bool IsPawn(const PieceType& piece)
     return ((piece == WHITE_PAWN || piece == BLACK_PAWN) ? true : false);
 }
 
-enum CastlingRights
-{
-    WHITE_KINGSIDE = 0,
-    WHITE_QUEENSIDE,
-    BLACK_KINGSIDE,
-    BLACK_QUEENSIDE
-};
+
 
 inline bool IsWithinCastlingRights(const CastlingRights& test, const std::vector<CastlingRights>& castlingRights)
 {

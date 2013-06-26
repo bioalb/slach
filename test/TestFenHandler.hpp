@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include "FenHandler.hpp"
+#include "SlachTypes.hpp"
 
 /**
  * Test suite to test the fen handler class
@@ -271,7 +272,8 @@ public:
             squares[i]->SetPieceOnThisSquare(slach::BLACK_BISHOP);//for testing, we start with all bishops!!
         }
 
-        int rc = handler.SetPositionFromFen(aftere2e4, squares);
+        slach::FenPositionFeatures pos_features;
+        int rc = handler.SetPositionFromFen(aftere2e4, squares,pos_features);
         TS_ASSERT_EQUALS(rc,0);
 
         //check the vector of squares one by one
@@ -334,15 +336,15 @@ public:
                 TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::NO_PIECE);
             }
         }
-        TS_ASSERT_EQUALS(handler.WhosTurnIsIt(), slach::BLACK);
-        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights().size(), 4u);
-        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights()[0], slach::WHITE_KINGSIDE);
-        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights()[1], slach::WHITE_QUEENSIDE);
-        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights()[2], slach::BLACK_KINGSIDE);
-        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights()[3], slach::BLACK_QUEENSIDE);
-        TS_ASSERT_EQUALS(handler.GetEnPassantSquareIndex(), 20u);//e3
-        TS_ASSERT_EQUALS(handler.GetHalfMoveClock(), 0u);
-        TS_ASSERT_EQUALS(handler.GetFullMoveClock(), 1u);
+        TS_ASSERT_EQUALS(pos_features.mTurnToMove, slach::BLACK);
+        TS_ASSERT_EQUALS(pos_features.mCastlingRights.size(), 4u);
+        TS_ASSERT_EQUALS(pos_features.mCastlingRights[0], slach::WHITE_KINGSIDE);
+        TS_ASSERT_EQUALS(pos_features.mCastlingRights[1], slach::WHITE_QUEENSIDE);
+        TS_ASSERT_EQUALS(pos_features.mCastlingRights[2], slach::BLACK_KINGSIDE);
+        TS_ASSERT_EQUALS(pos_features.mCastlingRights[3], slach::BLACK_QUEENSIDE);
+        TS_ASSERT_EQUALS(pos_features.mIndexOfEnpassant, 20u);//e3
+        TS_ASSERT_EQUALS(pos_features.mHalfMoveClockSinceLastPawnMove, 0u);
+        TS_ASSERT_EQUALS(pos_features.mMoveCounter, 1u);
 
         //clear up memory
         for (unsigned i = 0; i < squares.size(); ++i)
@@ -368,7 +370,8 @@ public:
             squares[i]->SetPieceOnThisSquare(slach::BLACK_BISHOP);//for testing, we start with all bishops!!
         }
 
-        int rc = handler.SetPositionFromFen(endgame, squares);
+        slach::FenPositionFeatures pos_features;
+        int rc = handler.SetPositionFromFen(endgame, squares, pos_features);
         TS_ASSERT_EQUALS(rc,0);
 
         //check the vector of squares one by one
@@ -392,11 +395,12 @@ public:
                 TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::NO_PIECE);
             }
         }
-        TS_ASSERT_EQUALS(handler.WhosTurnIsIt(), slach::WHITE);
-        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights().size(), 0u);
-        TS_ASSERT_EQUALS(handler.GetEnPassantSquareIndex(), 64u);//no en-passant
-        TS_ASSERT_EQUALS(handler.GetHalfMoveClock(), 0u);
-        TS_ASSERT_EQUALS(handler.GetFullMoveClock(), 68u);
+
+        TS_ASSERT_EQUALS(pos_features.mTurnToMove, slach::WHITE);
+        TS_ASSERT_EQUALS(pos_features.mCastlingRights.size(), 0u);
+        TS_ASSERT_EQUALS(pos_features.mIndexOfEnpassant, 64u); //  no en-passant
+        TS_ASSERT_EQUALS(pos_features.mHalfMoveClockSinceLastPawnMove, 0u);
+        TS_ASSERT_EQUALS(pos_features.mMoveCounter, 68u);
 
         //clear up memory
         for (unsigned i = 0; i < squares.size(); ++i)
@@ -422,7 +426,8 @@ public:
             squares[i]->SetPieceOnThisSquare(slach::BLACK_BISHOP);//for testing, we start with all bishops!!
         }
 
-        int rc = handler.SetPositionFromFen(endgame, squares);
+        slach::FenPositionFeatures pos_features;
+        int rc = handler.SetPositionFromFen(endgame, squares, pos_features);
         TS_ASSERT_EQUALS(rc,0);
 
         //check the vector of squares one by one
@@ -453,11 +458,12 @@ public:
                 TS_ASSERT_EQUALS(squares[i]->GetPieceOnThisSquare(),slach::NO_PIECE);
             }
         }
-        TS_ASSERT_EQUALS(handler.WhosTurnIsIt(), slach::BLACK);
-        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights().size(), 0u);
-        TS_ASSERT_EQUALS(handler.GetEnPassantSquareIndex(), 64u);//no en-passant
-        TS_ASSERT_EQUALS(handler.GetHalfMoveClock(), 11);
-        TS_ASSERT_EQUALS(handler.GetFullMoveClock(), 47);
+
+        TS_ASSERT_EQUALS(pos_features.mTurnToMove, slach::BLACK);
+        TS_ASSERT_EQUALS(pos_features.mCastlingRights.size(), 0u);
+        TS_ASSERT_EQUALS(pos_features.mIndexOfEnpassant, 64u); //  no en-passant
+        TS_ASSERT_EQUALS(pos_features.mHalfMoveClockSinceLastPawnMove, 11u);
+        TS_ASSERT_EQUALS(pos_features.mMoveCounter, 47u);
 
         //clear up memory
         for (unsigned i = 0; i < squares.size(); ++i)
@@ -483,7 +489,8 @@ public:
             squares[i]->SetPieceOnThisSquare(slach::BLACK_BISHOP);//for testing, we start with all bishops!!
         }
 
-        int rc = handler.SetPositionFromFen(test_position_3, squares);
+        slach::FenPositionFeatures pos_features;
+        int rc = handler.SetPositionFromFen(test_position_3, squares,pos_features);
         TS_ASSERT_EQUALS(rc,0);
         //the aim of this test is actually the castling rights, but just in case we check some squares
         TS_ASSERT_EQUALS(squares[0]->GetPieceOnThisSquare(),slach::WHITE_ROOK);
@@ -491,13 +498,13 @@ public:
         TS_ASSERT_EQUALS(squares[4]->GetPieceOnThisSquare(),slach::WHITE_KING);
         TS_ASSERT_EQUALS(squares[63]->GetPieceOnThisSquare(),slach::BLACK_ROOK);
 
-        TS_ASSERT_EQUALS(handler.WhosTurnIsIt(), slach::BLACK);
-        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights().size(), 2u);
-        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights()[0], slach::WHITE_QUEENSIDE);
-        TS_ASSERT_EQUALS(handler.GetLatestCastlingRights()[1], slach::BLACK_KINGSIDE);
-        TS_ASSERT_EQUALS(handler.GetEnPassantSquareIndex(), 64u);//no enpassant, last move was Rook to g1
-        TS_ASSERT_EQUALS(handler.GetHalfMoveClock(), 3u);
-        TS_ASSERT_EQUALS(handler.GetFullMoveClock(), 8u);
+        TS_ASSERT_EQUALS(pos_features.mTurnToMove, slach::BLACK);
+        TS_ASSERT_EQUALS(pos_features.mCastlingRights.size(), 2u);
+        TS_ASSERT_EQUALS(pos_features.mCastlingRights[0], slach::WHITE_QUEENSIDE);
+        TS_ASSERT_EQUALS(pos_features.mCastlingRights[1], slach::BLACK_KINGSIDE);
+        TS_ASSERT_EQUALS(pos_features.mIndexOfEnpassant, 64u);//no enpassant, last move was Rook to g1
+        TS_ASSERT_EQUALS(pos_features.mHalfMoveClockSinceLastPawnMove, 3u);
+        TS_ASSERT_EQUALS(pos_features.mMoveCounter, 8u);
 
         for (unsigned i = 0; i < squares.size(); ++i)
         {
@@ -521,8 +528,9 @@ public:
             squares[i]->SetPieceOnThisSquare(slach::BLACK_BISHOP);//for testing, we start with all bishops!!
         }
 
+        slach::FenPositionFeatures pos_features;
         //check that the method returns 1 as error code...
-        int rc = handler.SetPositionFromFen(endgame, squares);
+        int rc = handler.SetPositionFromFen(endgame, squares, pos_features);
         TS_ASSERT_EQUALS(rc,1);
 
         //..and that it didn't touch anything else
@@ -538,7 +546,7 @@ public:
         null_squares.resize(64u);
 
         //check that the method returns 1 as error code as the pointers point to NULL...
-        rc = handler.SetPositionFromFen(endgame, null_squares);
+        rc = handler.SetPositionFromFen(endgame, null_squares,pos_features);
         TS_ASSERT_EQUALS(rc,1);
 
 
@@ -558,7 +566,7 @@ public:
         }
 
         //check that the method returns 1 as error code...
-        rc = handler.SetPositionFromFen(invalid_endgame, ok_squares);
+        rc = handler.SetPositionFromFen(invalid_endgame, ok_squares, pos_features);
         TS_ASSERT_EQUALS(rc,1);
 
         //..and that it didn't touch anything else
@@ -619,7 +627,7 @@ public:
         std::vector<slach::CastlingRights> empty_vec;
 
         slach::FenHandler handler;
-        std::string calculated_fen = handler.GetFenFromPosition(squares,slach::BLACK,empty_vec,NULL,4,40u);
+        std::string calculated_fen = handler.GetFenFromPosition(squares,slach::BLACK,empty_vec,64,4,40u);
         std::string valid_fen = "8/p6k/1p2b3/3pPpPP/8/4P3/PPP1K3/8 b - - 4 40";
 
         TS_ASSERT_EQUALS(calculated_fen, valid_fen);
@@ -702,11 +710,10 @@ public:
 
         slach::FenHandler handler;
         std::vector<slach::CastlingRights> cr = {slach::WHITE_KINGSIDE, slach::WHITE_QUEENSIDE, slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
-
-        slach::Square* p_enpassantsquare = new slach::Square();
-        p_enpassantsquare->SetFile('e');
-        p_enpassantsquare->SetRank('3');
-        std::string calculated_fen = handler.GetFenFromPosition(squares,slach::BLACK,cr,p_enpassantsquare,0,1);
+        unsigned enpassant_index = 20u;//e3
+        squares[enpassant_index]->SetFile('e');
+        squares[enpassant_index]->SetRank('3');
+        std::string calculated_fen = handler.GetFenFromPosition(squares,slach::BLACK,cr,enpassant_index,0,1);
         //initial position after 1. e4 (from wikipedia)
         std::string valid_fen = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
 
@@ -717,7 +724,7 @@ public:
         {
             delete squares[i];
         }
-        delete p_enpassantsquare;
+
 
     }
 

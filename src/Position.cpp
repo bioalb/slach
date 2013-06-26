@@ -3,9 +3,7 @@
 #include "Position.hpp"
 
 slach::Position::Position()
-   : mToMove(WHITE),
-     mMoveNumber(1),
-     mpFenHandler(new FenHandler() ),
+   : mpFenHandler(new FenHandler() ),
      mpLegalMoveChecker (new LegalMoveChecker() ),
      mWhitePromotionPiece(WHITE_QUEEN),
      mBlackPromotionPiece(BLACK_QUEEN)
@@ -20,15 +18,19 @@ slach::Position::~Position()
 
 int slach::Position::SetFromFen(const std::string& rFenPosition, std::vector<Square*>& rSquares)
 {
+	FenPositionFeatures temp;
     //if the fen is valid, this changes rSquares.
-     int rc = mpFenHandler->SetPositionFromFen(rFenPosition, rSquares);
+     int rc = mpFenHandler->SetPositionFromFen(rFenPosition, rSquares,temp);
      if (rc == 0)//only if fen is valid
      {
-         mCurrentFenPosition = rFenPosition;
-         mCastlingRights = mpFenHandler->GetLatestCastlingRights();
-         mMoveNumber = mpFenHandler->GetFullMoveClock();
-         mHalfMovesSinceLastPawnMove = mpFenHandler->GetHalfMoveClock();
-         mToMove = mpFenHandler->WhosTurnIsIt();
+    	 mCurrentFenPosition = rFenPosition;
+    	 mPositionFeatures = temp;
+//         mCurrentFenPosition = rFenPosition;
+//         mCastlingRights = mPositionFeatures.mCastlingRights;
+//         mMoveNumber = mPositionFeatures.mMoveCounter;
+//         mHalfMovesSinceLastPawnMove = mPositionFeatures.mHalfMoveClockSinceLastPawnMove;
+//         mEnPassantSquareindex = mPositionFeatures.mIndexOfEnpassant;
+//         mToMove = mPositionFeatures.mTurnToMove;
      }
      return rc;
 }
@@ -37,9 +39,9 @@ bool slach::Position::IsMoveLegal(Move& rMove, std::vector<Square*>& rSquares)
 {
     bool ret =  mpLegalMoveChecker->IsMoveLegalInPosition(rSquares,
 														  rMove,
-														  mpFenHandler->WhosTurnIsIt(),
-														  mpFenHandler->GetLatestCastlingRights(),
-														  mpFenHandler->GetEnPassantSquareIndex(),
+														  mPositionFeatures.mTurnToMove,
+														  mPositionFeatures.mCastlingRights,
+														  mPositionFeatures.mIndexOfEnpassant,
 														  mMoveGivesCheck);
     if (mMoveGivesCheck == true)
     {
@@ -54,30 +56,29 @@ void slach::Position::UpdatePositionWithMove(slach::Move& rMove, std::vector<Squ
     unsigned origin_index = rMove.GetOrigin()->GetIndexFromA1();
     unsigned destination_index = rMove.GetDestination()->GetIndexFromA1();
 
-    Square* p_en_passant_square = NULL;
-
     assert(origin_index<rSquares.size());//segfault guard
     assert(destination_index<rSquares.size());//segfault guard
 
     //check for pawn move to adjust the clock and enpassant tag
+    mPositionFeatures.mIndexOfEnpassant = 64u;
     if (IsPawn(rSquares[origin_index]->GetPieceOnThisSquare() ) )
     {
         if (abs(origin_index - destination_index) == 16)
         {
             if (origin_index < 16)//white pawn
             {
-            	p_en_passant_square = rSquares[origin_index + 8u];
+            	mPositionFeatures.mIndexOfEnpassant = origin_index + 8u;
             }
             else
             {
-            	p_en_passant_square = rSquares[origin_index - 8u];
+            	mPositionFeatures.mIndexOfEnpassant = origin_index - 8u;
             }
         }
-        mHalfMovesSinceLastPawnMove = 0u;
+        mPositionFeatures.mHalfMoveClockSinceLastPawnMove = 0u;
     }
     else//not a pawn move, increase the clock
     {
-    	mHalfMovesSinceLastPawnMove++;
+    	mPositionFeatures.mHalfMoveClockSinceLastPawnMove++;
     }
 
     if (rMove.IsSpecialMove() == true)
@@ -91,30 +92,31 @@ void slach::Position::UpdatePositionWithMove(slach::Move& rMove, std::vector<Squ
     } //otherwise the special move method above  would have processed it
 
     //update turn to move and move counter
-    if (mToMove == slach::BLACK)
+    if (mPositionFeatures.mTurnToMove == slach::BLACK)
     {
-    	mToMove = slach::WHITE;//black has moved, white's turn
-    	mMoveNumber++;//black has moved, increment move clock
+    	mPositionFeatures.mTurnToMove = slach::WHITE;//black has moved, white's turn
+    	mPositionFeatures.mMoveCounter++;//black has moved, increment move clock
     }
     else //it was white's turn
     {
-    	mToMove = slach::BLACK;//white has moved, black's turn
+    	mPositionFeatures.mTurnToMove = slach::BLACK;//white has moved, black's turn
     }
 
-    //get a valid fen for the new position and update the member variable
-    mCurrentFenPosition = mpFenHandler->GetFenFromPosition(rSquares, mToMove,
-    		mCastlingRights,
-    		p_en_passant_square,
-    		mHalfMovesSinceLastPawnMove,
-    		mMoveNumber);
+    //get a valid fen for the new position
+    mCurrentFenPosition = mpFenHandler->GetFenFromPosition(rSquares,
+    		mPositionFeatures.mTurnToMove,
+    		mPositionFeatures.mCastlingRights,
+    		mPositionFeatures.mIndexOfEnpassant,
+    		mPositionFeatures.mHalfMoveClockSinceLastPawnMove,
+    		mPositionFeatures.mMoveCounter);
 
     //this line will update squares and all other details within the fen handler
-    mpFenHandler->SetPositionFromFen(mCurrentFenPosition, rSquares);
+    //mpFenHandler->SetPositionFromFen(mCurrentFenPosition, rSquares, mPositionFeatures);
 }
 
 slach::Colour slach::Position::GetTurnToMove() const
 {
-	return mToMove;
+	return mPositionFeatures.mTurnToMove;
 }
 
 std::string slach::Position::GetPositionAsFen() const
@@ -134,7 +136,7 @@ void  slach::Position::MoveThePieces(const Move& rMove, std::vector<Square*>& rS
         (abs(destination_index - origin_index) != 16) &&
         rSquares[destination_index]->GetPieceOnThisSquare() == NO_PIECE)
     {
-        if (mToMove == WHITE)
+        if (mPositionFeatures.mTurnToMove == WHITE)
         {
             if (abs(destination_index-origin_index) == 7)//enpassant on the left
             {
@@ -188,8 +190,8 @@ void slach::Position::ProcessSpecialMove(const Move& rMove, std::vector<Square*>
             MoveThePieces(rMove, rSquares);
         }
         //white can't castle anymore anyway
-        DeleteCastlingRights(WHITE_KINGSIDE, mCastlingRights);
-        DeleteCastlingRights(WHITE_QUEENSIDE, mCastlingRights);
+        DeleteCastlingRights(WHITE_KINGSIDE, mPositionFeatures.mCastlingRights);
+        DeleteCastlingRights(WHITE_QUEENSIDE, mPositionFeatures.mCastlingRights);
     }
     else if (rMove.IsBlackKingMoving())
     {
@@ -212,27 +214,27 @@ void slach::Position::ProcessSpecialMove(const Move& rMove, std::vector<Square*>
             MoveThePieces(rMove, rSquares);
         }
         //black can't castle anymore anyway
-        DeleteCastlingRights(BLACK_KINGSIDE, mCastlingRights);
-        DeleteCastlingRights(BLACK_QUEENSIDE, mCastlingRights);
+        DeleteCastlingRights(BLACK_KINGSIDE, mPositionFeatures.mCastlingRights);
+        DeleteCastlingRights(BLACK_QUEENSIDE, mPositionFeatures.mCastlingRights);
     }
     else if (rMove.IsKingSideWhiteRookMoving())
     {
-		DeleteCastlingRights(WHITE_KINGSIDE, mCastlingRights);
+		DeleteCastlingRights(WHITE_KINGSIDE, mPositionFeatures.mCastlingRights);
 		MoveThePieces(rMove, rSquares);
     }
     else if (rMove.IsQueenSideWhiteRookMoving())
     {
-		DeleteCastlingRights(WHITE_QUEENSIDE, mCastlingRights);
+		DeleteCastlingRights(WHITE_QUEENSIDE, mPositionFeatures.mCastlingRights);
 		MoveThePieces(rMove, rSquares);
     }
     else if (rMove.IsKingSideBlackRookMoving())
     {
-		DeleteCastlingRights(BLACK_KINGSIDE, mCastlingRights);
+		DeleteCastlingRights(BLACK_KINGSIDE, mPositionFeatures.mCastlingRights);
 		MoveThePieces(rMove, rSquares);
     }
     else if(rMove.IsQueenSideBlackRookMoving())
     {
-		DeleteCastlingRights(BLACK_QUEENSIDE, mCastlingRights);
+		DeleteCastlingRights(BLACK_QUEENSIDE, mPositionFeatures.mCastlingRights);
 		MoveThePieces(rMove, rSquares);
     }
     else if (rMove.IsWhitePromoting())
