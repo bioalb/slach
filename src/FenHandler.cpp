@@ -337,22 +337,6 @@ int slach::FenHandler::AssignPieceFromLetter(PieceType& piece, const char &chara
     return rc;
 }
 
-unsigned slach::FenHandler::GetIndexFromCoordinates(const char &rFile, const char &rRank) const
-{
-    unsigned global_counter = 0u;
-    for (unsigned rank_index  = 0; rank_index < gChessboardFiles.size(); ++rank_index)
-    {
-        for (unsigned file_index = 0; file_index <  gChessboardRanks.size(); ++file_index)
-        {
-            if ((gChessboardRanks[rank_index] == rRank) && (gChessboardFiles[file_index] == rFile))
-            {
-                return global_counter;
-            }
-            global_counter++;
-        }
-    }
-    return 64u;
-}
 int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::vector<Square* > &rSquares,FenPositionFeatures& positionFeatures)
 {
     int rc = 0;//return code, initialise at 0

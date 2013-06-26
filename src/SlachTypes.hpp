@@ -197,5 +197,30 @@ inline void DeleteCastlingRights(const CastlingRights& toBeDeleted, std::vector<
         }
     }
 }
+
+/**
+ * Helper method that returns the index (counting on a chessboard from A1 to H8, from 0 to 63)
+ * corresponding to the char coordinates
+ *
+ * @param  rFile the file of the coordinate (column), a to h
+ * @param rRank the rank of the coordinate (row) 1 to 8
+ * @return the index if rank and files are appropriate, 64 (out of the chessboard) otherwise
+ */
+inline unsigned GetIndexFromCoordinates(const char &rFile, const char &rRank)
+{
+    unsigned global_counter = 0u;
+    for (unsigned rank_index  = 0; rank_index < gChessboardFiles.size(); ++rank_index)
+    {
+        for (unsigned file_index = 0; file_index <  gChessboardRanks.size(); ++file_index)
+        {
+            if ((gChessboardRanks[rank_index] == rRank) && (gChessboardFiles[file_index] == rFile))
+            {
+                return global_counter;
+            }
+            global_counter++;
+        }
+    }
+    return 64u;
+}
 }//namespace slach
 #endif

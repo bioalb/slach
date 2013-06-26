@@ -65,16 +65,6 @@ class FenHandler
      */
     bool IsFenValid(const std::string &rFenString) const;
 
-    /**
-     * Helper method that returns the index (counting on a chessboard from A1 to H8, from 0 to 63)
-     * corresponding to the char coordinates
-     *
-     * @param  rFile the file of the coordinate (column), a to h
-     * @param rRank the rank of the coordinate (row) 1 to 8
-     * @return the index if rank and files are appropriate, 64 (out of the chessboard) otherwise
-     */
-    unsigned GetIndexFromCoordinates(const char &rFile, const char &rRank) const;
-
   public:
 
     /**
