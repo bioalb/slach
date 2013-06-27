@@ -12,17 +12,20 @@ include_directories(/usr/lib/i386-linux-gnu/wx/include/gtk2-unicode-release-2.8
                     /usr/include/wxSVG 
                     ${srcdir} 
                     ${stockfishdir} )
+link_directories (/usr/lib/i386-linux-gnu ${CMAKE_SOURCE_DIR}/build/lib) 
 else()
 include_directories(/usr/lib/x86_64-linux-gnu/wx/include/gtk2-unicode-release-2.8 
                     /usr/include/wx-2.8 
                     /usr/include/wxSVG 
                     ${srcdir} 
                     ${stockfishdir} )
+                    
+link_directories (/usr/lib/-x86_64-linux-gnu ${CMAKE_SOURCE_DIR}/build/lib) 
 endif()
 
 
                     
-link_directories (/usr/lib/i386-linux-gnu ${CMAKE_SOURCE_DIR}/build/lib) 
+
 
 ADD_EXECUTABLE(slach   ${srcdir}/Exception.cpp
                        ${srcdir}/HelperGlobalFunctions.cpp
