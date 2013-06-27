@@ -4,7 +4,7 @@
 #include <cxxtest/TestSuite.h>
 #include <iostream>
 #include <sstream>
-#include "../src/ChessBoard.hpp"
+#include "ChessBoard.hpp"
 #include "SlachTypes.hpp"
 
 /**

@@ -68,7 +68,7 @@ public :
 	 * are arranged on the squares pointed by the vector in rSquares
 	 *
 	 * @param  fenPosition (input) the FEN position we wish to set.
-	 * @param rSquares (output) vectror of pointers to square. The squares will be occupied by the correct pieces
+	 * @param rSquares (output) vector of pointers to square. The squares will be occupied by the correct pieces
 	 * @return 0 if the fen is valid and the pieces have been moved, non-zero otherwise.
 	 */
 	int SetFromFen(const std::string& fenPosition, std::vector<Square*>& rSquares);
@@ -95,6 +95,8 @@ public :
     void SetPromotionPiece(slach::PieceType piece);
 
     std::string GetPositionAsFen() const;
+
+    slach::FenPositionFeatures GetPositionFeatures() const;
 };
 
 

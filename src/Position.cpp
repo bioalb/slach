@@ -111,6 +111,11 @@ std::string slach::Position::GetPositionAsFen() const
 	return mCurrentFenPosition;
 }
 
+slach::FenPositionFeatures slach::Position::GetPositionFeatures() const
+{
+	return mPositionFeatures;
+}
+
 void  slach::Position::MoveThePieces(const Move& rMove, std::vector<Square*>& rSquares)
 {
     unsigned origin_index = rMove.GetOrigin()->GetIndexFromA1();
