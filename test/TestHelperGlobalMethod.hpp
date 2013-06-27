@@ -3,6 +3,7 @@
 
 #include <cxxtest/TestSuite.h>
 #include "SlachTypes.hpp"
+#include "HelperGlobalFunctions.hpp"
 
 class TestHelperGlobalMethod : public CxxTest::TestSuite
 {

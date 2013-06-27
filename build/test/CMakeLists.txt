@@ -7,6 +7,7 @@ include_directories(. ${srcdir}
                     ${stockfishdir})
 
 SET (source_files ${srcdir}/Exception.cpp
+                  ${srcdir}/HelperGlobalFunctions.cpp
                   ${srcdir}/Game.cpp
                   ${srcdir}/Position.cpp
                   ${srcdir}/FenHandler.cpp

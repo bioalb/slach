@@ -1,5 +1,6 @@
 #include <cassert>
 #include "Exception.hpp"
+#include "HelperGlobalFunctions.hpp"
 #include "Position.hpp"
 
 slach::Position::Position()

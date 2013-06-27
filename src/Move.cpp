@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Move.hpp"
+#include "HelperGlobalFunctions.hpp"
 
 slach::Move::Move()
     : mpOrigin(NULL),

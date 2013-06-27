@@ -4,6 +4,7 @@
 #include <sstream>
 #include <cmath>
 #include "Exception.hpp"
+#include "HelperGlobalFunctions.hpp"
 #include "FenHandler.hpp"
 
 slach::FenHandler::FenHandler()

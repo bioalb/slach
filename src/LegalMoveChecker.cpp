@@ -1,6 +1,7 @@
 #include <cassert>
 #include <algorithm>
 #include "Exception.hpp"
+#include "HelperGlobalFunctions.hpp"
 #include "LegalMoveChecker.hpp"
 
 
