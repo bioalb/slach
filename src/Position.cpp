@@ -249,7 +249,7 @@ void slach::Position::SetPromotionPiece(slach::PieceType piece)
 {
     if (IsPawn(piece))
     {
-        EXCEPTION("slach::ChessBoard::SetPromotionPiece: you can't set a pawn to be a promotion piece");
+        EXCEPTION("slach::Position::SetPromotionPiece: you can't set a pawn to be a promotion piece");
     }
     if (IsWhitePiece(piece))
     {

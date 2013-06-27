@@ -339,10 +339,6 @@ class TestChessBoardSpecialMoves : public CxxTest::TestSuite
 
        std::string after_promotion_to_knight = "2b1k1N1/4P3/3K3P/p7/8/P7/8/1q6 b - - 0 61";
        TS_ASSERT_EQUALS(after_promotion_to_knight, my_cb.GetCurrentFenPosition());
-
-       //coverage
-       TS_ASSERT_THROWS_THIS(my_cb.SetPromotionPiece(slach::WHITE_PAWN), "slach::ChessBoard::SetPromotionPiece: you can't set a pawn to be a promotion piece");
-       TS_ASSERT_THROWS_THIS(my_cb.SetPromotionPiece(slach::BLACK_PAWN), "slach::ChessBoard::SetPromotionPiece: you can't set a pawn to be a promotion piece");
    }
 };
 
