@@ -226,12 +226,14 @@ void slach_gui::SquarePanel::PaintPiece()
 {
     slach::PieceType piece = mpSquare->GetPieceOnThisSquare();
     std::vector<wxSVGDocument*> svgdocs = mpParent->GetPiecesSvgDocs();
-
+    //wxImage im(white_king_xpm);
+    //im.Rescale(mCurrentWidth, mCurrentHeight);
     switch(piece)
     {
         case slach::WHITE_KING:
             //last true is for transparency!
             mImageOfPieceOnThisSquare = svgdocs[0]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            //mIconNearTheMouse.CopyFromBitmap(im);// = wxDROP_ICON(white_king);
             mIconNearTheMouse = wxDROP_ICON(white_king);
             break;
         case slach::BLACK_KING:
