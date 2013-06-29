@@ -226,8 +226,9 @@ void slach_gui::SquarePanel::PaintPiece()
 {
     slach::PieceType piece = mpSquare->GetPieceOnThisSquare();
     std::vector<wxSVGDocument*> svgdocs = mpParent->GetPiecesSvgDocs();
-    //wxImage im(white_king_xpm);
-    //im.Rescale(mCurrentWidth, mCurrentHeight);
+    wxImage im(black_pawn_xpm);
+    im.Rescale(mCurrentWidth, mCurrentHeight);
+
     switch(piece)
     {
         case slach::WHITE_KING:
@@ -278,7 +279,8 @@ void slach_gui::SquarePanel::PaintPiece()
             break;
         case slach::BLACK_PAWN:
             mImageOfPieceOnThisSquare = svgdocs[11]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
-            mIconNearTheMouse = wxDROP_ICON(black_pawn);
+            mIconNearTheMouse.CopyFromBitmap(im);
+            //mIconNearTheMouse = wxDROP_ICON(black_pawn);
             break;
         case slach::NO_PIECE:
             mImageOfPieceOnThisSquare = svgdocs[12]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
@@ -325,13 +327,17 @@ void slach_gui::SquarePanel::LeftMouseClick(wxMouseEvent& event)
 {
     //first record source coordinates
     mpParent->SetOriginSquare(this);
+
     wxBitmapDataObject piece_to_be_moved(mImageOfPieceOnThisSquare);
     wxDropSource dragSource( this, mIconNearTheMouse, mIconNearTheMouse);
+    wxCursor cursor(mImageOfPieceOnThisSquare);
 
+    dragSource.SetCursor(wxDragMove, cursor);
     dragSource.SetData( piece_to_be_moved );
-    this->Refresh();
-    wxDragResult result = dragSource.DoDragDrop( wxDrag_DefaultMove );
 
+    PaintBackground();///remove the source piece while dragging...
+
+    wxDragResult result = dragSource.DoDragDrop( wxDragMove );
     switch (result)
     {
         case wxDragCopy: break;
