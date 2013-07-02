@@ -49,7 +49,7 @@ slach_gui::SquarePanel::SquarePanel(ActualBoardPanel* parent, slach::Square* pSq
     mIsSquarePanelPrintable = pSquare->IsCoordinatePrintable();
     mCurrentWidth = -1;
     mCurrentHeight = -1;
-
+    DetermineCoordinateToPrint();//this gets the right mPrintedCoord
     this->SetDropTarget(new DropTargetPanel(this));
 }
 
@@ -82,13 +82,11 @@ void slach_gui::SquarePanel::PaintBackground()
     std::vector<wxImage> png_images = mpParent->GetPiecesPgns();
     if ( (mpSquare->IsDarkSquare() == true) && (mpSquare->IsBorderSquare() == false))
     {
-        this->SetBackgroundColour(wxColour(32,107,129));
-        mBackgroundOnThisSquare = png_images[13];
+        mBackgroundOnThisSquare = png_images[13];//rgb 32,107,129
     }
     if ( (mpSquare->IsLightSquare() == true) && (mpSquare->IsBorderSquare() == false))
     {
-        this->SetBackgroundColour(wxColour(235,241,246));
-        mBackgroundOnThisSquare = png_images[14];
+        mBackgroundOnThisSquare = png_images[14];//rgb 235,241,246
     }
     if (mpSquare->IsBorderSquare())
     {
@@ -101,92 +99,88 @@ void slach_gui::SquarePanel::PaintBackground()
     dc.DrawBitmap( mBackgroundOnThisSquare, 0, 0, true );
 }
 
-
-
 void slach_gui::SquarePanel::DetermineCoordinateToPrint()
 {
-    assert(mIsSquarePanelPrintable);
-    assert(mIsBorderSquarePanel);
     if (mFile=="a")
     {
         wxMemoryInputStream istream(a_img, sizeof a_img);
-        mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
+        mPrintedCoord.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
     else if (mFile=="b")
     {
         wxMemoryInputStream istream(b_img, sizeof b_img);
-        mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
+        mPrintedCoord.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
     else if (mFile=="c")
     {
         wxMemoryInputStream istream(c_img, sizeof c_img);
-        mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
+        mPrintedCoord.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
     else if (mFile=="d")
     {
         wxMemoryInputStream istream(d_img, sizeof d_img);
-        mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
+        mPrintedCoord.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
     else if (mFile=="e")
     {
         wxMemoryInputStream istream(e_img, sizeof e_img);
-        mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
+        mPrintedCoord.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
     else if (mFile=="f")
     {
         wxMemoryInputStream istream(f_img, sizeof f_img);
-        mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
+        mPrintedCoord.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
     else if (mFile=="g")
     {
         wxMemoryInputStream istream(g_img, sizeof g_img);
-        mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
+        mPrintedCoord.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
     else if (mFile=="h")
     {
         wxMemoryInputStream istream(h_img, sizeof h_img);
-        mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
+        mPrintedCoord.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
 
     else if (mRank=="1")
     {
         wxMemoryInputStream istream(one_img, sizeof one_img);
-        mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
+        mPrintedCoord.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
     else if (mRank=="2")
     {
         wxMemoryInputStream istream(two_img, sizeof two_img);
-        mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
+        mPrintedCoord.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
     else if (mRank=="3")
     {
         wxMemoryInputStream istream(three_img, sizeof three_img);
-        mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
+        mPrintedCoord.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
     else if (mRank=="4")
     {
         wxMemoryInputStream istream(four_img, sizeof four_img);
-        mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
+        mPrintedCoord.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
     else if (mRank=="5")
     {
         wxMemoryInputStream istream(five_img, sizeof five_img);
-        mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
+        mPrintedCoord.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
     else if (mRank=="6")
     {
         wxMemoryInputStream istream(six_img, sizeof six_img);
-        mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
+        mPrintedCoord.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
     else if (mRank=="7")
     {
         wxMemoryInputStream istream(seven_img, sizeof seven_img);
-        mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
+        mPrintedCoord.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
     else if (mRank=="8")
     {
         wxMemoryInputStream istream(eight_img, sizeof eight_img);
-        mpPrintedCoord = new wxImage(istream, wxBITMAP_TYPE_PNG);
+        mPrintedCoord.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
     else
     {
@@ -201,8 +195,6 @@ void slach_gui::SquarePanel::PaintOnBorder()
           mIsSquarePanelPrintable==true))
     {
         wxPaintDC dc(this);
-        DetermineCoordinateToPrint();//this gets the right mpPrintedCoord
-        assert(mpPrintedCoord!=NULL);
         double fractional_occupancy_of_space= 0.7;
         int dim = 0;
         int xcoord = 0;
@@ -220,8 +212,8 @@ void slach_gui::SquarePanel::PaintOnBorder()
             ycoord = (mCurrentHeight-dim)/2;;
         }
 
-        mpPrintedCoord->Rescale(dim, dim);
-        dc.DrawBitmap( *mpPrintedCoord, xcoord, ycoord, true );
+        mPrintedCoord.Rescale(dim, dim);
+        dc.DrawBitmap(mPrintedCoord, xcoord, ycoord, true );
     }
 }
 
@@ -321,8 +313,8 @@ void slach_gui::SquarePanel::LeftMouseClick(wxMouseEvent& event)
     mpParent->SetOriginSquare(this);
 
     wxBitmapDataObject piece_to_be_moved(mImageOfPieceOnThisSquare);
-    wxDropSource drop_source( this, mIconNearTheMouse, mIconNearTheMouse);
     wxCursor cursor(mImageOfPieceOnThisSquare);
+    wxDropSource drop_source( this, mIconNearTheMouse, mIconNearTheMouse);
 
     drop_source.SetCursor(wxDragMove, cursor);
     drop_source.SetData( piece_to_be_moved );

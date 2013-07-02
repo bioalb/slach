@@ -4,6 +4,8 @@
 #include <cxxtest/TestSuite.h>
 #include <iostream>
 #include <sstream>
+#include "evaluate.h"
+#include "thread.h"
 #include "EngineInterface.hpp"
 #include "ChessBoard.hpp"
 
@@ -51,6 +53,23 @@ public:
         TS_ASSERT_EQUALS(stockfish_squares[squares.size()], sf_square);
         TS_ASSERT_EQUALS(stockfish_squares[squares.size()], interface.ConvertSquareToStockfish(pe2));
         delete pe2;
+    }
+
+    void TestPosition()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        std::vector<slach::Square*> squares =  my_cb.GetSquares();//already numbered and well defined.
+        my_cb.SetupInitialChessPosition();
+
+        std::string fen_pos = my_cb.GetCurrentFenPosition();
+
+        ::Position stockfish_position;
+        //::Search::StateStackPtr SetupStates;
+        stockfish_position.set(fen_pos, false, ::Threads.main_thread());
+        //SetupStates = ::Search::StateStackPtr(new std::stack<StateInfo>());
+        std::cout<<::Eval::trace(stockfish_position)<<std::endl;
+        //::Threads.wait_for_think_finished();
     }
 
 };

@@ -39,7 +39,7 @@ private:
     void PaintOnBorder();
     void DetermineCoordinateToPrint();
 
-    wxImage* mpPrintedCoord;
+    wxImage mPrintedCoord;
     wxImage mImageOfPieceOnThisSquare;
     wxImage mBackgroundOnThisSquare;
     wxIcon mIconNearTheMouse;

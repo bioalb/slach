@@ -22,7 +22,7 @@ slach::EngineInterface::EngineInterface()
     Bitbases::init_kpk();
     Search::init();
     Eval::init();
-    //Threads.init();
+    Threads.init();
     TT.set_size(Options["Hash"]);
 }
 
