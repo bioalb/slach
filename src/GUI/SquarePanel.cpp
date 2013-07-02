@@ -75,24 +75,23 @@ slach::Square* slach_gui::SquarePanel::GetSquare()
 
 void slach_gui::SquarePanel::PaintBackground()
 {
-    std::vector<wxSVGDocument*> svgdocs = mpParent->GetPiecesSvgDocs();
+    std::vector<wxImage> png_images = mpParent->GetPiecesPgns();
     if ( (mpSquare->IsDarkSquare() == true) && (mpSquare->IsBorderSquare() == false))
     {
-        this->SetBackgroundColour(wxColour(32,107,129));
-        mBackgroundOnThisSquare = svgdocs[13]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+        //this->SetBackgroundColour(wxColour(32,107,129));
+        mBackgroundOnThisSquare = png_images[13];
     }
     if ( (mpSquare->IsLightSquare() == true) && (mpSquare->IsBorderSquare() == false))
     {
-        this->SetBackgroundColour(wxColour(235,241,246));
-        mBackgroundOnThisSquare = svgdocs[14]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+        //this->SetBackgroundColour(wxColour(235,241,246));
+        mBackgroundOnThisSquare = png_images[14];
     }
     if (mpSquare->IsBorderSquare())
     {
-        //mBackgroundOnThisSquare = svgdocs[15]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
-        this->SetBackgroundColour(wxColour(35,87,102));
+        mBackgroundOnThisSquare = png_images[15];
     }
 
-
+    mBackgroundOnThisSquare.Rescale(mCurrentWidth, mCurrentHeight);
     //now really draw the rendered image
     wxPaintDC dc(this);
     dc.DrawBitmap( mBackgroundOnThisSquare, 0, 0, false );
@@ -217,73 +216,68 @@ void slach_gui::SquarePanel::PaintOnBorder()
             ycoord = (mCurrentHeight-dim)/2;;
         }
 
-        wxBitmap resized = wxBitmap( mpPrintedCoord->Scale(dim, dim) );
-        dc.DrawBitmap( resized, xcoord, ycoord, false );
+        mpPrintedCoord->Rescale(dim, dim);
+        dc.DrawBitmap( *mpPrintedCoord, xcoord, ycoord, false );
     }
 }
 
 void slach_gui::SquarePanel::PaintPiece()
 {
     slach::PieceType piece = mpSquare->GetPieceOnThisSquare();
-    std::vector<wxSVGDocument*> svgdocs = mpParent->GetPiecesSvgDocs();
-    wxImage im(black_pawn_xpm);
-    im.Rescale(mCurrentWidth, mCurrentHeight);
+    std::vector<wxImage> png_images = mpParent->GetPiecesPgns();
 
     switch(piece)
     {
         case slach::WHITE_KING:
-            //last true is for transparency!
-            mImageOfPieceOnThisSquare = svgdocs[0]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
-            //mIconNearTheMouse.CopyFromBitmap(im);// = wxDROP_ICON(white_king);
+            mImageOfPieceOnThisSquare = png_images[0];
             mIconNearTheMouse = wxDROP_ICON(white_king);
             break;
         case slach::BLACK_KING:
-            mImageOfPieceOnThisSquare = svgdocs[1]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mImageOfPieceOnThisSquare = png_images[1];
             mIconNearTheMouse = wxDROP_ICON(black_king);
             break;
         case slach::WHITE_QUEEN:
-            mImageOfPieceOnThisSquare = svgdocs[2]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mImageOfPieceOnThisSquare = png_images[2];
             mIconNearTheMouse = wxDROP_ICON(white_queen);
             break;
         case slach::BLACK_QUEEN:
-            mImageOfPieceOnThisSquare = svgdocs[3]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mImageOfPieceOnThisSquare = png_images[3];
             mIconNearTheMouse = wxDROP_ICON(black_queen);
             break;
         case slach::WHITE_ROOK:
-            mImageOfPieceOnThisSquare = svgdocs[4]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mImageOfPieceOnThisSquare = png_images[4];
             mIconNearTheMouse = wxDROP_ICON(white_rook);
             break;
         case slach::BLACK_ROOK:
-            mImageOfPieceOnThisSquare = svgdocs[5]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mImageOfPieceOnThisSquare = png_images[5];
             mIconNearTheMouse = wxDROP_ICON(black_rook);
             break;
         case slach::WHITE_BISHOP:
-            mImageOfPieceOnThisSquare = svgdocs[6]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mImageOfPieceOnThisSquare = png_images[6];
             mIconNearTheMouse = wxDROP_ICON(white_bishop);
             break;
         case slach::BLACK_BISHOP:
-            mImageOfPieceOnThisSquare = svgdocs[7]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mImageOfPieceOnThisSquare = png_images[7];
             mIconNearTheMouse = wxDROP_ICON(black_bishop);
             break;
         case slach::WHITE_KNIGHT:
-            mImageOfPieceOnThisSquare = svgdocs[8]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mImageOfPieceOnThisSquare = png_images[8];
             mIconNearTheMouse = wxDROP_ICON(white_knight);
             break;
         case slach::BLACK_KNIGHT:
-            mImageOfPieceOnThisSquare = svgdocs[9]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mImageOfPieceOnThisSquare = png_images[9];
             mIconNearTheMouse = wxDROP_ICON(black_knight);
             break;
         case slach::WHITE_PAWN:
-            mImageOfPieceOnThisSquare = svgdocs[10]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mImageOfPieceOnThisSquare = png_images[10];
             mIconNearTheMouse = wxDROP_ICON(white_pawn);
             break;
         case slach::BLACK_PAWN:
-            mImageOfPieceOnThisSquare = svgdocs[11]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
-            mIconNearTheMouse.CopyFromBitmap(im);
-            //mIconNearTheMouse = wxDROP_ICON(black_pawn);
+            mImageOfPieceOnThisSquare = png_images[11];
+            mIconNearTheMouse = wxDROP_ICON(black_pawn);
             break;
         case slach::NO_PIECE:
-            mImageOfPieceOnThisSquare = svgdocs[12]->Render(mCurrentWidth,mCurrentHeight,NULL,true,true);
+            mImageOfPieceOnThisSquare = png_images[12];
             mIconNearTheMouse = wxDROP_ICON(no_piece);
             break;
         default:
@@ -291,6 +285,7 @@ void slach_gui::SquarePanel::PaintPiece()
             break;
     }
 
+    mImageOfPieceOnThisSquare.Rescale(mCurrentWidth, mCurrentHeight);
     //now really draw the rendered image
     wxPaintDC dc(this);
     dc.DrawBitmap( mImageOfPieceOnThisSquare, 0, 0, false );

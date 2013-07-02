@@ -21,14 +21,14 @@ private:
     std::string mOriginFile;
     std::string mOriginRank;
 
-    std::string mSvgPieceDirectory;
-    std::string mSvgBackgroundDirectory;
+    std::string mPngPieceDirectory;
+    std::string mPngBackgroundDirectory;
 
     /**
      * Stores pointers of svgdocs corresponding to
      * the pieces
      */
-    std::vector<wxSVGDocument*> mPiecesSvgDocs;
+    std::vector<wxImage> mPieceImages;
     std::vector<SquarePanel* > mSquarePanels;
     wxFlexGridSizer* mpGridSizer;
     slach::ChessBoardWithBorders* mpChessBoardWithBorders;
@@ -53,7 +53,7 @@ public:
     void SetupChessboard();
 
     std::vector<SquarePanel* > GetSquarePanels();
-    std::vector<wxSVGDocument* > GetPiecesSvgDocs();
+    std::vector<wxImage > GetPiecesPgns();
     void OnSize(wxSizeEvent& event);
 
     DECLARE_EVENT_TABLE()

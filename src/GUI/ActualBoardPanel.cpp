@@ -12,8 +12,8 @@ slach_gui::ActualBoardPanel::ActualBoardPanel(wxPanel* parent, wxWindowID id, co
       mpOriginSquarePanel(NULL),
       mpDestinationSquarePanel(NULL)
 {
-    mSvgPieceDirectory = "../../src/GUI/bitmaps/pieces/svg/";
-    mSvgBackgroundDirectory = "../../src/GUI/bitmaps/squares/svg/";
+    mPngPieceDirectory = "../../src/GUI/bitmaps/pieces/png/";
+    mPngBackgroundDirectory = "../../src/GUI/bitmaps/squares/png/";
 
     mSquarePanels.resize(slach::gChessBoardSizeWB);
     mpChessBoardWithBorders = new slach::ChessBoardWithBorders();
@@ -60,28 +60,24 @@ slach_gui::ActualBoardPanel::~ActualBoardPanel()
 
 void slach_gui::ActualBoardPanel::LoadSvgPieces()
 {
-    mPiecesSvgDocs.resize(16u);
-    for (unsigned i = 0; i < mPiecesSvgDocs.size(); ++i)
-    {
-        mPiecesSvgDocs[i] = new wxSVGDocument;
-    }
+	mPieceImages.resize(16u);
 
-    mPiecesSvgDocs[0]->Load(wxString((mSvgPieceDirectory+"white_king.svg").c_str(), wxConvUTF8));
-    mPiecesSvgDocs[1]->Load(wxString((mSvgPieceDirectory+"black_king.svg").c_str(), wxConvUTF8));
-    mPiecesSvgDocs[2]->Load(wxString((mSvgPieceDirectory+"white_queen.svg").c_str(), wxConvUTF8));
-    mPiecesSvgDocs[3]->Load(wxString((mSvgPieceDirectory+"black_queen.svg").c_str(), wxConvUTF8));
-    mPiecesSvgDocs[4]->Load(wxString((mSvgPieceDirectory+"white_rook.svg").c_str(), wxConvUTF8));
-    mPiecesSvgDocs[5]->Load(wxString((mSvgPieceDirectory+"black_rook.svg").c_str(), wxConvUTF8));
-    mPiecesSvgDocs[6]->Load(wxString((mSvgPieceDirectory+"white_bishop.svg").c_str(), wxConvUTF8));
-    mPiecesSvgDocs[7]->Load(wxString((mSvgPieceDirectory+"black_bishop.svg").c_str(), wxConvUTF8));
-    mPiecesSvgDocs[8]->Load(wxString((mSvgPieceDirectory+"white_knight.svg").c_str(), wxConvUTF8));
-    mPiecesSvgDocs[9]->Load(wxString((mSvgPieceDirectory+"black_knight.svg").c_str(), wxConvUTF8));
-    mPiecesSvgDocs[10]->Load(wxString((mSvgPieceDirectory+"white_pawn.svg").c_str(), wxConvUTF8));
-    mPiecesSvgDocs[11]->Load(wxString((mSvgPieceDirectory+"black_pawn.svg").c_str(), wxConvUTF8));
-    mPiecesSvgDocs[12]->Load(wxString((mSvgPieceDirectory+"no_piece.svg").c_str(), wxConvUTF8));
-    mPiecesSvgDocs[13]->Load(wxString((mSvgBackgroundDirectory+"dark_square.svg").c_str(), wxConvUTF8));
-    mPiecesSvgDocs[14]->Load(wxString((mSvgBackgroundDirectory+"light_square.svg").c_str(), wxConvUTF8));
-    mPiecesSvgDocs[15]->Load(wxString((mSvgBackgroundDirectory+"border_square.svg").c_str(), wxConvUTF8));
+    mPieceImages[0].LoadFile(wxString((mPngPieceDirectory+"white_king.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
+    mPieceImages[1].LoadFile(wxString((mPngPieceDirectory+"black_king.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
+    mPieceImages[2].LoadFile(wxString((mPngPieceDirectory+"white_queen.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
+    mPieceImages[3].LoadFile(wxString((mPngPieceDirectory+"black_queen.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
+    mPieceImages[4].LoadFile(wxString((mPngPieceDirectory+"white_rook.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
+    mPieceImages[5].LoadFile(wxString((mPngPieceDirectory+"black_rook.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
+    mPieceImages[6].LoadFile(wxString((mPngPieceDirectory+"white_bishop.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
+    mPieceImages[7].LoadFile(wxString((mPngPieceDirectory+"black_bishop.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
+    mPieceImages[8].LoadFile(wxString((mPngPieceDirectory+"white_knight.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
+    mPieceImages[9].LoadFile(wxString((mPngPieceDirectory+"black_knight.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
+    mPieceImages[10].LoadFile(wxString((mPngPieceDirectory+"white_pawn.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
+    mPieceImages[11].LoadFile(wxString((mPngPieceDirectory+"black_pawn.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
+    mPieceImages[12].LoadFile(wxString((mPngPieceDirectory+"no_piece.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
+    mPieceImages[13].LoadFile(wxString((mPngBackgroundDirectory+"dark_square.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
+    mPieceImages[14].LoadFile(wxString((mPngBackgroundDirectory+"light_square.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
+    mPieceImages[15].LoadFile(wxString((mPngBackgroundDirectory+"border_square.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
 
 }
 
@@ -90,9 +86,9 @@ std::vector<slach_gui::SquarePanel* > slach_gui::ActualBoardPanel::GetSquarePane
     return mSquarePanels;
 }
 
-std::vector<wxSVGDocument* > slach_gui::ActualBoardPanel::GetPiecesSvgDocs()
+std::vector<wxImage > slach_gui::ActualBoardPanel::GetPiecesPgns()
 {
-    return mPiecesSvgDocs;
+    return mPieceImages;
 }
 
 void slach_gui::ActualBoardPanel::SetupChessboard()
