@@ -5,7 +5,7 @@
 #include <wx/sizer.h>
 #include <wx/panel.h>
 #include <wx/dnd.h>
-#include "../Square.hpp"
+#include "Square.hpp"
 
 namespace slach_gui
 {

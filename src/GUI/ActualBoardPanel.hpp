@@ -4,7 +4,6 @@
 #include <wx/wx.h>
 #include <wx/sizer.h>
 #include <wx/panel.h>
-#include <SVGDocument.h>
 #include <vector>
 #include "SquarePanel.hpp"
 #include "ChessBoardWithBorders.hpp"

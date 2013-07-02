@@ -7,16 +7,14 @@ ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64
                  -O0 -std=c++0x -g3 -Wall -Wextra -pedantic -fmessage-length=0 -finstrument-functions)
                  
 if (os_bit_number EQUAL 32)             
-include_directories(/usr/lib/i386-linux-gnu/wx/include/gtk2-unicode-release-2.8 
-                    /usr/include/wx-2.8 
-                    /usr/include/wxSVG 
+include_directories(/usr/local/lib/wx/include/gtk2-unicode-2.9/ 
+                    /usr/local/include/wx-2.9 
                     ${srcdir} 
                     ${stockfishdir} )
 link_directories (/usr/lib/i386-linux-gnu ${CMAKE_SOURCE_DIR}/build/lib) 
 else()
 include_directories(/usr/local/lib/wx/include/gtk2-unicode-2.9/ 
                     /usr/local/include/wx-2.9 
-                    /usr/include/wxSVG 
                     ${srcdir} 
                     ${stockfishdir} )
                     
@@ -59,7 +57,6 @@ TARGET_LINK_LIBRARIES(slach   -lwx_gtk2u_richtext-2.9
                               -lwx_baseu_xml-2.9 
                               -lwx_baseu_net-2.9 
                               -lwx_baseu-2.9
-                              -lwxsvg
                               -lstockfish)
 
 
