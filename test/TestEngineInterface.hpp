@@ -4,6 +4,7 @@
 #include <cxxtest/TestSuite.h>
 #include <iostream>
 #include <sstream>
+#include <ctime>
 #include "evaluate.h"
 #include "thread.h"
 #include "EngineInterface.hpp"
@@ -61,15 +62,22 @@ public:
         my_cb.SetupChessBoard();
         std::vector<slach::Square*> squares =  my_cb.GetSquares();//already numbered and well defined.
         my_cb.SetupInitialChessPosition();
+        std::string test_position_3 = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
 
         std::string fen_pos = my_cb.GetCurrentFenPosition();
 
-        ::Position stockfish_position;
-        //::Search::StateStackPtr SetupStates;
-        stockfish_position.set(fen_pos, false, ::Threads.main_thread());
-        //SetupStates = ::Search::StateStackPtr(new std::stack<StateInfo>());
+        Position stockfish_position;
+        Search::LimitsType limits;
+        limits.movetime = 1000*7;//think for 7 seconds...
+        std::vector< ::Move > searchMoves;
+
+        stockfish_position.set(test_position_3, false, ::Threads.main_thread());
+        std::cout<<std::endl;
         std::cout<<::Eval::trace(stockfish_position)<<std::endl;
-        //::Threads.wait_for_think_finished();
+
+        Threads.start_thinking(stockfish_position, limits, searchMoves, Search::SetupStates);
+        Threads.wait_for_think_finished();
+
     }
 
 };
