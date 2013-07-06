@@ -26,6 +26,7 @@ slach::ChessBoard::~ChessBoard()
         delete mSquares[i];
     }
     delete mpGame;
+    delete mpPosition;
 }
 
 std::vector<slach::Square* > slach::ChessBoard::GetSquares() const

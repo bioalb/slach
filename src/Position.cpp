@@ -14,7 +14,8 @@ slach::Position::Position()
 
 slach::Position::~Position()
 {
-
+    delete mpFenHandler;
+    delete mpLegalMoveChecker;
 }
 
 int slach::Position::SetFromFen(const std::string& rFenPosition, std::vector<Square*>& rSquares)

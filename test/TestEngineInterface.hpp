@@ -77,7 +77,6 @@ public:
 
         Threads.start_thinking(stockfish_position, limits, searchMoves, Search::SetupStates);
         Threads.wait_for_think_finished();
-
     }
 
 };
