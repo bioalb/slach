@@ -28,9 +28,30 @@ slach::EngineInterface::EngineInterface()
 
 slach::EngineInterface::~EngineInterface()
 {
+    //stockfish::Threads.exit();
     delete mpStockfishPosition;
-    //Threads.exit();
 }
+
+void slach::EngineInterface::StartAnalsyingPosition(const Position& position, double seconds)
+{
+    stockfish::Search::LimitsType limits;
+    if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
+    {
+        limits.movetime = 1000*seconds;//converts milliseconds to seconds...
+    }
+    else
+    {
+        limits.infinite = true;
+    }
+    std::vector< stockfish::Move > searchMoves;
+
+    mpStockfishPosition->set(position.GetPositionAsFen(), false, stockfish::Threads.main_thread());
+
+    stockfish::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, stockfish::Search::SetupStates);
+    stockfish::Threads.wait_for_think_finished();
+}
+
+
 
 stockfish::Square slach::EngineInterface::ConvertSquareToStockfish(const Square* pSquare) const
 {

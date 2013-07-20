@@ -1,8 +1,10 @@
 #ifndef ENGINEINTERFACE_HPP_
 #define ENGINEINTERFACE_HPP_
 
+#include <limits>
 #include "position.h"//within stockfish
 #include "Game.hpp"
+#include "Position.hpp"
 
 class TestEngineInterface;//forward declaration, for testing and accessing protected methods from the test class
 
@@ -37,6 +39,16 @@ class EngineInterface
 
     EngineInterface();
     ~EngineInterface();
+
+    /**
+     * This method triggers the engine to analyse the position and outputs to std::output the engine analysis.
+     * It thinks for the number of seconds specified by the parameter "seconds"
+     *
+     * @param position the position to analyise
+     * @param seconds the number of seconds we want the engine to analyse the position for. Iif no parameter is specified,
+     *        the engine will think for an infinite time
+     */
+    void StartAnalsyingPosition(const Position& position, double seconds = std::numeric_limits<double>::max());
 
 };
 

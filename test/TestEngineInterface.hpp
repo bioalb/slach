@@ -54,29 +54,26 @@ public:
         TS_ASSERT_EQUALS(stockfish_squares[squares.size()], sf_square);
         TS_ASSERT_EQUALS(stockfish_squares[squares.size()], interface.ConvertSquareToStockfish(pe2));
         delete pe2;
+
+        my_cb.SetupInitialChessPosition();
+        slach::Position position;
+        position.SetFromFen(my_cb.GetCurrentFenPosition(), squares);
+
+        interface.StartAnalsyingPosition(position, 1.0);
     }
 
-    void TestPosition()
+    void TestStartAndStop()
     {
         slach::ChessBoard my_cb;
         my_cb.SetupChessBoard();
         std::vector<slach::Square*> squares =  my_cb.GetSquares();//already numbered and well defined.
-        my_cb.SetupInitialChessPosition();
-        std::string test_position_3 = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
 
-        std::string fen_pos = my_cb.GetCurrentFenPosition();
+        slach::EngineInterface interface;
+        std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
+        slach::Position position;
+        position.SetFromFen(test_position, squares);
 
-        stockfish::Position stockfish_position;
-        stockfish::Search::LimitsType limits;
-        limits.movetime = 1000*7;//think for 7 seconds...
-        std::vector< stockfish::Move > searchMoves;
-
-        stockfish_position.set(test_position_3, false, stockfish::Threads.main_thread());
-        std::cout<<std::endl;
-        std::cout<<stockfish::Eval::trace(stockfish_position)<<std::endl;
-
-        stockfish::Threads.start_thinking(stockfish_position, limits, searchMoves, stockfish::Search::SetupStates);
-        stockfish::Threads.wait_for_think_finished();
+        interface.StartAnalsyingPosition(position, 3.0);
     }
 
 };
