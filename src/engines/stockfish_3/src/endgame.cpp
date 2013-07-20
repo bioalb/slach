@@ -27,7 +27,10 @@
 
 using std::string;
 
-namespace {
+namespace stockfish
+{
+
+namespace  {
 
   // Table used to drive the defending king towards the edge of the board
   // in KX vs K and KQ vs KR endgames.
@@ -966,3 +969,5 @@ ScaleFactor Endgame<KPKP>::operator()(const Position& pos) const {
   // it's probably at least a draw even with the pawn.
   return Bitbases::probe_kpk(wksq, wpsq, bksq, us) ? SCALE_FACTOR_NONE : SCALE_FACTOR_DRAW;
 }
+
+}  //namespace stockfish

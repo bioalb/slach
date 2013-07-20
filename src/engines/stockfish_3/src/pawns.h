@@ -24,6 +24,9 @@
 #include "position.h"
 #include "types.h"
 
+namespace stockfish
+{
+
 namespace Pawns {
 
 /// Pawns::Entry contains various information about a pawn structure. Currently,
@@ -73,4 +76,5 @@ Entry* probe(const Position& pos, Table& entries);
 
 }
 
+} // namespace stockfish
 #endif // !defined(PAWNS_H_INCLUDED)

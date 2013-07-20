@@ -29,6 +29,9 @@
 #include "position.h"
 #include "types.h"
 
+namespace stockfish
+{
+
 struct SplitPoint;
 
 namespace Search {
@@ -109,4 +112,5 @@ extern void think();
 
 } // namespace Search
 
+} // namespace stockfish
 #endif // !defined(SEARCH_H_INCLUDED)

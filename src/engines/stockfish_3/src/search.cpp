@@ -35,6 +35,9 @@
 #include "tt.h"
 #include "ucioption.h"
 
+namespace stockfish
+{
+
 namespace Search {
 
   volatile SignalsType Signals;
@@ -1800,3 +1803,5 @@ void check_time() {
       || (Limits.nodes && nodes >= Limits.nodes))
       Signals.stop = true;
 }
+
+}// namespace stockfish

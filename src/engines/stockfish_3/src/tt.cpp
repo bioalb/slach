@@ -23,6 +23,9 @@
 #include "bitboard.h"
 #include "tt.h"
 
+namespace stockfish
+{
+
 TranspositionTable TT; // Our global transposition table
 
 
@@ -119,3 +122,5 @@ TTEntry* TranspositionTable::probe(const Key key) const {
 
   return NULL;
 }
+
+} // namespace stockfish

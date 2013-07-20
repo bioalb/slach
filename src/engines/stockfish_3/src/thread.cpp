@@ -26,7 +26,11 @@
 #include "thread.h"
 #include "ucioption.h"
 
+namespace stockfish
+{
+
 using namespace Search;
+
 
 ThreadPool Threads; // Global object
 
@@ -379,3 +383,5 @@ void ThreadPool::start_thinking(const Position& pos, const LimitsType& limits,
   main_thread()->thinking = true;
   main_thread()->notify_one(); // Starts main thread
 }
+
+} // namespace stockfish

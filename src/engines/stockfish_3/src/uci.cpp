@@ -31,6 +31,9 @@
 
 using namespace std;
 
+namespace stockfish
+{
+
 extern void benchmark(const Position& pos, istream& is);
 
 namespace {
@@ -213,3 +216,5 @@ namespace {
     Threads.start_thinking(pos, limits, searchMoves, SetupStates);
   }
 }
+
+} // namespace stockfish

@@ -26,6 +26,8 @@
 #include "position.h"
 #include "types.h"
 
+namespace stockfish
+{
 
 /// EndgameType lists all supported endgames
 
@@ -119,4 +121,5 @@ public:
   { return eg = map(eg).count(key) ? map(eg)[key] : NULL; }
 };
 
+} // namespace stockfish
 #endif // !defined(ENDGAME_H_INCLUDED)

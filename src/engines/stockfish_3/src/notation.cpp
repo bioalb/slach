@@ -28,6 +28,9 @@
 
 using namespace std;
 
+namespace stockfish
+{
+
 static const char* PieceToChar[COLOR_NB] = { " PNBRQK", " pnbrqk" };
 
 
@@ -261,3 +264,5 @@ string pretty_pv(Position& pos, int depth, Value value, int64_t msecs, Move pv[]
 
   return s.str();
 }
+
+} //namespace stockfish

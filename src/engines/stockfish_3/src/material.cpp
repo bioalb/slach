@@ -25,6 +25,9 @@
 
 using namespace std;
 
+namespace stockfish
+{
+
 namespace {
 
   // Values modified by Joona Kiiski
@@ -290,3 +293,5 @@ Phase game_phase(const Position& pos) {
 }
 
 } // namespace Material
+
+} // namespace stockfish

@@ -28,6 +28,9 @@
 #include "position.h"
 #include "search.h"
 
+namespace stockfish
+{
+
 const int MAX_THREADS = 64; // Because SplitPoint::slavesMask is a uint64_t
 const int MAX_SPLITPOINTS_PER_THREAD = 8;
 
@@ -163,5 +166,7 @@ struct ThreadPool : public std::vector<Thread*> {
 };
 
 extern ThreadPool Threads;
+
+} // namespace stockfish
 
 #endif // !defined(THREAD_H_INCLUDED)

@@ -23,6 +23,9 @@
 #include "bitboard.h"
 #include "types.h"
 
+namespace stockfish
+{
+
 namespace {
 
   // The possible pawns squares are 24, the first 4 files and ranks from 2 to 7
@@ -103,7 +106,7 @@ void Bitbases::init_kpk() {
 }
 
 
-namespace {
+//namespace {
 
   Result KPKPosition::classify_leaf(unsigned idx) {
 
@@ -170,4 +173,6 @@ namespace {
         return res = r & DRAW ? DRAW : r & UNKNOWN ? UNKNOWN : WIN;
   }
 
-} // namespace
+//} // namespace
+
+} // namespace stockfish

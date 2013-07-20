@@ -24,6 +24,9 @@
 #include <cassert>
 #include "types.h"
 
+namespace stockfish
+{
+
 enum BitCountType {
   CNT_64,
   CNT_64_MAX15,
@@ -102,4 +105,5 @@ inline int popcount<CNT_HW_POPCNT>(Bitboard b) {
 #endif
 }
 
+} // namespace stockfish
 #endif // !defined(BITCOUNT_H_INCLUDED)

@@ -22,6 +22,9 @@
 
 #include "types.h"
 
+namespace stockfish
+{
+
 enum GenType {
   CAPTURES,
   QUIETS,
@@ -55,5 +58,7 @@ private:
   MoveStack mlist[MAX_MOVES];
   MoveStack *cur, *last;
 };
+
+} // namespace stockfish
 
 #endif // !defined(MOVEGEN_H_INCLUDED)

@@ -26,6 +26,9 @@
 #include "position.h"
 #include "rkiss.h"
 
+namespace stockfish
+{
+
 class PolyglotBook : private std::ifstream {
 public:
   PolyglotBook();
@@ -41,5 +44,7 @@ private:
   RKISS rkiss;
   std::string fileName;
 };
+
+} // namespace stockfish
 
 #endif // !defined(BOOK_H_INCLUDED)

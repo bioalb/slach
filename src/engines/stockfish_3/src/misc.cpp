@@ -30,6 +30,9 @@
 
 using namespace std;
 
+namespace stockfish
+{
+
 /// Version number. If Version is left empty, then Tag plus current
 /// date, in the format DD-MM-YY, are used as a version number.
 
@@ -243,3 +246,4 @@ void prefetch(char* addr) {
 }
 
 #endif
+} // namepace stockfish

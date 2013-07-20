@@ -22,6 +22,8 @@
 
 /// The TimeManager class computes the optimal time to think depending on the
 /// maximum available time, the move game number and other parameters.
+namespace stockfish
+{
 
 class TimeManager {
 public:
@@ -35,5 +37,7 @@ private:
   int maximumSearchTime;
   int unstablePVExtraTime;
 };
+
+} // namespace stockfish
 
 #endif // !defined(TIMEMAN_H_INCLUDED)

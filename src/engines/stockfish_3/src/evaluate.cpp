@@ -29,6 +29,9 @@
 #include "thread.h"
 #include "ucioption.h"
 
+namespace stockfish
+{
+
 namespace {
 
   // Struct EvalInfo contains various information computed and collected
@@ -1215,3 +1218,5 @@ Value do_evaluate(const Position& pos, Value& margin) {
     }
   }
 }
+
+}  //namespace stockfish

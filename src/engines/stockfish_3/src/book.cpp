@@ -33,7 +33,7 @@
 
 using namespace std;
 
-namespace {
+namespace stockfish {
 
   // A Polyglot book is a series of "entries" of 16 bytes. All integers are
   // stored in big-endian format, with highest byte first (regardless of size).
@@ -347,13 +347,15 @@ namespace {
     return key;
   }
 
-} // namespace
+} // namespace stockfish
 
-PolyglotBook::PolyglotBook() : rkiss(Time::now() % 10000) {}
+stockfish::PolyglotBook::PolyglotBook() : rkiss(Time::now() % 10000) {}
 
-PolyglotBook::~PolyglotBook() { if (is_open()) close(); }
+stockfish::PolyglotBook::~PolyglotBook() { if (is_open()) close(); }
 
 
+namespace stockfish
+{
 /// operator>>() reads sizeof(T) chars from the file's binary byte stream and
 /// converts them in a number of type T. A Polyglot book stores numbers in
 /// big-endian format.
@@ -371,11 +373,12 @@ template<> PolyglotBook& PolyglotBook::operator>>(Entry& e) {
   return *this >> e.key >> e.move >> e.count >> e.learn;
 }
 
+} //  namespace stockfish --> here because the tow sepcializations need to be in same namespace
 
 /// open() tries to open a book file with the given name after closing any
 /// exsisting one.
 
-bool PolyglotBook::open(const char* fName) {
+bool stockfish::PolyglotBook::open(const char* fName) {
 
   if (is_open()) // Cannot close an already closed file
       close();
@@ -392,7 +395,7 @@ bool PolyglotBook::open(const char* fName) {
 /// found returns MOVE_NONE. If pickBest is true returns always the highest
 /// rated move, otherwise randomly chooses one, based on the move score.
 
-Move PolyglotBook::probe(const Position& pos, const string& fName, bool pickBest) {
+stockfish::Move stockfish::PolyglotBook::probe(const Position& pos, const string& fName, bool pickBest) {
 
   if (fileName != fName && !open(fName.c_str()))
       return MOVE_NONE;
@@ -448,7 +451,7 @@ Move PolyglotBook::probe(const Position& pos, const string& fName, bool pickBest
 /// the book file for the given key. Returns the index of the leftmost book
 /// entry with the same key as the input.
 
-size_t PolyglotBook::find_first(Key key) {
+size_t stockfish::PolyglotBook::find_first(Key key) {
 
   seekg(0, ios::end); // Move pointer to end, so tellg() gets file's size
 

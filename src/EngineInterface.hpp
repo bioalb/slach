@@ -20,7 +20,7 @@ class EngineInterface
     std::string mFenString;
 
     /**pointer to a position object within the stockfish engine*/
-    Position* mpStockfishPosition;
+    stockfish::Position* mpStockfishPosition;
 
   protected:
 
@@ -31,7 +31,7 @@ class EngineInterface
      * @param pSquare a pointer to the square we wish to convert.
      * @return The corresponding square of the correct type defined by stocksfish (enum)
      */
-    ::Square ConvertSquareToStockfish(const Square* pSquare) const;
+    stockfish::Square ConvertSquareToStockfish(const Square* pSquare) const;
 
   public :
 

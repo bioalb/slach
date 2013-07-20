@@ -26,6 +26,9 @@
 
 #include "types.h"
 
+namespace stockfish
+{
+
 extern const std::string engine_info(bool to_uci = false);
 extern int cpu_count();
 extern void timed_wait(WaitCondition&, Lock&, int);
@@ -65,5 +68,7 @@ std::ostream& operator<<(std::ostream&, SyncCout);
 
 #define sync_cout std::cout << io_lock
 #define sync_endl std::endl << io_unlock
+
+}  // namespace stockfish
 
 #endif // !defined(MISC_H_INCLUDED)

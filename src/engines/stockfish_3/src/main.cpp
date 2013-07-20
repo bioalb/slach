@@ -30,23 +30,23 @@
 
 int main(int argc, char* argv[]) {
 
-  std::cout << engine_info() << std::endl;
+  std::cout << stockfish::engine_info() << std::endl;
 
-  UCI::init(Options);
-  Bitboards::init();
-  Zobrist::init();
-  Bitbases::init_kpk();
-  Search::init();
-  Eval::init();
-  Threads.init();
-  TT.set_size(Options["Hash"]);
+  stockfish::UCI::init(stockfish::Options);
+  stockfish::Bitboards::init();
+  stockfish::Zobrist::init();
+  stockfish::Bitbases::init_kpk();
+  stockfish::Search::init();
+  stockfish::Eval::init();
+  stockfish::Threads.init();
+  stockfish::TT.set_size(stockfish::Options["Hash"]);
 
   std::string args;
 
   for (int i = 1; i < argc; i++)
       args += std::string(argv[i]) + " ";
 
-  UCI::loop(args);
+  stockfish::UCI::loop(args);
 
-  Threads.exit();
+  stockfish::Threads.exit();
 }

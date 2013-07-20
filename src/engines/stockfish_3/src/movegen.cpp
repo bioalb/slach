@@ -29,6 +29,9 @@
 /// Version used for pawns, where the 'from' square is given as a delta from the 'to' square
 #define SERIALIZE_PAWNS(b, d) while (b) { Square to = pop_lsb(&b); \
                                          (*mlist++).move = make_move(to - (d), to); }
+namespace stockfish
+{
+
 namespace {
 
   template<CastlingSide Side, bool Checks, bool Chess960>
@@ -433,3 +436,5 @@ MoveStack* generate<LEGAL>(const Position& pos, MoveStack* mlist) {
 
   return end;
 }
+
+} // namespace stockfish

@@ -26,6 +26,8 @@
 #include "bitboard.h"
 #include "types.h"
 
+namespace stockfish
+{
 
 /// The checkInfo struct is initialized at c'tor time and keeps info used
 /// to detect if a move gives check.
@@ -421,5 +423,7 @@ inline PieceType Position::captured_piece_type() const {
 inline Thread* Position::this_thread() const {
   return thisThread;
 }
+
+} //namespace stockfish
 
 #endif // !defined(POSITION_H_INCLUDED)

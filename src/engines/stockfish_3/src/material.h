@@ -25,6 +25,9 @@
 #include "position.h"
 #include "types.h"
 
+namespace stockfish
+{
+
 namespace Material {
 
 /// Material::Entry contains various information about a material configuration.
@@ -73,5 +76,7 @@ inline ScaleFactor Entry::scale_factor(const Position& pos, Color c) const {
 }
 
 }
+
+} // namesapce stockfish
 
 #endif // !defined(MATERIAL_H_INCLUDED)

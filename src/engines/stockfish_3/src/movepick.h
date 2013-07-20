@@ -28,7 +28,8 @@
 #include "search.h"
 #include "types.h"
 
-
+namespace stockfish
+{
 /// The Stats struct stores moves statistics. According to the template parameter
 /// the class can store both History and Gains type statistics. History records
 /// how often different moves have been successful or unsuccessful during the
@@ -94,5 +95,7 @@ private:
   MoveStack *cur, *end, *endQuiets, *endBadCaptures;
   MoveStack moves[MAX_MOVES];
 };
+
+} // namespace stockfish
 
 #endif // !defined(MOVEPICK_H_INCLUDED)

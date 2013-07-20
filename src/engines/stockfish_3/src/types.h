@@ -42,6 +42,9 @@
 
 #include "platform.h"
 
+namespace stockfish
+{
+
 #if defined(_WIN64) && !defined(IS_64BIT)
 #  include <intrin.h> // MSVC popcnt and bsfq instrinsics
 #  define IS_64BIT
@@ -483,11 +486,14 @@ inline bool is_ok(Move m) {
   return from_sq(m) != to_sq(m); // Catches also MOVE_NULL and MOVE_NONE
 }
 
+} // namespace stockfish
 #include <string>
 
-inline const std::string square_to_string(Square s) {
+inline const std::string square_to_string(stockfish::Square s) {
   char ch[] = { file_to_char(file_of(s)), rank_to_char(rank_of(s)), 0 };
   return ch;
 }
+
+
 
 #endif // !defined(TYPES_H_INCLUDED)

@@ -23,6 +23,9 @@
 #include <map>
 #include <string>
 
+namespace stockfish
+{
+
 namespace UCI {
 
 class Option;
@@ -65,5 +68,7 @@ void loop(const std::string&);
 } // namespace UCI
 
 extern UCI::OptionsMap Options;
+
+} // namespace stockfish
 
 #endif // !defined(UCIOPTION_H_INCLUDED)

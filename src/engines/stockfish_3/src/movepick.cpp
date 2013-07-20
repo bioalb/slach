@@ -23,6 +23,9 @@
 #include "movepick.h"
 #include "thread.h"
 
+namespace stockfish
+{
+
 namespace {
 
   enum Sequencer {
@@ -375,3 +378,5 @@ Move MovePicker::next_move<false>() {
 /// safe so must be lock protected by the caller.
 template<>
 Move MovePicker::next_move<true>() { return ss->splitPoint->movePicker->next_move<false>(); }
+
+} // namespace stockfish

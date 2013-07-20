@@ -22,6 +22,10 @@
 
 #include "types.h"
 
+namespace stockfish
+{
+
+
 #define S(mg, eg) make_score(mg, eg)
 
 
@@ -94,5 +98,7 @@ static const Score PSQT[][SQUARE_NB] = {
 };
 
 #undef S
+
+} // namespace stockfish
 
 #endif // !defined(PSQTAB_H_INCLUDED)

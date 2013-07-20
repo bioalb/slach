@@ -26,6 +26,9 @@
 #include "misc.h"
 #include "rkiss.h"
 
+namespace stockfish
+{
+
 CACHE_LINE_ALIGNMENT
 
 Bitboard RMasks[SQUARE_NB];
@@ -343,3 +346,5 @@ namespace {
     }
   }
 }
+
+}  // namespace stockfish

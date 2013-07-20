@@ -23,6 +23,9 @@
 
 #include "types.h"
 
+namespace stockfish
+{
+
 namespace Bitboards {
 
 void init();
@@ -291,5 +294,7 @@ extern Square lsb(Bitboard b);
 extern Square pop_lsb(Bitboard* b);
 
 #endif
+
+}  // namespace stockfish
 
 #endif // !defined(BITBOARD_H_INCLUDED)

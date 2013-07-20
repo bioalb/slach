@@ -24,6 +24,9 @@
 #include "timeman.h"
 #include "ucioption.h"
 
+namespace stockfish
+{
+
 namespace {
 
   /// Constants
@@ -160,3 +163,5 @@ namespace {
     return int(floor(myTime * std::min(ratio1, ratio2)));
   }
 }
+
+}  // namespace stockfish

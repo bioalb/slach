@@ -41,6 +41,9 @@
 /// bit 21-22: value type
 /// bit 23-31: generation
 
+namespace stockfish
+{
+
 class TTEntry {
 
 public:
@@ -122,5 +125,7 @@ inline void TranspositionTable::refresh(const TTEntry* tte) const {
 
   const_cast<TTEntry*>(tte)->set_generation(generation);
 }
+
+} // namespace stockfish
 
 #endif // !defined(TT_H_INCLUDED)

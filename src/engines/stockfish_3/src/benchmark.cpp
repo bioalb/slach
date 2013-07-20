@@ -31,6 +31,9 @@
 
 using namespace std;
 
+namespace stockfish
+{
+
 static const char* Defaults[] = {
   "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
   "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 10",
@@ -143,3 +146,5 @@ void benchmark(const Position& current, istream& is) {
        << "\nNodes searched  : " << nodes
        << "\nNodes/second    : " << 1000 * nodes / elapsed << endl;
 }
+
+} // namespace stockfish

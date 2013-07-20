@@ -24,6 +24,9 @@
 #include "pawns.h"
 #include "position.h"
 
+namespace stockfish
+{
+
 namespace {
 
   #define V Value
@@ -290,3 +293,5 @@ template Score Entry::update_safety<WHITE>(const Position& pos, Square ksq);
 template Score Entry::update_safety<BLACK>(const Position& pos, Square ksq);
 
 } // namespace Pawns
+
+} //namespace stockfish

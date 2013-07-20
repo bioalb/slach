@@ -37,6 +37,9 @@ using std::string;
 using std::cout;
 using std::endl;
 
+namespace stockfish
+{
+
 static const string PieceToChar(" PNBRQK  pnbrqk");
 
 CACHE_LINE_ALIGNMENT
@@ -102,8 +105,10 @@ void init() {
 
 } // namespace Zobrist
 
+//namespace
+//{
 
-namespace {
+namespace stockfish{
 
 /// next_attacker() is an helper function used by see() to locate the least
 /// valuable attacker for the side to move, remove the attacker we just found
@@ -136,7 +141,7 @@ PieceType next_attacker<KING>(const Bitboard*, const Square&, const Bitboard&, B
 
 } // namespace
 
-
+//}
 /// CheckInfo c'tor
 
 CheckInfo::CheckInfo(const Position& pos) {
@@ -1207,7 +1212,7 @@ int Position::see(Move m, int asymmThreshold) const {
       slIndex++;
 
       // Locate and remove from 'occupied' the next least valuable attacker
-      captured = next_attacker<PAWN>(byTypeBB, to, stmAttackers, occupied, attackers);
+      captured = stockfish::next_attacker<PAWN>(byTypeBB, to, stmAttackers, occupied, attackers);
 
       attackers &= occupied; // Remove the just found attacker
       stm = ~stm;
@@ -1584,3 +1589,5 @@ bool Position::pos_is_ok(int* failedStep) const {
   *step = 0;
   return true;
 }
+
+} //namespace stockfish
