@@ -4,6 +4,7 @@
 #include <wx/wx.h>
 #include <wx/sizer.h>
 #include <wx/panel.h>
+#include <wx/textctrl.h>
 
 namespace slach_gui
 {
@@ -20,6 +21,8 @@ public:
      * So when the user resizes the image panel the image should be resized too.
      */
     void OnSize(wxSizeEvent& event);
+
+    void ShowText();
 
     DECLARE_EVENT_TABLE()
 };
