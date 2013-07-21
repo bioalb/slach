@@ -59,7 +59,7 @@ public:
         slach::Position position;
         position.SetFromFen(my_cb.GetCurrentFenPosition(), squares);
 
-        interface.StartAnalsyingPosition(position, 1.0);
+        interface.StartAnalsyingPosition(&position, 1.0);
     }
 
     void TestStartAndStop()
@@ -73,7 +73,7 @@ public:
         slach::Position position;
         position.SetFromFen(test_position, squares);
 
-        interface.StartAnalsyingPosition(position, 3.0);
+        interface.StartAnalsyingPosition(&position, 3.0);
     }
 
 };

@@ -32,8 +32,10 @@ slach::EngineInterface::~EngineInterface()
     delete mpStockfishPosition;
 }
 
-void slach::EngineInterface::StartAnalsyingPosition(const Position& position, double seconds)
+void slach::EngineInterface::StartAnalsyingPosition(Position* pPosition, double seconds)
 {
+    assert(pPosition != NULL);
+
     stockfish::Search::LimitsType limits;
     if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
     {
@@ -45,7 +47,7 @@ void slach::EngineInterface::StartAnalsyingPosition(const Position& position, do
     }
     std::vector< stockfish::Move > searchMoves;
 
-    mpStockfishPosition->set(position.GetPositionAsFen(), false, stockfish::Threads.main_thread());
+    mpStockfishPosition->set(pPosition->GetPositionAsFen(), false, stockfish::Threads.main_thread());
 
     stockfish::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, stockfish::Search::SetupStates);
     stockfish::Threads.wait_for_think_finished();

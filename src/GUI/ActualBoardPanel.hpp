@@ -55,6 +55,8 @@ public:
     std::vector<wxImage > GetPiecesPgns();
     void OnSize(wxSizeEvent& event);
 
+    slach::ChessBoard* GetChessBoard() const;
+
     DECLARE_EVENT_TABLE()
 };
 

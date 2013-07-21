@@ -109,6 +109,11 @@ std::string slach::ChessBoard::GetCurrentFenPosition() const
     return mpPosition->GetPositionAsFen();
 }
 
+slach::Position* slach::ChessBoard::GetCurrentPosition() const
+{
+    return mpPosition;
+}
+
 slach::Colour slach::ChessBoard::WhosTurnIsIt() const
 {
     return mpPosition->GetTurnToMove();

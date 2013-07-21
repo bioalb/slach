@@ -44,11 +44,11 @@ class EngineInterface
      * This method triggers the engine to analyse the position and outputs to std::output the engine analysis.
      * It thinks for the number of seconds specified by the parameter "seconds"
      *
-     * @param position the position to analyise
+     * @param pPosition A pointer to the position to analyise
      * @param seconds the number of seconds we want the engine to analyse the position for. Iif no parameter is specified,
      *        the engine will think for an infinite time
      */
-    void StartAnalsyingPosition(const Position& position, double seconds = std::numeric_limits<double>::max());
+    void StartAnalsyingPosition(Position* pPosition, double seconds = std::numeric_limits<double>::max());
 
 };
 

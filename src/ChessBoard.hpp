@@ -153,6 +153,8 @@ public:
      * @param piece the promotion piece. Colour will be assigned automatically
      */
     void SetPromotionPiece(slach::PieceType piece);
+
+    Position* GetCurrentPosition() const;
 };
 
 }//namespace slach

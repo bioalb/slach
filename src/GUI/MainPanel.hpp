@@ -35,7 +35,7 @@ public:
      * So when the user resizes the image panel the image should be resized too.
      */
     void OnSize(wxSizeEvent& event);
-
+    void FinalizeCreation();
     DECLARE_EVENT_TABLE()
 };
 

@@ -18,6 +18,11 @@ slach_gui::ChessboardPanel::~ChessboardPanel()
     delete mpActualChessboard;
 }
 
+slach_gui::ActualBoardPanel* slach_gui::ChessboardPanel::GetActualChessboard() const
+{
+    return mpActualChessboard;
+}
+
 void slach_gui::ChessboardPanel::OnSize(wxSizeEvent& event)
 {
     Refresh();

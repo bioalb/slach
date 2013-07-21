@@ -191,6 +191,10 @@ void slach_gui::ActualBoardPanel::OnSize(wxSizeEvent& event)
     event.Skip();
 }
 
+slach::ChessBoard* slach_gui::ActualBoardPanel::GetChessBoard() const
+{
+    return mpChessBoard;
+}
 
 BEGIN_EVENT_TABLE(slach_gui::ActualBoardPanel, wxPanel)
     EVT_SIZE(slach_gui::ActualBoardPanel::OnSize)

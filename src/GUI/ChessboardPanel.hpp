@@ -28,6 +28,8 @@ public:
      */
     void OnSize(wxSizeEvent& event);
 
+    ActualBoardPanel* GetActualChessboard() const;
+
     DECLARE_EVENT_TABLE()
 };
 
