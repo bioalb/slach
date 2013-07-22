@@ -31,7 +31,7 @@ void slach_gui::BottomPanel::StartEngine(wxCommandEvent& event)
     {
         wxStreamToTextRedirector redirect(text);
         text->SetEditable(false);
-        //mpEngineInterface->StartAnalsyingPosition(mpPosition);
+        mpEngineInterface->StartAnalsyingPosition(mpPosition, 1.0);
     }
 }
 BEGIN_EVENT_TABLE(slach_gui::BottomPanel, wxPanel)
