@@ -27,7 +27,7 @@ void slach_gui::BottomPanel::SetPositionToAnalyse(slach::Position* pPosition)
 
 void slach_gui::BottomPanel::StartEngine(wxCommandEvent& event)
 {
-    wxTextCtrl* text = new wxTextCtrl(this, wxID_ANY, wxT("HELLO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
+    wxTextCtrl* text = new wxTextCtrl(this, wxID_ANY, wxT("HELLO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"), wxDefaultPosition, wxSize(350,180), wxTE_MULTILINE);
     {
         wxStreamToTextRedirector redirect(text);
         text->SetEditable(false);
