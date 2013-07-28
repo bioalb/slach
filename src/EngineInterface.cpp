@@ -47,7 +47,7 @@ void slach::EngineInterface::StartAnalsyingPosition(Position* pPosition, double 
     }
     std::vector< stockfish::Move > searchMoves;
 
-    mpStockfishPosition->set(pPosition->GetPositionAsFen(), false, stockfish::Threads.main_thread());
+    mpStockfishPosition->set(pPosition->GetPositionAsFen(), false /*not chess960*/, stockfish::Threads.main_thread());
 
     stockfish::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, stockfish::Search::SetupStates);
     stockfish::Threads.wait_for_think_finished();

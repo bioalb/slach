@@ -5,24 +5,12 @@ ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64
                 -D_LARGE_FILES 
                 -D__WXGTK__ 
                  -O0 -std=c++0x -g3 -Wall -Wextra -pedantic -fmessage-length=0 -finstrument-functions)
-                 
-if (os_bit_number EQUAL 32)             
+                           
 include_directories(/usr/local/lib/wx/include/gtk2-unicode-2.9/ 
                     /usr/local/include/wx-2.9 
                     ${srcdir} 
                     ${stockfishdir} )
-link_directories (/usr/lib/i386-linux-gnu ${CMAKE_SOURCE_DIR}/build/lib) 
-else()
-include_directories(/usr/local/lib/wx/include/gtk2-unicode-2.9/ 
-                    /usr/local/include/wx-2.9 
-                    ${srcdir} 
-                    ${stockfishdir} )
-                    
-link_directories (/usr/local/lib ${CMAKE_SOURCE_DIR}/build/lib) 
-endif()
-
-
-                    
+link_directories (${CMAKE_SOURCE_DIR}/build/lib) 
 
 
 ADD_EXECUTABLE(slach   ${srcdir}/Exception.cpp
