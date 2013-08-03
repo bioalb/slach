@@ -54,7 +54,7 @@ void slach_gui::MainFrame::OnAbout(wxCommandEvent& event)
     wxT("About Slach"), wxOK | wxICON_INFORMATION );
 }
 
-BEGIN_EVENT_TABLE(slach_gui::MainFrame, wxFrame)
+wxBEGIN_EVENT_TABLE(slach_gui::MainFrame, wxFrame)
     EVT_MENU(wxID_EXIT,  slach_gui::MainFrame::OnExit)
     EVT_MENU(wxID_ABOUT, slach_gui::MainFrame::OnAbout)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()

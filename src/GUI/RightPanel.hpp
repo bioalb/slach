@@ -21,7 +21,7 @@ public:
      */
     void OnSize(wxSizeEvent& event);
 
-    DECLARE_EVENT_TABLE()
+    wxDECLARE_EVENT_TABLE();
 };
 
 }//namespace slach_gui

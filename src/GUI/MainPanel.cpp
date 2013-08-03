@@ -30,6 +30,6 @@ void slach_gui::MainPanel::OnSize(wxSizeEvent& event){
 }
 
 
-BEGIN_EVENT_TABLE(slach_gui::MainPanel, wxPanel)
+wxBEGIN_EVENT_TABLE(slach_gui::MainPanel, wxPanel)
     EVT_SIZE(slach_gui::MainPanel::OnSize)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()

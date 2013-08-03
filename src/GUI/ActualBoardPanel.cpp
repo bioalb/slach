@@ -196,7 +196,7 @@ slach::ChessBoard* slach_gui::ActualBoardPanel::GetChessBoard() const
     return mpChessBoard;
 }
 
-BEGIN_EVENT_TABLE(slach_gui::ActualBoardPanel, wxPanel)
+wxBEGIN_EVENT_TABLE(slach_gui::ActualBoardPanel, wxPanel)
     EVT_SIZE(slach_gui::ActualBoardPanel::OnSize)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 

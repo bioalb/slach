@@ -31,7 +31,7 @@ public:
     void StartEngine(wxCommandEvent& event);
     void SetPositionToAnalyse(slach::Position* pPosition);
 
-    DECLARE_EVENT_TABLE()
+    wxDECLARE_EVENT_TABLE();
 };
 
 } //namespace slach_gui

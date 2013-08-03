@@ -57,7 +57,7 @@ public:
 
     slach::ChessBoard* GetChessBoard() const;
 
-    DECLARE_EVENT_TABLE()
+    wxDECLARE_EVENT_TABLE();
 };
 
 }//namespace slach_gui

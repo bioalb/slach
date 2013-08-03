@@ -32,6 +32,6 @@ void slach_gui::ChessboardPanel::OnSize(wxSizeEvent& event)
 }
 
 
-BEGIN_EVENT_TABLE(slach_gui::ChessboardPanel, wxPanel)
+wxBEGIN_EVENT_TABLE(slach_gui::ChessboardPanel, wxPanel)
     EVT_SIZE(slach_gui::ChessboardPanel::OnSize)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()

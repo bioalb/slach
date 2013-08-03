@@ -17,6 +17,6 @@ void slach_gui::RightPanel::OnSize(wxSizeEvent& event)
     event.Skip();
 }
 
-BEGIN_EVENT_TABLE(slach_gui::RightPanel, wxPanel)
+wxBEGIN_EVENT_TABLE(slach_gui::RightPanel, wxPanel)
     EVT_SIZE(slach_gui::RightPanel::OnSize)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()

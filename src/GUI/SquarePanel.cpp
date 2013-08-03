@@ -341,9 +341,9 @@ bool slach_gui::SquarePanel::OnDrop(wxCoord x, wxCoord y, std::string file, std:
 }
 
 
-BEGIN_EVENT_TABLE(slach_gui::SquarePanel, wxPanel)
+wxBEGIN_EVENT_TABLE(slach_gui::SquarePanel, wxPanel)
     EVT_SIZE(slach_gui::SquarePanel::OnSize)
     EVT_RIGHT_DOWN(slach_gui::SquarePanel::rightClick)
     EVT_PAINT(slach_gui::SquarePanel::RenderOnChessBoard)
     EVT_LEFT_DOWN(slach_gui::SquarePanel::LeftMouseClick)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()

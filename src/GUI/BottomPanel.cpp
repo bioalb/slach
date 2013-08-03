@@ -34,7 +34,7 @@ void slach_gui::BottomPanel::StartEngine(wxCommandEvent& event)
         mpEngineInterface->StartAnalsyingPosition(mpPosition, 1.0);
     }
 }
-BEGIN_EVENT_TABLE(slach_gui::BottomPanel, wxPanel)
+wxBEGIN_EVENT_TABLE(slach_gui::BottomPanel, wxPanel)
     EVT_SIZE(slach_gui::BottomPanel::OnSize)
     EVT_BUTTON(1, slach_gui::BottomPanel::StartEngine)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
