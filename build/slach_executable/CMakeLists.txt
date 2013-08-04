@@ -6,7 +6,7 @@ ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64
                 -D__WXGTK__ 
                  -O0 -std=c++0x -g3 -Wall -Wextra -pedantic -fmessage-length=0 -finstrument-functions)
                            
-include_directories(/usr/local/lib/wx/include/gtk2-unicode-2.9/ 
+include_directories(/usr/local/lib/wx/include/${GTK_VER}-unicode-2.9
                     /usr/local/include/wx-2.9 
                     ${srcdir} 
                     ${stockfishdir} )
@@ -35,13 +35,13 @@ ADD_EXECUTABLE(slach   ${srcdir}/Exception.cpp
                        ${srcdir}/GUI/slach_main.cpp)
 
 #most of this from the wx widgets documentation
-TARGET_LINK_LIBRARIES(slach   -lwx_gtk2u_richtext-2.9 
-                              -lwx_gtk2u_aui-2.9 
-                              -lwx_gtk2u_xrc-2.9 
-                              -lwx_gtk2u_qa-2.9 
-                              -lwx_gtk2u_html-2.9 
-                              -lwx_gtk2u_adv-2.9 
-                              -lwx_gtk2u_core-2.9 
+TARGET_LINK_LIBRARIES(slach   -lwx_${GTK_VER}u_richtext-2.9 
+                              -lwx_${GTK_VER}u_aui-2.9 
+                              -lwx_${GTK_VER}u_xrc-2.9 
+                              -lwx_${GTK_VER}u_qa-2.9 
+                              -lwx_${GTK_VER}u_html-2.9 
+                              -lwx_${GTK_VER}u_adv-2.9 
+                              -lwx_${GTK_VER}u_core-2.9 
                               -lwx_baseu_xml-2.9 
                               -lwx_baseu_net-2.9 
                               -lwx_baseu-2.9
