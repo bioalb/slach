@@ -40,7 +40,9 @@
 slach_gui::SquarePanel::SquarePanel(ActualBoardPanel* parent, slach::Square* pSquare, const wxColour& colour, const wxPoint& pos, const wxSize& size, long style )
     : wxPanel(parent,wxID_ANY, pos,size, style),
       mpParent(parent),
-      mpSquare(pSquare)
+      mpSquare(pSquare),
+      mDrawPiece(true),
+      mDeletePiece(false)
 {
     mFile = pSquare->GetFile();
     mRank = pSquare->GetRank();
@@ -77,7 +79,7 @@ slach::Square* slach_gui::SquarePanel::GetSquare()
     return mpSquare;
 }
 
-void slach_gui::SquarePanel::PaintBackground()
+void slach_gui::SquarePanel::PaintBackground(wxPaintDC& dc)
 {
     std::vector<wxImage> png_images = mpParent->GetPiecesPgns();
     if ( (mpSquare->IsDarkSquare() == true) && (mpSquare->IsBorderSquare() == false))
@@ -95,7 +97,6 @@ void slach_gui::SquarePanel::PaintBackground()
 
     mBackgroundOnThisSquare.Rescale(mCurrentWidth, mCurrentHeight);
     //now really draw the rendered image
-    wxPaintDC dc(this);
     dc.DrawBitmap( mBackgroundOnThisSquare, 0, 0, true );
 }
 
@@ -188,13 +189,12 @@ void slach_gui::SquarePanel::DetermineCoordinateToPrint()
     }
 }
 
-void slach_gui::SquarePanel::PaintOnBorder()
+void slach_gui::SquarePanel::PaintOnBorder(wxPaintDC& dc)
 {
     if ( (mIsBorderSquarePanel==true &&
           mIsCornerSquarePanel==false &&
           mIsSquarePanelPrintable==true))
     {
-        wxPaintDC dc(this);
         double fractional_occupancy_of_space= 0.7;
         int dim = 0;
         int xcoord = 0;
@@ -217,7 +217,7 @@ void slach_gui::SquarePanel::PaintOnBorder()
     }
 }
 
-void slach_gui::SquarePanel::PaintPiece()
+void slach_gui::SquarePanel::PaintPiece(wxPaintDC& dc)
 {
     slach::PieceType piece = mpSquare->GetPieceOnThisSquare();
     std::vector<wxImage> png_images = mpParent->GetPiecesPgns();
@@ -282,16 +282,30 @@ void slach_gui::SquarePanel::PaintPiece()
     }
 
     mImageOfPieceOnThisSquare.Rescale(mCurrentWidth, mCurrentHeight);
-    //now really draw the rendered image
-    wxPaintDC dc(this);
+    //now really draw the rendered image;
     dc.DrawBitmap( mImageOfPieceOnThisSquare, 0, 0, true );
 }
 
 void slach_gui::SquarePanel::RenderOnChessBoard(wxPaintEvent & evt)
 {
-    PaintBackground();
-    PaintOnBorder();
-    PaintPiece();
+	wxPaintDC dc(this);
+	if (mpSquare->IsBorderSquare())
+	{
+		PaintBackground(dc);
+		PaintOnBorder(dc);
+	}
+	else
+	{
+		if ((mDeletePiece == true) && (mDrawPiece==false))
+		{
+			PaintBackground(dc);
+		}
+		if (mDrawPiece == true)
+		{
+			PaintBackground(dc);
+			PaintPiece(dc);
+		}
+	}
     evt.Skip();
 }
 
@@ -319,16 +333,23 @@ void slach_gui::SquarePanel::LeftMouseClick(wxMouseEvent& event)
     drop_source.SetCursor(wxDragMove, cursor);
     drop_source.SetData( piece_to_be_moved );
 
-    PaintBackground();///remove the source piece while dragging...
+    mDrawPiece = false;
+    mDeletePiece = true;
+    this->Refresh();///remove the source piece while dragging...
 
     wxDragResult result = drop_source.DoDragDrop( wxDragMove );
+
+    mDrawPiece = true;
+    mDeletePiece = false;
     switch (result)
     {
         case wxDragCopy: break;
         case wxDragMove: break;
         case wxDragCancel:
+            mDrawPiece = true;
+            mDeletePiece = false;
             //need to re-paint the piece as it was deleted upon initiation of dragging
-            PaintPiece();
+            this->Refresh();
             break;
         default: break;
     }
@@ -338,6 +359,16 @@ bool slach_gui::SquarePanel::OnDrop(wxCoord x, wxCoord y, std::string file, std:
 {
     mpParent->SetDestinationSquare(this);
     return true;
+}
+
+void slach_gui::SquarePanel::SetToDrawPiece(bool drawPiece)
+{
+	mDrawPiece = drawPiece;
+}
+
+void slach_gui::SquarePanel::SetToDeletePiece(bool deletePiece)
+{
+	mDeletePiece = deletePiece;
 }
 
 

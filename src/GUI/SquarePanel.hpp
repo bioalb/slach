@@ -36,7 +36,10 @@ private:
     int mCurrentWidth;
     int mCurrentHeight;
 
-    void PaintOnBorder();
+    void PaintOnBorder(wxPaintDC& dc);
+    void PaintPiece(wxPaintDC& dc);
+    void PaintBackground(wxPaintDC& dc);
+
     void DetermineCoordinateToPrint();
 
     wxImage mPrintedCoord;
@@ -44,11 +47,13 @@ private:
     wxImage mBackgroundOnThisSquare;
     wxIcon mIconNearTheMouse;
 
+    bool mDrawPiece;
+    bool mDeletePiece;
+
 public:
     SquarePanel(ActualBoardPanel* parent, slach::Square* pSquare,const wxColour& colour = wxT("red"), const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize, long style =  wxBORDER_NONE);
     ~SquarePanel();
 
-    void PaintPiece();
     /*
      * Here we call refresh to tell the panel to draw itself again.
      * So when the user resizes the image panel the image should be resized too.
@@ -56,7 +61,7 @@ public:
     void OnSize(wxSizeEvent& event);
 
     void RenderOnChessBoard(wxPaintEvent & evt);
-    void PaintBackground();
+
     void rightClick(wxMouseEvent& event);
     void LeftMouseClick(wxMouseEvent& event);
     virtual bool OnDrop(wxCoord x, wxCoord y, std::string file, std::string rank);
@@ -64,6 +69,9 @@ public:
     wxImage GetImageOfPieceOnThisSquare();
 
     slach::Square* GetSquare();
+
+    void SetToDrawPiece(bool drawPiece = true);
+    void SetToDeletePiece(bool deletePiece = true);
 
     wxDECLARE_EVENT_TABLE();
 };

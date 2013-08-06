@@ -115,30 +115,52 @@ void slach_gui::ActualBoardPanel::SetDestinationSquare(SquarePanel* pDestination
         if (candidate_move.DoesMoveRequireSpecialGuiHandling())
         {
             mpChessBoard->MakeThisMove(candidate_move);
-            mpOriginSquarePanel->PaintBackground();
-            mpDestinationSquarePanel->PaintBackground();
-            mpDestinationSquarePanel->PaintPiece();
+
+            //delete piece on origin
+            mpOriginSquarePanel->SetToDrawPiece (false);
+            mpOriginSquarePanel->SetToDeletePiece (true);
+            mpOriginSquarePanel->Refresh();
+            mpOriginSquarePanel->SetToDrawPiece (true);
+            mpOriginSquarePanel->SetToDeletePiece (false);
+
+            //paint piece on destination
+            mpDestinationSquarePanel->SetToDrawPiece (true);
+            mpDestinationSquarePanel->SetToDeletePiece (false);
+            mpDestinationSquarePanel->Refresh();
+
 
 			for (unsigned i = 0; i  < mSquarePanels.size(); ++i)
 			{
 				if (! ( mpChessBoardWithBorders->GetSquares()[i]->IsBorderSquare()))
 				{
-					mSquarePanels[i]->PaintBackground();
-					mSquarePanels[i]->PaintPiece();
+					mSquarePanels[i]->SetToDrawPiece (true);
+					mSquarePanels[i]->SetToDeletePiece (false);
+					mSquarePanels[i]->Refresh();
 				}
 			}
         }
         else
         {
             mpChessBoard->MakeThisMove(candidate_move);
-            mpOriginSquarePanel->PaintBackground();
-            mpDestinationSquarePanel->PaintBackground();
-            mpDestinationSquarePanel->PaintPiece();
+            //delete piece on origin
+            mpOriginSquarePanel->SetToDrawPiece (false);
+            mpOriginSquarePanel->SetToDeletePiece (true);
+            mpOriginSquarePanel->Refresh();
+            mpOriginSquarePanel->SetToDrawPiece (true);
+            mpOriginSquarePanel->SetToDeletePiece (false);
+
+            //paint piece on destination
+            mpDestinationSquarePanel->SetToDrawPiece (true);
+            mpDestinationSquarePanel->SetToDeletePiece (false);
+            mpDestinationSquarePanel->Refresh();
         }
     }
     else
     {
-        mpOriginSquarePanel->PaintPiece();
+    	//not legal, re-draw piece on origin
+    	mpOriginSquarePanel->SetToDrawPiece (true);
+    	mpOriginSquarePanel->SetToDeletePiece (false);
+    	mpOriginSquarePanel->Refresh();
     }
 }
 void slach_gui::ActualBoardPanel::SetOriginSquare(SquarePanel* pOriginPanel)
