@@ -83,8 +83,22 @@ public:
 
     wxImage GetImageOfPieceOnThisSquare();
 
+    /**
+     * this method gets you a pointer to the underlying Square object.
+     *
+     * @return a ointer to the underlying slach::Square object
+     */
     slach::Square* GetSquare();
 
+    /**
+     * Sets whether we wish to draw a piece on this square or not.
+     * The drawing will take place at the next Refresh().
+     * You can pass false to this method and achieve deletion of a piece
+     * at the next Refresh().
+     *
+     * @param drawPiece true if you want the piece drawn, false if you want just the background
+     *                  e.g., for deleting ane xisting piece.
+     */
     void SetToDrawPiece(bool drawPiece = true);
 
     wxDECLARE_EVENT_TABLE();
