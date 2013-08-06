@@ -41,8 +41,7 @@ slach_gui::SquarePanel::SquarePanel(ActualBoardPanel* parent, slach::Square* pSq
     : wxPanel(parent,wxID_ANY, pos,size, style),
       mpParent(parent),
       mpSquare(pSquare),
-      mDrawPiece(true),
-      mDeletePiece(false)
+      mDrawPiece(true)
 {
     mFile = pSquare->GetFile();
     mRank = pSquare->GetRank();
@@ -296,13 +295,9 @@ void slach_gui::SquarePanel::RenderOnChessBoard(wxPaintEvent & evt)
 	}
 	else
 	{
-		if ((mDeletePiece == true) && (mDrawPiece==false))
-		{
-			PaintBackground(dc);
-		}
+		PaintBackground(dc);
 		if (mDrawPiece == true)
 		{
-			PaintBackground(dc);
 			PaintPiece(dc);
 		}
 	}
@@ -334,20 +329,17 @@ void slach_gui::SquarePanel::LeftMouseClick(wxMouseEvent& event)
     drop_source.SetData( piece_to_be_moved );
 
     mDrawPiece = false;
-    mDeletePiece = true;
     this->Refresh();///remove the source piece while dragging...
 
     wxDragResult result = drop_source.DoDragDrop( wxDragMove );
 
     mDrawPiece = true;
-    mDeletePiece = false;
     switch (result)
     {
         case wxDragCopy: break;
         case wxDragMove: break;
         case wxDragCancel:
             mDrawPiece = true;
-            mDeletePiece = false;
             //need to re-paint the piece as it was deleted upon initiation of dragging
             this->Refresh();
             break;
@@ -366,10 +358,6 @@ void slach_gui::SquarePanel::SetToDrawPiece(bool drawPiece)
 	mDrawPiece = drawPiece;
 }
 
-void slach_gui::SquarePanel::SetToDeletePiece(bool deletePiece)
-{
-	mDeletePiece = deletePiece;
-}
 
 
 wxBEGIN_EVENT_TABLE(slach_gui::SquarePanel, wxPanel)
