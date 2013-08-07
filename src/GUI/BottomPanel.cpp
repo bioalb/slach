@@ -36,7 +36,7 @@ void slach_gui::BottomPanel::StartEngine(wxCommandEvent& event)
         wxStreamToTextRedirector redirect(text);
         // we want to start a long task, but we don't want our GUI to block
         // while it's executed, so we use a thread to do it.
-        if (CreateThread(wxTHREAD_DETACHED) != wxTHREAD_NO_ERROR)
+        if (CreateThread(wxTHREAD_JOINABLE) != wxTHREAD_NO_ERROR)
         {
             wxLogError("Could not create the worker thread!");
             return;
@@ -74,8 +74,8 @@ wxThread::ExitCode slach_gui::BottomPanel::Entry()
     // this function gets executed in the secondary thread context!
 
     // here we do our long task, periodically calling TestDestroy():
-    //while (!GetThread()->TestDestroy())
-    //{
+    while (!GetThread()->TestDestroy())
+    {
         // since this Entry() is implemented in MyFrame context we don't
         // need any pointer to access the m_data, m_processedData, m_dataCS
         // variables... very nice!
@@ -84,9 +84,9 @@ wxThread::ExitCode slach_gui::BottomPanel::Entry()
 
         // VERY IMPORTANT: do not call any GUI function inside this
         //                 function; rather use wxQueueEvent():
-        //wxQueueEvent(this, new wxThreadEvent(wxEVT_COMMAND_MYTHREAD_UPDATE));
+        wxQueueEvent(this, new wxThreadEvent(myEVT_THREAD_UPDATE));
             // we used pointer 'this' assuming it's safe; see OnClose()
-    //}
+    }
     // TestDestroy() returned true (which means the main thread asked us
     // to terminate as soon as possible) or we ended the long task...
     return (wxThread::ExitCode)0;
@@ -99,7 +99,10 @@ void slach_gui::BottomPanel::OnClose(wxCloseEvent&)
     // instance and posts events to *this event handler
     if (GetThread() &&      // DoStartALongTask() may have not been called
         GetThread()->IsRunning())
-        GetThread()->Wait();
+    {
+    	mpEngineInterface->StopEngine();
+        GetThread()->Kill();
+    }
     Destroy();
 }
 

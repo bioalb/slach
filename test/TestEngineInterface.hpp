@@ -54,15 +54,9 @@ public:
         TS_ASSERT_EQUALS(stockfish_squares[squares.size()], sf_square);
         TS_ASSERT_EQUALS(stockfish_squares[squares.size()], interface.ConvertSquareToStockfish(pe2));
         delete pe2;
-
-        my_cb.SetupInitialChessPosition();
-        slach::Position position;
-        position.SetFromFen(my_cb.GetCurrentFenPosition(), squares);
-
-        interface.StartAnalsyingPosition(&position, 1.0);
     }
 
-    void TestStartAndStop()
+    void TestStartAndStopAfterthreeseconds()
     {
         slach::ChessBoard my_cb;
         my_cb.SetupChessBoard();
@@ -72,9 +66,35 @@ public:
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
         slach::Position position;
         position.SetFromFen(test_position, squares);
-
+        std::cout<<std::endl<<"*******"<<"Starting analysis. I will analyse for 3 seconds"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(&position, 3.0);
+        std::cout<<std::endl<<"Done analysing for 3 seconds"<<std::endl;
     }
+
+    void TestStartInfiniteAndStop()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        std::vector<slach::Square*> squares =  my_cb.GetSquares();//already numbered and well defined.
+
+        slach::EngineInterface interface;
+        std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
+        slach::Position position;
+        position.SetFromFen(test_position, squares);
+        std::cout<<std::endl<<"*******"<<"Starting analysis. I will start with infinite analysis"<<"*******"<<std::endl;
+        interface.StartAnalsyingPosition(&position);
+
+		std::time_t time_now;
+		std::time_t start_time;
+		std::time(&start_time);
+
+		while (std::difftime(time_now,start_time) < 5.0)
+		{
+			std::time(&time_now);
+		}
+        interface.StopEngine();
+    }
+
 
 };
 #endif

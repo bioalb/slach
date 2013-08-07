@@ -36,21 +36,32 @@ void slach::EngineInterface::StartAnalsyingPosition(Position* pPosition, double 
 {
     assert(pPosition != NULL);
 
+    stockfish::Search::init();
+    stockfish::Search::Signals.stop = false;
     stockfish::Search::LimitsType limits;
+
+    std::vector< stockfish::Move > searchMoves;
+    mpStockfishPosition->set(pPosition->GetPositionAsFen(), false /*not chess960*/, stockfish::Threads.main_thread());
+
     if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
     {
         limits.movetime = 1000*seconds;//converts milliseconds to seconds...
+        stockfish::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, stockfish::Search::SetupStates);
+        stockfish::Threads.wait_for_think_finished();
     }
     else
     {
         limits.infinite = true;
+        stockfish::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, stockfish::Search::SetupStates);
     }
-    std::vector< stockfish::Move > searchMoves;
+}
 
-    mpStockfishPosition->set(pPosition->GetPositionAsFen(), false /*not chess960*/, stockfish::Threads.main_thread());
-
-    stockfish::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, stockfish::Search::SetupStates);
-    stockfish::Threads.wait_for_think_finished();
+void slach::EngineInterface::StopEngine()
+{
+	stockfish::Search::Signals.stop = true;
+	stockfish::Threads.main_thread()->notify_one();
+	stockfish::Threads.wait_for_think_finished();
+	//stockfish::Threads.exit();
 }
 
 
