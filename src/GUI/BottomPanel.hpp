@@ -9,7 +9,6 @@
 #include <wx/thread.h>
 #include "EngineInterface.hpp"
 
-wxDECLARE_EVENT(myEVT_THREAD_UPDATE, wxThreadEvent);
 namespace slach_gui
 {
 
@@ -38,7 +37,7 @@ public:
      * So when the user resizes the image panel the image should be resized too.
      */
     void OnSize(wxSizeEvent& event);
-    void OnThreadUpdate(wxThreadEvent& evt);
+
     void OnClose(wxCloseEvent& evt);
 
     void StartEngine(wxCommandEvent& event);

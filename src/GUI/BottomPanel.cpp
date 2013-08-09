@@ -50,7 +50,7 @@ void slach_gui::BottomPanel::SetPositionToAnalyse(slach::Position* pPosition)
 void slach_gui::BottomPanel::StopEngine(wxCommandEvent& event)
 {
 	mEngineIsRunning = false;
-	//mpEngineInterface->StopEngine(); not working, it's in the thread!
+	mpEngineInterface->StopEngine();
 }
 
 void slach_gui::BottomPanel::StartEngine(wxCommandEvent& event)
@@ -75,60 +75,39 @@ void slach_gui::BottomPanel::StartEngine(wxCommandEvent& event)
 
 wxThread::ExitCode slach_gui::BottomPanel::Entry()
 {
-    // IMPORTANT:
-    // this function gets executed in the secondary thread context!
-
-    // here we do our long task, periodically calling TestDestroy():
-    while (!GetThread()->TestDestroy())
-    {
-        // since this Entry() is implemented in MyFrame context we don't
-        // need any pointer to access the m_data, m_processedData, m_dataCS
-        // variables... very nice!
-        wxCriticalSectionLocker lock(mCritSect);
-        mpEngineInterface->StartAnalsyingPosition(mpPosition); //infinite
-        // VERY IMPORTANT: do not call any GUI function inside this
-        //                 function; rather use wxQueueEvent():
-        //wxQueueEvent(this, new wxThreadEvent(myEVT_THREAD_UPDATE));
-            // we used pointer 'this' assuming it's safe; see OnClose()
-    }
-    // TestDestroy() returned true (which means the main thread asked us
-    // to terminate as soon as possible) or we ended the long task...
+    // IMPORTANT:this function gets executed in the secondary thread context!
+	mpEngineInterface->StartAnalsyingPosition(mpPosition); //infinite
     return (wxThread::ExitCode)0;
 }
 
 void slach_gui::BottomPanel::OnClose(wxCloseEvent&)
 {
-	mpEngineInterface->StopEngine();
+	if (mEngineIsRunning == true)
+	{
+		mpEngineInterface->StopEngine();
+	}
+
     // important: before terminating, we _must_ wait for our joinable
     // thread to end, if it's running; in fact it uses variables of this
     // instance and posts events to *this event handler
-    if (GetThread() &&      // DoStartALongTask() may have not been called
-        GetThread()->IsRunning())
+    if ( GetThread() &&   GetThread()->IsRunning())
     {
-        GetThread()->Kill();
+    	GetThread()->Wait();
     }
     Destroy();
-}
-
-void slach_gui::BottomPanel::OnThreadUpdate(wxThreadEvent& evt)
-{
-
-	evt.Skip();
 }
 
 void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
 {
 	if (mEngineIsRunning == true)
 	{
-		//wxStreamToTextRedirector redirect(mpEngineTextBox); not working
+		//wxStreamToTextRedirector redirect(mpEngineTextBox); //not working
 		(*mpEngineTextBox)<<mpEngineInterface->GetLatestEngineOutput();
 	}
 	evt.Skip();
 }
 
-wxDEFINE_EVENT(myEVT_THREAD_UPDATE, wxThreadEvent);
 wxBEGIN_EVENT_TABLE(slach_gui::BottomPanel, wxPanel)
-    EVT_THREAD(myEVT_THREAD_UPDATE, slach_gui::BottomPanel::OnThreadUpdate)
     EVT_CLOSE(slach_gui::BottomPanel::OnClose)
     EVT_SIZE(slach_gui::BottomPanel::OnSize)
     EVT_BUTTON(1, slach_gui::BottomPanel::StartEngine)
