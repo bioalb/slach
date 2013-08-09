@@ -51,6 +51,8 @@ class EngineInterface
     void StartAnalsyingPosition(Position* pPosition, double seconds = std::numeric_limits<double>::max());
 
     void StopEngine();
+
+    std::string GetLatestEngineOutput();
 };
 
 }//namespace slach

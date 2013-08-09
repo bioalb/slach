@@ -46,6 +46,7 @@ void slach::EngineInterface::StartAnalsyingPosition(Position* pPosition, double 
     if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
     {
         limits.movetime = 1000*seconds;//converts milliseconds to seconds...
+        limits.infinite = false;
         stockfish::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, stockfish::Search::SetupStates);
         stockfish::Threads.wait_for_think_finished();
     }
@@ -64,7 +65,10 @@ void slach::EngineInterface::StopEngine()
 	//stockfish::Threads.exit();
 }
 
-
+std::string slach::EngineInterface::GetLatestEngineOutput()
+{
+	return "hello from engine interface \n";
+}
 
 stockfish::Square slach::EngineInterface::ConvertSquareToStockfish(const Square* pSquare) const
 {

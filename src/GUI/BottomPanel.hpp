@@ -21,8 +21,11 @@ protected:
     wxCriticalSection mCritSect;
     slach::EngineInterface* mpEngineInterface;
     wxButton* mpStartEngineButton;
+    wxButton* mpStopEngineButton;
+    wxTextCtrl* mpEngineTextBox;
     slach::Position* mpPosition;
-
+    wxTimer mTimer;
+    bool mEngineIsRunning;
     // in wxThreadHelper
     virtual wxThread::ExitCode Entry();
 
@@ -39,8 +42,9 @@ public:
     void OnClose(wxCloseEvent& evt);
 
     void StartEngine(wxCommandEvent& event);
+    void StopEngine(wxCommandEvent& event);
     void SetPositionToAnalyse(slach::Position* pPosition);
-
+    void UpdateEngineOutput(wxTimerEvent& evt);
     wxDECLARE_EVENT_TABLE();
 };
 
