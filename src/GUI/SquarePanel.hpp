@@ -10,14 +10,14 @@
 namespace slach_gui
 {
 
-class ActualBoardPanel;//forward declaration of the parent
+class ChessBoardPanel;//forward declaration of the parent
 
 class SquarePanel : public wxPanel
 {
 
 private:
 
-    ActualBoardPanel* mpParent;
+    ChessBoardPanel* mpParent;
 
     std::string mFile;
     std::string mRank;
@@ -55,7 +55,7 @@ private:
     bool mDrawPiece;
 
 public:
-    SquarePanel(ActualBoardPanel* parent, slach::Square* pSquare,const wxColour& colour = wxT("red"), const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize, long style =  wxBORDER_NONE);
+    SquarePanel(ChessBoardPanel* parent, slach::Square* pSquare,const wxColour& colour = wxT("red"), const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize, long style =  wxBORDER_NONE);
     ~SquarePanel();
 
     /*

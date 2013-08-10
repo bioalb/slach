@@ -27,7 +27,7 @@ slach_gui::MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const
 
     mpRightPanel = new RightPanel(this);
     mpBottomPanel = new BottomPanel(this);
-    mpBoardPanel = new ActualBoardPanel(this);
+    mpBoardPanel = new ChessBoardPanel(this);
 
     wxBoxSizer* h_sizer = new wxBoxSizer(wxHORIZONTAL);
 

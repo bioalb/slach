@@ -1,5 +1,5 @@
-#ifndef _ACTUALBOARDPANEL_HPP_
-#define _ACTUALBOARDPANEL_HPP_
+#ifndef _ChessBoardPANEL_HPP_
+#define _ChessBoardPANEL_HPP_
 
 #include <wx/wx.h>
 #include <wx/sizer.h>
@@ -11,7 +11,7 @@
 namespace slach_gui
 {
 
-class ActualBoardPanel : public wxPanel
+class ChessBoardPanel : public wxPanel
 {
 
 private:
@@ -42,8 +42,8 @@ private:
      */
     void LoadSvgPieces();
 public:
-    ActualBoardPanel(wxFrame* parent,  wxWindowID id = wxID_ANY, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
-    ~ActualBoardPanel();
+    ChessBoardPanel(wxFrame* parent,  wxWindowID id = wxID_ANY, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
+    ~ChessBoardPanel();
     void SetDestinationSquare(SquarePanel* pDestinationSquare);
     void SetOriginSquare(SquarePanel* pOrignSquare);
     SquarePanel* GetDestinationSquare();
@@ -61,4 +61,4 @@ public:
 };
 
 }//namespace slach_gui
-#endif /* _ACTUALBOARDPANEL_HPP_ */
+#endif /* _ChessBoardPANEL_HPP_ */

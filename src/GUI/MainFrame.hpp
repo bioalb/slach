@@ -7,7 +7,7 @@
 #endif
 #include "BottomPanel.hpp"
 #include "RightPanel.hpp"
-#include "ActualBoardPanel.hpp"
+#include "ChessBoardPanel.hpp"
 
 namespace slach_gui
 {
@@ -30,7 +30,7 @@ public:
 
     RightPanel* mpRightPanel;
     BottomPanel* mpBottomPanel;
-    ActualBoardPanel* mpBoardPanel;
+    ChessBoardPanel* mpBoardPanel;
 
 private:
 

@@ -37,7 +37,7 @@
 #include "bitmaps/pieces/xpm/white_king.xpm"
 #include "bitmaps/pieces/xpm/no_piece.xpm"
 
-slach_gui::SquarePanel::SquarePanel(ActualBoardPanel* parent, slach::Square* pSquare, const wxColour& colour, const wxPoint& pos, const wxSize& size, long style )
+slach_gui::SquarePanel::SquarePanel(ChessBoardPanel* parent, slach::Square* pSquare, const wxColour& colour, const wxPoint& pos, const wxSize& size, long style )
     : wxPanel(parent,wxID_ANY, pos,size, style),
       mpParent(parent),
       mpSquare(pSquare),
