@@ -32,7 +32,7 @@ private:
     wxFlexGridSizer* mpGridSizer;
     slach::ChessBoardWithBorders* mpChessBoardWithBorders;
     slach::ChessBoard* mpChessBoard;
-    wxPanel* mpParent;
+    wxFrame* mpParent;
     SquarePanel* mpOriginSquarePanel;
     SquarePanel* mpDestinationSquarePanel;
     /**
@@ -42,7 +42,7 @@ private:
      */
     void LoadSvgPieces();
 public:
-    ActualBoardPanel(wxPanel* parent,  wxWindowID id = wxID_ANY, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
+    ActualBoardPanel(wxFrame* parent,  wxWindowID id = wxID_ANY, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
     ~ActualBoardPanel();
     void SetDestinationSquare(SquarePanel* pDestinationSquare);
     void SetOriginSquare(SquarePanel* pOrignSquare);

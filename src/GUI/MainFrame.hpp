@@ -5,8 +5,9 @@
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
 #endif
-#include "MainPanel.hpp"
+#include "BottomPanel.hpp"
 #include "RightPanel.hpp"
+#include "ActualBoardPanel.hpp"
 
 namespace slach_gui
 {
@@ -27,8 +28,10 @@ public:
 
     ~MainFrame();
 
-    RightPanel* right_panel;
-    MainPanel* main_panel;
+    RightPanel* mpRightPanel;
+    BottomPanel* mpBottomPanel;
+    ActualBoardPanel* mpBoardPanel;
+
 private:
 
     /**

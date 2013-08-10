@@ -1,7 +1,7 @@
 #include <ctime>
 #include "BottomPanel.hpp"
 
-slach_gui::BottomPanel::BottomPanel(wxPanel* parent, const wxPoint& pos, const wxSize& size)
+slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,-1, pos,size),
       mpEngineInterface( new slach::EngineInterface() ),
       mpStartEngineButton ( new wxButton(this, 1, wxT("Start Engine"),wxDefaultPosition, wxDefaultSize) ),

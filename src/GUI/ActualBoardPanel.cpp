@@ -6,7 +6,7 @@
 #include "DropTargetPanel.hpp"
 #include "ActualBoardPanel.hpp"
 
-slach_gui::ActualBoardPanel::ActualBoardPanel(wxPanel* parent, wxWindowID id, const wxPoint& pos, const wxSize& size)
+slach_gui::ActualBoardPanel::ActualBoardPanel(wxFrame* parent, wxWindowID id, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size),
       mpParent(parent),
       mpOriginSquarePanel(NULL),
@@ -175,7 +175,7 @@ void slach_gui::ActualBoardPanel::OnSize(wxSizeEvent& event)
 {
     Refresh();
     //figure out the new dimensions
-    wxSize chessboard_panel_size = mpParent->GetSize();
+    wxSize chessboard_panel_size = this->GetSize();
     int panel_x = chessboard_panel_size.GetWidth();
     int panel_y = chessboard_panel_size.GetHeight();
     int min_size;

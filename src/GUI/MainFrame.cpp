@@ -25,18 +25,19 @@ slach_gui::MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const
 
     this->SetBackgroundColour(wxT("red"));
 
-    //creates the two main panels
+    mpRightPanel = new RightPanel(this);
+    mpBottomPanel = new BottomPanel(this);
+    mpBoardPanel = new ActualBoardPanel(this);
+
     wxBoxSizer* h_sizer = new wxBoxSizer(wxHORIZONTAL);
-    // then simply create like this
-    right_panel = new RightPanel(this);
-    main_panel = new MainPanel(this);
 
-    h_sizer->Add(main_panel, 2.8, wxEXPAND);
-    h_sizer->Add(right_panel, 1.0, wxEXPAND);
+    wxBoxSizer* v_sizer = new wxBoxSizer(wxVERTICAL);
+    v_sizer->Add(mpBoardPanel, 4.0, wxGROW);
+    v_sizer->Add(mpBottomPanel, 1.0, wxGROW);
 
+    h_sizer->Add(v_sizer,2.8,wxEXPAND);
+    h_sizer->Add(mpRightPanel, 1.0, wxEXPAND);
     this->SetSizer(h_sizer);
-
-    main_panel->FinalizeCreation();
 }
 
 slach_gui::MainFrame::~MainFrame()

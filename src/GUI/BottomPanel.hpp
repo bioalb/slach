@@ -29,7 +29,7 @@ protected:
     virtual wxThread::ExitCode Entry();
 
 public:
-    BottomPanel(wxPanel* parent, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
+    BottomPanel(wxFrame* parent, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
     ~BottomPanel();
 
     /*
