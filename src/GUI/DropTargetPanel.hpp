@@ -5,7 +5,6 @@
 #include <wx/sizer.h>
 #include <wx/panel.h>
 #include <wx/dnd.h>
-#include "ChessboardPanel.hpp"
 
 namespace slach_gui
 {
