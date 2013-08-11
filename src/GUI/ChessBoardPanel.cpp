@@ -98,6 +98,7 @@ void slach_gui::ChessBoardPanel::SetupChessboard()
     for (unsigned i = 0; i < squares.size(); ++i)
     {
         mSquarePanels[i] = new SquarePanel( this, squares[i] );
+        mSquarePanels[i]->SetPngImages(mPieceImages);
         mpGridSizer->Add(mSquarePanels[i], 0, wxEXPAND);
     }
     this->SetSizer(mpGridSizer, false);

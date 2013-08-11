@@ -17,7 +17,7 @@ class SquarePanel : public wxPanel
 
 private:
 
-    ChessBoardPanel* mpParent;
+    wxPanel* mpParent;
 
     std::string mFile;
     std::string mRank;
@@ -54,8 +54,10 @@ private:
      */
     bool mDrawPiece;
 
+    std::vector<wxImage> mPngImages;
+
 public:
-    SquarePanel(ChessBoardPanel* parent, slach::Square* pSquare,const wxColour& colour = wxT("red"), const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize, long style =  wxBORDER_NONE);
+    SquarePanel(wxPanel* parent, slach::Square* pSquare,const wxColour& colour = wxT("red"), const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize, long style =  wxBORDER_NONE);
     ~SquarePanel();
 
     /*
@@ -100,6 +102,8 @@ public:
      *                  e.g., for deleting ane xisting piece.
      */
     void SetToDrawPiece(bool drawPiece = true);
+
+    void SetPngImages(std::vector<wxImage>& pngImages);
 
     wxDECLARE_EVENT_TABLE();
 };

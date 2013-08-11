@@ -37,7 +37,7 @@
 #include "bitmaps/pieces/xpm/white_king.xpm"
 #include "bitmaps/pieces/xpm/no_piece.xpm"
 
-slach_gui::SquarePanel::SquarePanel(ChessBoardPanel* parent, slach::Square* pSquare, const wxColour& colour, const wxPoint& pos, const wxSize& size, long style )
+slach_gui::SquarePanel::SquarePanel(wxPanel* parent, slach::Square* pSquare, const wxColour& colour, const wxPoint& pos, const wxSize& size, long style )
     : wxPanel(parent,wxID_ANY, pos,size, style),
       mpParent(parent),
       mpSquare(pSquare),
@@ -80,18 +80,18 @@ slach::Square* slach_gui::SquarePanel::GetSquare()
 
 void slach_gui::SquarePanel::PaintBackground(wxPaintDC& dc)
 {
-    std::vector<wxImage> png_images = mpParent->GetPiecesPgns();
+    assert(mPngImages.size() == 16u);
     if ( (mpSquare->IsDarkSquare() == true) && (mpSquare->IsBorderSquare() == false))
     {
-        mBackgroundOnThisSquare = png_images[13];//rgb 32,107,129
+        mBackgroundOnThisSquare = mPngImages[13];//rgb 32,107,129
     }
     if ( (mpSquare->IsLightSquare() == true) && (mpSquare->IsBorderSquare() == false))
     {
-        mBackgroundOnThisSquare = png_images[14];//rgb 235,241,246
+        mBackgroundOnThisSquare = mPngImages[14];//rgb 235,241,246
     }
     if (mpSquare->IsBorderSquare())
     {
-        mBackgroundOnThisSquare = png_images[15];
+        mBackgroundOnThisSquare = mPngImages[15];
     }
 
     mBackgroundOnThisSquare.Rescale(mCurrentWidth, mCurrentHeight);
@@ -215,64 +215,67 @@ void slach_gui::SquarePanel::PaintOnBorder(wxPaintDC& dc)
         dc.DrawBitmap(mPrintedCoord, xcoord, ycoord, true );
     }
 }
+void slach_gui::SquarePanel::SetPngImages(std::vector<wxImage>& pngImages)
+{
+    pngImages = mPngImages;
+}
 
 void slach_gui::SquarePanel::PaintPiece(wxPaintDC& dc)
 {
     slach::PieceType piece = mpSquare->GetPieceOnThisSquare();
-    std::vector<wxImage> png_images = mpParent->GetPiecesPgns();
-
+    assert(mPngImages.size() == 16u);
     switch(piece)
     {
         case slach::WHITE_KING:
-            mImageOfPieceOnThisSquare = png_images[0];
+            mImageOfPieceOnThisSquare = mPngImages[0];
             mIconNearTheMouse = wxDROP_ICON(white_king);
             break;
         case slach::BLACK_KING:
-            mImageOfPieceOnThisSquare = png_images[1];
+            mImageOfPieceOnThisSquare = mPngImages[1];
             mIconNearTheMouse = wxDROP_ICON(black_king);
             break;
         case slach::WHITE_QUEEN:
-            mImageOfPieceOnThisSquare = png_images[2];
+            mImageOfPieceOnThisSquare = mPngImages[2];
             mIconNearTheMouse = wxDROP_ICON(white_queen);
             break;
         case slach::BLACK_QUEEN:
-            mImageOfPieceOnThisSquare = png_images[3];
+            mImageOfPieceOnThisSquare = mPngImages[3];
             mIconNearTheMouse = wxDROP_ICON(black_queen);
             break;
         case slach::WHITE_ROOK:
-            mImageOfPieceOnThisSquare = png_images[4];
+            mImageOfPieceOnThisSquare = mPngImages[4];
             mIconNearTheMouse = wxDROP_ICON(white_rook);
             break;
         case slach::BLACK_ROOK:
-            mImageOfPieceOnThisSquare = png_images[5];
+            mImageOfPieceOnThisSquare = mPngImages[5];
             mIconNearTheMouse = wxDROP_ICON(black_rook);
             break;
         case slach::WHITE_BISHOP:
-            mImageOfPieceOnThisSquare = png_images[6];
+            mImageOfPieceOnThisSquare = mPngImages[6];
             mIconNearTheMouse = wxDROP_ICON(white_bishop);
             break;
         case slach::BLACK_BISHOP:
-            mImageOfPieceOnThisSquare = png_images[7];
+            mImageOfPieceOnThisSquare = mPngImages[7];
             mIconNearTheMouse = wxDROP_ICON(black_bishop);
             break;
         case slach::WHITE_KNIGHT:
-            mImageOfPieceOnThisSquare = png_images[8];
+            mImageOfPieceOnThisSquare = mPngImages[8];
             mIconNearTheMouse = wxDROP_ICON(white_knight);
             break;
         case slach::BLACK_KNIGHT:
-            mImageOfPieceOnThisSquare = png_images[9];
+            mImageOfPieceOnThisSquare = mPngImages[9];
             mIconNearTheMouse = wxDROP_ICON(black_knight);
             break;
         case slach::WHITE_PAWN:
-            mImageOfPieceOnThisSquare = png_images[10];
+            mImageOfPieceOnThisSquare = mPngImages[10];
             mIconNearTheMouse = wxDROP_ICON(white_pawn);
             break;
         case slach::BLACK_PAWN:
-            mImageOfPieceOnThisSquare = png_images[11];
+            mImageOfPieceOnThisSquare = mPngImages[11];
             mIconNearTheMouse = wxDROP_ICON(black_pawn);
             break;
         case slach::NO_PIECE:
-            mImageOfPieceOnThisSquare = png_images[12];
+            mImageOfPieceOnThisSquare = mPngImages[12];
             mIconNearTheMouse = wxDROP_ICON(no_piece);
             break;
         default:
