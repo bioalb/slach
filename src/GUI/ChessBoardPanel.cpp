@@ -86,6 +86,9 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
         mpGridSizer->Add(mSquarePanels[i], 0, wxEXPAND);
         //bind the paint event
         mSquarePanels[i]->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnSquare, this);
+        mSquarePanels[i]->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::LeftMouseClick, this);
+        mSquarePanels[i]->Bind(wxEVT_LEFT_UP, &ChessBoardPanel::LeftMouseRelease, this);
+        this->SetDropTarget(new DropTargetPanel(mSquarePanels[i]));
     }
     this->SetSizer(mpGridSizer, false);
 
@@ -125,57 +128,84 @@ std::vector<wxImage > slach_gui::ChessBoardPanel::GetPiecesPgns()
     return mPieceImages;
 }
 
+void slach_gui::ChessBoardPanel::LeftMouseClick(wxMouseEvent& event)
+{
+	int square_index_int = (static_cast<wxWindow*> (event.GetEventObject()))->GetId();
+	mSourceIndex = (unsigned) square_index_int;
 
-//void slach_gui::ChessBoardPanel::SetDestinationSquare(SquarePanel* pDestinationPanel)
-//{
-//    mpDestinationSquarePanel = pDestinationPanel;
-//
-//    slach::Move candidate_move(mpOriginSquarePanel->GetSquare(), mpDestinationSquarePanel->GetSquare());
-//    if (mpChessBoard->IsLegalMove(candidate_move)==true)
-//    {
-//        if (candidate_move.DoesMoveRequireSpecialGuiHandling())
-//        {
-//            mpChessBoard->MakeThisMove(candidate_move);
-//
-//            //delete piece on origin
-//            mpOriginSquarePanel->SetToDrawPiece (false);
-//            mpOriginSquarePanel->Refresh();
-//            mpOriginSquarePanel->SetToDrawPiece (true);
-//
-//            //paint piece on destination
-//            mpDestinationSquarePanel->SetToDrawPiece (true);
-//            mpDestinationSquarePanel->Refresh();
-//
-//
-//			for (unsigned i = 0; i  < mSquarePanels.size(); ++i)
-//			{
-//				if (! ( mpChessBoardWithBorders->GetSquares()[i]->IsBorderSquare()))
-//				{
-//					mSquarePanels[i]->SetToDrawPiece (true);
-//					mSquarePanels[i]->Refresh();
-//				}
-//			}
-//        }
-//        else
-//        {
-//            mpChessBoard->MakeThisMove(candidate_move);
-//            //delete piece on origin
-//            mpOriginSquarePanel->SetToDrawPiece (false);
-//            mpOriginSquarePanel->Refresh();
-//            mpOriginSquarePanel->SetToDrawPiece (true);
-//
-//            //paint piece on destination
-//            mpDestinationSquarePanel->SetToDrawPiece (true);
-//            mpDestinationSquarePanel->Refresh();
-//        }
-//    }
-//    else
-//    {
-//    	//not legal, re-draw piece on origin
-//    	mpOriginSquarePanel->SetToDrawPiece (true);
-//    	mpOriginSquarePanel->Refresh();
-//    }
-//}
+    wxBitmapDataObject piece_to_be_moved(mPieceImages[0]);
+    wxCursor cursor(mPieceImages[0]);
+    wxDropSource drop_source(mSquarePanels[mSourceIndex], mIconNearTheMouse, mIconNearTheMouse);
+
+    drop_source.SetCursor(wxDragMove, cursor);
+    drop_source.SetData( piece_to_be_moved );
+
+    mDrawPiece = false;
+    mSquarePanels[mSourceIndex]->Refresh();///remove the source piece while dragging...
+
+    wxDragResult result = drop_source.DoDragDrop( wxDragMove );
+
+    mDrawPiece = true;
+    switch (result)
+    {
+        case wxDragCopy: break;
+        case wxDragMove: break;
+        case wxDragCancel:
+            mDrawPiece = true;
+            //need to re-paint the piece as it was deleted upon initiation of dragging
+            mSquarePanels[mSourceIndex]->Refresh();
+            break;
+        default: break;
+    }
+}
+
+void slach_gui::ChessBoardPanel::LeftMouseRelease(wxMouseEvent& event)
+{
+	int square_index_int = (static_cast<wxWindow*> (event.GetEventObject()))->GetId();
+	unsigned destination_index = (unsigned) square_index_int;
+
+    slach::Move candidate_move(mpSquares[mSourceIndex], mpSquares[destination_index]);
+    if (mpChessBoard->IsLegalMove(candidate_move)==true)
+    {
+        if (candidate_move.DoesMoveRequireSpecialGuiHandling())
+        {
+            mpChessBoard->MakeThisMove(candidate_move);
+
+            //delete piece on origin
+            mDrawPiece = false;
+            mSquarePanels[mSourceIndex]->Refresh();
+            mDrawPiece = true;
+
+            //paint piece on destination
+            mSquarePanels[destination_index]->Refresh();
+
+			for (unsigned i = 0; i  < mSquarePanels.size(); ++i)
+			{
+				if (! ( mpChessBoardWithBorders->GetSquares()[i]->IsBorderSquare()))
+				{
+					mSquarePanels[i]->Refresh();
+				}
+			}
+        }
+        else
+        {
+            mpChessBoard->MakeThisMove(candidate_move);
+            //delete piece on origin
+            mDrawPiece = false;
+            mSquarePanels[mSourceIndex]->Refresh();
+            mDrawPiece = true;
+
+            //paint piece on destination
+            mSquarePanels[destination_index]->Refresh();
+        }
+    }
+    else
+    {
+    	//not legal, re-draw piece on origin
+    	mDrawPiece = true;
+        mSquarePanels[mSourceIndex]->Refresh();
+    }
+}
 
 void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
 {
@@ -218,7 +248,6 @@ slach::ChessBoard* slach_gui::ChessBoardPanel::GetChessBoard() const
 
 void slach_gui::ChessBoardPanel::PaintOnSquare(wxPaintEvent& event)
 {
-
 	int square_index_int = (static_cast<wxWindow*> (event.GetEventObject()))->GetId();
 	unsigned square_index = (unsigned) square_index_int;
 
@@ -463,5 +492,7 @@ wxImage slach_gui::ChessBoardPanel::DetermineCoordinateToPrint(unsigned squareIn
 wxBEGIN_EVENT_TABLE(slach_gui::ChessBoardPanel, wxPanel)
     EVT_SIZE(slach_gui::ChessBoardPanel::OnSize)
     EVT_PAINT(slach_gui::ChessBoardPanel::PaintOnSquare)
+    EVT_LEFT_UP(slach_gui::ChessBoardPanel::LeftMouseRelease)
+    EVT_LEFT_DOWN(slach_gui::ChessBoardPanel::LeftMouseClick)
 wxEND_EVENT_TABLE()
 
