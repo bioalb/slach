@@ -1,16 +1,46 @@
 #include <algorithm>
 #include <iostream>
 #include <cassert>
+#include <wx/mstream.h>
 #include "SlachTypes.hpp"
 #include "ChessBoardPanel.hpp"
 #include "DropTargetPanel.hpp"
 #include "ChessBoardPanel.hpp"
+#include "bitmaps/letters/png/a.png.h"
+#include "bitmaps/letters/png/b.png.h"
+#include "bitmaps/letters/png/c.png.h"
+#include "bitmaps/letters/png/d.png.h"
+#include "bitmaps/letters/png/e.png.h"
+#include "bitmaps/letters/png/f.png.h"
+#include "bitmaps/letters/png/g.png.h"
+#include "bitmaps/letters/png/h.png.h"
+
+#include "bitmaps/numbers/png/one.png.h"
+#include "bitmaps/numbers/png/two.png.h"
+#include "bitmaps/numbers/png/three.png.h"
+#include "bitmaps/numbers/png/four.png.h"
+#include "bitmaps/numbers/png/five.png.h"
+#include "bitmaps/numbers/png/six.png.h"
+#include "bitmaps/numbers/png/seven.png.h"
+#include "bitmaps/numbers/png/eight.png.h"
+
+#include "bitmaps/pieces/xpm/black_rook.xpm"
+#include "bitmaps/pieces/xpm/black_king.xpm"
+#include "bitmaps/pieces/xpm/black_queen.xpm"
+#include "bitmaps/pieces/xpm/black_bishop.xpm"
+#include "bitmaps/pieces/xpm/black_knight.xpm"
+#include "bitmaps/pieces/xpm/black_pawn.xpm"
+#include "bitmaps/pieces/xpm/white_pawn.xpm"
+#include "bitmaps/pieces/xpm/white_knight.xpm"
+#include "bitmaps/pieces/xpm/white_bishop.xpm"
+#include "bitmaps/pieces/xpm/white_rook.xpm"
+#include "bitmaps/pieces/xpm/white_queen.xpm"
+#include "bitmaps/pieces/xpm/white_king.xpm"
+#include "bitmaps/pieces/xpm/no_piece.xpm"
 
 slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size),
-      mpParent(parent),
-      mpOriginSquarePanel(NULL),
-      mpDestinationSquarePanel(NULL)
+      mpParent(parent)
 {
     mPngPieceDirectory = "../../src/GUI/bitmaps/pieces/png/";
     mPngBackgroundDirectory = "../../src/GUI/bitmaps/squares/png/";
@@ -45,16 +75,25 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
     mpGridSizer->AddGrowableRow(9,1);//border
 
     LoadSvgPieces();
-    SetupChessboard();
 
+    mpChessBoard = mpChessBoardWithBorders->GetPlayableChessBoard();
+    mpChessBoard->SetupInitialChessPosition();
+    mpSquares = mpChessBoardWithBorders->GetSquares();
+    assert(mpSquares.size() == mSquarePanels.size());
+    for (unsigned i = 0; i < mpSquares.size(); ++i)
+    {
+        mSquarePanels[i] = new wxPanel( this, /*ID*/ (int) i );
+        mpGridSizer->Add(mSquarePanels[i], 0, wxEXPAND);
+        //bind the paint event
+        mSquarePanels[i]->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnSquare, this);
+    }
+    this->SetSizer(mpGridSizer, false);
+
+    mDrawPiece = true;
 }
 
 slach_gui::ChessBoardPanel::~ChessBoardPanel()
 {
-    for (unsigned i = 0; i < slach::gChessBoardSizeWB; ++i)
-    {
-        delete mSquarePanels[i];
-    }
     delete mpChessBoardWithBorders;
 }
 
@@ -81,96 +120,62 @@ void slach_gui::ChessBoardPanel::LoadSvgPieces()
 
 }
 
-std::vector<slach_gui::SquarePanel* > slach_gui::ChessBoardPanel::GetSquarePanels()
-{
-    return mSquarePanels;
-}
-
 std::vector<wxImage > slach_gui::ChessBoardPanel::GetPiecesPgns()
 {
     return mPieceImages;
 }
 
-void slach_gui::ChessBoardPanel::SetupChessboard()
-{
-    std::vector<slach::Square* > squares = mpChessBoardWithBorders->GetSquares();
-    assert(squares.size() == mSquarePanels.size());
-    for (unsigned i = 0; i < squares.size(); ++i)
-    {
-        mSquarePanels[i] = new SquarePanel( this, squares[i] );
-        mSquarePanels[i]->SetPngImages(mPieceImages);
-        mpGridSizer->Add(mSquarePanels[i], 0, wxEXPAND);
-    }
-    this->SetSizer(mpGridSizer, false);
-    mpChessBoard = mpChessBoardWithBorders->GetPlayableChessBoard();
-    mpChessBoard->SetupInitialChessPosition();
-}
 
-void slach_gui::ChessBoardPanel::SetDestinationSquare(SquarePanel* pDestinationPanel)
-{
-    mpDestinationSquarePanel = pDestinationPanel;
-
-    slach::Move candidate_move(mpOriginSquarePanel->GetSquare(), mpDestinationSquarePanel->GetSquare());
-    if (mpChessBoard->IsLegalMove(candidate_move)==true)
-    {
-        if (candidate_move.DoesMoveRequireSpecialGuiHandling())
-        {
-            mpChessBoard->MakeThisMove(candidate_move);
-
-            //delete piece on origin
-            mpOriginSquarePanel->SetToDrawPiece (false);
-            mpOriginSquarePanel->Refresh();
-            mpOriginSquarePanel->SetToDrawPiece (true);
-
-            //paint piece on destination
-            mpDestinationSquarePanel->SetToDrawPiece (true);
-            mpDestinationSquarePanel->Refresh();
-
-
-			for (unsigned i = 0; i  < mSquarePanels.size(); ++i)
-			{
-				if (! ( mpChessBoardWithBorders->GetSquares()[i]->IsBorderSquare()))
-				{
-					mSquarePanels[i]->SetToDrawPiece (true);
-					mSquarePanels[i]->Refresh();
-				}
-			}
-        }
-        else
-        {
-            mpChessBoard->MakeThisMove(candidate_move);
-            //delete piece on origin
-            mpOriginSquarePanel->SetToDrawPiece (false);
-            mpOriginSquarePanel->Refresh();
-            mpOriginSquarePanel->SetToDrawPiece (true);
-
-            //paint piece on destination
-            mpDestinationSquarePanel->SetToDrawPiece (true);
-            mpDestinationSquarePanel->Refresh();
-        }
-    }
-    else
-    {
-    	//not legal, re-draw piece on origin
-    	mpOriginSquarePanel->SetToDrawPiece (true);
-    	mpOriginSquarePanel->Refresh();
-    }
-}
-void slach_gui::ChessBoardPanel::SetOriginSquare(SquarePanel* pOriginPanel)
-{
-    mpOriginSquarePanel = pOriginPanel;
-}
-
-slach_gui::SquarePanel* slach_gui::ChessBoardPanel::GetDestinationSquare()
-{
-    return mpDestinationSquarePanel;
-
-}
-
-slach_gui::SquarePanel* slach_gui::ChessBoardPanel::GetOriginSquare()
-{
-    return mpOriginSquarePanel;
-}
+//void slach_gui::ChessBoardPanel::SetDestinationSquare(SquarePanel* pDestinationPanel)
+//{
+//    mpDestinationSquarePanel = pDestinationPanel;
+//
+//    slach::Move candidate_move(mpOriginSquarePanel->GetSquare(), mpDestinationSquarePanel->GetSquare());
+//    if (mpChessBoard->IsLegalMove(candidate_move)==true)
+//    {
+//        if (candidate_move.DoesMoveRequireSpecialGuiHandling())
+//        {
+//            mpChessBoard->MakeThisMove(candidate_move);
+//
+//            //delete piece on origin
+//            mpOriginSquarePanel->SetToDrawPiece (false);
+//            mpOriginSquarePanel->Refresh();
+//            mpOriginSquarePanel->SetToDrawPiece (true);
+//
+//            //paint piece on destination
+//            mpDestinationSquarePanel->SetToDrawPiece (true);
+//            mpDestinationSquarePanel->Refresh();
+//
+//
+//			for (unsigned i = 0; i  < mSquarePanels.size(); ++i)
+//			{
+//				if (! ( mpChessBoardWithBorders->GetSquares()[i]->IsBorderSquare()))
+//				{
+//					mSquarePanels[i]->SetToDrawPiece (true);
+//					mSquarePanels[i]->Refresh();
+//				}
+//			}
+//        }
+//        else
+//        {
+//            mpChessBoard->MakeThisMove(candidate_move);
+//            //delete piece on origin
+//            mpOriginSquarePanel->SetToDrawPiece (false);
+//            mpOriginSquarePanel->Refresh();
+//            mpOriginSquarePanel->SetToDrawPiece (true);
+//
+//            //paint piece on destination
+//            mpDestinationSquarePanel->SetToDrawPiece (true);
+//            mpDestinationSquarePanel->Refresh();
+//        }
+//    }
+//    else
+//    {
+//    	//not legal, re-draw piece on origin
+//    	mpOriginSquarePanel->SetToDrawPiece (true);
+//    	mpOriginSquarePanel->Refresh();
+//    }
+//}
 
 void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
 {
@@ -211,7 +216,252 @@ slach::ChessBoard* slach_gui::ChessBoardPanel::GetChessBoard() const
     return mpChessBoard;
 }
 
+void slach_gui::ChessBoardPanel::PaintOnSquare(wxPaintEvent& event)
+{
+
+	int square_index_int = (static_cast<wxWindow*> (event.GetEventObject()))->GetId();
+	unsigned square_index = (unsigned) square_index_int;
+
+	wxPaintDC dc(mSquarePanels[square_index]);
+	if (mpSquares[square_index]->IsBorderSquare())
+	{
+		PaintBackground(dc, square_index);
+		PaintOnBorder(dc, square_index);
+	}
+	else
+	{
+		PaintBackground(dc, square_index);
+		if (mDrawPiece == true)
+		{
+			PaintPiece(dc, square_index);
+		}
+	}
+	event .Skip();
+}
+
+void slach_gui::ChessBoardPanel::PaintPiece(wxPaintDC& dc, unsigned squareIndex)
+{
+	assert(mPieceImages.size() == 16u);
+    slach::PieceType piece = mpSquares[squareIndex]->GetPieceOnThisSquare();
+    wxImage piece_image;
+
+    switch(piece)
+    {
+        case slach::WHITE_KING:
+            piece_image = mPieceImages[0];
+            mIconNearTheMouse = wxDROP_ICON(white_king);
+            break;
+        case slach::BLACK_KING:
+            piece_image = mPieceImages[1];
+            mIconNearTheMouse = wxDROP_ICON(black_king);
+            break;
+        case slach::WHITE_QUEEN:
+            piece_image = mPieceImages[2];
+            mIconNearTheMouse = wxDROP_ICON(white_queen);
+            break;
+        case slach::BLACK_QUEEN:
+            piece_image = mPieceImages[3];
+            mIconNearTheMouse = wxDROP_ICON(black_queen);
+            break;
+        case slach::WHITE_ROOK:
+            piece_image = mPieceImages[4];
+            mIconNearTheMouse = wxDROP_ICON(white_rook);
+            break;
+        case slach::BLACK_ROOK:
+            piece_image = mPieceImages[5];
+            mIconNearTheMouse = wxDROP_ICON(black_rook);
+            break;
+        case slach::WHITE_BISHOP:
+            piece_image = mPieceImages[6];
+            mIconNearTheMouse = wxDROP_ICON(white_bishop);
+            break;
+        case slach::BLACK_BISHOP:
+            piece_image = mPieceImages[7];
+            mIconNearTheMouse = wxDROP_ICON(black_bishop);
+            break;
+        case slach::WHITE_KNIGHT:
+            piece_image = mPieceImages[8];
+            mIconNearTheMouse = wxDROP_ICON(white_knight);
+            break;
+        case slach::BLACK_KNIGHT:
+            piece_image = mPieceImages[9];
+            mIconNearTheMouse = wxDROP_ICON(black_knight);
+            break;
+        case slach::WHITE_PAWN:
+            piece_image = mPieceImages[10];
+            mIconNearTheMouse = wxDROP_ICON(white_pawn);
+            break;
+        case slach::BLACK_PAWN:
+            piece_image = mPieceImages[11];
+            mIconNearTheMouse = wxDROP_ICON(black_pawn);
+            break;
+        case slach::NO_PIECE:
+            piece_image = mPieceImages[12];
+            mIconNearTheMouse = wxDROP_ICON(no_piece);
+            break;
+        default:
+            //NEVER_REACHED;
+            break;
+    }
+
+    int width = mSquarePanels[squareIndex]->GetClientSize().GetWidth();
+    int height = mSquarePanels[squareIndex]->GetClientSize().GetHeight();
+    piece_image.Rescale(width, height);
+    //now really draw the rendered image;
+    dc.DrawBitmap( piece_image, 0, 0, true );
+}
+
+void slach_gui::ChessBoardPanel::PaintBackground(wxPaintDC& dc, unsigned squareIndex)
+{
+    assert(mPieceImages.size() == 16u);
+    int width = mSquarePanels[squareIndex]->GetClientSize().GetWidth();
+    int height = mSquarePanels[squareIndex]->GetClientSize().GetHeight();
+
+    if ( (mpSquares[squareIndex]->IsDarkSquare() == true) && (mpSquares[squareIndex]->IsBorderSquare() == false))
+    {
+        mPieceImages[13].Rescale(width, height);//rgb 32,107,129
+        //now really draw the rendered image
+        dc.DrawBitmap( mPieceImages[13], 0, 0, true );
+    }
+    if ( (mpSquares[squareIndex]->IsLightSquare() == true) && (mpSquares[squareIndex]->IsBorderSquare() == false))
+    {
+        mPieceImages[14].Rescale(width, height);//rgb 235.241,246
+        //now really draw the rendered image
+        dc.DrawBitmap( mPieceImages[14], 0, 0, true );
+    }
+    if (mpSquares[squareIndex]->IsBorderSquare())
+    {
+        mPieceImages[15].Rescale(width, height);
+        //now really draw the rendered image
+        dc.DrawBitmap( mPieceImages[15], 0, 0, true );
+    }
+}
+
+void slach_gui::ChessBoardPanel::PaintOnBorder(wxPaintDC& dc, unsigned squareIndex)
+{
+    if ( (mpSquares[squareIndex]->IsBorderSquare()==true &&
+    	  mpSquares[squareIndex]->IsCornerSquare()==false &&
+    	  mpSquares[squareIndex]->IsCoordinatePrintable()))
+    {
+        double fractional_occupancy_of_space= 0.7;
+        int dim = 0;
+        int xcoord = 0;
+        int ycoord = 0;
+        int width = mSquarePanels[squareIndex]->GetClientSize().GetWidth();
+        int height = mSquarePanels[squareIndex]->GetClientSize().GetHeight();
+        if (width<=height)
+        {
+            dim =  width*fractional_occupancy_of_space;
+            xcoord = 0.0;//for some reason it does not want to center itself when it is small
+            ycoord = (height-dim)/2;
+        }
+        else
+        {
+            dim = height*fractional_occupancy_of_space;
+            xcoord = (width-dim)/2;
+            ycoord = (height-dim)/2;;
+        }
+
+        wxImage ret = DetermineCoordinateToPrint(squareIndex);
+        ret.Rescale(dim, dim);
+        dc.DrawBitmap(ret, xcoord, ycoord, true );
+    }
+}
+
+wxImage slach_gui::ChessBoardPanel::DetermineCoordinateToPrint(unsigned squareIndex)
+{
+	wxImage ret;
+    if (mpSquares[squareIndex]->GetFile()=='a')
+    {
+        wxMemoryInputStream istream(a_img, sizeof a_img);
+        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
+    }
+    else if (mpSquares[squareIndex]->GetFile()=='b')
+    {
+        wxMemoryInputStream istream(b_img, sizeof b_img);
+        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
+    }
+    else if (mpSquares[squareIndex]->GetFile()=='c')
+    {
+        wxMemoryInputStream istream(c_img, sizeof c_img);
+        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
+    }
+    else if (mpSquares[squareIndex]->GetFile()=='d')
+    {
+        wxMemoryInputStream istream(d_img, sizeof d_img);
+        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
+    }
+    else if (mpSquares[squareIndex]->GetFile()=='e')
+    {
+        wxMemoryInputStream istream(e_img, sizeof e_img);
+        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
+    }
+    else if (mpSquares[squareIndex]->GetFile()=='f')
+    {
+        wxMemoryInputStream istream(f_img, sizeof f_img);
+        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
+    }
+    else if (mpSquares[squareIndex]->GetFile()=='g')
+    {
+        wxMemoryInputStream istream(g_img, sizeof g_img);
+        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
+    }
+    else if (mpSquares[squareIndex]->GetFile()=='h')
+    {
+        wxMemoryInputStream istream(h_img, sizeof h_img);
+        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
+    }
+
+    else if (mpSquares[squareIndex]->GetRank()=='1')
+    {
+        wxMemoryInputStream istream(one_img, sizeof one_img);
+        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
+    }
+    else if (mpSquares[squareIndex]->GetRank()=='2')
+    {
+        wxMemoryInputStream istream(two_img, sizeof two_img);
+        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
+    }
+    else if (mpSquares[squareIndex]->GetRank()=='3')
+    {
+        wxMemoryInputStream istream(three_img, sizeof three_img);
+        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
+    }
+    else if (mpSquares[squareIndex]->GetRank()=='4')
+    {
+        wxMemoryInputStream istream(four_img, sizeof four_img);
+        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
+    }
+    else if (mpSquares[squareIndex]->GetRank()=='5')
+    {
+        wxMemoryInputStream istream(five_img, sizeof five_img);
+        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
+    }
+    else if (mpSquares[squareIndex]->GetRank()=='6')
+    {
+        wxMemoryInputStream istream(six_img, sizeof six_img);
+        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
+    }
+    else if (mpSquares[squareIndex]->GetRank()=='7')
+    {
+        wxMemoryInputStream istream(seven_img, sizeof seven_img);
+        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
+    }
+    else if (mpSquares[squareIndex]->GetRank()=='8')
+    {
+        wxMemoryInputStream istream(eight_img, sizeof eight_img);
+        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
+    }
+    else
+    {
+        //we should never be here
+    }
+
+    return ret;
+}
+
 wxBEGIN_EVENT_TABLE(slach_gui::ChessBoardPanel, wxPanel)
     EVT_SIZE(slach_gui::ChessBoardPanel::OnSize)
+    EVT_PAINT(slach_gui::ChessBoardPanel::PaintOnSquare)
 wxEND_EVENT_TABLE()
 

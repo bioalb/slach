@@ -12,9 +12,9 @@ namespace slach_gui
 class DropTargetPanel : public wxDropTarget
 {
 private:
-    SquarePanel* mpPanel;
+    wxPanel* mpPanel;
 public:
-    DropTargetPanel(SquarePanel* pParent);
+    DropTargetPanel(wxPanel* pParent);
     virtual ~DropTargetPanel();
     virtual wxDragResult OnData(wxCoord x, wxCoord y, wxDragResult def);
     virtual wxDragResult OnDragOver(wxCoord x, wxCoord y, wxDragResult def);
