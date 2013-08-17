@@ -33,13 +33,14 @@ private:
      */
     std::vector<wxImage> mPieceImages;
     std::vector<wxPanel* > mSquarePanels;
+    std::vector<slach::Square* > mpAllSquares;
+    std::vector<slach::Square* > mpPlayableSquares;
     wxFlexGridSizer* mpGridSizer;
     slach::ChessBoardWithBorders* mpChessBoardWithBorders;
     slach::ChessBoard* mpChessBoard;
     wxFrame* mpParent;
 
     wxIcon mIconNearTheMouse;
-    std::vector<slach::Square* > mpSquares;
 
     bool mDrawPiece;
     /**
@@ -59,7 +60,7 @@ public:
 
     void PaintOnSquare(wxPaintEvent& event);
     void LeftMouseClick(wxMouseEvent& event);
-    void LeftMouseRelease(wxMouseEvent& event);
+    void LeftMouseRelease(unsigned destinationIndex);
 
 
     std::vector<wxImage > GetPiecesPgns();

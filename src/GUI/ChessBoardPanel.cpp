@@ -78,17 +78,23 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
 
     mpChessBoard = mpChessBoardWithBorders->GetPlayableChessBoard();
     mpChessBoard->SetupInitialChessPosition();
-    mpSquares = mpChessBoardWithBorders->GetSquares();
-    assert(mpSquares.size() == mSquarePanels.size());
-    for (unsigned i = 0; i < mpSquares.size(); ++i)
+    mpAllSquares = mpChessBoardWithBorders->GetSquares();
+    mpPlayableSquares = mpChessBoard->GetSquares();
+
+    assert(mpAllSquares.size() == mSquarePanels.size());
+    for (unsigned i = 0; i < mpAllSquares.size(); ++i)
     {
         mSquarePanels[i] = new wxPanel( this, /*ID*/ (int) i );
         mpGridSizer->Add(mSquarePanels[i], 0, wxEXPAND);
         //bind the paint event
         mSquarePanels[i]->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnSquare, this);
-        mSquarePanels[i]->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::LeftMouseClick, this);
-        mSquarePanels[i]->Bind(wxEVT_LEFT_UP, &ChessBoardPanel::LeftMouseRelease, this);
-        this->SetDropTarget(new DropTargetPanel(mSquarePanels[i]));
+        if (mpAllSquares[i]->IsBorderSquare() == false)
+        {
+        	mSquarePanels[i]->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::LeftMouseClick, this);
+        	DropTargetPanel* p_target_panel = new DropTargetPanel(this);
+        	p_target_panel->SetIndexOfSquare(i);
+        	mSquarePanels[i]->SetDropTarget(p_target_panel);
+        }
     }
     this->SetSizer(mpGridSizer, false);
 
@@ -133,8 +139,8 @@ void slach_gui::ChessBoardPanel::LeftMouseClick(wxMouseEvent& event)
 	int square_index_int = (static_cast<wxWindow*> (event.GetEventObject()))->GetId();
 	mSourceIndex = (unsigned) square_index_int;
 
-    wxBitmapDataObject piece_to_be_moved(GetImageFromPiece(mpSquares[mSourceIndex]->GetPieceOnThisSquare()));
-    wxCursor cursor(mpSquares[mSourceIndex]->GetPieceOnThisSquare());
+    wxBitmapDataObject piece_to_be_moved(GetImageFromPiece(mpAllSquares[mSourceIndex]->GetPieceOnThisSquare()));
+    wxCursor cursor(mpAllSquares[mSourceIndex]->GetPieceOnThisSquare());
     wxDropSource drop_source(mSquarePanels[mSourceIndex], mIconNearTheMouse, mIconNearTheMouse);
 
     drop_source.SetCursor(wxDragMove, cursor);
@@ -159,12 +165,11 @@ void slach_gui::ChessBoardPanel::LeftMouseClick(wxMouseEvent& event)
     }
 }
 
-void slach_gui::ChessBoardPanel::LeftMouseRelease(wxMouseEvent& event)
+void slach_gui::ChessBoardPanel::LeftMouseRelease(unsigned destinationIndex)
 {
-	int square_index_int = (static_cast<wxWindow*> (event.GetEventObject()))->GetId();
-	unsigned destination_index = (unsigned) square_index_int;
-
-    slach::Move candidate_move(mpSquares[mSourceIndex], mpSquares[destination_index]);
+	assert(mSourceIndex<mpAllSquares.size());
+	assert(destinationIndex<mpAllSquares.size());
+    slach::Move candidate_move(mpAllSquares[mSourceIndex], mpAllSquares[destinationIndex]);
     if (mpChessBoard->IsLegalMove(candidate_move)==true)
     {
         if (candidate_move.DoesMoveRequireSpecialGuiHandling())
@@ -177,7 +182,7 @@ void slach_gui::ChessBoardPanel::LeftMouseRelease(wxMouseEvent& event)
             mDrawPiece = true;
 
             //paint piece on destination
-            mSquarePanels[destination_index]->Refresh();
+            mSquarePanels[destinationIndex]->Refresh();
 
 			for (unsigned i = 0; i  < mSquarePanels.size(); ++i)
 			{
@@ -196,7 +201,7 @@ void slach_gui::ChessBoardPanel::LeftMouseRelease(wxMouseEvent& event)
             mDrawPiece = true;
 
             //paint piece on destination
-            mSquarePanels[destination_index]->Refresh();
+            mSquarePanels[destinationIndex]->Refresh();
         }
     }
     else
@@ -252,7 +257,7 @@ void slach_gui::ChessBoardPanel::PaintOnSquare(wxPaintEvent& event)
 	unsigned square_index = (unsigned) square_index_int;
 
 	wxPaintDC dc(mSquarePanels[square_index]);
-	if (mpSquares[square_index]->IsBorderSquare())
+	if (mpAllSquares[square_index]->IsBorderSquare())
 	{
 		PaintBackground(dc, square_index);
 		PaintOnBorder(dc, square_index);
@@ -271,7 +276,7 @@ void slach_gui::ChessBoardPanel::PaintOnSquare(wxPaintEvent& event)
 void slach_gui::ChessBoardPanel::PaintPiece(wxPaintDC& dc, unsigned squareIndex)
 {
 	assert(mPieceImages.size() == 16u);
-    slach::PieceType piece = mpSquares[squareIndex]->GetPieceOnThisSquare();
+    slach::PieceType piece = mpAllSquares[squareIndex]->GetPieceOnThisSquare();
     wxImage piece_image = GetImageFromPiece(piece);
 
     int width = mSquarePanels[squareIndex]->GetClientSize().GetWidth();
@@ -352,19 +357,19 @@ void slach_gui::ChessBoardPanel::PaintBackground(wxPaintDC& dc, unsigned squareI
     int width = mSquarePanels[squareIndex]->GetClientSize().GetWidth();
     int height = mSquarePanels[squareIndex]->GetClientSize().GetHeight();
 
-    if ( (mpSquares[squareIndex]->IsDarkSquare() == true) && (mpSquares[squareIndex]->IsBorderSquare() == false))
+    if ( (mpAllSquares[squareIndex]->IsDarkSquare() == true) && (mpAllSquares[squareIndex]->IsBorderSquare() == false))
     {
         mPieceImages[13].Rescale(width, height);//rgb 32,107,129
         //now really draw the rendered image
         dc.DrawBitmap( mPieceImages[13], 0, 0, true );
     }
-    if ( (mpSquares[squareIndex]->IsLightSquare() == true) && (mpSquares[squareIndex]->IsBorderSquare() == false))
+    if ( (mpAllSquares[squareIndex]->IsLightSquare() == true) && (mpAllSquares[squareIndex]->IsBorderSquare() == false))
     {
         mPieceImages[14].Rescale(width, height);//rgb 235.241,246
         //now really draw the rendered image
         dc.DrawBitmap( mPieceImages[14], 0, 0, true );
     }
-    if (mpSquares[squareIndex]->IsBorderSquare())
+    if (mpAllSquares[squareIndex]->IsBorderSquare())
     {
         mPieceImages[15].Rescale(width, height);
         //now really draw the rendered image
@@ -374,9 +379,9 @@ void slach_gui::ChessBoardPanel::PaintBackground(wxPaintDC& dc, unsigned squareI
 
 void slach_gui::ChessBoardPanel::PaintOnBorder(wxPaintDC& dc, unsigned squareIndex)
 {
-    if ( (mpSquares[squareIndex]->IsBorderSquare()==true &&
-    	  mpSquares[squareIndex]->IsCornerSquare()==false &&
-    	  mpSquares[squareIndex]->IsCoordinatePrintable()))
+    if ( (mpAllSquares[squareIndex]->IsBorderSquare()==true &&
+    	  mpAllSquares[squareIndex]->IsCornerSquare()==false &&
+    	  mpAllSquares[squareIndex]->IsCoordinatePrintable()))
     {
         double fractional_occupancy_of_space= 0.7;
         int dim = 0;
@@ -406,83 +411,83 @@ void slach_gui::ChessBoardPanel::PaintOnBorder(wxPaintDC& dc, unsigned squareInd
 wxImage slach_gui::ChessBoardPanel::DetermineCoordinateToPrint(unsigned squareIndex)
 {
 	wxImage ret;
-    if (mpSquares[squareIndex]->GetFile()=='a')
+    if (mpAllSquares[squareIndex]->GetFile()=='a')
     {
         wxMemoryInputStream istream(a_img, sizeof a_img);
         ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mpSquares[squareIndex]->GetFile()=='b')
+    else if (mpAllSquares[squareIndex]->GetFile()=='b')
     {
         wxMemoryInputStream istream(b_img, sizeof b_img);
         ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mpSquares[squareIndex]->GetFile()=='c')
+    else if (mpAllSquares[squareIndex]->GetFile()=='c')
     {
         wxMemoryInputStream istream(c_img, sizeof c_img);
         ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mpSquares[squareIndex]->GetFile()=='d')
+    else if (mpAllSquares[squareIndex]->GetFile()=='d')
     {
         wxMemoryInputStream istream(d_img, sizeof d_img);
         ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mpSquares[squareIndex]->GetFile()=='e')
+    else if (mpAllSquares[squareIndex]->GetFile()=='e')
     {
         wxMemoryInputStream istream(e_img, sizeof e_img);
         ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mpSquares[squareIndex]->GetFile()=='f')
+    else if (mpAllSquares[squareIndex]->GetFile()=='f')
     {
         wxMemoryInputStream istream(f_img, sizeof f_img);
         ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mpSquares[squareIndex]->GetFile()=='g')
+    else if (mpAllSquares[squareIndex]->GetFile()=='g')
     {
         wxMemoryInputStream istream(g_img, sizeof g_img);
         ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mpSquares[squareIndex]->GetFile()=='h')
+    else if (mpAllSquares[squareIndex]->GetFile()=='h')
     {
         wxMemoryInputStream istream(h_img, sizeof h_img);
         ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
 
-    else if (mpSquares[squareIndex]->GetRank()=='1')
+    else if (mpAllSquares[squareIndex]->GetRank()=='1')
     {
         wxMemoryInputStream istream(one_img, sizeof one_img);
         ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mpSquares[squareIndex]->GetRank()=='2')
+    else if (mpAllSquares[squareIndex]->GetRank()=='2')
     {
         wxMemoryInputStream istream(two_img, sizeof two_img);
         ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mpSquares[squareIndex]->GetRank()=='3')
+    else if (mpAllSquares[squareIndex]->GetRank()=='3')
     {
         wxMemoryInputStream istream(three_img, sizeof three_img);
         ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mpSquares[squareIndex]->GetRank()=='4')
+    else if (mpAllSquares[squareIndex]->GetRank()=='4')
     {
         wxMemoryInputStream istream(four_img, sizeof four_img);
         ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mpSquares[squareIndex]->GetRank()=='5')
+    else if (mpAllSquares[squareIndex]->GetRank()=='5')
     {
         wxMemoryInputStream istream(five_img, sizeof five_img);
         ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mpSquares[squareIndex]->GetRank()=='6')
+    else if (mpAllSquares[squareIndex]->GetRank()=='6')
     {
         wxMemoryInputStream istream(six_img, sizeof six_img);
         ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mpSquares[squareIndex]->GetRank()=='7')
+    else if (mpAllSquares[squareIndex]->GetRank()=='7')
     {
         wxMemoryInputStream istream(seven_img, sizeof seven_img);
         ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
     }
-    else if (mpSquares[squareIndex]->GetRank()=='8')
+    else if (mpAllSquares[squareIndex]->GetRank()=='8')
     {
         wxMemoryInputStream istream(eight_img, sizeof eight_img);
         ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
@@ -498,7 +503,6 @@ wxImage slach_gui::ChessBoardPanel::DetermineCoordinateToPrint(unsigned squareIn
 wxBEGIN_EVENT_TABLE(slach_gui::ChessBoardPanel, wxPanel)
     EVT_SIZE(slach_gui::ChessBoardPanel::OnSize)
     EVT_PAINT(slach_gui::ChessBoardPanel::PaintOnSquare)
-    EVT_LEFT_UP(slach_gui::ChessBoardPanel::LeftMouseRelease)
     EVT_LEFT_DOWN(slach_gui::ChessBoardPanel::LeftMouseClick)
 wxEND_EVENT_TABLE()
 

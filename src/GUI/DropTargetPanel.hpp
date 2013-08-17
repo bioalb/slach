@@ -13,11 +13,13 @@ class DropTargetPanel : public wxDropTarget
 {
 private:
     wxPanel* mpPanel;
+    unsigned mIndex;
 public:
     DropTargetPanel(wxPanel* pParent);
     virtual ~DropTargetPanel();
     virtual wxDragResult OnData(wxCoord x, wxCoord y, wxDragResult def);
     virtual wxDragResult OnDragOver(wxCoord x, wxCoord y, wxDragResult def);
+    void SetIndexOfSquare(unsigned index);
 };
 
 } //namespace slach_gui
