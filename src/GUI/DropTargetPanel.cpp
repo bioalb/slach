@@ -1,13 +1,15 @@
 #include "DropTargetPanel.hpp"
 #include "ChessBoardPanel.hpp"
 slach_gui::DropTargetPanel::DropTargetPanel(wxPanel* pParent)
-    : mpPanel(pParent)
+    : mpPanel(pParent),
+      mIndex(0u)
 {
-	mIndex = 0;
     this->SetDataObject(new wxBitmapDataObject());
 }
 slach_gui::DropTargetPanel::~DropTargetPanel()
-{ }
+{
+	//nothing done
+}
 
 void slach_gui::DropTargetPanel::SetIndexOfSquare(unsigned index)
 {
