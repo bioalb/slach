@@ -133,8 +133,8 @@ void slach_gui::ChessBoardPanel::LeftMouseClick(wxMouseEvent& event)
 	int square_index_int = (static_cast<wxWindow*> (event.GetEventObject()))->GetId();
 	mSourceIndex = (unsigned) square_index_int;
 
-    wxBitmapDataObject piece_to_be_moved(mPieceImages[0]);
-    wxCursor cursor(mPieceImages[0]);
+    wxBitmapDataObject piece_to_be_moved(GetImageFromPiece(mpSquares[mSourceIndex]->GetPieceOnThisSquare()));
+    wxCursor cursor(mpSquares[mSourceIndex]->GetPieceOnThisSquare());
     wxDropSource drop_source(mSquarePanels[mSourceIndex], mIconNearTheMouse, mIconNearTheMouse);
 
     drop_source.SetCursor(wxDragMove, cursor);
@@ -272,8 +272,18 @@ void slach_gui::ChessBoardPanel::PaintPiece(wxPaintDC& dc, unsigned squareIndex)
 {
 	assert(mPieceImages.size() == 16u);
     slach::PieceType piece = mpSquares[squareIndex]->GetPieceOnThisSquare();
-    wxImage piece_image;
+    wxImage piece_image = GetImageFromPiece(piece);
 
+    int width = mSquarePanels[squareIndex]->GetClientSize().GetWidth();
+    int height = mSquarePanels[squareIndex]->GetClientSize().GetHeight();
+    piece_image.Rescale(width, height);
+    //now really draw the rendered image;
+    dc.DrawBitmap( piece_image, 0, 0, true );
+}
+
+wxImage slach_gui::ChessBoardPanel::GetImageFromPiece(slach::PieceType piece)
+{
+	wxImage piece_image;
     switch(piece)
     {
         case slach::WHITE_KING:
@@ -332,13 +342,9 @@ void slach_gui::ChessBoardPanel::PaintPiece(wxPaintDC& dc, unsigned squareIndex)
             //NEVER_REACHED;
             break;
     }
-
-    int width = mSquarePanels[squareIndex]->GetClientSize().GetWidth();
-    int height = mSquarePanels[squareIndex]->GetClientSize().GetHeight();
-    piece_image.Rescale(width, height);
-    //now really draw the rendered image;
-    dc.DrawBitmap( piece_image, 0, 0, true );
+    return piece_image;
 }
+
 
 void slach_gui::ChessBoardPanel::PaintBackground(wxPaintDC& dc, unsigned squareIndex)
 {

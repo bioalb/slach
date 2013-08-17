@@ -51,7 +51,7 @@ private:
 
 
     wxImage DetermineCoordinateToPrint(unsigned squareIndex);
-
+    wxImage GetImageFromPiece(slach::PieceType piece);
     unsigned mSourceIndex;
 public:
     ChessBoardPanel(wxFrame* parent,  wxWindowID id = wxID_ANY, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
@@ -60,6 +60,8 @@ public:
     void PaintOnSquare(wxPaintEvent& event);
     void LeftMouseClick(wxMouseEvent& event);
     void LeftMouseRelease(wxMouseEvent& event);
+
+
     std::vector<wxImage > GetPiecesPgns();
     void OnSize(wxSizeEvent& event);
 
