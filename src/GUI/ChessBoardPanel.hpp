@@ -120,12 +120,62 @@ private:
 
 public:
 
+    /**
+     * Constructor. Initializes all member variables.
+     * Create all teh children panel (the squares) and puts them
+     * in the gridsizer.
+     * Initialization of the target for the drag and drop also happens here.
+     *
+     * @param parent the parent frame
+     * @param id the window ID (defaults to wx/ID_ANY)
+     * @param pos the position of this panel (defaults to wxDefaultPosition)
+     * @param size the size of this panel in pixel (wxDefaultSize)
+     */
     ChessBoardPanel(wxFrame* parent,  wxWindowID id = wxID_ANY, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
+
+    /**
+     * Destructor
+     */
     ~ChessBoardPanel();
 
+    /**
+     * Main method to draw the chessboard and the pieces.
+     * Captured as PaintEvent, it figures out which object (square panel)
+     * has generated the event and paint on it accordingly.
+     * To do so, it examines various member variables including mDrawPiece.
+     * The children panel of this class (the squares) connects their paint event to this method.
+     * It calls several private helper methods (PaintBackground, PaintPiece and PaintOnBorder)
+     *
+     * @param event the paint event
+     */
     void PaintOnSquare(wxPaintEvent& event);
+
+    /**
+     * This method captures the initiation of the drag and drop between squares.
+     * The children panel of this class (the squares) connects their mouse event to this method.
+     *
+     * @param event the mouse click event
+     */
     void LeftMouseClick(wxMouseEvent& event);
+
+    /**
+     * This method captures the mouse release for drag and drop.
+     * It gets called by a DropTargetPanel (where the user released the mouse).
+     * Since mSourceIndex was already stored, obtaining the index of the destination
+     * square completes the information we need to generate a move.
+     *
+     * This is done in this method that contains the logic to repaint the necessary pieces
+     * according to the move. It also calls the legal move checker to see if it is valid.
+     *
+     * @param destinationIndex the index of the destination square
+     */
     void LeftMouseRelease(unsigned destinationIndex);
+
+    /**
+     * Resizing method. It figures out the new size and resize everything accordingly.
+     *
+     * @param event the size event
+     */
     void OnSize(wxSizeEvent& event);
 
 
