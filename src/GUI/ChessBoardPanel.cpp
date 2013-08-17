@@ -40,18 +40,20 @@
 
 slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size),
-      mpParent(parent)
+      mPngPieceDirectory("../../src/GUI/bitmaps/pieces/png/"),
+      mPngBackgroundDirectory("../../src/GUI/bitmaps/squares/png/"),
+      mpChessBoardWithBorders ( new slach::ChessBoardWithBorders() ),
+      mpChessBoard(NULL),
+      mpGridSizer ( new wxFlexGridSizer(slach::gBoardRowSize+2,slach::gBoardColumnSize+2,0,0) ),
+      mpParent(parent),
+      mDrawPiece(true),
+      mSourceIndex(0u)
 {
-    mPngPieceDirectory = "../../src/GUI/bitmaps/pieces/png/";
-    mPngBackgroundDirectory = "../../src/GUI/bitmaps/squares/png/";
 
     mSquarePanels.resize(slach::gChessBoardSizeWB);
-    mpChessBoardWithBorders = new slach::ChessBoardWithBorders();
-
 
     //now the grid sizer.
     int square_to_border_prop = 3;//proportion between border and square
-    mpGridSizer = new wxFlexGridSizer(slach::gBoardRowSize+2,slach::gBoardColumnSize+2,0,0);
     mpGridSizer->AddGrowableCol(0,1);//border
     mpGridSizer->AddGrowableCol(1,square_to_border_prop);
     mpGridSizer->AddGrowableCol(2,square_to_border_prop);
@@ -74,12 +76,11 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
     mpGridSizer->AddGrowableRow(8,square_to_border_prop);
     mpGridSizer->AddGrowableRow(9,1);//border
 
-    LoadSvgPieces();
+    LoadBoardImages();
 
     mpChessBoard = mpChessBoardWithBorders->GetPlayableChessBoard();
     mpChessBoard->SetupInitialChessPosition();
     mpAllSquares = mpChessBoardWithBorders->GetSquares();
-    mpPlayableSquares = mpChessBoard->GetSquares();
 
     assert(mpAllSquares.size() == mSquarePanels.size());
     for (unsigned i = 0; i < mpAllSquares.size(); ++i)
@@ -97,8 +98,6 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
         }
     }
     this->SetSizer(mpGridSizer, false);
-
-    mDrawPiece = true;
 }
 
 slach_gui::ChessBoardPanel::~ChessBoardPanel()
@@ -106,7 +105,7 @@ slach_gui::ChessBoardPanel::~ChessBoardPanel()
     delete mpChessBoardWithBorders;
 }
 
-void slach_gui::ChessBoardPanel::LoadSvgPieces()
+void slach_gui::ChessBoardPanel::LoadBoardImages()
 {
 	mPieceImages.resize(16u);
 
@@ -127,11 +126,6 @@ void slach_gui::ChessBoardPanel::LoadSvgPieces()
     mPieceImages[14].LoadFile(wxString((mPngBackgroundDirectory+"light_square.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
     mPieceImages[15].LoadFile(wxString((mPngBackgroundDirectory+"border_square.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
 
-}
-
-std::vector<wxImage > slach_gui::ChessBoardPanel::GetPiecesPgns()
-{
-    return mPieceImages;
 }
 
 void slach_gui::ChessBoardPanel::LeftMouseClick(wxMouseEvent& event)
@@ -244,11 +238,6 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
 
     //skip the event.
     event.Skip();
-}
-
-slach::ChessBoard* slach_gui::ChessBoardPanel::GetChessBoard() const
-{
-    return mpChessBoard;
 }
 
 void slach_gui::ChessBoardPanel::PaintOnSquare(wxPaintEvent& event)
