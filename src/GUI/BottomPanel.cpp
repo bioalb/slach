@@ -45,15 +45,40 @@ void slach_gui::BottomPanel::OnSize(wxSizeEvent& event)
 void slach_gui::BottomPanel::SetPositionToAnalyse(slach::Position* pPosition)
 {
     mpPosition = pPosition;
+    if (mEngineIsRunning == true)
+    {
+    	DoStopEngine();
+    	DoStartEngine();
+    }
 }
 
 void slach_gui::BottomPanel::StopEngine(wxCommandEvent& event)
 {
-	mEngineIsRunning = false;
-	mpEngineInterface->StopEngine();
+	DoStopEngine();
+	event.Skip();
 }
 
 void slach_gui::BottomPanel::StartEngine(wxCommandEvent& event)
+{
+	DoStartEngine();
+	event.Skip();
+}
+
+void slach_gui::BottomPanel::DoStopEngine()
+{
+	mEngineIsRunning = false;
+	mpEngineInterface->StopEngine();
+    // important: before terminating, we _must_ wait for our joinable
+    // thread to end, if it's running; in fact it uses variables of this
+    // instance and posts events to *this event handler
+    if ( GetThread() &&   GetThread()->IsRunning())
+    {
+    	GetThread()->Wait();
+    }
+    Destroy();
+}
+
+void slach_gui::BottomPanel::DoStartEngine()
 {
 	mEngineIsRunning = true;
     // we want to start a long task, but we don't want our GUI to block
@@ -69,8 +94,6 @@ void slach_gui::BottomPanel::StartEngine(wxCommandEvent& event)
 		wxLogError("Could not run the worker thread!");
 		return;
 	}
-
-	event.Skip();
 }
 
 wxThread::ExitCode slach_gui::BottomPanel::Entry()
@@ -84,17 +107,8 @@ void slach_gui::BottomPanel::OnClose(wxCloseEvent&)
 {
 	if (mEngineIsRunning == true)
 	{
-		mpEngineInterface->StopEngine();
+		DoStopEngine();
 	}
-
-    // important: before terminating, we _must_ wait for our joinable
-    // thread to end, if it's running; in fact it uses variables of this
-    // instance and posts events to *this event handler
-    if ( GetThread() &&   GetThread()->IsRunning())
-    {
-    	GetThread()->Wait();
-    }
-    Destroy();
 }
 
 void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)

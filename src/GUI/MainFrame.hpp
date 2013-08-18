@@ -32,6 +32,13 @@ public:
     BottomPanel* mpBottomPanel;
     ChessBoardPanel* mpBoardPanel;
 
+    /**
+     * this methods tells the bottom panel
+     * to use the position that is passed in
+     *
+     * @param pPosition the position we wish to set
+     */
+    void UpdateChessPositionForEngine(slach::Position* pPosition);
 private:
 
     /**

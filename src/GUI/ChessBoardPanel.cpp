@@ -5,7 +5,7 @@
 #include "SlachTypes.hpp"
 #include "ChessBoardPanel.hpp"
 #include "DropTargetPanel.hpp"
-#include "ChessBoardPanel.hpp"
+#include "MainFrame.hpp"
 #include "bitmaps/letters/png/a.png.h"
 #include "bitmaps/letters/png/b.png.h"
 #include "bitmaps/letters/png/c.png.h"
@@ -80,6 +80,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
 
     mpChessBoard = mpChessBoardWithBorders->GetPlayableChessBoard();
     mpChessBoard->SetupInitialChessPosition();
+    (static_cast<MainFrame*> (mpParent))->UpdateChessPositionForEngine(mpChessBoard->GetCurrentPosition());
     mpAllSquares = mpChessBoardWithBorders->GetSquares();
 
     assert(mpAllSquares.size() == mSquarePanels.size());
@@ -183,6 +184,7 @@ void slach_gui::ChessBoardPanel::ProcessMoveInGui(slach::Move & move)
             //paint piece on destination
             mSquarePanels[destination_index]->Refresh();
         }
+        (static_cast<MainFrame*> (mpParent))->UpdateChessPositionForEngine(mpChessBoard->GetCurrentPosition());
     }
     else
     {

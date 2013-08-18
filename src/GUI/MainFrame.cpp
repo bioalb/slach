@@ -40,6 +40,11 @@ slach_gui::MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const
     this->SetSizer(h_sizer);
 }
 
+void slach_gui::MainFrame::UpdateChessPositionForEngine(slach::Position* pPosition)
+{
+	mpBottomPanel->SetPositionToAnalyse(pPosition);
+}
+
 slach_gui::MainFrame::~MainFrame()
 {
 }

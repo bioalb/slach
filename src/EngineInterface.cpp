@@ -62,8 +62,8 @@ void slach::EngineInterface::StopEngine()
 {
 	stockfish::Search::Signals.stop = true;
 	stockfish::Threads.main_thread()->notify_one();
-	stockfish::Threads.main_thread()->exit;
 	stockfish::Threads.wait_for_think_finished();
+	stockfish::Threads.main_thread()->exit;
 	stockfish::Threads.exit();
 }
 

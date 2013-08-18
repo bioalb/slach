@@ -28,6 +28,9 @@ protected:
     // in wxThreadHelper
     virtual wxThread::ExitCode Entry();
 
+    void DoStartEngine();
+    void DoStopEngine();
+
 public:
     BottomPanel(wxFrame* parent, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
     ~BottomPanel();
@@ -40,6 +43,9 @@ public:
 
     void OnClose(wxCloseEvent& evt);
 
+    /**
+     * captures the event and calls DoStartEngine();
+     */
     void StartEngine(wxCommandEvent& event);
     void StopEngine(wxCommandEvent& event);
     void SetPositionToAnalyse(slach::Position* pPosition);
