@@ -37,6 +37,7 @@ slach::ChessBoardWithBorders::ChessBoardWithBorders()
         assert(column<files.size());
         mSquares[index]->SetFile(files[column]);
         mSquares[index]->SetRank(ranks[row]);
+
         column++;
 
         if ( (column%file_size==0) )
@@ -105,6 +106,11 @@ slach::ChessBoardWithBorders::ChessBoardWithBorders()
                 mSquares[index]->SetAsPrintableCoordinates(true);
             }
         }
+    }
+
+    for (unsigned i = 0; i <mSquares.size(); ++i )
+    {
+        mSquares[i]->SetIndexFromTopLeft(i);
     }
 }
 

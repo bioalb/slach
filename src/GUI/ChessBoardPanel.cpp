@@ -141,19 +141,28 @@ void slach_gui::ChessBoardPanel::LeftMouseRelease(unsigned destinationIndex)
 	assert(mSourceIndex<mpAllSquares.size());
 	assert(destinationIndex<mpAllSquares.size());
     slach::Move candidate_move(mpAllSquares[mSourceIndex], mpAllSquares[destinationIndex]);
-    if (mpChessBoard->IsLegalMove(candidate_move)==true)
+
+    ProcessMoveInGui(candidate_move);
+}
+
+void slach_gui::ChessBoardPanel::ProcessMoveInGui(slach::Move & move)
+{
+	unsigned destination_index = move.GetDestination()->GetIndexFromTopLeft();
+	unsigned source_index = move.GetOrigin()->GetIndexFromTopLeft();
+
+    if (mpChessBoard->IsLegalMove(move)==true)
     {
-        if (candidate_move.DoesMoveRequireSpecialGuiHandling())
+        if (move.DoesMoveRequireSpecialGuiHandling())
         {
-            mpChessBoard->MakeThisMove(candidate_move);
+            mpChessBoard->MakeThisMove(move);
 
             //delete piece on origin
             mDrawPiece = false;
-            mSquarePanels[mSourceIndex]->Refresh();
+            mSquarePanels[source_index]->Refresh();
             mDrawPiece = true;
 
             //paint piece on destination
-            mSquarePanels[destinationIndex]->Refresh();
+            mSquarePanels[destination_index]->Refresh();
 
 			for (unsigned i = 0; i  < mSquarePanels.size(); ++i)
 			{
@@ -165,21 +174,21 @@ void slach_gui::ChessBoardPanel::LeftMouseRelease(unsigned destinationIndex)
         }
         else
         {
-            mpChessBoard->MakeThisMove(candidate_move);
+            mpChessBoard->MakeThisMove(move);
             //delete piece on origin
             mDrawPiece = false;
-            mSquarePanels[mSourceIndex]->Refresh();
+            mSquarePanels[source_index]->Refresh();
             mDrawPiece = true;
 
             //paint piece on destination
-            mSquarePanels[destinationIndex]->Refresh();
+            mSquarePanels[destination_index]->Refresh();
         }
     }
     else
     {
     	//not legal, re-draw piece on origin
     	mDrawPiece = true;
-        mSquarePanels[mSourceIndex]->Refresh();
+        mSquarePanels[source_index]->Refresh();
     }
 }
 

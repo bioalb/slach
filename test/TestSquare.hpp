@@ -30,6 +30,7 @@ public:
         TS_ASSERT_EQUALS(sq1.IsDarkSquare(), false);
         TS_ASSERT_EQUALS(sq1.IsLightSquare(), false);
         TS_ASSERT_EQUALS(sq1.GetIndexFromA1(), UINT_MAX);
+        TS_ASSERT_EQUALS(sq1.GetIndexFromTopLeft(), UINT_MAX);
         TS_ASSERT_THROWS_THIS(sq1.GetRankAsInt(),
                 "slach::Square::GetRankAsInt the square index must be initialised before calling this method");
         TS_ASSERT_THROWS_THIS(sq1.GetFileAsInt(),
@@ -43,7 +44,9 @@ public:
         TS_ASSERT_EQUALS(sq1.GetFileAsString(), "a");
         TS_ASSERT_EQUALS(sq1.GetIndexFromA1(), UINT_MAX);
         sq1.SetIndexFromA1(24u);
+        sq1.SetIndexFromTopLeft(41u);
         TS_ASSERT_EQUALS(sq1.GetIndexFromA1(), 24u);
+        TS_ASSERT_EQUALS(sq1.GetIndexFromTopLeft(), 41u);
         TS_ASSERT_EQUALS(sq1.GetRankAsInt(), 3);
         TS_ASSERT_EQUALS(sq1.GetFileAsInt(), 0);
         TS_ASSERT_EQUALS(sq1.Getx88Index(), 48);

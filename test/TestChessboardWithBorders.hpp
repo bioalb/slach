@@ -318,6 +318,7 @@ public:
         TS_ASSERT_EQUALS(squares[88]->IsLightSquare(), true);
         TS_ASSERT_EQUALS(squares[88]->GetFile(), 'h');
         TS_ASSERT_EQUALS(squares[88]->GetRank(), '1');
+        TS_ASSERT_EQUALS(squares[88]->GetIndexFromA1(), 7u);
 
         //border square next to h1
         TS_ASSERT_EQUALS(squares[89]->IsCornerSquare(), false);
@@ -325,6 +326,7 @@ public:
         TS_ASSERT_EQUALS(squares[89]->GetFile(), '0');
         TS_ASSERT_EQUALS(squares[89]->GetRank(), '1');
         TS_ASSERT_EQUALS(squares[89]->IsCoordinatePrintable(), false);
+        TS_ASSERT_EQUALS(squares[89]->GetIndexFromA1(), UINT_MAX);//not playable square, default value
 
         /////
         //Bottom border
@@ -356,6 +358,13 @@ public:
         TS_ASSERT_EQUALS(squares[99]->GetFile(), '0');
         TS_ASSERT_EQUALS(squares[99]->GetRank(), '0');
         TS_ASSERT_EQUALS(squares[99]->IsCoordinatePrintable(), false);
+
+
+        //check indices setting
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+        	TS_ASSERT_EQUALS(squares[i]->GetIndexFromTopLeft(), i);
+        }
 
         //coverage
         TS_ASSERT_EQUALS(my_cb.GetPlayableChessBoard()->GetSquares().size(), 64u);

@@ -171,6 +171,8 @@ public:
      */
     void LeftMouseRelease(unsigned destinationIndex);
 
+    void ProcessMoveInGui(slach::Move & move);
+
     /**
      * Resizing method. It figures out the new size and resize everything accordingly.
      *

@@ -48,6 +48,14 @@ private:
      * it is initialised to UINT_MAX in the constructor
      */
     unsigned mIndexFromA1;
+    /**
+     * The index of this square on a chessboard counting from top left of the board
+     * INCLUDING borders.
+     * Meaning that this index is zero in the border square top left of A8
+     *
+     * it is initialised to UINT_MAX in the constructor
+     */
+    unsigned mIndexFromTopLeft;
 
 public:
     /**Constructor*/
@@ -226,9 +234,25 @@ public:
      * This method PERFORMS NO CHECKS. whatever is passed in, gets assigned to the mIndexFromA1
      * member variable.
      *
-     * @param index the idedx we wish to set.
+     * @param index the index we wish to set.
      */
     void SetIndexFromA1(unsigned index);
+
+    /**
+     * Sets the index of this square
+     * counting from top left (near a8) AND including borders
+     * This method PERFORMS NO CHECKS. whatever is passed in, gets assigned to the mIndexFromTopLeft
+     * member variable.
+     *
+     * @param index the index we wish to set
+     */
+    void SetIndexFromTopLeft(unsigned index);
+
+    /**
+     * Gets the index of this square
+     * counting from top left (near a8) AND including borders
+     */
+    unsigned GetIndexFromTopLeft() const;
 
     int Getx88Index() const;
 

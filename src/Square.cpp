@@ -12,7 +12,8 @@ slach::Square::Square()
     mIsDarkSquare(false),
     mIsCoordinatePrintable(false),
     mPieceOnThisSquare(NO_PIECE),
-    mIndexFromA1(UINT_MAX)
+    mIndexFromA1(UINT_MAX),
+    mIndexFromTopLeft(UINT_MAX)
 {
 
 }
@@ -165,6 +166,16 @@ void slach::Square::SetIndexFromA1(unsigned index)
 unsigned slach::Square::GetIndexFromA1() const
 {
     return mIndexFromA1;
+}
+
+void slach::Square::SetIndexFromTopLeft(unsigned index)
+{
+    mIndexFromTopLeft = index;
+}
+
+unsigned slach::Square::GetIndexFromTopLeft() const
+{
+    return mIndexFromTopLeft;
 }
 
 int slach::Square::Getx88Index() const
