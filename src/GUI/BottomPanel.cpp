@@ -45,6 +45,7 @@ void slach_gui::BottomPanel::OnSize(wxSizeEvent& event)
 void slach_gui::BottomPanel::SetPositionToAnalyse(slach::Position* pPosition)
 {
     mpPosition = pPosition;
+
     if (mEngineIsRunning == true)
     {
     	DoStopEngine();
@@ -67,15 +68,8 @@ void slach_gui::BottomPanel::StartEngine(wxCommandEvent& event)
 void slach_gui::BottomPanel::DoStopEngine()
 {
 	mEngineIsRunning = false;
+	wxCriticalSectionLocker lock(mCritSect);
 	mpEngineInterface->StopEngine();
-    // important: before terminating, we _must_ wait for our joinable
-    // thread to end, if it's running; in fact it uses variables of this
-    // instance and posts events to *this event handler
-    if ( GetThread() &&   GetThread()->IsRunning())
-    {
-    	GetThread()->Wait();
-    }
-    Destroy();
 }
 
 void slach_gui::BottomPanel::DoStartEngine()
@@ -99,6 +93,7 @@ void slach_gui::BottomPanel::DoStartEngine()
 wxThread::ExitCode slach_gui::BottomPanel::Entry()
 {
     // IMPORTANT:this function gets executed in the secondary thread context!
+	wxCriticalSectionLocker lock(mCritSect);
 	mpEngineInterface->StartAnalsyingPosition(mpPosition); //infinite
     return (wxThread::ExitCode)0;
 }
@@ -109,6 +104,14 @@ void slach_gui::BottomPanel::OnClose(wxCloseEvent&)
 	{
 		DoStopEngine();
 	}
+    // important: before terminating, we _must_ wait for our joinable
+    // thread to end, if it's running; in fact it uses variables of this
+    // instance and posts events to *this event handler
+    if ( GetThread() &&   GetThread()->IsRunning())
+    {
+    	GetThread()->Wait();
+    }
+    Destroy();
 }
 
 void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)

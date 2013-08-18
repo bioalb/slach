@@ -35,9 +35,9 @@ slach::EngineInterface::~EngineInterface()
 void slach::EngineInterface::StartAnalsyingPosition(Position* pPosition, double seconds)
 {
     assert(pPosition != NULL);
-
     stockfish::Search::init();
     stockfish::Threads.init();
+
     stockfish::Search::Signals.stop = false;
     stockfish::Search::LimitsType limits;
 
@@ -63,8 +63,7 @@ void slach::EngineInterface::StopEngine()
 	stockfish::Search::Signals.stop = true;
 	stockfish::Threads.main_thread()->notify_one();
 	stockfish::Threads.wait_for_think_finished();
-	stockfish::Threads.main_thread()->exit;
-	stockfish::Threads.exit();
+	//stockfish::Threads.exit();
 }
 
 std::string slach::EngineInterface::GetLatestEngineOutput()
