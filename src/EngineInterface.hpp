@@ -21,6 +21,9 @@ class EngineInterface
     /**Cache for a FEN string*/
     std::string mFenString;
 
+    /**Cache teh latest engine output when we tried to collect it*/
+    std::string mLatestOutput;
+
     /**pointer to a position object within the stockfish engine*/
     stockfish::Position* mpStockfishPosition;
 

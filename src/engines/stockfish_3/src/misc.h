@@ -66,7 +66,9 @@ private:
 enum SyncCout { io_lock, io_unlock };
 std::ostream& operator<<(std::ostream&, SyncCout);
 
-#define sync_cout std::cout << io_lock
+extern std::stringstream global_stream; // introduced by slach to redirect std::cout
+
+#define sync_cout global_stream << io_lock
 #define sync_endl std::endl << io_unlock
 
 }  // namespace stockfish

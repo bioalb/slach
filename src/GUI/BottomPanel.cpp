@@ -61,6 +61,7 @@ void slach_gui::BottomPanel::StopEngine(wxCommandEvent& event)
 
 void slach_gui::BottomPanel::StartEngine(wxCommandEvent& event)
 {
+    mpEngineTextBox->Clear();//clear the box
 	DoStartEngine();
 	event.Skip();
 }

@@ -805,10 +805,10 @@ split_point_start: // At split points actual search starts from here
       {
           Signals.firstRootMove = (moveCount == 1);
 
-          if (thisThread == Threads.main_thread() && Time::now() - SearchTime > 3000)
+          /*if (thisThread == Threads.main_thread() && Time::now() - SearchTime > 3000)
               sync_cout << "info depth " << depth / ONE_PLY
                         << " currmove " << move_to_uci(move, pos.is_chess960())
-                        << " currmovenumber " << moveCount + PVIdx << sync_endl;
+                        << " currmovenumber " << moveCount + PVIdx << sync_endl;*/
       }
 
       ext = DEPTH_ZERO;
@@ -1545,14 +1545,14 @@ split_point_start: // At split points actual search starts from here
         if (s.rdbuf()->in_avail()) // Not at first line
             s << "\n";
 
-        s << "info depth " << d
-          << " seldepth "  << selDepth
-          << " score "     << (i == PVIdx ? score_to_uci(v, alpha, beta) : score_to_uci(v))
-          << " nodes "     << pos.nodes_searched()
+        s << " Depth " << d
+          /*<< " seldepth "  << selDepth*/
+          << " Score "     << (i == PVIdx ? score_to_uci(v, alpha, beta) : score_to_uci(v))
+          /*<< " nodes "     << pos.nodes_searched()
           << " nps "       << pos.nodes_searched() * 1000 / elaspsed
           << " time "      << elaspsed
-          << " multipv "   << i + 1
-          << " pv";
+          << " multipv "   << i + 1*/
+          << " Line:";
 
         for (size_t j = 0; RootMoves[i].pv[j] != MOVE_NONE; j++)
             s <<  " " << move_to_uci(RootMoves[i].pv[j], pos.is_chess960());

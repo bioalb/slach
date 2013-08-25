@@ -68,7 +68,8 @@ public:
         position.SetFromFen(test_position, squares);
         std::cout<<std::endl<<"*******"<<"Starting analysis. I will analyse for 3 seconds"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(&position, 3.0);
-        std::cout<<std::endl<<"Done analysing for 3 seconds"<<std::endl;
+        std::cout<<std::endl<<"Done analysing for 3 seconds, engine output follows"<<std::endl;
+        std::cout<<interface.GetLatestEngineOutput()<<std::endl;
     }
 
     void TestStartInfiniteAndStop()
@@ -93,6 +94,7 @@ public:
 			std::time(&time_now);
 		}
         interface.StopEngine();
+        std::cout<<interface.GetLatestEngineOutput()<<std::endl;
     }
 
 

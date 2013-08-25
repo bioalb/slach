@@ -134,7 +134,7 @@ Square msb(Bitboard b) {
 
 void Bitboards::print(Bitboard b) {
 
-  sync_cout;
+  //sync_cout;
 
   for (Rank rank = RANK_8; rank >= RANK_1; rank--)
   {

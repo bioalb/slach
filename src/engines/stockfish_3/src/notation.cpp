@@ -50,7 +50,7 @@ string score_to_uci(Value v, Value alpha, Value beta) {
   else
       s << "mate " << (v > 0 ? VALUE_MATE - v + 1 : -VALUE_MATE - v) / 2;
 
-  s << (v >= beta ? " lowerbound" : v <= alpha ? " upperbound" : "");
+  //s << (v >= beta ? " lowerbound" : v <= alpha ? " upperbound" : "");
 
   return s.str();
 }

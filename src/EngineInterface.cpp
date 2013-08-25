@@ -10,10 +10,12 @@
 #include "thread.h"
 #include "tt.h"
 #include "ucioption.h"
+#include "misc.h"
 
 
 slach::EngineInterface::EngineInterface()
   : mFenString(""),
+    mLatestOutput(""),
     mpStockfishPosition (new stockfish::Position())
 {
     stockfish::UCI::init(stockfish::Options);
@@ -66,9 +68,23 @@ void slach::EngineInterface::StopEngine()
 	//stockfish::Threads.exit();
 }
 
+
 std::string slach::EngineInterface::GetLatestEngineOutput()
 {
-	return "hello from engine interface \n";
+    std::string raw_string = stockfish::global_stream.str();
+    if (raw_string.compare(mLatestOutput) > 0) //raw_string is longer
+    {
+        //std::size_t end_of_shorter_string = raw_string.find(mLatestOutput);
+
+
+        raw_string = raw_string.substr(mLatestOutput.length());
+        mLatestOutput = raw_string;
+    }
+    else
+    {
+        raw_string = "";
+    }
+	return raw_string;
 }
 
 stockfish::Square slach::EngineInterface::ConvertSquareToStockfish(const Square* pSquare) const
