@@ -15,7 +15,9 @@
 
 slach::EngineInterface::EngineInterface()
   : mFenString(""),
-    mLatestOutput(""),
+    mLatestDepth(INT_MAX),
+    mLatestScore(DBL_MAX),
+    mLatestLine(""),
     mpStockfishPosition (new stockfish::Position())
 {
     stockfish::UCI::init(stockfish::Options);
@@ -72,19 +74,43 @@ void slach::EngineInterface::StopEngine()
 std::string slach::EngineInterface::GetLatestEngineOutput()
 {
     std::string raw_string = stockfish::global_stream.str();
-    if (raw_string.compare(mLatestOutput) > 0) //raw_string is longer
+
+    int depth;
+    double score;
+    std::string line;
+    ParseEngineOutput(raw_string, depth,score,line);
+
+    if ( (depth != mLatestDepth) || (score != mLatestScore) || (line != mLatestLine) )
     {
-        //std::size_t end_of_shorter_string = raw_string.find(mLatestOutput);
-
-
-        raw_string = raw_string.substr(mLatestOutput.length());
-        mLatestOutput = raw_string;
+        size_t pos = raw_string.rfind("Depth");
+        std::string substring = raw_string.substr(pos);
+        raw_string = substring;
+        mLatestDepth = depth;
+        mLatestScore = score;
+        mLatestLine = line;
     }
     else
     {
         raw_string = "";
     }
 	return raw_string;
+}
+
+void slach::EngineInterface::ParseEngineOutput(const std::string& engineOutput, int& depth, double& score, std::string& line)
+{
+    size_t pos = engineOutput.rfind("Depth");
+    pos = engineOutput.find_first_of(' ', pos);
+
+    depth = atoi(&(engineOutput[pos]));
+
+    pos = engineOutput.rfind("cp");
+    pos = engineOutput.find_first_of(' ', pos);
+
+    score = atoi(&(engineOutput[pos]))*100;
+
+    pos = engineOutput.rfind("Line:");
+    pos = engineOutput.find_first_of(' ', pos);
+    line  = engineOutput.substr(pos+1);
 }
 
 stockfish::Square slach::EngineInterface::ConvertSquareToStockfish(const Square* pSquare) const

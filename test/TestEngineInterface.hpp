@@ -97,6 +97,25 @@ public:
         std::cout<<interface.GetLatestEngineOutput()<<std::endl;
     }
 
+    void TestParsingEngineOutput()
+    {
+        slach::EngineInterface interface;
+
+        std::string test_string =   std::string("Depth 1 Score cp -24 Line: f6e4 c3e4 d5e4") +
+                                    "\nDepth 2 Score cp -24 Line: f6e4 c3e4 d5e4" +
+                                    "\nDepth 3 Score cp -8 Line: f5d3 d2d3 e7e6" +
+                                    "\nDepth 4 Score cp -12 Line: f6e4 c3e4 d5e4 g2g4" +
+                                    "\nDepth 5 Score cp -4 Line: f5d3 d2d3 c6b4 d3d2 e7e6";
+        int depth;
+        double score;
+        std::string line;
+        interface.ParseEngineOutput(test_string, depth, score, line);
+
+        TS_ASSERT_EQUALS(depth,5);
+        TS_ASSERT_DELTA(score, -4*100, 1e-6);
+        TS_ASSERT_EQUALS(line, "f5d3 d2d3 c6b4 d3d2 e7e6");
+
+    }
 
 };
 #endif
