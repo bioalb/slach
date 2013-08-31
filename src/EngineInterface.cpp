@@ -74,6 +74,7 @@ void slach::EngineInterface::StopEngine()
 std::string slach::EngineInterface::GetLatestEngineOutput()
 {
     std::string raw_string = stockfish::global_stream.str();
+    std::string ret ("");
 
     int depth;
     double score;
@@ -82,18 +83,17 @@ std::string slach::EngineInterface::GetLatestEngineOutput()
 
     if ( (depth != mLatestDepth) || (score != mLatestScore) || (line != mLatestLine) )
     {
-        size_t pos = raw_string.rfind("Depth");
-        std::string substring = raw_string.substr(pos);
-        raw_string = substring;
+        std::stringstream ss;
+        ss.setf( std::ios::fixed, std::ios::floatfield );//for the score
+        ss.precision(2);//for the score
+        ss<<"Depth = " << depth << "; score = " << score << "; " << line;
+        ret = ss.str();
         mLatestDepth = depth;
         mLatestScore = score;
         mLatestLine = line;
     }
-    else
-    {
-        raw_string = "";
-    }
-	return raw_string;
+
+	return ret;
 }
 
 void slach::EngineInterface::ParseEngineOutput(const std::string& engineOutput, int& depth, double& score, std::string& line)
@@ -106,7 +106,7 @@ void slach::EngineInterface::ParseEngineOutput(const std::string& engineOutput, 
     pos = engineOutput.rfind("cp");
     pos = engineOutput.find_first_of(' ', pos);
 
-    score = atoi(&(engineOutput[pos]))*100;
+    score = atoi(&(engineOutput[pos]))/100.0;
 
     pos = engineOutput.rfind("Line:");
     pos = engineOutput.find_first_of(' ', pos);

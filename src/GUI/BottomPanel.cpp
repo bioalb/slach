@@ -45,7 +45,7 @@ void slach_gui::BottomPanel::OnSize(wxSizeEvent& event)
 void slach_gui::BottomPanel::SetPositionToAnalyse(slach::Position* pPosition)
 {
     mpPosition = pPosition;
-
+    mpEngineTextBox->Clear();//clear the box
     if (mEngineIsRunning == true)
     {
     	DoStopEngine();

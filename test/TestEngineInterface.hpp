@@ -112,7 +112,7 @@ public:
         interface.ParseEngineOutput(test_string, depth, score, line);
 
         TS_ASSERT_EQUALS(depth,5);
-        TS_ASSERT_DELTA(score, -4*100, 1e-6);
+        TS_ASSERT_DELTA(score, -4.0/100.0, 1e-6);
         TS_ASSERT_EQUALS(line, "f5d3 d2d3 c6b4 d3d2 e7e6");
 
     }
