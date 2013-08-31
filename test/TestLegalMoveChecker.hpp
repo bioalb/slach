@@ -583,6 +583,7 @@ public:
         slach::Colour turn = slach::WHITE;
         unsigned enpassant_index = 64u;//no -ep
         bool gives_check;
+        unsigned ambiguity_square;
         slach::LegalMoveChecker generator;
         std::vector<unsigned> white_that_attacks_c7 = generator.GetAttackers(squares[50], squares, slach::WHITE);
         std::vector<unsigned> black_that_attacks_c7 = generator.GetAttackers(squares[50], squares, slach::BLACK);
@@ -593,7 +594,7 @@ public:
         //this would be legal, but it is not black's turn'
         slach::Move black_move_not_his_turn(squares[0], squares[1]);//a1-b1
 
-        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, black_move_not_his_turn, turn,castling_rights,enpassant_index,gives_check ));
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, black_move_not_his_turn, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
 
         //white's turn
         slach::Move queen_pseudo_illegal_move(squares[49],squares[3]);//b7-d1, queen can't go here from b7
@@ -602,11 +603,11 @@ public:
         slach::Move king_legal_move(squares[4],squares[12]);//e1-e2 away from check
         slach::Move king_illegal_move( squares[4], squares[3]);//e1-d1 still in check
 
-        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, queen_pseudo_illegal_move, turn,castling_rights,enpassant_index,gives_check ));
-        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, queen_pseudo_legal_move_leaves_king_on_check, turn,castling_rights,enpassant_index,gives_check ));
-        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, queen_legal_move, turn,castling_rights,enpassant_index,gives_check ));
-        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, king_legal_move, turn,castling_rights,enpassant_index,gives_check ));
-        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, king_illegal_move, turn,castling_rights,enpassant_index,gives_check ));
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, queen_pseudo_illegal_move, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, queen_pseudo_legal_move_leaves_king_on_check, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
+        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, queen_legal_move, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
+        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, king_legal_move, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, king_illegal_move, turn,castling_rights,enpassant_index,gives_check , ambiguity_square));
 
         for (unsigned i = 0; i < squares.size(); ++i)
         {
@@ -647,6 +648,7 @@ public:
         }
 
         bool gives_check = false;
+        unsigned ambiguity_square;
         std::vector<slach::CastlingRights> castling_rights = {slach::WHITE_KINGSIDE, slach::WHITE_QUEENSIDE, slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
         slach::Colour turn = slach::BLACK;
         unsigned enpassant_index = 64u;//no -ep
@@ -654,7 +656,7 @@ public:
         slach::Move rook_gives_check(squares[8],squares[0]);//a2-a1, black rook gives check
         slach::LegalMoveChecker generator;
 
-        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, rook_gives_check, turn,castling_rights,enpassant_index, gives_check ));
+        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, rook_gives_check, turn,castling_rights,enpassant_index, gives_check, ambiguity_square ));
         TS_ASSERT_EQUALS(gives_check, true);
 
         for (unsigned i = 0; i < squares.size(); ++i)
@@ -702,15 +704,16 @@ public:
         slach::Colour turn = slach::BLACK;
         unsigned enpassant_index = 64u;//no -ep
         bool gives_check;
+        unsigned ambiguity_square;
         slach::LegalMoveChecker generator;
 
         slach::Move rook_shield_but_it_is_double_check(squares[58], squares[18]);//c8-c3
         slach::Move king_illegal_move(squares[4], squares[11]);//e1-d2 still in check
         slach::Move king_legal_move(squares[4], squares[13]);//e1-f2
 
-        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, rook_shield_but_it_is_double_check, turn,castling_rights,enpassant_index,gives_check ));
-        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, king_illegal_move, turn,castling_rights,enpassant_index,gives_check ));
-        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, king_legal_move, turn,castling_rights,enpassant_index,gives_check ));
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, rook_shield_but_it_is_double_check, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, king_illegal_move, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
+        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, king_legal_move, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
         TS_ASSERT_EQUALS(gives_check, false);//not giving check here
         for (unsigned i = 0; i < squares.size(); ++i)
         {
@@ -718,6 +721,54 @@ public:
         }
     }
 
+    void testAmbiguityMove(void)
+    {
+        std::vector<slach::Square* > squares;
+        squares.resize(64u);
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            squares[i] = new slach::Square();
+            squares[i]->SetIndexFromA1(i);
+            //put the white king on e1
+            if (i==11u)//d2
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_KING);
+            }
+            else if (i==0)//a1
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_ROOK);
+            }
+            else if (i==7)//h1
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_ROOK);
+            }
+            else if (i==60)//e8,
+            {
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_KING);
+            }
+            else if (i==26)//c4, attacking f1 --> should make castling illegal
+            {
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_BISHOP);
+            }
+            else
+            {
+                squares[i]->SetPieceOnThisSquare(slach::NO_PIECE);
+            }
+        }
+
+        std::vector<slach::CastlingRights> castling_rights = {slach::WHITE_KINGSIDE, slach::WHITE_QUEENSIDE, slach::BLACK_KINGSIDE, slach::BLACK_QUEENSIDE};
+        slach::Colour turn = slach::WHITE;
+        unsigned enpassant_index = 64u;//no -ep
+        bool gives_check;
+        unsigned ambiguity_square;
+        slach::LegalMoveChecker generator;
+        slach::Move a1_c1(squares[0],squares[2]);//a1-c1
+        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, a1_c1, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
+        TS_ASSERT_EQUALS(gives_check, false);//not giving check here
+        TS_ASSERT_EQUALS(ambiguity_square, 7u);//rook on h1 could also go to c1
+
+
+    }
     void testIllegalCastlingWhite(void)
     {
         std::vector<slach::Square* > squares;
@@ -757,17 +808,20 @@ public:
         slach::Colour turn = slach::WHITE;
         unsigned enpassant_index = 64u;//no -ep
         bool gives_check;
+        unsigned ambiguity_square;
         slach::LegalMoveChecker generator;
 
         slach::Move castling_kingside(squares[4],squares[6]);//e1-g1
         slach::Move castling_queenside(squares[4],squares[2]);//e1-c1
 
-        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index,gives_check ));
-        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index,gives_check ));
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
+        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index,gives_check , ambiguity_square));
 
         squares[30]->SetPieceOnThisSquare(slach::BLACK_QUEEN);//g4, attacking d1 where king passes
-        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index,gives_check ));
-        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index,gives_check ));
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
+        TS_ASSERT_EQUALS(gives_check, false);//not giving check here
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
+        TS_ASSERT_EQUALS(gives_check, false);//not giving check here
 
         for (unsigned i = 0; i < squares.size(); ++i)
         {
@@ -814,17 +868,18 @@ public:
 		slach::Colour turn = slach::BLACK;
 		unsigned enpassant_index = 64u;//no -ep
 		bool gives_check;
+		unsigned ambiguity_square;
 		slach::LegalMoveChecker generator;
 
 		slach::Move castling_kingside(squares[60],squares[62]);//e8-g8
 		slach::Move castling_queenside(squares[60],squares[58]);//e8-c8
 
-		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index,gives_check ));
-		TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index,gives_check ));
+		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
+		TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
 
 		squares[38]->SetPieceOnThisSquare(slach::WHITE_QUEEN);//g5, attacking d8, where the king passes
-		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index,gives_check ));
-		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index,gives_check ));
+		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
+		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
 
 		for (unsigned i = 0; i < squares.size(); ++i)
 		{
@@ -871,17 +926,18 @@ public:
         slach::Colour turn = slach::WHITE;
         unsigned enpassant_index = 64u;//no -ep
         bool gives_check;
+        unsigned ambiguity_square;
         slach::LegalMoveChecker generator;
 
         slach::Move castling_kingside (squares[4],squares[6]);//e1-g1
         slach::Move castling_queenside(squares[4],squares[2]);//e1-c1
 
-        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index,gives_check ));
-        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index,gives_check ));
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
+        TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
 
         squares[20]->SetPieceOnThisSquare(slach::NO_PIECE);//remove the rook, and everyone can castle now...
-        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index,gives_check ));
-        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index,gives_check ));
+        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
+        TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
 
         for (unsigned i = 0; i < squares.size(); ++i)
         {
@@ -928,17 +984,23 @@ public:
 		slach::Colour turn = slach::BLACK;
 		unsigned enpassant_index = 64u;//no -ep
 		bool gives_check;
+		unsigned ambiguity_square;
 		slach::LegalMoveChecker generator;
 
 		slach::Move castling_kingside(squares[60], squares[62]);//e8-g8
 		slach::Move castling_queenside(squares[60],squares[58]);//e8-c8
 
-		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index, gives_check ));
-		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index, gives_check ));
+		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index, gives_check, ambiguity_square ));
+		TS_ASSERT_EQUALS(false, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index, gives_check, ambiguity_square ));
 
+		TS_ASSERT_EQUALS(gives_check, false);//not giving check here
+		TS_ASSERT_EQUALS(ambiguity_square, 64u);//no ambiguity
 		squares[44]->SetPieceOnThisSquare(slach::NO_PIECE);//g5, attacking d8, where the king passes
-		TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index, gives_check ));
-		TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index, gives_check ));
+		TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_queenside, turn,castling_rights,enpassant_index, gives_check, ambiguity_square ));
+		TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, castling_kingside, turn,castling_rights,enpassant_index, gives_check, ambiguity_square ));
+
+        TS_ASSERT_EQUALS(gives_check, false);//not giving check here
+        TS_ASSERT_EQUALS(ambiguity_square, 64u);//no ambiguity
 
 		for (unsigned i = 0; i < squares.size(); ++i)
 		{

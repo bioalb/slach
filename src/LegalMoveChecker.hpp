@@ -102,11 +102,14 @@ public :
      * @param turn the turn to move : SLACH::WHITE or SLACH::BLACK.
      * @param castlingRights a vector with the castling rights
      * @param enpassantIindex any index of square where there is an en-passant capture possibility.
-     * @param givesCheck (output) this will contain true or false whether the moves gives check or not.
+     * @param givesCheck (output) this will contain true or false whether the moves gives check or not. It will be false if the move is not legal.
+     * @param ambiguitySquare (output)  this will contain an index of a square where the same piece from the same colour could have landed to the
+     *                                  same destination as the actual move did. This is useful for outputting the move in algebraic format.
+     *                                  If no piece can do that, this will be 64 (one bigger than the chessboard).
      * @return true if the move is legal, false otherwise.
      */
     bool IsMoveLegalInPosition(const std::vector<Square*>& rSquares,
-            const Move& rMove, Colour turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex, bool& givesCheck);
+            const Move& rMove, Colour turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex, bool& givesCheck, unsigned& ambiguitySquare);
 
 
 };

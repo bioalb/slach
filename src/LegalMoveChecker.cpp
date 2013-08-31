@@ -262,8 +262,11 @@ std::vector<unsigned> slach::LegalMoveChecker::GetAttackers(Square* attacked, co
 }
 
 bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& rSquares,
-            const Move& rMove, Colour turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex, bool& givesCheck)
+            const Move& rMove, Colour turn, std::vector<CastlingRights> castlingRights, unsigned enpassantIindex, bool& givesCheck, unsigned& ambiguitySquare)
 {
+    givesCheck = false; //default
+    ambiguitySquare = 64u; //default value as per documentation
+
     PieceType origin_piece = rMove.GetOrigin()->GetPieceOnThisSquare();
     //NOT YOUR TURN!
     if (IsPieceSameAsTurn(origin_piece, turn) == false)
@@ -282,6 +285,27 @@ bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& 
     	}
     	unsigned origin_index = rMove.GetOrigin()->GetIndexFromA1();
     	unsigned dest_index = rMove.GetDestination()->GetIndexFromA1();
+
+    	//look for ambiguity (the same piece from the same colour could go to destination square as well)
+        for (unsigned  i = 0; i < mTempSquares.size(); ++i)
+        {
+            if (i == origin_index)
+            {
+                continue;
+            }
+            if ( mTempSquares[i]->GetPieceOnThisSquare() == mTempSquares[origin_index]->GetPieceOnThisSquare() )
+            {
+                //found the exact same piece on the board, where can it go?
+                std::vector<unsigned> possible_dests = GetPseudoLegalMovesSquaresFromOrigin(mTempSquares[i], mTempSquares, castlingRights,enpassantIindex);
+                std::sort (possible_dests.begin(), possible_dests.end());
+                if (std::binary_search (possible_dests.begin(), possible_dests.end(), dest_index) == true)
+                {
+                    ambiguitySquare = i;
+                }
+                break; //this assumes no more than two exact same pieces on the board
+            }
+        }
+
     	//make the move on temp squares
     	mTempSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
     	mTempSquares[dest_index]->SetPieceOnThisSquare(rMove.GetOrigin()->GetPieceOnThisSquare());

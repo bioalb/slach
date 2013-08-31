@@ -33,12 +33,14 @@ int slach::Position::SetFromFen(const std::string& rFenPosition, std::vector<Squ
 
 bool slach::Position::IsMoveLegal(Move& rMove, std::vector<Square*>& rSquares)
 {
+    unsigned amb;
     bool ret =  mpLegalMoveChecker->IsMoveLegalInPosition(rSquares,
 														  rMove,
 														  mPositionFeatures.mTurnToMove,
 														  mPositionFeatures.mCastlingRights,
 														  mPositionFeatures.mIndexOfEnpassant,
-														  mMoveGivesCheck);
+														  mMoveGivesCheck,
+														  amb);
     if (mMoveGivesCheck == true)
     {
         rMove.GivesCheck(true);
