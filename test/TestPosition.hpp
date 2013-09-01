@@ -352,8 +352,6 @@ public:
 		TS_ASSERT_EQUALS(false, pos.IsMoveLegal(black_castle_queenside, squares));//rook in place but no rights
 	}
 
-	//This test starts from a position where, after some moves played, both sides could castle.
-	//Both sides then move their rooks back and forth thus progressively loosing castling rights
    void testPromotions(void)
    {
        slach::ChessBoard my_cb;
@@ -407,6 +405,7 @@ public:
 
        pos.SetPromotionPiece(slach::WHITE_KNIGHT);
        TS_ASSERT_EQUALS(pos.IsMoveLegal(g7_g8, squares), true);
+       TS_ASSERT_EQUALS(g7_g8.GetMoveInAlgebraicFormat(), "g8=N");
        pos.UpdatePositionWithMove(g7_g8, squares);
 
        TS_ASSERT_EQUALS(squares[62]->GetPieceOnThisSquare(), slach::WHITE_KNIGHT);
@@ -415,5 +414,30 @@ public:
        TS_ASSERT_THROWS_THIS(pos.SetPromotionPiece(slach::WHITE_PAWN), "slach::Position::SetPromotionPiece: you can't set a pawn to be a promotion piece");
        TS_ASSERT_THROWS_THIS(pos.SetPromotionPiece(slach::BLACK_PAWN), "slach::Position::SetPromotionPiece: you can't set a pawn to be a promotion piece");
    }
+
+    void testAmbiguousMoveNotation(void)
+    {
+         slach::ChessBoard my_cb;
+         my_cb.SetupChessBoard();
+         my_cb.SetupInitialChessPosition();
+         std::vector<slach::Square* > squares = my_cb.GetSquares();
+         TS_ASSERT_EQUALS(squares.size(), 64u);
+
+         //saved in tets/data/test_position_6.png for reference
+         std::string fen_poistion = "r4rk1/pp1b2pp/2n1pp2/q1np4/2P4B/P3P3/1PQN1PPP/R3KB1R w KQ - 3 14";
+         slach::Position pos;
+         pos.SetFromFen(fen_poistion, squares);
+         //white's turn move is Bishop (h4 takes the pawn in f6)
+         slach::Move h4_f6(squares[31],squares[45]);//h4-f6
+         TS_ASSERT_EQUALS(pos.IsMoveLegal(h4_f6, squares), true);
+         TS_ASSERT_EQUALS(h4_f6.GetMoveInAlgebraicFormat(), "Bxf6");
+         pos.UpdatePositionWithMove(h4_f6, squares);
+
+         //black's turn now. Black moves one of the rooks (f-file) to d8 rook on a8 could also go there
+         slach::Move f8_d8(squares[61],squares[59]);//f8-d8
+         TS_ASSERT_EQUALS(pos.IsMoveLegal(f8_d8, squares), true);
+         TS_ASSERT_EQUALS(f8_d8.GetMoveInAlgebraicFormat(), "Rfd8");
+         pos.UpdatePositionWithMove(f8_d8, squares);
+    }
 };
 #endif

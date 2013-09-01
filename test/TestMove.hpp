@@ -290,28 +290,31 @@ class TestMove : public CxxTest::TestSuite
             }
         }
 
-        slach::Move white_captures_enpassant(squares[48],squares[56]);//a7-a8
+        slach::Move white_promotes(squares[48],squares[56]);//a7-a8
+        TS_ASSERT_EQUALS(white_promotes.GetPromotionPieceCode(), "Q");//default value
         slach::Move white_pawn_move(squares[8], squares[16]);//a2-a3
-        slach::Move white_regular_capture(squares[9u], squares[1u]);//b2-b1
+        slach::Move black_promotes(squares[9u], squares[1u]);//b2-b1
+        black_promotes.SetPromotionPiece(slach::BLACK_KNIGHT);
+        TS_ASSERT_EQUALS(black_promotes.GetPromotionPieceCode(), "N");
         slach::Move black_pawn_moves(squares[49], squares[41]);//b7-b6
 
-        TS_ASSERT_EQUALS(white_captures_enpassant.IsWhiteCastlingKingSide(), false);
-        TS_ASSERT_EQUALS(white_captures_enpassant.IsWhiteCastlingQueenSide(), false);
-        TS_ASSERT_EQUALS(white_captures_enpassant.IsBlackCastlingKingSide(), false);
-        TS_ASSERT_EQUALS(white_captures_enpassant.IsBlackCastlingQueenSide(), false);
-        TS_ASSERT_EQUALS(white_captures_enpassant.IsSpecialMove(), true);
-        TS_ASSERT_EQUALS(white_captures_enpassant.IsWhitePromoting(), true);
-        TS_ASSERT_EQUALS(white_captures_enpassant.IsBlackPromoting(), false);
-        TS_ASSERT_EQUALS(white_captures_enpassant.IsKingSideWhiteRookMoving(), false);
-        TS_ASSERT_EQUALS(white_captures_enpassant.IsQueenSideWhiteRookMoving(), false);
-        TS_ASSERT_EQUALS(white_captures_enpassant.IsKingSideBlackRookMoving(), false);
-        TS_ASSERT_EQUALS(white_captures_enpassant.IsQueenSideBlackRookMoving(), false);
-        TS_ASSERT_EQUALS(white_captures_enpassant.IsWhiteKingMoving(), false);
-        TS_ASSERT_EQUALS(white_captures_enpassant.IsBlackKingMoving(), false);
-        TS_ASSERT_EQUALS(white_captures_enpassant.DoesMoveRequireSpecialGuiHandling(), true);
-        TS_ASSERT_EQUALS(white_captures_enpassant.IsBlackCapturingEnPassant(), false);
-        TS_ASSERT_EQUALS(white_captures_enpassant.IsWhiteCapturingEnPassant(), false);
-        TS_ASSERT_EQUALS(white_captures_enpassant.GetMoveInAlgebraicFormat(), "a8=Q");
+        TS_ASSERT_EQUALS(white_promotes.IsWhiteCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(white_promotes.IsWhiteCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(white_promotes.IsBlackCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(white_promotes.IsBlackCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(white_promotes.IsSpecialMove(), true);
+        TS_ASSERT_EQUALS(white_promotes.IsWhitePromoting(), true);
+        TS_ASSERT_EQUALS(white_promotes.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(white_promotes.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(white_promotes.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(white_promotes.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(white_promotes.IsQueenSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(white_promotes.IsWhiteKingMoving(), false);
+        TS_ASSERT_EQUALS(white_promotes.IsBlackKingMoving(), false);
+        TS_ASSERT_EQUALS(white_promotes.DoesMoveRequireSpecialGuiHandling(), true);
+        TS_ASSERT_EQUALS(white_promotes.IsBlackCapturingEnPassant(), false);
+        TS_ASSERT_EQUALS(white_promotes.IsWhiteCapturingEnPassant(), false);
+        TS_ASSERT_EQUALS(white_promotes.GetMoveInAlgebraicFormat(), "a8=Q");
 
         TS_ASSERT_EQUALS(white_pawn_move.IsWhiteCastlingKingSide(), false);
         TS_ASSERT_EQUALS(white_pawn_move.IsWhiteCastlingQueenSide(), false);
@@ -331,23 +334,23 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(white_pawn_move.IsWhiteCapturingEnPassant(), false);
         TS_ASSERT_EQUALS(white_pawn_move.GetMoveInAlgebraicFormat(), "a3");
 
-        TS_ASSERT_EQUALS(white_regular_capture.IsWhiteCastlingKingSide(), false);
-        TS_ASSERT_EQUALS(white_regular_capture.IsWhiteCastlingQueenSide(), false);
-        TS_ASSERT_EQUALS(white_regular_capture.IsBlackCastlingKingSide(), false);
-        TS_ASSERT_EQUALS(white_regular_capture.IsBlackCastlingQueenSide(), false);
-        TS_ASSERT_EQUALS(white_regular_capture.IsSpecialMove(), true);
-        TS_ASSERT_EQUALS(white_regular_capture.IsWhitePromoting(), false);
-        TS_ASSERT_EQUALS(white_regular_capture.IsBlackPromoting(), true);
-        TS_ASSERT_EQUALS(white_regular_capture.IsKingSideWhiteRookMoving(), false);
-        TS_ASSERT_EQUALS(white_regular_capture.IsQueenSideWhiteRookMoving(), false);
-        TS_ASSERT_EQUALS(white_regular_capture.IsKingSideBlackRookMoving(), false);
-        TS_ASSERT_EQUALS(white_regular_capture.IsQueenSideBlackRookMoving(), false);
-        TS_ASSERT_EQUALS(white_regular_capture.IsWhiteKingMoving(), false);
-        TS_ASSERT_EQUALS(white_regular_capture.IsBlackKingMoving(), false);
-        TS_ASSERT_EQUALS(white_regular_capture.DoesMoveRequireSpecialGuiHandling(), true);
-        TS_ASSERT_EQUALS(white_regular_capture.IsBlackCapturingEnPassant(), false);
-        TS_ASSERT_EQUALS(white_regular_capture.IsWhiteCapturingEnPassant(), false);
-        TS_ASSERT_EQUALS(white_regular_capture.GetMoveInAlgebraicFormat(), "b1=Q");
+        TS_ASSERT_EQUALS(black_promotes.IsWhiteCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(black_promotes.IsWhiteCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(black_promotes.IsBlackCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(black_promotes.IsBlackCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(black_promotes.IsSpecialMove(), true);
+        TS_ASSERT_EQUALS(black_promotes.IsWhitePromoting(), false);
+        TS_ASSERT_EQUALS(black_promotes.IsBlackPromoting(), true);
+        TS_ASSERT_EQUALS(black_promotes.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(black_promotes.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(black_promotes.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(black_promotes.IsQueenSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(black_promotes.IsWhiteKingMoving(), false);
+        TS_ASSERT_EQUALS(black_promotes.IsBlackKingMoving(), false);
+        TS_ASSERT_EQUALS(black_promotes.DoesMoveRequireSpecialGuiHandling(), true);
+        TS_ASSERT_EQUALS(black_promotes.IsBlackCapturingEnPassant(), false);
+        TS_ASSERT_EQUALS(black_promotes.IsWhiteCapturingEnPassant(), false);
+        TS_ASSERT_EQUALS(black_promotes.GetMoveInAlgebraicFormat(), "b1=N");
 
         TS_ASSERT_EQUALS(black_pawn_moves.IsWhiteCastlingKingSide(), false);
         TS_ASSERT_EQUALS(black_pawn_moves.IsWhiteCastlingQueenSide(), false);

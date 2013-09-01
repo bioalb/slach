@@ -1,4 +1,5 @@
 #include <cassert>
+#include <iostream>
 #include "Exception.hpp"
 #include "HelperGlobalFunctions.hpp"
 #include "Position.hpp"
@@ -33,20 +34,31 @@ int slach::Position::SetFromFen(const std::string& rFenPosition, std::vector<Squ
 
 bool slach::Position::IsMoveLegal(Move& rMove, std::vector<Square*>& rSquares)
 {
-    unsigned amb;
+    unsigned ambiguity_index;
     bool ret =  mpLegalMoveChecker->IsMoveLegalInPosition(rSquares,
 														  rMove,
 														  mPositionFeatures.mTurnToMove,
 														  mPositionFeatures.mCastlingRights,
 														  mPositionFeatures.mIndexOfEnpassant,
 														  mMoveGivesCheck,
-														  amb);
+														  ambiguity_index);
     if (mMoveGivesCheck == true)
     {
         rMove.GivesCheck(true);
     }
-
-    return ret;
+    if (rMove.IsWhitePromoting())
+    {
+        rMove.SetPromotionPiece(mWhitePromotionPiece);
+    }
+    if (rMove.IsBlackPromoting())
+    {
+        rMove.SetPromotionPiece(mBlackPromotionPiece);
+    }
+    if (ambiguity_index < 64u)//meaning there is ambiguity
+    {
+        rMove.SetAmbiguityPrefix( rSquares[ambiguity_index]->GetFileAsString() );
+    }
+   return ret;
 }
 
 void slach::Position::UpdatePositionWithMove(slach::Move& rMove, std::vector<Square*>& rSquares)
@@ -159,7 +171,7 @@ void  slach::Position::MoveThePieces(const Move& rMove, std::vector<Square*>& rS
     rSquares[destination_index]->SetPieceOnThisSquare(origin_piece);
 }
 
-void slach::Position::ProcessSpecialMove(const Move& rMove, std::vector<Square*>& rSquares)
+void slach::Position::ProcessSpecialMove(Move& rMove, std::vector<Square*>& rSquares)
 {
     unsigned origin_index = rMove.GetOrigin()->GetIndexFromA1();
     unsigned destination_index = rMove.GetDestination()->GetIndexFromA1();
@@ -234,11 +246,13 @@ void slach::Position::ProcessSpecialMove(const Move& rMove, std::vector<Square*>
     }
     else if (rMove.IsWhitePromoting())
     {
+        rMove.SetPromotionPiece(mWhitePromotionPiece);
         rSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
         rSquares[destination_index]->SetPieceOnThisSquare(mWhitePromotionPiece);
     }
     else if (rMove.IsBlackPromoting())
     {
+        rMove.SetPromotionPiece(mBlackPromotionPiece);
         rSquares[origin_index]->SetPieceOnThisSquare(NO_PIECE);
         rSquares[destination_index]->SetPieceOnThisSquare(mBlackPromotionPiece);
     }

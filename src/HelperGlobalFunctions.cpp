@@ -30,3 +30,31 @@ unsigned slach::GetIndexFromCoordinates(const char &rFile, const char &rRank)
     }
     return 64u;
 }
+
+std::string slach::GetPieceCodeOfThisPiece (const PieceType& piece)
+{
+    std::string ret("");
+
+    if (IsQueen(piece))
+    {
+        ret = "Q";
+    }
+    if (IsRook(piece))
+    {
+        ret = "R";
+    }
+    if (IsBishop(piece))
+    {
+        ret = "B";
+    }
+    if (IsKnight(piece))
+    {
+        ret = "N";
+    }
+    if (IsKing(piece))
+    {
+        ret = "K";
+    }
+
+    return ret;
+}

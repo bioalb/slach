@@ -765,9 +765,7 @@ public:
         slach::Move a1_c1(squares[0],squares[2]);//a1-c1
         TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, a1_c1, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
         TS_ASSERT_EQUALS(gives_check, false);//not giving check here
-        TS_ASSERT_EQUALS(ambiguity_square, 7u);//rook on h1 could also go to c1
-
-
+        TS_ASSERT_EQUALS(ambiguity_square, 0u);//rook on h1 could also go to c1, a1 is the index of ambiguity
     }
     void testIllegalCastlingWhite(void)
     {

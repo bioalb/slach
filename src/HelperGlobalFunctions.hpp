@@ -1,6 +1,7 @@
 #ifndef HELPER_GLOBAL_FUNCTIONS_HPP
 #define HELPER_GLOBAL_FUNCTIONS_HPP
 
+#include <string>
 #include "SlachTypes.hpp"
 
 namespace slach
@@ -96,6 +97,11 @@ void DeleteCastlingRights(const CastlingRights& toBeDeleted, std::vector<Castlin
  * @return the index if rank and files are appropriate, 64 (out of the chessboard) otherwise
  */
 unsigned GetIndexFromCoordinates(const char &rFile, const char &rRank);
+
+/**
+ * HElper method that gives you the code of the piece you pass in (Q, B etc)
+ */
+std::string GetPieceCodeOfThisPiece (const PieceType& piece);
 
 } // namespace slach
 

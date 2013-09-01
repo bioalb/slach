@@ -39,7 +39,7 @@ private :
      * @param rMove (input) the move to be processed
      * @param rSquares (will change) the representation of the chessboard
      */
-    void ProcessSpecialMove(const Move& rMove, std::vector<Square*>& rSquares);
+    void ProcessSpecialMove(Move& rMove, std::vector<Square*>& rSquares);
 
     /**
      * Helper method that actually moves the pieces according to rMove.

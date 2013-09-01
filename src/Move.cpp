@@ -6,7 +6,8 @@ slach::Move::Move()
     : mpOrigin(NULL),
       mpDestination(NULL),
       mGivesCheck(false),
-      mAmbiguityPrefix("")
+      mAmbiguityPrefix(""),
+      mPromotionPieceCode("Q")
 {
 }
 
@@ -14,7 +15,8 @@ slach::Move::Move(Square* pOrigin, Square* pDestination)
     : mpOrigin(pOrigin),
       mpDestination(pDestination),
       mGivesCheck(false),
-      mAmbiguityPrefix("")
+      mAmbiguityPrefix(""),
+      mPromotionPieceCode("Q")
 {
 }
 
@@ -22,7 +24,8 @@ slach::Move::Move (const Move& move)
   :mpOrigin (move.GetOrigin()),
    mpDestination (move.GetDestination() ),
    mGivesCheck(move.DoesMoveGiceCheck()),
-   mAmbiguityPrefix(move.GetAmbiguityPrefix())
+   mAmbiguityPrefix(move.GetAmbiguityPrefix()),
+   mPromotionPieceCode(move.GetPromotionPieceCode())
 {
 }
 
@@ -34,6 +37,7 @@ slach::Move& slach::Move::operator=(const Move& from)
        mpDestination = from.GetDestination();
        mGivesCheck = from.DoesMoveGiceCheck();
        mAmbiguityPrefix = from.GetAmbiguityPrefix();
+       mPromotionPieceCode = from.GetPromotionPieceCode();
     }
 
     return *this;
@@ -287,6 +291,31 @@ void slach::Move::SetAmbiguityPrefix(std::string prefix)
     mAmbiguityPrefix = prefix;
 }
 
+std::string slach::Move::GetPromotionPieceCode() const
+{
+    return mPromotionPieceCode;
+}
+
+void slach::Move::SetPromotionPiece(const slach::PieceType& piece)
+{
+    if (IsQueen(piece))
+    {
+        mPromotionPieceCode = "Q";
+    }
+    if (IsRook(piece))
+    {
+        mPromotionPieceCode = "R";
+    }
+    if (IsBishop(piece))
+    {
+        mPromotionPieceCode = "B";
+    }
+    if (IsKnight(piece))
+    {
+        mPromotionPieceCode = "N";
+    }
+}
+
 
 std::string slach::Move::GetMoveInAlgebraicFormat() const
 {
@@ -345,7 +374,7 @@ std::string slach::Move::GetMoveInAlgebraicFormat() const
        std::string promotion_suffix = "";
        if (IsBlackPromoting() || IsWhitePromoting())
        {
-           promotion_suffix = "=Q";
+           promotion_suffix = std::string("=") + mPromotionPieceCode;
        }
 
        std::string suffix;

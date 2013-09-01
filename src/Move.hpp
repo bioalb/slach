@@ -28,6 +28,8 @@ private :
 
     std::string mAmbiguityPrefix;
 
+    std::string mPromotionPieceCode;
+
 public :
 
     /**
@@ -198,6 +200,10 @@ public :
     std::string GetAmbiguityPrefix() const;
 
     void SetAmbiguityPrefix(std::string prefix);
+
+    std::string GetPromotionPieceCode() const;
+
+    void SetPromotionPiece(const slach::PieceType& piece);
 
 
 };
