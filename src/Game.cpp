@@ -27,10 +27,10 @@ void slach::Game::AddPosition(std::string fenPosition)
     mListOfFenPositions.push_back(fenPosition);
 }
 
-void slach::Game::AddMove(const Move& rMove, std::string ambiguityPrefix)
+void slach::Game::AddMove(const Move& rMove)
 {
     mMoveList.push_back(rMove);
-    mMoveListAlgFormat.push_back(rMove.GetMoveInAlgebraicFormat(ambiguityPrefix));
+    mMoveListAlgFormat.push_back(rMove.GetMoveInAlgebraicFormat());
 }
 
 std::string slach::Game::FetchFromFenList(int moveNumber, Colour toMove)

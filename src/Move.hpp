@@ -26,6 +26,8 @@ private :
 
     bool mGivesCheck;
 
+    std::string mAmbiguityPrefix;
+
 public :
 
     /**
@@ -187,11 +189,15 @@ public :
     /**
      * Returns the algebraic format of this move
      */
-    std::string GetMoveInAlgebraicFormat(std::string ambiguityPrefix = "") const;
+    std::string GetMoveInAlgebraicFormat() const;
 
     void GivesCheck(bool gives = true);
 
     bool DoesMoveGiceCheck() const;
+
+    std::string GetAmbiguityPrefix() const;
+
+    void SetAmbiguityPrefix(std::string prefix);
 
 
 };

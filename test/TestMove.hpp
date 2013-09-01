@@ -577,6 +577,99 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(a1_a8.GetMoveInAlgebraicFormat(), "Rxa8");
     }
 
+    void TestCornerRookMovesWithAmbiguity()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            if ((i==0u) || (i==7u) || (i==24u))//white rooks, a1, h1 and a5
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_ROOK);
+            }
+            else if ((i==56u) || (i==63u))//black rooks
+            {
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_ROOK);
+            }
+            else if (i==12u)//white king, e2
+            {
+                squares[i]->SetPieceOnThisSquare(slach::WHITE_KING);
+            }
+            else if (i==54u)//black king, g7
+            {
+                squares[i]->SetPieceOnThisSquare(slach::BLACK_KING);
+            }
+            else
+            {
+                squares[i]->SetPieceOnThisSquare(slach::NO_PIECE);
+            }
+        }
+
+        slach::Move a1_b1(squares[0],squares[1]);//a1-b1, both white rooks can go to b1
+        a1_b1.SetAmbiguityPrefix("a");
+        slach::Move h1_b1(squares[7], squares[1]); // h1-b1  both white rooks can go to b1
+        h1_b1.SetAmbiguityPrefix("h");
+        slach::Move a5_a2(squares[24], squares[8]);// a5-a2 both rooks can go to a2
+        a5_a2.SetAmbiguityPrefix("5");
+
+        TS_ASSERT_EQUALS(a1_b1.IsWhiteCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(a1_b1.IsWhiteCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(a1_b1.IsBlackCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(a1_b1.IsBlackCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(a1_b1.IsSpecialMove(), true);
+        TS_ASSERT_EQUALS(a1_b1.IsWhitePromoting(), false);
+        TS_ASSERT_EQUALS(a1_b1.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(a1_b1.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(a1_b1.IsQueenSideWhiteRookMoving(), true);
+        TS_ASSERT_EQUALS(a1_b1.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(a1_b1.IsQueenSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(a1_b1.IsWhiteKingMoving(), false);
+        TS_ASSERT_EQUALS(a1_b1.IsBlackKingMoving(), false);
+        TS_ASSERT_EQUALS(a1_b1.DoesMoveRequireSpecialGuiHandling(), false);
+        TS_ASSERT_EQUALS(a1_b1.IsBlackCapturingEnPassant(), false);
+        TS_ASSERT_EQUALS(a1_b1.IsWhiteCapturingEnPassant(), false);
+        TS_ASSERT_EQUALS(a1_b1.GetAmbiguityPrefix(), "a");
+        TS_ASSERT_EQUALS(a1_b1.GetMoveInAlgebraicFormat(), "Rab1");
+
+        TS_ASSERT_EQUALS(h1_b1.IsWhiteCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(h1_b1.IsWhiteCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(h1_b1.IsBlackCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(h1_b1.IsBlackCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(h1_b1.IsSpecialMove(), true);
+        TS_ASSERT_EQUALS(h1_b1.IsWhitePromoting(), false);
+        TS_ASSERT_EQUALS(h1_b1.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(h1_b1.IsKingSideWhiteRookMoving(), true);
+        TS_ASSERT_EQUALS(h1_b1.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(h1_b1.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(h1_b1.IsQueenSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(h1_b1.IsWhiteKingMoving(), false);
+        TS_ASSERT_EQUALS(h1_b1.IsBlackKingMoving(), false);
+        TS_ASSERT_EQUALS(h1_b1.DoesMoveRequireSpecialGuiHandling(), false);
+        TS_ASSERT_EQUALS(h1_b1.IsBlackCapturingEnPassant(), false);
+        TS_ASSERT_EQUALS(h1_b1.IsWhiteCapturingEnPassant(), false);
+        TS_ASSERT_EQUALS(h1_b1.GetMoveInAlgebraicFormat(), "Rhb1");
+
+        TS_ASSERT_EQUALS(a5_a2.IsWhiteCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(a5_a2.IsWhiteCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(a5_a2.IsBlackCastlingKingSide(), false);
+        TS_ASSERT_EQUALS(a5_a2.IsBlackCastlingQueenSide(), false);
+        TS_ASSERT_EQUALS(a5_a2.IsSpecialMove(), false);
+        TS_ASSERT_EQUALS(a5_a2.IsWhitePromoting(), false);
+        TS_ASSERT_EQUALS(a5_a2.IsBlackPromoting(), false);
+        TS_ASSERT_EQUALS(a5_a2.IsKingSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(a5_a2.IsQueenSideWhiteRookMoving(), false);
+        TS_ASSERT_EQUALS(a5_a2.IsKingSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(a5_a2.IsQueenSideBlackRookMoving(), false);
+        TS_ASSERT_EQUALS(a5_a2.IsWhiteKingMoving(), false);
+        TS_ASSERT_EQUALS(a5_a2.IsBlackKingMoving(), false);
+        TS_ASSERT_EQUALS(a5_a2.DoesMoveRequireSpecialGuiHandling(), false);
+        TS_ASSERT_EQUALS(a5_a2.IsBlackCapturingEnPassant(), false);
+        TS_ASSERT_EQUALS(a5_a2.IsWhiteCapturingEnPassant(), false);
+        TS_ASSERT_EQUALS(a5_a2.GetMoveInAlgebraicFormat(), "R5a2");
+    }
+
     void TestPseudoCornerRookMoves()
     {
         slach::ChessBoard my_cb;

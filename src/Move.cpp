@@ -5,21 +5,24 @@
 slach::Move::Move()
     : mpOrigin(NULL),
       mpDestination(NULL),
-      mGivesCheck(false)
+      mGivesCheck(false),
+      mAmbiguityPrefix("")
 {
 }
 
 slach::Move::Move(Square* pOrigin, Square* pDestination)
     : mpOrigin(pOrigin),
       mpDestination(pDestination),
-      mGivesCheck(false)
+      mGivesCheck(false),
+      mAmbiguityPrefix("")
 {
 }
 
 slach::Move::Move (const Move& move)
   :mpOrigin (move.GetOrigin()),
    mpDestination (move.GetDestination() ),
-   mGivesCheck(move.DoesMoveGiceCheck())
+   mGivesCheck(move.DoesMoveGiceCheck()),
+   mAmbiguityPrefix(move.GetAmbiguityPrefix())
 {
 }
 
@@ -29,6 +32,8 @@ slach::Move& slach::Move::operator=(const Move& from)
     {
        mpOrigin = from.GetOrigin();
        mpDestination = from.GetDestination();
+       mGivesCheck = from.DoesMoveGiceCheck();
+       mAmbiguityPrefix = from.GetAmbiguityPrefix();
     }
 
     return *this;
@@ -272,7 +277,18 @@ void slach::Move::GivesCheck(bool gives)
 	mGivesCheck = gives;
 }
 
-std::string slach::Move::GetMoveInAlgebraicFormat(std::string ambiguityPrefix) const
+std::string slach::Move::GetAmbiguityPrefix() const
+{
+    return mAmbiguityPrefix;
+}
+
+void slach::Move::SetAmbiguityPrefix(std::string prefix)
+{
+    mAmbiguityPrefix = prefix;
+}
+
+
+std::string slach::Move::GetMoveInAlgebraicFormat() const
 {
     if (IsBlackCastlingKingSide() || IsWhiteCastlingKingSide())
     {
@@ -337,6 +353,6 @@ std::string slach::Move::GetMoveInAlgebraicFormat(std::string ambiguityPrefix) c
        {
     	   suffix = "+";
        }
-       return (piece_code + ambiguityPrefix + capture_symbol + mpDestination->GetFile() + mpDestination->GetRank() + promotion_suffix + suffix);
+       return (piece_code + mAmbiguityPrefix + capture_symbol + mpDestination->GetFile() + mpDestination->GetRank() + promotion_suffix + suffix);
     }
 }

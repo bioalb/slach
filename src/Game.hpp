@@ -65,7 +65,7 @@ public:
      * @param ambiguityPrefix: to go in algebraic notation between the piece code and the destination
      *                         coordinate (e.g., Rad1, the a rook to d1. Can also be used for the X capture sign)
      */
-    void AddMove(const Move& rMove, std::string ambiguityPrefix = "");
+    void AddMove(const Move& rMove);
 
     void AddPosition(std::string fenPosition);
 
