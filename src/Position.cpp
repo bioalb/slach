@@ -56,7 +56,11 @@ bool slach::Position::IsMoveLegal(Move& rMove, std::vector<Square*>& rSquares)
     }
     if (ambiguity_index < 64u)//meaning there is ambiguity
     {
-        rMove.SetAmbiguityPrefix( rSquares[ambiguity_index]->GetFileAsString() );
+        rMove.SetAmbiguityPrefix( rMove.GetOrigin()->GetFileAsString() );
+        if (rSquares[ambiguity_index]->GetFileAsInt() == rMove.GetOrigin()->GetFileAsInt())
+        {
+            rMove.SetAmbiguityPrefix( rMove.GetOrigin()->GetRankAsString() );
+        }
     }
    return ret;
 }

@@ -439,5 +439,25 @@ public:
          TS_ASSERT_EQUALS(f8_d8.GetMoveInAlgebraicFormat(), "Rfd8");
          pos.UpdatePositionWithMove(f8_d8, squares);
     }
+
+    void testAmbiguousMoveNotation2(void)
+    {
+         slach::ChessBoard my_cb;
+         my_cb.SetupChessBoard();
+         my_cb.SetupInitialChessPosition();
+         std::vector<slach::Square* > squares = my_cb.GetSquares();
+         TS_ASSERT_EQUALS(squares.size(), 64u);
+
+         //saved in tets/data/test_position_7.png for reference
+         std::string fen_poistion = "r5k1/1p1b2pp/2n1pp2/2np4/1PP5/r3P1B1/2QK1PPP/R4B1R b - - 4 19";
+         slach::Position pos;
+         pos.SetFromFen(fen_poistion, squares);
+
+         //black's turn now. Black moves one of the rooks (the one in a8) to a6. rook on a3 could also go there
+         slach::Move a8_a6(squares[56],squares[40]);//a8-a6
+         TS_ASSERT_EQUALS(pos.IsMoveLegal(a8_a6, squares), true);
+         TS_ASSERT_EQUALS(a8_a6.GetMoveInAlgebraicFormat(), "R8a6");
+         pos.UpdatePositionWithMove(a8_a6, squares);
+    }
 };
 #endif

@@ -300,7 +300,7 @@ bool slach::LegalMoveChecker::IsMoveLegalInPosition(const std::vector<Square*>& 
                 std::sort (possible_dests.begin(), possible_dests.end());
                 if (std::binary_search (possible_dests.begin(), possible_dests.end(), dest_index) == true)
                 {
-                    ambiguitySquare = origin_index;
+                    ambiguitySquare = i;
                 }
                 break; //this assumes no more than two exact same pieces on the board
             }
