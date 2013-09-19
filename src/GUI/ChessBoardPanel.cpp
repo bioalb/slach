@@ -52,6 +52,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
 
     mSquarePanels.resize(slach::gChessBoardSizeWB);
 
+
     //now the grid sizer.
     int square_to_border_prop = 3;//proportion between border and square
     mpGridSizer->AddGrowableCol(0,1);//border
@@ -98,7 +99,21 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
         	mSquarePanels[i]->SetDropTarget(p_target_panel);
         }
     }
-    this->SetSizer(mpGridSizer, false);
+
+    wxPanel* left_of_chessboard = new wxPanel(this, -1);
+    left_of_chessboard->SetBackgroundColour(wxT("yellow"));
+    wxPanel* right_of_chessboard = new wxPanel(this, -1);
+    right_of_chessboard->SetBackgroundColour(wxT("green"));
+
+    wxButton* rest_button  = new wxButton(left_of_chessboard, 1, wxT("Reset"),wxDefaultPosition, wxDefaultSize);
+
+
+    wxBoxSizer* main_sizer =  new wxBoxSizer(wxHORIZONTAL);
+
+    main_sizer->Add(left_of_chessboard, 1.0, wxGROW);
+    main_sizer->Add(mpGridSizer, 4.0, wxGROW);
+    main_sizer->Add(right_of_chessboard, 1.0, wxGROW);
+    this->SetSizer(main_sizer, false);
 }
 
 slach_gui::ChessBoardPanel::~ChessBoardPanel()
@@ -219,9 +234,6 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
     }
     //...now resize the chess board accordingly
     wxSize chessboard_size(min_size,min_size);
-    this->SetSize(chessboard_size);
-    //and center it
-    this->SetPosition(central_point);
     mpGridSizer->SetMinSize(chessboard_size);
 
     //skip the event.
@@ -250,6 +262,24 @@ void slach_gui::ChessBoardPanel::PaintOnSquare(wxPaintEvent& event)
 	event .Skip();
 }
 
+void slach_gui::ChessBoardPanel::DrawAndSetFenPositionOnBoard(const std::string& rFenPosition)
+{
+    mpChessBoard->SetFenPosition(rFenPosition);
+    for (unsigned i = 0; i  < mSquarePanels.size(); ++i)
+    {
+        if (! ( mpChessBoardWithBorders->GetSquares()[i]->IsBorderSquare()))
+        {
+            mSquarePanels[i]->Refresh();
+        }
+    }
+    (static_cast<MainFrame*> (mpParent))->UpdateChessPositionForEngine(mpChessBoard->GetCurrentPosition());
+}
+
+void slach_gui::ChessBoardPanel::ResetToInitialPosition(wxCommandEvent& event)
+{
+    DrawAndSetFenPositionOnBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    event.Skip();
+}
 
 ///////////////////////////////
 // Helper private methods
@@ -507,5 +537,6 @@ wxBEGIN_EVENT_TABLE(slach_gui::ChessBoardPanel, wxPanel)
     EVT_SIZE(slach_gui::ChessBoardPanel::OnSize)
     EVT_PAINT(slach_gui::ChessBoardPanel::PaintOnSquare)
     EVT_LEFT_DOWN(slach_gui::ChessBoardPanel::LeftMouseClick)
+    EVT_BUTTON(1, slach_gui::ChessBoardPanel::ResetToInitialPosition)
 wxEND_EVENT_TABLE()
 

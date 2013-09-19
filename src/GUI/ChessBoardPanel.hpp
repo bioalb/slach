@@ -158,6 +158,10 @@ public:
      */
     void LeftMouseClick(wxMouseEvent& event);
 
+    void ResetToInitialPosition(wxCommandEvent& event);
+
+    void DrawAndSetFenPositionOnBoard(const std::string& rFenPosition);
+
     /**
      * This method captures the mouse release for drag and drop.
      * It gets called by a DropTargetPanel (where the user released the mouse).
@@ -172,6 +176,8 @@ public:
     void LeftMouseRelease(unsigned destinationIndex);
 
     void ProcessMoveInGui(slach::Move & move);
+
+
 
     /**
      * Resizing method. It figures out the new size and resize everything accordingly.
