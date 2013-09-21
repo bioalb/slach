@@ -41,6 +41,8 @@ private:
 
     /** The space on the left of the board*/
     wxPanel* mpLeftOfChessBoard;
+    /** A panel that will contain the board*/
+    wxPanel* mpMidPanelOfChessBoard;
     /** The space oi the right of the board*/
     wxPanel* mpRightOfChessBoard;
 

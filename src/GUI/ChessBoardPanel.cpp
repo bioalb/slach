@@ -47,6 +47,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
       mpGridSizer ( new wxFlexGridSizer(slach::gBoardRowSize+2,slach::gBoardColumnSize+2,0,0) ),
       mpPrincipalSizer (new wxBoxSizer(wxHORIZONTAL)),
       mpLeftOfChessBoard (new wxPanel(this, -1)),
+      mpMidPanelOfChessBoard(new wxPanel(this, -1)),
       mpRightOfChessBoard(new wxPanel(this, -1)),
       mpParent(parent),
       mDrawPiece(true),
@@ -89,8 +90,8 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
     assert(mpAllSquares.size() == mSquarePanels.size());
     for (unsigned i = 0; i < mpAllSquares.size(); ++i)
     {
-        mSquarePanels[i] = new wxPanel( this, /*ID*/ (int) i );
-        mpGridSizer->Add(mSquarePanels[i], 0, wxGROW);
+        mSquarePanels[i] = new wxPanel( mpMidPanelOfChessBoard, /*ID*/ (int) i );
+        mpGridSizer->Add(mSquarePanels[i], 0, wxEXPAND | wxALL);
         //bind the paint event
         mSquarePanels[i]->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnSquare, this);
         if (mpAllSquares[i]->IsBorderSquare() == false)
@@ -102,18 +103,20 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
         }
     }
 
+    mpMidPanelOfChessBoard->Bind(wxEVT_SIZE, &ChessBoardPanel::OnSize, this);
+
     //Bind the paint event for the left side of the board
     mpLeftOfChessBoard->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnLeftOfBoard, this);
     mpRightOfChessBoard->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnRightOfBoard, this);
 
     //Arrange the panels
-    mpPrincipalSizer->Add(mpLeftOfChessBoard, 1.0, wxGROW);
-    mpPrincipalSizer->Add(mpGridSizer, 4.0, wxGROW);
-    mpPrincipalSizer->Add(mpRightOfChessBoard, 1.0, wxGROW);
+    mpPrincipalSizer->Add(mpLeftOfChessBoard, 1.0, wxEXPAND | wxALL);
+    mpPrincipalSizer->Add(mpMidPanelOfChessBoard, 4.0, wxEXPAND | wxALL);
+    mpPrincipalSizer->Add(mpRightOfChessBoard, 2.0, wxEXPAND | wxALL);
     this->SetSizer(mpPrincipalSizer, false);
 
 
-    //wxButton* rest_button  = new wxButton(mpLeftOfChessBoard, 1, wxT("Fen..."),wxDefaultPosition, wxDefaultSize);
+    wxButton* rest_button  = new wxButton(mpLeftOfChessBoard, 1, wxT("Fen..."),wxDefaultPosition, wxDefaultSize);
 }
 
 slach_gui::ChessBoardPanel::~ChessBoardPanel()
@@ -123,7 +126,6 @@ slach_gui::ChessBoardPanel::~ChessBoardPanel()
 
 void slach_gui::ChessBoardPanel::LeftMouseClick(wxMouseEvent& event)
 {
-    std::cout<<"CLICK  "<<mpGridSizer->GetSize().GetWidth()<<"   "<<mpGridSizer->GetSize().GetHeight()<<std::endl;
 	int square_index_int = (static_cast<wxWindow*> (event.GetEventObject()))->GetId();
 	mSourceIndex = (unsigned) square_index_int;
 
@@ -215,9 +217,10 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
     Refresh();
 
     //figure out the new dimensions
-    wxSize chessboard_panel_size = event.GetSize();
+    wxSize chessboard_panel_size = mpPrincipalSizer->GetItem(mpMidPanelOfChessBoard)->GetSize();
     int panel_x = chessboard_panel_size.GetWidth();
     int panel_y = chessboard_panel_size.GetHeight();
+
     int min_size;
 
     //which side is longer...
@@ -225,19 +228,19 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
     if (panel_x > panel_y)
     {
         min_size=panel_y;
-        central_point.x = (panel_x-min_size)/2;
-        central_point.y = 0;
+        central_point.x = (panel_x - min_size)/2;
+        central_point.y = 0.0;
     }
     else
     {
         min_size=panel_x;
-        central_point.x = 0;
-        central_point.y = (panel_y-min_size)/2;
+        central_point.x = 0.0;
+        central_point.y = (panel_y - min_size)/2;
     }
     //...now resize the chess board accordingly
     wxSize chessboard_size(min_size,min_size);
     mpGridSizer->SetDimension(central_point, chessboard_size);
-
+    mpGridSizer->Layout();
     //skip the event. Needed as per wxWdigets documentation
     event.Skip();
 }
