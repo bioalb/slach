@@ -36,6 +36,11 @@ private:
     /** cache of the gridsizer that organizes the board*/
     wxFlexGridSizer* mpGridSizer;
 
+    /** The space on teh left of the board*/
+    wxPanel* mpLeftOfChessBoard;
+    /** The sapce oin the right of the board*/
+    wxPanel* mpRightOfChessBoard;
+
     /** stores the parent frame*/
     wxFrame* mpParent;
 
@@ -149,6 +154,20 @@ public:
      * @param event the paint event
      */
     void PaintOnSquare(wxPaintEvent& event);
+
+    /**
+     * Paints background gradient on the left of the board.
+     *
+     * @param event the paint event
+     */
+    void PaintOnLeftOfBoard(wxPaintEvent& event);
+
+    /**
+     * Paints background gradient on the left of the board.
+     *
+     * @param event the paint event
+     */
+    void PaintOnRightOfBoard(wxPaintEvent& event);
 
     /**
      * This method captures the initiation of the drag and drop between squares.
