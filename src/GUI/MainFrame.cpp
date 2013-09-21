@@ -32,10 +32,10 @@ slach_gui::MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const
     wxBoxSizer* h_sizer = new wxBoxSizer(wxHORIZONTAL);
 
     wxBoxSizer* v_sizer = new wxBoxSizer(wxVERTICAL);
-    v_sizer->Add(mpBoardPanel, 4.0, wxGROW);
+    v_sizer->Add(mpBoardPanel, 5.0, wxGROW);
     v_sizer->Add(mpBottomPanel, 1.0, wxGROW);
 
-    h_sizer->Add(v_sizer,3.1,wxEXPAND);
+    h_sizer->Add(v_sizer,3.3,wxEXPAND);
     h_sizer->Add(mpRightPanel, 1.0, wxEXPAND);
     this->SetSizer(h_sizer);
 }

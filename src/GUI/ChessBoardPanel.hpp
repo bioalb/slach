@@ -130,6 +130,14 @@ private:
      */
     wxImage GetImageFromPiece(slach::PieceType piece);
 
+    /**
+     * Helper method that paints a vertical gradient on the panel
+     *
+     * @param dc thed evice context
+     * @param  pPanel the panel we wish to paint on
+     */
+    void DoPaintVerticalGradient(wxPaintDC& dc, wxPanel* pPanel);
+
 public:
 
     /**
@@ -175,6 +183,9 @@ public:
      * @param event the paint event
      */
     void PaintOnRightOfBoard(wxPaintEvent& event);
+
+    void PaintOnMidBoard(wxPaintEvent& event);
+
 
     /**
      * This method captures the initiation of the drag and drop between squares.

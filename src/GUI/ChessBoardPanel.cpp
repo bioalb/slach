@@ -107,6 +107,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
 
     //Bind the paint event for the left side of the board
     mpLeftOfChessBoard->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnLeftOfBoard, this);
+    mpMidPanelOfChessBoard->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnMidBoard, this);
     mpRightOfChessBoard->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnRightOfBoard, this);
 
     //Arrange the panels
@@ -248,25 +249,32 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
 void slach_gui::ChessBoardPanel::PaintOnLeftOfBoard(wxPaintEvent& event)
 {
     wxPaintDC dc(mpLeftOfChessBoard);
-    wxRect clientRect = mpLeftOfChessBoard->GetClientRect();
-    wxRect gradientRect = clientRect;
-    gradientRect.SetHeight(gradientRect.GetHeight());
-    dc.GradientFillLinear(gradientRect,
-    wxColour(32,107,129), wxColour(235,241,246), wxSOUTH);
+    DoPaintVerticalGradient(dc, mpLeftOfChessBoard);
     event.Skip();
 }
 
 void slach_gui::ChessBoardPanel::PaintOnRightOfBoard(wxPaintEvent& event)
 {
     wxPaintDC dc(mpRightOfChessBoard);
-    wxRect clientRect = mpRightOfChessBoard->GetClientRect();
+    DoPaintVerticalGradient(dc, mpRightOfChessBoard);
+    event.Skip();
+}
+
+void slach_gui::ChessBoardPanel::PaintOnMidBoard(wxPaintEvent& event)
+{
+    wxPaintDC dc(mpMidPanelOfChessBoard);
+    DoPaintVerticalGradient(dc, mpMidPanelOfChessBoard);
+    event.Skip();
+}
+
+void slach_gui::ChessBoardPanel::DoPaintVerticalGradient(wxPaintDC& dc, wxPanel* pPanel)
+{
+    wxRect clientRect = pPanel->GetClientRect();
     wxRect gradientRect = clientRect;
     gradientRect.SetHeight(gradientRect.GetHeight());
     dc.GradientFillLinear(gradientRect,
     wxColour(32,107,129), wxColour(235,241,246), wxSOUTH);
-    event.Skip();
 }
-
 void slach_gui::ChessBoardPanel::PaintOnSquare(wxPaintEvent& event)
 {
 	int square_index_int = (static_cast<wxWindow*> (event.GetEventObject()))->GetId();
@@ -564,7 +572,9 @@ wxBEGIN_EVENT_TABLE(slach_gui::ChessBoardPanel, wxPanel)
     EVT_SIZE(slach_gui::ChessBoardPanel::OnSize)
     EVT_PAINT(slach_gui::ChessBoardPanel::PaintOnSquare)
     EVT_PAINT(slach_gui::ChessBoardPanel::PaintOnLeftOfBoard)
+    EVT_PAINT(slach_gui::ChessBoardPanel::PaintOnMidBoard)
     EVT_PAINT(slach_gui::ChessBoardPanel::PaintOnRightOfBoard)
+
     EVT_LEFT_DOWN(slach_gui::ChessBoardPanel::LeftMouseClick)
     EVT_BUTTON(1, slach_gui::ChessBoardPanel::ResetToInitialPosition)
 wxEND_EVENT_TABLE()
