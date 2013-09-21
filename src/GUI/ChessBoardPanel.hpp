@@ -36,10 +36,15 @@ private:
     /** cache of the gridsizer that organizes the board*/
     wxFlexGridSizer* mpGridSizer;
 
-    /** The space on teh left of the board*/
+    /**The main sizer that decides where the board is*/
+    wxBoxSizer* mpPrincipalSizer;
+
+    /** The space on the left of the board*/
     wxPanel* mpLeftOfChessBoard;
-    /** The sapce oin the right of the board*/
+    /** The space oi the right of the board*/
     wxPanel* mpRightOfChessBoard;
+
+
 
     /** stores the parent frame*/
     wxFrame* mpParent;
