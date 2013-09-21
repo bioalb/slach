@@ -112,7 +112,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
 
     //Arrange the panels
     mpPrincipalSizer->Add(mpLeftOfChessBoard, 1.0, wxEXPAND | wxALL);
-    mpPrincipalSizer->Add(mpMidPanelOfChessBoard, 4.0, wxEXPAND | wxALL);
+    mpPrincipalSizer->Add(mpMidPanelOfChessBoard, 6.0, wxEXPAND | wxALL);
     mpPrincipalSizer->Add(mpRightOfChessBoard, 2.0, wxEXPAND | wxALL);
     this->SetSizer(mpPrincipalSizer, false);
 
