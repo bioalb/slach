@@ -10,7 +10,7 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
       mTimer(this, 1),
       mEngineIsRunning(false)
 {
-    this->SetBackgroundColour(wxT("green"));
+    this->SetBackgroundColour(wxColour(35,87,102));
     mpEngineTextBox->SetEditable(false);
     wxBoxSizer *topsizer = new wxBoxSizer( wxVERTICAL );
     topsizer->Add(mpEngineTextBox,
@@ -26,7 +26,7 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
     topsizer->Add(button_sizer, wxSizerFlags(0).Left() );
 
     this->SetSizer(topsizer, false);
-    mTimer.Start(1500);//every 500 ms
+    mTimer.Start(1500);//every 1500 ms
 
 }
 

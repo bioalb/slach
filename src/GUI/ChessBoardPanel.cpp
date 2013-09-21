@@ -439,7 +439,7 @@ void slach_gui::ChessBoardPanel::PaintBackground(wxPaintDC& dc, unsigned squareI
     }
     if (mpAllSquares[squareIndex]->IsBorderSquare())
     {
-        mPieceImages[15].Rescale(width, height);
+        mPieceImages[15].Rescale(width, height);//rgb 35,87,102
         //now really draw the rendered image
         dc.DrawBitmap( mPieceImages[15], 0, 0, true );
     }
