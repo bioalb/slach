@@ -120,6 +120,13 @@ public:
     slach::Colour WhosTurnIsIt() const;
 
     /**
+     * this one queries the position object and gives the current move number
+     *
+     * @return the current move number
+     */
+    unsigned GetCurrentMoveNumber() const;
+
+    /**
      * Access method for the variable mCurrentFenPosition
      *
      * @return a string containing the current FEN position.

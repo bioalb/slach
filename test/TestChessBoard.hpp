@@ -489,6 +489,7 @@ public:
 
         //black's turn
         TS_ASSERT_EQUALS(my_cb.WhosTurnIsIt(), slach::BLACK);
+        TS_ASSERT_EQUALS(my_cb.GetCurrentMoveNumber(), 2u);
     }
 
     void testAnotherFen()
@@ -526,6 +527,7 @@ public:
         }
 
         TS_ASSERT_EQUALS(my_cb.WhosTurnIsIt(), slach::WHITE);
+        TS_ASSERT_EQUALS(my_cb.GetCurrentMoveNumber(), 68u);
     }
 
     void testThatInvalidFenChangesNothing()

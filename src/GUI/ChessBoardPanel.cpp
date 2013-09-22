@@ -3,6 +3,7 @@
 #include <cassert>
 #include <wx/mstream.h>
 #include "SlachTypes.hpp"
+#include "HelperGlobalFunctions.hpp"
 #include "ChessBoardPanel.hpp"
 #include "DropTargetPanel.hpp"
 #include "MainFrame.hpp"
@@ -282,8 +283,20 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
 void slach_gui::ChessBoardPanel::ArrowButtonMovement(wxMouseEvent& event)
 {
     int generating_id = ((wxPanel*) event.GetEventObject())->GetId();
+    slach::Colour current_turn = mpChessBoard->WhosTurnIsIt();
+    slach::Colour opp_col = slach::OppositeColour(current_turn);
+    unsigned  current_move_number = mpChessBoard->GetCurrentMoveNumber();
+
     if (generating_id == ID_FORWARD_BUTTON)
     {
+        if (current_turn == slach::WHITE)//black just moved, we want next move, white to move
+        {
+            mpChessBoard->ResetToMoveNumber(current_move_number+1, opp_col);
+        }
+        else//white just moved, we want situation on same move but white's turn
+        {
+            mpChessBoard->ResetToMoveNumber(current_move_number, opp_col);
+        }
         std::cout<<"Move forward one"<<std::endl;
     }
     else if (generating_id == ID_FORWARD_MORE_BUTTON)
@@ -296,6 +309,14 @@ void slach_gui::ChessBoardPanel::ArrowButtonMovement(wxMouseEvent& event)
     }
     else if (generating_id == ID_BACKWARD_BUTTON)
     {
+        if (current_turn == slach::WHITE)//black just moved, we want same move, black to move
+        {
+            mpChessBoard->ResetToMoveNumber(current_move_number, opp_col);
+        }
+        else//white just moved, we want situation on previous move but white's turn
+        {
+            mpChessBoard->ResetToMoveNumber(current_move_number, opp_col);
+        }
         std::cout<<"backward"<<std::endl;
     }
     else if (generating_id == ID_BACKWARD_MORE_BUTTON)
@@ -306,6 +327,7 @@ void slach_gui::ChessBoardPanel::ArrowButtonMovement(wxMouseEvent& event)
     {
         std::cout<<"backward end"<<std::endl;
     }
+    DrawAndSetFenPositionOnBoard(mpChessBoard->GetCurrentFenPosition());
 }
 
 void slach_gui::ChessBoardPanel::PaintOnSidesOfBoard(wxPaintEvent& event)

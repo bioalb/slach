@@ -119,6 +119,11 @@ slach::Colour slach::ChessBoard::WhosTurnIsIt() const
     return mpPosition->GetTurnToMove();
 }
 
+unsigned slach::ChessBoard::GetCurrentMoveNumber() const
+{
+    return mpPosition->GetPositionFeatures().mMoveCounter;
+}
+
 void slach::ChessBoard::SetPromotionPiece(slach::PieceType piece)
 {
 	mpPosition->SetPromotionPiece(piece);
