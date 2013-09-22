@@ -22,9 +22,14 @@ private:
     std::string mPngPieceDirectory;
     /** Directory where png of the backgrounds are*/
     std::string mPngBackgroundDirectory;
+    /** Directory where the png of the arrows are*/
+    std::string mPngArrowsDirectory;
 
     /** Stores pointers of the images of the pieces */
     std::vector<wxImage> mPieceImages;
+    /** Stores pointers of the images of the arrows */
+    std::vector<wxImage> mArrowImages;
+
     /** Stores the panels that make up the chessboard*/
     std::vector<wxPanel* > mSquarePanels;
     /** Stores the square objects of the chessboard*/
@@ -39,6 +44,8 @@ private:
     /**The main sizer that decides where the board is*/
     wxBoxSizer* mpPrincipalSizer;
 
+
+
     /** The space on the left of the board*/
     wxPanel* mpLeftOfChessBoard;
     /** A panel that will contain the board*/
@@ -46,7 +53,15 @@ private:
     /** The space oi the right of the board*/
     wxPanel* mpRightOfChessBoard;
 
+    wxPanel* mpRightSideUpperPart;
+    wxPanel* mpRightSideLowerPart;
 
+    wxPanel* mpForwardArrowPanel;
+    wxPanel* mpForwardArrowPanelMore;
+    wxPanel* mpForwardArrowPanelEnd;
+    wxPanel* mpBackwardArrowPanel;
+    wxPanel* mpBackwardArrowPanelMore;
+    wxPanel* mpBackwardArrowPanelEnd;
 
     /** stores the parent frame*/
     wxFrame* mpParent;
@@ -170,6 +185,8 @@ public:
      */
     void PaintOnSquare(wxPaintEvent& event);
 
+    void PaintArrows(wxPaintEvent& event);
+
     /**
      * Paints background gradient on the left of the board.
      *
@@ -223,8 +240,6 @@ public:
      */
     void OnSize(wxSizeEvent& event);
 
-
-    wxDECLARE_EVENT_TABLE();
 };
 
 }//namespace slach_gui
