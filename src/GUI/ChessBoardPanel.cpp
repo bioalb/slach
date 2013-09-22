@@ -47,9 +47,9 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
       mpChessBoard(NULL),
       mpGridSizer ( new wxFlexGridSizer(slach::gBoardRowSize+2,slach::gBoardColumnSize+2,0,0) ),
       mpPrincipalSizer (new wxBoxSizer(wxHORIZONTAL)),
-      mpLeftOfChessBoard (new wxPanel(this, -1)),
-      mpMidPanelOfChessBoard(new wxPanel(this, -1)),
-      mpRightOfChessBoard(new wxPanel(this, -1)),
+      mpLeftOfChessBoard (new wxPanel(this, ID_LEFT_OF_BOARD)),
+      mpMidPanelOfChessBoard(new wxPanel(this, ID_ACTUAL_BOARD)),
+      mpRightOfChessBoard(new wxPanel(this, ID_RIGHT_OF_BOARD)),
       mpParent(parent),
       mDrawPiece(true),
       mSourceIndex(0u)
@@ -112,39 +112,44 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
 
 
     //divide the section on the RHS of the board
-    mpRightSideUpperPart = new wxPanel(mpRightOfChessBoard,-1);
-    mpRightSideLowerPart =  new wxPanel(mpRightOfChessBoard,-1);
+    mpRightSideUpperPart = new wxPanel(mpRightOfChessBoard,ID_RIGHT_OF_BOARD_UPPER);
+    mpRightSideLowerPart =  new wxPanel(mpRightOfChessBoard,ID_RIGHT_OF_BOARD_LOWER);
     wxBoxSizer* right_side_sizer = new wxBoxSizer(wxVERTICAL);
-    right_side_sizer->Add(mpRightSideUpperPart, 9.0, wxEXPAND | wxALL);
+    right_side_sizer->Add(mpRightSideUpperPart, 10.0, wxEXPAND | wxALL);
     right_side_sizer->Add(mpRightSideLowerPart, 1.0, wxEXPAND | wxALL);
     mpRightOfChessBoard->SetSizer(right_side_sizer, false);
 
-    wxButton* rest_button  = new wxButton(mpLeftOfChessBoard, 1, wxT("Fen..."),wxDefaultPosition, wxDefaultSize);
+    mpForwardArrowPanel  = new wxPanel(mpRightSideLowerPart, ID_FORWARD_BUTTON);
+    mpForwardArrowPanelMore  = new wxPanel(mpRightSideLowerPart, ID_FORWARD_MORE_BUTTON);
+    mpForwardArrowPanelEnd  = new wxPanel(mpRightSideLowerPart, ID_FORWARD_END_BUTTON);
+    mpBackwardArrowPanel  = new wxPanel(mpRightSideLowerPart, ID_BACKWARD_BUTTON);
+    mpBackwardArrowPanelMore  = new wxPanel(mpRightSideLowerPart, ID_BACKWARD_MORE_BUTTON);
+    mpBackwardArrowPanelEnd  = new wxPanel(mpRightSideLowerPart, ID_BACKWARD_END_BUTTON);
 
-    mpForwardArrowPanel  = new wxPanel(mpRightSideLowerPart, -1);
-    mpForwardArrowPanelMore  = new wxPanel(mpRightSideLowerPart, -1);
-    mpForwardArrowPanelEnd  = new wxPanel(mpRightSideLowerPart, -1);
-    mpBackwardArrowPanel  = new wxPanel(mpRightSideLowerPart, -1);
-    mpBackwardArrowPanelMore  = new wxPanel(mpRightSideLowerPart, -1);
-    mpBackwardArrowPanelEnd  = new wxPanel(mpRightSideLowerPart, -1);
-
-    mpForwardArrowPanel->SetBackgroundColour(wxT("red"));
     wxBoxSizer* bottom_of_right_panel_sizer = new wxBoxSizer(wxHORIZONTAL);
+    bottom_of_right_panel_sizer->Add(mpBackwardArrowPanelEnd,1.0, wxEXPAND | wxALL);
+    bottom_of_right_panel_sizer->Add(mpBackwardArrowPanelMore,1.0, wxEXPAND | wxALL);
+    bottom_of_right_panel_sizer->Add(mpBackwardArrowPanel,1.0, wxEXPAND | wxALL);
     bottom_of_right_panel_sizer->Add(mpForwardArrowPanel,1.0, wxEXPAND | wxALL);
     bottom_of_right_panel_sizer->Add(mpForwardArrowPanelMore,1.0, wxEXPAND | wxALL);
     bottom_of_right_panel_sizer->Add(mpForwardArrowPanelEnd,1.0, wxEXPAND | wxALL);
-    bottom_of_right_panel_sizer->Add(mpBackwardArrowPanel,1.0, wxEXPAND | wxALL);
-    bottom_of_right_panel_sizer->Add(mpBackwardArrowPanelMore,1.0, wxEXPAND | wxALL);
-    bottom_of_right_panel_sizer->Add(mpBackwardArrowPanelEnd,1.0, wxEXPAND | wxALL);
     mpRightSideLowerPart->SetSizer(bottom_of_right_panel_sizer, false);
 
-    //Bind the paint events for the left side of the board
-    mpLeftOfChessBoard->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnLeftOfBoard, this);
-    mpRightOfChessBoard->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnRightOfBoard, this);
-    mpRightSideLowerPart->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintArrows, this);
 
-    mpMidPanelOfChessBoard->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnMidBoard, this);
-    mpMidPanelOfChessBoard->Bind(wxEVT_SIZE, &ChessBoardPanel::OnSize, this);
+    //Bind the button and paint  events for the left side of the board
+    mpLeftOfChessBoard->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnSidesOfBoard, this);//with this-> instead of mpLeftOfChessBoard it does not work
+    mpMidPanelOfChessBoard->Bind(wxEVT_SIZE, &ChessBoardPanel::OnSize, this);//keep the board as a square
+
+    //BIND THE CLICKS ON THE ARROWS
+    mpForwardArrowPanel->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
+    mpForwardArrowPanelMore->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
+    mpForwardArrowPanelEnd->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
+    mpBackwardArrowPanel->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
+    mpBackwardArrowPanelMore->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
+    mpBackwardArrowPanelEnd->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
+
+
+    wxButton* rest_button  = new wxButton(mpLeftOfChessBoard, 1, wxT("Fen..."),wxDefaultPosition, wxDefaultSize);
     rest_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ChessBoardPanel::ResetToInitialPosition, this);
 }
 
@@ -274,39 +279,73 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
     event.Skip();
 }
 
-void slach_gui::ChessBoardPanel::PaintOnLeftOfBoard(wxPaintEvent& event)
+void slach_gui::ChessBoardPanel::ArrowButtonMovement(wxMouseEvent& event)
+{
+    int generating_id = ((wxPanel*) event.GetEventObject())->GetId();
+    if (generating_id == ID_FORWARD_BUTTON)
+    {
+        std::cout<<"Move forward one"<<std::endl;
+    }
+    else if (generating_id == ID_FORWARD_MORE_BUTTON)
+    {
+        std::cout<<"Move forward more"<<std::endl;
+    }
+    else if (generating_id == ID_FORWARD_END_BUTTON)
+    {
+        std::cout<<"Move forward end"<<std::endl;
+    }
+    else if (generating_id == ID_BACKWARD_BUTTON)
+    {
+        std::cout<<"backward"<<std::endl;
+    }
+    else if (generating_id == ID_BACKWARD_MORE_BUTTON)
+    {
+        std::cout<<"backward more"<<std::endl;
+    }
+    else if (generating_id == ID_BACKWARD_END_BUTTON)
+    {
+        std::cout<<"backward end"<<std::endl;
+    }
+}
+
+void slach_gui::ChessBoardPanel::PaintOnSidesOfBoard(wxPaintEvent& event)
 {
     wxPaintDC dc(mpLeftOfChessBoard);
     DoPaintVerticalGradient(dc, mpLeftOfChessBoard);
-    //event.Skip();
+
+    wxPaintDC dc1(mpMidPanelOfChessBoard);
+    DoPaintVerticalGradient(dc1, mpMidPanelOfChessBoard);
+
+    wxPaintDC dc2(mpRightOfChessBoard);
+    DoPaintVerticalGradient(dc2, mpRightOfChessBoard);
+
+
+    wxPaintDC dcBE(mpBackwardArrowPanelEnd);
+    DoPaintImageOnPanel(dcBE, mpBackwardArrowPanelEnd, mArrowImages[5]);
+
+    wxPaintDC dcBM(mpBackwardArrowPanelMore);
+    DoPaintImageOnPanel(dcBM, mpBackwardArrowPanelMore, mArrowImages[4]);
+
+    wxPaintDC dcBACK(mpBackwardArrowPanel);
+    DoPaintImageOnPanel(dcBACK, mpBackwardArrowPanelMore, mArrowImages[3]);
+
+    wxPaintDC dcFOR(mpForwardArrowPanel);
+    DoPaintImageOnPanel(dcFOR, mpForwardArrowPanel, mArrowImages[0]);
+
+    wxPaintDC dcFM(mpForwardArrowPanelMore);
+    DoPaintImageOnPanel(dcFM, mpForwardArrowPanelMore, mArrowImages[1]);
+
+    wxPaintDC dcFE(mpForwardArrowPanelEnd);
+    DoPaintImageOnPanel(dcFE, mpForwardArrowPanelEnd, mArrowImages[2]);
 }
 
-void slach_gui::ChessBoardPanel::PaintOnRightOfBoard(wxPaintEvent& event)
+void slach_gui::ChessBoardPanel::DoPaintImageOnPanel(wxPaintDC& dc, wxPanel* pPanel, wxImage& Image)
 {
-assert(0);
-    wxPaintDC dc(mpRightOfChessBoard);
-    DoPaintVerticalGradient(dc, mpRightOfChessBoard);
-    //event.Skip();
-}
-
-void slach_gui::ChessBoardPanel::PaintOnMidBoard(wxPaintEvent& event)
-{
-
-    wxPaintDC dc(mpMidPanelOfChessBoard);
-    DoPaintVerticalGradient(dc, mpMidPanelOfChessBoard);
-    //event.Skip();
-}
-
-void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
-{
-    wxPaintDC dc2(mpForwardArrowPanel);
-
-    int width = mpForwardArrowPanel->GetClientSize().GetWidth();
-    int height = mpForwardArrowPanel->GetClientSize().GetHeight();
-    std::cout<<width<<"  "<<height<<std::endl;
-    mArrowImages[0].Rescale(width, height);
+    int width = pPanel->GetClientSize().GetWidth();
+    int height = pPanel->GetClientSize().GetHeight();
+    Image.Rescale(width, height);
     //now really draw the rendered image;
-    dc2.DrawBitmap(mArrowImages[0], 0, 0, true );
+    dc.DrawBitmap(Image, 0, 0, true );
 }
 
 void slach_gui::ChessBoardPanel::DoPaintVerticalGradient(wxPaintDC& dc, wxPanel* pPanel)

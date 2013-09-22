@@ -13,6 +13,19 @@ namespace slach_gui
 /**
  * Major GUI class that holds the chessboard
  */
+
+static const int ID_LEFT_OF_BOARD = 50;
+static const int ID_ACTUAL_BOARD = 51;
+static const int ID_RIGHT_OF_BOARD = 52;
+static const int ID_RIGHT_OF_BOARD_UPPER = 53;
+static const int ID_RIGHT_OF_BOARD_LOWER = 54;
+static const int ID_FORWARD_BUTTON = 55;
+static const int ID_BACKWARD_BUTTON = 56;
+static const int ID_FORWARD_MORE_BUTTON = 57;
+static const int ID_BACKWARD_MORE_BUTTON = 58;
+static const int ID_FORWARD_END_BUTTON = 59;
+static const int ID_BACKWARD_END_BUTTON = 60;
+
 class ChessBoardPanel : public wxPanel
 {
 
@@ -153,6 +166,15 @@ private:
      */
     void DoPaintVerticalGradient(wxPaintDC& dc, wxPanel* pPanel);
 
+    /**
+     * Helper method to draw an image on a panel. The image is resized to fit into the panel.
+     *
+     * @param dc thed evice context (paint device context)
+     * @param pPanel the panel we want to draw upon
+     * @param Image the image we wish to draw
+     */
+    void DoPaintImageOnPanel(wxPaintDC& dc, wxPanel* pPanel, wxImage& Image);
+
 public:
 
     /**
@@ -185,24 +207,15 @@ public:
      */
     void PaintOnSquare(wxPaintEvent& event);
 
-    void PaintArrows(wxPaintEvent& event);
-
     /**
-     * Paints background gradient on the left of the board.
+     * Paints background gradient and various things near the board.
+     * It takes care of:
+     *   - gradient backgrounds
+     *   - arrows
      *
      * @param event the paint event
      */
-    void PaintOnLeftOfBoard(wxPaintEvent& event);
-
-    /**
-     * Paints background gradient on the left of the board.
-     *
-     * @param event the paint event
-     */
-    void PaintOnRightOfBoard(wxPaintEvent& event);
-
-    void PaintOnMidBoard(wxPaintEvent& event);
-
+    void PaintOnSidesOfBoard(wxPaintEvent& event);
 
     /**
      * This method captures the initiation of the drag and drop between squares.
@@ -213,6 +226,14 @@ public:
     void LeftMouseClick(wxMouseEvent& event);
 
     void ResetToInitialPosition(wxCommandEvent& event);
+
+    /**
+     * this method is activated when use clicks on one of the arrows.
+     * It figure sout which arrow the use clicked and behaves accordingly.
+     *
+     * @param event the generating event
+     */
+    void ArrowButtonMovement(wxMouseEvent& event);
 
     void DrawAndSetFenPositionOnBoard(const std::string& rFenPosition);
 
