@@ -165,7 +165,7 @@ void slach_gui::ChessBoardPanel::LeftMouseClick(wxMouseEvent& event)
 	mSourceIndex = (unsigned) square_index_int;
 
     wxBitmapDataObject piece_to_be_moved(GetImageFromPiece(mpAllSquares[mSourceIndex]->GetPieceOnThisSquare()));
-    wxCursor cursor(mpAllSquares[mSourceIndex]->GetPieceOnThisSquare());
+    wxCursor cursor(GetImageFromPiece( mpAllSquares[mSourceIndex]->GetPieceOnThisSquare() ));
     wxDropSource drop_source(mSquarePanels[mSourceIndex], mIconNearTheMouse, mIconNearTheMouse);
 
     drop_source.SetCursor(wxDragMove, cursor);
