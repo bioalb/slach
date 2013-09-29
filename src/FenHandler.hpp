@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "Square.hpp"
+#include "SlachTypes.hpp"
 
 
 //Forward declaration for testing
@@ -110,46 +111,11 @@ class FenHandler
     std::string GetFenFromPosition(const std::vector<Square* > &rSquares, const FenPositionFeatures& positionFeatures) const;
 
     /**
-     * Access method for the variable mTurnToMove. Refers to the last valid fen that
-     * was passed to SetPositionFromFen
+     * Given a fen string, returns the position features
      *
-     * @return BLACK if it is black's turn to move, WHITE if it is white
+     * @return the position features
      */
-    slach::Colour WhosTurnIsIt() const;
-
-    /**
-     * Access the member variable mCastlingRights
-     *
-     * @return a vector containing the castling rights set the last time SetPositionFromFen was called.
-     *         if it is empty, it means there are no castling rights
-     */
-    std::vector<slach::CastlingRights> GetLatestCastlingRights() const;
-
-
-    /**
-     * Access the member variable mEnPassantSquare
-     *
-     * @return the index of the square available for enpassant (starting from A1 to H8, 0 to 63)
-     *         as per the last time SetPositionFromFen was called.
-     *         if it returns 64 (out of the chessboard), it means there are no enpassant squares
-     */
-    unsigned GetEnPassantSquareIndex() const;
-
-    /**
-     * Access the member variable mHalfMoveClock
-     *
-     * @return the number of half moves since the last pawn move
-     *         as per the last time SetPositionFromFen was called.
-     */
-    unsigned GetHalfMoveClock() const;
-
-    /**
-     * Access the member variable mFullMoveClock
-     *
-     * @return the number of moves so far as per the last time SetPositionFromFen was called.
-     */
-    unsigned GetFullMoveClock() const;
-
+    FenPositionFeatures GetPositionFeaturesFromFen (const std::string & rInputfen);
 
 };
 

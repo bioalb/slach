@@ -668,6 +668,72 @@ public:
         }
     }
 
+    void TestGettingPositionFeatures()
+    {
+        slach::FenHandler handler;
+
+        std::string test_fen = "r4rk1/1p2p1bp/pq1p2p1/2pNPp2/2Pn4/3P4/PP1Q1PPP/R2BK2R w KQ f6 0 16";
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mMoveCounter, 16u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mHalfMoveClockSinceLastPawnMove, 0u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mIndexOfEnpassant, 45u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights.size(), 2u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights[0], slach::WHITE_KINGSIDE);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights[1], slach::WHITE_QUEENSIDE);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mTurnToMove, slach::WHITE);
+
+        //extra space in between sections should not be a problem
+        test_fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w    KQkq - 1 2";
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mMoveCounter, 2u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mHalfMoveClockSinceLastPawnMove, 1u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mIndexOfEnpassant, 64u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights.size(), 4u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights[0], slach::WHITE_KINGSIDE);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights[1], slach::WHITE_QUEENSIDE);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights[2], slach::BLACK_KINGSIDE);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights[3], slach::BLACK_QUEENSIDE);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mTurnToMove, slach::WHITE);
+
+        // right en-passant
+        test_fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq a3 1 2";
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mMoveCounter, 2u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mHalfMoveClockSinceLastPawnMove, 1u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mIndexOfEnpassant, 16u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights.size(), 4u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights[0], slach::WHITE_KINGSIDE);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights[1], slach::WHITE_QUEENSIDE);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights[2], slach::BLACK_KINGSIDE);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights[3], slach::BLACK_QUEENSIDE);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mTurnToMove, slach::WHITE);
+
+        // correct move and half move (two digits)
+        test_fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq a3 0 21";
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mMoveCounter, 21u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mHalfMoveClockSinceLastPawnMove, 0u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mIndexOfEnpassant, 16u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights.size(), 4u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights[0], slach::WHITE_KINGSIDE);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights[1], slach::WHITE_QUEENSIDE);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights[2], slach::BLACK_KINGSIDE);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights[3], slach::BLACK_QUEENSIDE);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mTurnToMove, slach::WHITE);
+
+        //two dashes, no space
+        test_fen = "8/8/8/8/8/5k2/6p1/5K2 w -- 0 68";
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mMoveCounter, 68u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mHalfMoveClockSinceLastPawnMove, 0u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mIndexOfEnpassant, 64u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights.size(),0u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mTurnToMove, slach::WHITE);
+
+        //two dashes, with space
+        test_fen = "8/8/8/8/8/5k2/6p1/5K2 b - - 0 68";
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mMoveCounter, 68u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mHalfMoveClockSinceLastPawnMove, 0u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mIndexOfEnpassant, 64u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mCastlingRights.size(),0u);
+        TS_ASSERT_EQUALS(handler.GetPositionFeaturesFromFen(test_fen).mTurnToMove, slach::BLACK);
+    }
+
 
 };
 #endif

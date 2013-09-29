@@ -731,3 +731,20 @@ std::string slach::FenHandler::GetFenFromPosition(const std::vector<Square* > &r
     ret.append(fm_SS.str());
     return ret;
 }
+
+
+slach::FenPositionFeatures slach::FenHandler::GetPositionFeaturesFromFen (const std::string & rInputfen)
+{
+    FenPositionFeatures pos_feat;
+    std::vector<Square* > dummy_squares;//unused here
+    dummy_squares.resize(64u);
+    for (unsigned i = 0; i < dummy_squares.size(); ++i)
+    {
+        dummy_squares[i] = new Square();
+    }
+
+    int result = SetPositionFromFen(rInputfen, dummy_squares, pos_feat);
+    return pos_feat;
+
+
+}
