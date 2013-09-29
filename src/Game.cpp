@@ -45,16 +45,9 @@ std::string slach::Game::FetchFromFenList(int moveNumber, Colour toMove)
 	}
 	else
 	{
-		if (moveNumber<=0)//weird case, it should never happen, moveNumber should start from one
+		if (moveNumber<=0)
 		{
-			if (toMove == WHITE)
-			{
-				return mListOfFenPositions[0];
-			}
-			else
-			{
-				return mListOfFenPositions[1];
-			}
+			return mListOfFenPositions[0];
 		}
 
 		unsigned index = moveNumber*2;
@@ -63,32 +56,18 @@ std::string slach::Game::FetchFromFenList(int moveNumber, Colour toMove)
 		{
 			if ((index - 2)>=mListOfFenPositions.size())
 			{
-				if (mListOfFenPositions.size()%2==0)
-				{
-					return mListOfFenPositions[mListOfFenPositions.size()-2];
-				}
-				else
-				{
-					return mListOfFenPositions.back();
-				}
+				return mListOfFenPositions.back();
 			}
 			else
 			{
-				return mListOfFenPositions[index - 2];
+			    return mListOfFenPositions[index - 2];
 			}
 		}
 		else
 		{
 			if ((index - 1)>=mListOfFenPositions.size())
 			{
-			    if (mListOfFenPositions.size()%2==0)
-			    {
-				    return mListOfFenPositions.back();
-			    }
-			    else
-			    {
-				    return mListOfFenPositions[mListOfFenPositions.size()-2];
-			    }
+				return mListOfFenPositions.back();
 			}
 			else
 			{

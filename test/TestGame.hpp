@@ -286,24 +286,28 @@ public:
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(2u,slach::BLACK), initial);
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(22u,slach::WHITE), initial);
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(22u,slach::BLACK), initial);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(-22,slach::WHITE), initial);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(-22,slach::BLACK), initial);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(0,slach::WHITE), initial);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(0,slach::BLACK), initial);
 
         my_game.AddPosition(after_d2_d4);
         my_game.AddPosition(after_e7_e5);
         my_game.AddPosition(after_d4_takes_e5);
         my_game.AddPosition(after_bishop_b4_check);
 
-        //over the size last was white to move
+        //over the size
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(4u,slach::WHITE), after_bishop_b4_check);
-        TS_ASSERT_EQUALS(my_game.FetchFromFenList(4u,slach::BLACK), after_d4_takes_e5);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(4u,slach::BLACK), after_bishop_b4_check);
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(24u,slach::WHITE), after_bishop_b4_check);
-        TS_ASSERT_EQUALS(my_game.FetchFromFenList(24u,slach::BLACK), after_d4_takes_e5);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(24u,slach::BLACK), after_bishop_b4_check);
 
 
         my_game.AddPosition(after_c2c3);
 
         //cover the weird case when you pas sin 0...behaves like a one.
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(0u,slach::WHITE), initial);
-        TS_ASSERT_EQUALS(my_game.FetchFromFenList(0u,slach::BLACK), after_d2_d4);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(0u,slach::BLACK), initial);
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(1u,slach::WHITE), initial);
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(1u,slach::BLACK), after_d2_d4);
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(2u,slach::WHITE), after_e7_e5);
@@ -312,9 +316,9 @@ public:
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(3u,slach::BLACK), after_c2c3);
 
         //over the size last was black to move
-        TS_ASSERT_EQUALS(my_game.FetchFromFenList(4u,slach::WHITE), after_bishop_b4_check);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(4u,slach::WHITE), after_c2c3);
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(4u,slach::BLACK), after_c2c3);
-        TS_ASSERT_EQUALS(my_game.FetchFromFenList(24u,slach::WHITE), after_bishop_b4_check);
+        TS_ASSERT_EQUALS(my_game.FetchFromFenList(24u,slach::WHITE), after_c2c3);
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(24u,slach::BLACK), after_c2c3);
     }
 };

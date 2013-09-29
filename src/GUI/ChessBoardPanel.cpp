@@ -287,47 +287,47 @@ void slach_gui::ChessBoardPanel::ArrowButtonMovement(wxMouseEvent& event)
     slach::Colour opp_col = slach::OppositeColour(current_turn);
     unsigned  current_move_number = mpChessBoard->GetCurrentMoveNumber();
 
+    std::string fen_to_set;
+
     if (generating_id == ID_FORWARD_BUTTON)
     {
         if (current_turn == slach::WHITE)//black just moved, we want next move, white to move
         {
-            mpChessBoard->ResetToMoveNumber(current_move_number+1, opp_col);
+            fen_to_set = mpChessBoard->GetGame()->FetchFromFenList(current_move_number, opp_col);
         }
         else//white just moved, we want situation on same move but white's turn
         {
-            mpChessBoard->ResetToMoveNumber(current_move_number, opp_col);
+            fen_to_set = mpChessBoard->GetGame()->FetchFromFenList(current_move_number+1, opp_col);
         }
-        std::cout<<"Move forward one"<<std::endl;
     }
     else if (generating_id == ID_FORWARD_MORE_BUTTON)
     {
-        std::cout<<"Move forward more"<<std::endl;
+        fen_to_set = mpChessBoard->GetGame()->FetchFromFenList(current_move_number+5, opp_col);
     }
     else if (generating_id == ID_FORWARD_END_BUTTON)
     {
-        std::cout<<"Move forward end"<<std::endl;
+        fen_to_set = mpChessBoard->GetGame()->FetchFromFenList(100000000, opp_col);
     }
     else if (generating_id == ID_BACKWARD_BUTTON)
     {
         if (current_turn == slach::WHITE)//black just moved, we want same move, black to move
         {
-            mpChessBoard->ResetToMoveNumber(current_move_number, opp_col);
+            fen_to_set = mpChessBoard->GetGame()->FetchFromFenList(current_move_number-1, opp_col);
         }
         else//white just moved, we want situation on previous move but white's turn
         {
-            mpChessBoard->ResetToMoveNumber(current_move_number, opp_col);
+            fen_to_set = mpChessBoard->GetGame()->FetchFromFenList(current_move_number, opp_col);
         }
-        std::cout<<"backward"<<std::endl;
     }
     else if (generating_id == ID_BACKWARD_MORE_BUTTON)
     {
-        std::cout<<"backward more"<<std::endl;
+        fen_to_set = mpChessBoard->GetGame()->FetchFromFenList(current_move_number-5, opp_col);
     }
     else if (generating_id == ID_BACKWARD_END_BUTTON)
     {
-        std::cout<<"backward end"<<std::endl;
+        fen_to_set = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     }
-    DrawAndSetFenPositionOnBoard(mpChessBoard->GetCurrentFenPosition());
+    DrawAndSetFenPositionOnBoard(fen_to_set);
 }
 
 void slach_gui::ChessBoardPanel::PaintOnSidesOfBoard(wxPaintEvent& event)
