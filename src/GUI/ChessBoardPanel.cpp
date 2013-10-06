@@ -164,11 +164,10 @@ void slach_gui::ChessBoardPanel::LeftMouseClick(wxMouseEvent& event)
 	int square_index_int = (static_cast<wxWindow*> (event.GetEventObject()))->GetId();
 	mSourceIndex = (unsigned) square_index_int;
 
-    wxBitmapDataObject piece_to_be_moved(GetImageFromPiece(mpAllSquares[mSourceIndex]->GetPieceOnThisSquare()));
-    wxCursor cursor(GetImageFromPiece( mpAllSquares[mSourceIndex]->GetPieceOnThisSquare() ));
-    wxDropSource drop_source(mSquarePanels[mSourceIndex], mIconNearTheMouse, mIconNearTheMouse);
+    wxDropSource drop_source(mSquarePanels[mSourceIndex], GetIconFromPiece(mpAllSquares[mSourceIndex]->GetPieceOnThisSquare()),
+                                                          GetIconFromPiece(mpAllSquares[mSourceIndex]->GetPieceOnThisSquare()));
 
-    drop_source.SetCursor(wxDragMove, cursor);
+    wxBitmapDataObject piece_to_be_moved(GetImageFromPiece(mpAllSquares[mSourceIndex]->GetPieceOnThisSquare()));
     drop_source.SetData( piece_to_be_moved );
 
     mDrawPiece = false;
@@ -465,6 +464,57 @@ void slach_gui::ChessBoardPanel::PaintPiece(wxPaintDC& dc, unsigned squareIndex)
     dc.DrawBitmap( piece_image, 0, 0, true );
 }
 
+wxIcon slach_gui::ChessBoardPanel::GetIconFromPiece(slach::PieceType piece)
+{
+    wxIcon piece_icon;
+    switch(piece)
+    {
+        case slach::WHITE_KING:
+            piece_icon = wxDROP_ICON(white_king);
+            break;
+        case slach::BLACK_KING:
+            piece_icon = wxDROP_ICON(black_king);
+            break;
+        case slach::WHITE_QUEEN:
+            piece_icon = wxDROP_ICON(white_queen);
+            break;
+        case slach::BLACK_QUEEN:
+            piece_icon = wxDROP_ICON(black_queen);
+            break;
+        case slach::WHITE_ROOK:
+            piece_icon = wxDROP_ICON(white_rook);
+            break;
+        case slach::BLACK_ROOK:
+            piece_icon = wxDROP_ICON(black_rook);
+            break;
+        case slach::WHITE_BISHOP:
+            piece_icon = wxDROP_ICON(white_bishop);
+            break;
+        case slach::BLACK_BISHOP:
+            piece_icon = wxDROP_ICON(black_bishop);
+            break;
+        case slach::WHITE_KNIGHT:
+            piece_icon = wxDROP_ICON(white_knight);
+            break;
+        case slach::BLACK_KNIGHT:
+            piece_icon = wxDROP_ICON(black_knight);
+            break;
+        case slach::WHITE_PAWN:
+            piece_icon = wxDROP_ICON(white_pawn);
+            break;
+        case slach::BLACK_PAWN:
+            piece_icon = wxDROP_ICON(black_pawn);
+            break;
+        case slach::NO_PIECE:
+            piece_icon = wxDROP_ICON(no_piece);
+            break;
+        default:
+            //NEVER_REACHED;
+            break;
+    }
+
+    return piece_icon;
+}
 wxImage slach_gui::ChessBoardPanel::GetImageFromPiece(slach::PieceType piece)
 {
 	wxImage piece_image;
@@ -472,55 +522,42 @@ wxImage slach_gui::ChessBoardPanel::GetImageFromPiece(slach::PieceType piece)
     {
         case slach::WHITE_KING:
             piece_image = mPieceImages[0];
-            mIconNearTheMouse = wxDROP_ICON(white_king);
             break;
         case slach::BLACK_KING:
             piece_image = mPieceImages[1];
-            mIconNearTheMouse = wxDROP_ICON(black_king);
             break;
         case slach::WHITE_QUEEN:
             piece_image = mPieceImages[2];
-            mIconNearTheMouse = wxDROP_ICON(white_queen);
             break;
         case slach::BLACK_QUEEN:
             piece_image = mPieceImages[3];
-            mIconNearTheMouse = wxDROP_ICON(black_queen);
             break;
         case slach::WHITE_ROOK:
             piece_image = mPieceImages[4];
-            mIconNearTheMouse = wxDROP_ICON(white_rook);
             break;
         case slach::BLACK_ROOK:
             piece_image = mPieceImages[5];
-            mIconNearTheMouse = wxDROP_ICON(black_rook);
             break;
         case slach::WHITE_BISHOP:
             piece_image = mPieceImages[6];
-            mIconNearTheMouse = wxDROP_ICON(white_bishop);
             break;
         case slach::BLACK_BISHOP:
             piece_image = mPieceImages[7];
-            mIconNearTheMouse = wxDROP_ICON(black_bishop);
             break;
         case slach::WHITE_KNIGHT:
             piece_image = mPieceImages[8];
-            mIconNearTheMouse = wxDROP_ICON(white_knight);
             break;
         case slach::BLACK_KNIGHT:
             piece_image = mPieceImages[9];
-            mIconNearTheMouse = wxDROP_ICON(black_knight);
             break;
         case slach::WHITE_PAWN:
             piece_image = mPieceImages[10];
-            mIconNearTheMouse = wxDROP_ICON(white_pawn);
             break;
         case slach::BLACK_PAWN:
             piece_image = mPieceImages[11];
-            mIconNearTheMouse = wxDROP_ICON(black_pawn);
             break;
         case slach::NO_PIECE:
             piece_image = mPieceImages[12];
-            mIconNearTheMouse = wxDROP_ICON(no_piece);
             break;
         default:
             //NEVER_REACHED;
