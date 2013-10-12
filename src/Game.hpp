@@ -3,12 +3,40 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 #include "SlachTypes.hpp"
 #include "Move.hpp"
 #include "Square.hpp"
 
 namespace slach
 {
+
+
+
+struct SevenTagRoster
+{
+//    std::string mEvent;
+//    std::string mSite;
+//    std::string mDate;
+//    std::string mRound;
+//    std::string mWhitePlayer;
+//    std::string mBlackPlayer;
+    GameResult mResult;
+
+    std::vector<std::string> mLabels;
+    std::vector<std::string> mData;
+
+    SevenTagRoster()
+       : mLabels{"Event","Site","Date","Round","White", "Black", "Result"},
+         mData{"","","","","", "", ""}
+    {}
+};
+
+enum PgnValidity
+{
+    VALID_PGN,
+    INVALID_PGN
+};
 
 /**
  * The game class
@@ -31,6 +59,12 @@ private:
      * Stores the list of positions in this game
      */
     std::vector<std::string> mListOfFenPositions;
+
+    /**
+     * Structure to store the information of the seven tag roster
+     */
+    SevenTagRoster mSTR;
+
 
 public:
     /**
@@ -84,6 +118,13 @@ public:
      * @param toMove the colour to move
      */
     std::string FetchFromFenList(int moveNumber, Colour toMove);
+
+    PgnValidity LoadFromPgnString(const std::string& rGameString);
+
+    /**
+     * Access method to the variable mSTR
+     */
+    slach::SevenTagRoster GetSevenTagRoster() const;
 };
 
 }//namespace slach

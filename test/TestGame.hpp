@@ -4,6 +4,7 @@
 #include <cxxtest/TestSuite.h>
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include "Game.hpp"
 
 /**
@@ -320,6 +321,25 @@ public:
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(4u,slach::BLACK), after_c2c3);
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(24u,slach::WHITE), after_c2c3);
         TS_ASSERT_EQUALS(my_game.FetchFromFenList(24u,slach::BLACK), after_c2c3);
+    }
+
+    void TestReadFromPgnOneGame()
+    {
+        //read the whole file into string
+        std::ifstream in("test/data/pgn/one_game_ok_draw.pgn");
+        std::string game_string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+
+        slach::Game my_game;
+        slach::PgnValidity valid = my_game.LoadFromPgnString(game_string);
+
+        TS_ASSERT_EQUALS(valid, slach::VALID_PGN);
+        TS_ASSERT_EQUALS(my_game.GetSevenTagRoster().mData[0], "7th Kings Tournament");
+        TS_ASSERT_EQUALS(my_game.GetSevenTagRoster().mData[1], "Bucharest ROU");
+        TS_ASSERT_EQUALS(my_game.GetSevenTagRoster().mData[2], "2013.10.07");
+        TS_ASSERT_EQUALS(my_game.GetSevenTagRoster().mData[3], "1.1");
+        TS_ASSERT_EQUALS(my_game.GetSevenTagRoster().mData[4], "Radjabov, Teimour");
+        TS_ASSERT_EQUALS(my_game.GetSevenTagRoster().mData[5], "Ponomariov, Ruslan");
+        TS_ASSERT_EQUALS(my_game.GetSevenTagRoster().mData[6], "1/2-1/2");
     }
 };
 #endif

@@ -14,6 +14,13 @@ static const unsigned gBoardColumnSize = 8u;
 const std::vector<char> gChessboardFiles = {'a','b','c','d','e','f','g','h'};
 const std::vector<char> gChessboardRanks = {'1','2','3','4','5','6','7','8'};
 
+enum GameResult
+{
+    WHITE_WIN = 0,
+    BLACK_WIN,
+    DRAW,
+    UNKNOWN //game still in progress, game abandoned, or result otherwise unknown
+};
 enum SpecialMoveType
 {
     WHITE_CASTLE_KINGSIDE = 0,

@@ -4,7 +4,8 @@
 slach::Game::Game()
   : mMoveList {},
     mMoveListAlgFormat {},
-    mListOfFenPositions {}
+    mListOfFenPositions {},
+    mSTR()
 {
 }
 slach::Game::~Game()
@@ -77,3 +78,42 @@ std::string slach::Game::FetchFromFenList(int moveNumber, Colour toMove)
 	}
 }
 
+slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString)
+{
+    //Find end of tag pairs
+    unsigned last_tag = rGameString.rfind(']');
+    unsigned closed_bracket = 0;
+    unsigned old_closed_bracket = 0;
+    do
+    {
+        unsigned open_bracket = rGameString.find ('[',old_closed_bracket);
+        closed_bracket = rGameString.find(']', open_bracket);
+        std::string whole_tag = rGameString.substr(open_bracket, closed_bracket - open_bracket);
+
+        //find, within the tag, the label (from start until either space or ")
+        unsigned end_of_label = whole_tag.find_first_of(" \"");
+        std::string label =  whole_tag.substr(1, end_of_label-1);
+
+        unsigned first_inverted_commas = whole_tag.find('"');
+        unsigned last_inverted_commas = whole_tag.rfind('"');
+        std::string data = whole_tag.substr(first_inverted_commas+1, last_inverted_commas - first_inverted_commas - 1);
+        for (unsigned i = 0; i < mSTR.mLabels.size(); ++i)
+        {
+            if (label == mSTR.mLabels[i])
+            {
+                mSTR.mData[i] = data;
+            }
+        }
+
+        old_closed_bracket = closed_bracket;
+    }
+    while ( (closed_bracket != last_tag) &&  (closed_bracket != std::string::npos) );
+
+
+    return VALID_PGN;
+}
+
+slach::SevenTagRoster slach::Game::GetSevenTagRoster() const
+{
+    return mSTR;
+}
