@@ -99,9 +99,14 @@ void DeleteCastlingRights(const CastlingRights& toBeDeleted, std::vector<Castlin
 unsigned GetIndexFromCoordinates(const char &rFile, const char &rRank);
 
 /**
- * HElper method that gives you the code of the piece you pass in (Q, B etc)
+ * Helper method that gives you the code of the piece you pass in (Q, B etc)
  */
 std::string GetPieceCodeOfThisPiece (const PieceType& piece);
+
+/**
+ * Helper method that gives you the piece based on the SAN code and the colour
+ */
+PieceType GetPieceFromCode (const char code, Colour col);
 
 } // namespace slach
 

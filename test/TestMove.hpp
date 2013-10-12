@@ -941,8 +941,21 @@ class TestMove : public CxxTest::TestSuite
 		TS_ASSERT_EQUALS(black_regular_capture.IsBlackCapturingEnPassant(), false);
 		TS_ASSERT_EQUALS(black_regular_capture.IsWhiteCapturingEnPassant(), false);
 		TS_ASSERT_EQUALS(black_regular_capture.GetMoveInAlgebraicFormat(), "fxg3");
-
-
 	}
+
+    void TestMoveFromSan()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        my_cb.SetupInitialChessPosition();
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+
+        slach::Move knightf3("Nf3", squares, slach::WHITE);
+
+        TS_ASSERT_EQUALS(knightf3.GetOrigin()->GetFile(), 'g');
+        TS_ASSERT_EQUALS(knightf3.GetOrigin()->GetRank(), '1');
+        TS_ASSERT_EQUALS(knightf3.GetDestination()->GetFile(), 'f');
+        TS_ASSERT_EQUALS(knightf3.GetDestination()->GetRank(), '3');
+    }
 };
 #endif //TESTMOVE_HPP_

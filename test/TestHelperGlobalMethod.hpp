@@ -231,6 +231,30 @@ public:
         TS_ASSERT_EQUALS(slach::GetPieceCodeOfThisPiece(slach::WHITE_ROOK), "R");
         TS_ASSERT_EQUALS(slach::GetPieceCodeOfThisPiece(slach::NO_PIECE), "");
     }
+
+    void TestPieceFromCode()
+    {
+        TS_ASSERT_EQUALS(slach::GetPieceFromCode('K', slach::BLACK), slach::BLACK_KING);
+        TS_ASSERT_EQUALS(slach::GetPieceFromCode('K', slach::WHITE), slach::WHITE_KING);
+        TS_ASSERT_EQUALS(slach::GetPieceFromCode('Q', slach::BLACK), slach::BLACK_QUEEN);
+        TS_ASSERT_EQUALS(slach::GetPieceFromCode('Q', slach::WHITE), slach::WHITE_QUEEN);
+        TS_ASSERT_EQUALS(slach::GetPieceFromCode('N', slach::BLACK), slach::BLACK_KNIGHT);
+        TS_ASSERT_EQUALS(slach::GetPieceFromCode('N', slach::WHITE), slach::WHITE_KNIGHT);
+        TS_ASSERT_EQUALS(slach::GetPieceFromCode('B', slach::BLACK), slach::BLACK_BISHOP);
+        TS_ASSERT_EQUALS(slach::GetPieceFromCode('B', slach::WHITE), slach::WHITE_BISHOP);
+        TS_ASSERT_EQUALS(slach::GetPieceFromCode('R', slach::BLACK), slach::BLACK_ROOK);
+        TS_ASSERT_EQUALS(slach::GetPieceFromCode('R', slach::WHITE), slach::WHITE_ROOK);
+
+        //invalid
+        TS_ASSERT_EQUALS(slach::GetPieceFromCode('b', slach::BLACK), slach::NO_PIECE);
+        TS_ASSERT_EQUALS(slach::GetPieceFromCode('r', slach::WHITE), slach::NO_PIECE);
+        TS_ASSERT_EQUALS(slach::GetPieceFromCode('P', slach::BLACK), slach::NO_PIECE);
+        TS_ASSERT_EQUALS(slach::GetPieceFromCode('W', slach::WHITE), slach::NO_PIECE);
+        TS_ASSERT_EQUALS(slach::GetPieceFromCode(' ', slach::WHITE), slach::NO_PIECE);
+        TS_ASSERT_EQUALS(slach::GetPieceFromCode('1', slach::BLACK), slach::NO_PIECE);
+        TS_ASSERT_EQUALS(slach::GetPieceFromCode('L', slach::WHITE), slach::NO_PIECE);
+    }
+
     void TestIndexFromChars()
     {
         TS_ASSERT_EQUALS(slach::GetIndexFromCoordinates('a','1'),0u);

@@ -58,3 +58,66 @@ std::string slach::GetPieceCodeOfThisPiece (const PieceType& piece)
 
     return ret;
 }
+
+slach::PieceType slach::GetPieceFromCode (const char code, Colour col)
+{
+    if (code == 'N')
+    {
+        if ( col == WHITE )
+        {
+            return WHITE_KNIGHT;
+        }
+        else
+        {
+            return BLACK_KNIGHT;
+        }
+    }
+    else if (code == 'R')
+    {
+        if ( col == WHITE )
+        {
+            return WHITE_ROOK;
+        }
+        else
+        {
+            return BLACK_ROOK;
+        }
+    }
+    else if (code == 'Q')
+    {
+        if ( col == WHITE )
+        {
+            return WHITE_QUEEN;
+        }
+        else
+        {
+            return BLACK_QUEEN;
+        }
+    }
+    else if (code == 'K')
+    {
+        if ( col == WHITE )
+        {
+            return WHITE_KING;
+        }
+        else
+        {
+            return BLACK_KING;
+        }
+    }
+    else if (code == 'B')
+    {
+        if ( col == WHITE )
+        {
+            return WHITE_BISHOP;
+        }
+        else
+        {
+            return BLACK_BISHOP;
+        }
+    }
+    else
+    {
+        return NO_PIECE;
+    }
+}

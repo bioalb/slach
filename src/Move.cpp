@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cassert>
 #include "Move.hpp"
 #include "HelperGlobalFunctions.hpp"
 
@@ -27,6 +28,52 @@ slach::Move::Move (const Move& move)
    mAmbiguityPrefix(move.GetAmbiguityPrefix()),
    mPromotionPieceCode(move.GetPromotionPieceCode())
 {
+}
+
+slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Colour movingColour)
+  : mpOrigin(NULL),
+    mpDestination(NULL),
+    mGivesCheck(false),
+    mAmbiguityPrefix(""),
+    mPromotionPieceCode("Q")
+{
+
+    std::size_t pos = SanMove.find_first_of("NBRKQ");
+    if (pos != std::string::npos) //knight, bishop, rook or  queen move
+    {
+        char dest_file = SanMove[pos+1];
+        char dest_rank = SanMove[pos+2];
+        for (unsigned i = 0; i < pSquares.size(); ++i)
+        {
+            if ( (dest_file == pSquares[i]->GetFile()) && (dest_rank == pSquares[i]->GetRank() ) )
+            {
+                mpDestination = pSquares[i];
+                break;
+            }
+        }
+        assert(mpDestination != NULL);
+
+        PieceType moving_piece  = GetPieceFromCode(SanMove[pos], movingColour);
+        if (IsKnight(moving_piece))
+        {
+            std::vector<int> knight_offsets {  -33, -31, -18, -14, 14, 18, 31, 33 };
+            int x88_target_index = mpDestination->Getx88Index();
+            for (unsigned i = 0; i < pSquares.size(); ++i)
+            {
+                if (moving_piece == pSquares[i]->GetPieceOnThisSquare())
+                {
+                    for (unsigned j = 0; j < knight_offsets.size(); ++j)
+                    {
+                        if ( (x88_target_index - pSquares[i]->Getx88Index()) == knight_offsets[j])
+                        {
+                            mpOrigin = pSquares[i];
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 slach::Move& slach::Move::operator=(const Move& from)

@@ -46,6 +46,9 @@ public :
      */
     Move (const Move& move);
 
+    Move (const std::string& SanMove, std::vector<Square* > pSquares, Colour movingColour);
+
+
     /**
      * Overload  = operator. It assigns
      * the pointers to origin and destination.

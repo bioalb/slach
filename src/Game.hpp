@@ -15,12 +15,6 @@ namespace slach
 
 struct SevenTagRoster
 {
-//    std::string mEvent;
-//    std::string mSite;
-//    std::string mDate;
-//    std::string mRound;
-//    std::string mWhitePlayer;
-//    std::string mBlackPlayer;
     GameResult mResult;
 
     std::vector<std::string> mLabels;
