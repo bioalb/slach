@@ -23,6 +23,7 @@ namespace slach
 class LegalMoveChecker
 {
 	friend class ::TestLegalMoveChecker;//for testing
+	friend class Move;
 
 private :
 

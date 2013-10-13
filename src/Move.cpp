@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include "Move.hpp"
+#include "LegalMoveChecker.hpp"
 #include "HelperGlobalFunctions.hpp"
 
 slach::Move::Move()
@@ -38,33 +39,117 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
     mPromotionPieceCode("Q")
 {
 
-    std::size_t pos = SanMove.find_first_of("NBRKQ");
-    if (pos != std::string::npos) //knight, bishop, rook or  queen move
+    if (SanMove == "O-O")
     {
-        char dest_file = SanMove[pos+1];
-        char dest_rank = SanMove[pos+2];
-        for (unsigned i = 0; i < pSquares.size(); ++i)
+        if (movingColour==WHITE)
         {
-            if ( (dest_file == pSquares[i]->GetFile()) && (dest_rank == pSquares[i]->GetRank() ) )
-            {
-                mpDestination = pSquares[i];
-                break;
-            }
-        }
-        assert(mpDestination != NULL);
-
-        PieceType moving_piece  = GetPieceFromCode(SanMove[pos], movingColour);
-        if (IsKnight(moving_piece))
-        {
-            std::vector<int> knight_offsets {  -33, -31, -18, -14, 14, 18, 31, 33 };
-            int x88_target_index = mpDestination->Getx88Index();
             for (unsigned i = 0; i < pSquares.size(); ++i)
             {
-                if (moving_piece == pSquares[i]->GetPieceOnThisSquare())
+                if ( pSquares[i]->GetFile() == 'e' && pSquares[i]->GetRank() == '1' )
                 {
-                    for (unsigned j = 0; j < knight_offsets.size(); ++j)
+                    mpOrigin = pSquares[i];
+                    break;
+                }
+            }
+            for (unsigned i = 0; i < pSquares.size(); ++i)
+            {
+                if ( pSquares[i]->GetFile() == 'g' && pSquares[i]->GetRank() == '1' )
+                {
+                    mpDestination = pSquares[i];
+                    break;
+                }
+            }
+        }
+        else//black
+        {
+            for (unsigned i = 0; i < pSquares.size(); ++i)
+            {
+                if ( pSquares[i]->GetFile() == 'e' && pSquares[i]->GetRank() == '8' )
+                {
+                    mpOrigin = pSquares[i];
+                    break;
+                }
+            }
+            for (unsigned i = 0; i < pSquares.size(); ++i)
+            {
+                if ( pSquares[i]->GetFile() == 'g' && pSquares[i]->GetRank() == '8' )
+                {
+                    mpDestination = pSquares[i];
+                    break;
+                }
+            }
+        }
+    }
+    else if (SanMove == "O-O-O")
+    {
+        if (movingColour==WHITE)
+        {
+            for (unsigned i = 0; i < pSquares.size(); ++i)
+            {
+                if ( pSquares[i]->GetFile() == 'e' && pSquares[i]->GetRank() == '1' )
+                {
+                    mpOrigin = pSquares[i];
+                    break;
+                }
+            }
+            for (unsigned i = 0; i < pSquares.size(); ++i)
+            {
+                if ( pSquares[i]->GetFile() == 'c' && pSquares[i]->GetRank() == '1' )
+                {
+                    mpDestination = pSquares[i];
+                    break;
+                }
+            }
+        }
+        else//black
+        {
+            for (unsigned i = 0; i < pSquares.size(); ++i)
+            {
+                if ( pSquares[i]->GetFile() == 'e' && pSquares[i]->GetRank() == '8' )
+                {
+                    mpOrigin = pSquares[i];
+                    break;
+                }
+            }
+            for (unsigned i = 0; i < pSquares.size(); ++i)
+            {
+                if ( pSquares[i]->GetFile() == 'c' && pSquares[i]->GetRank() == '8' )
+                {
+                    mpDestination = pSquares[i];
+                    break;
+                }
+            }
+        }
+    }
+    else //not a castling
+    {
+        std::size_t pos = SanMove.find_first_of("NBRKQ");
+        if (pos != std::string::npos) //knight, bishop, rook or  queen move
+        {
+            char dest_file = SanMove[pos+1];
+            char dest_rank = SanMove[pos+2];
+            for (unsigned i = 0; i < pSquares.size(); ++i)
+            {
+                if ( (dest_file == pSquares[i]->GetFile()) && (dest_rank == pSquares[i]->GetRank() ) )
+                {
+                    mpDestination = pSquares[i];
+                    break;
+                }
+            }
+            assert(mpDestination != NULL);
+
+            PieceType moving_piece  = GetPieceFromCode(SanMove[pos], movingColour);
+            LegalMoveChecker move_checker;
+
+            for (unsigned i = 0; i < pSquares.size(); ++i)
+            {
+                if (pSquares[i]->GetPieceOnThisSquare() == moving_piece) //found the same piece...
+                {
+                    //... can it go to destination? i.e., is this the one that should move?
+                    std::vector<unsigned> pseudo_valid_destinations = move_checker.GetAttackedSquaresFromOrigin(pSquares[i], pSquares);
+                    for (unsigned j = 0; j < pseudo_valid_destinations.size(); ++j)
                     {
-                        if ( (x88_target_index - pSquares[i]->Getx88Index()) == knight_offsets[j])
+                        if (pseudo_valid_destinations[j] == mpDestination->GetIndexFromA1())
                         {
                             mpOrigin = pSquares[i];
                             break;
@@ -72,6 +157,7 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
                     }
                 }
             }
+
         }
     }
 }

@@ -943,7 +943,7 @@ class TestMove : public CxxTest::TestSuite
 		TS_ASSERT_EQUALS(black_regular_capture.GetMoveInAlgebraicFormat(), "fxg3");
 	}
 
-    void TestMoveFromSan()
+    void TestRegularknightMoveFromSan()
     {
         slach::ChessBoard my_cb;
         my_cb.SetupChessBoard();
@@ -957,5 +957,103 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(knightf3.GetDestination()->GetFile(), 'f');
         TS_ASSERT_EQUALS(knightf3.GetDestination()->GetRank(), '3');
     }
+
+    void TestMovesFromSanWhite()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        //this position is stored in test/data/test_position_4.png for reference
+        std::string test_pos_4 = "r3k2r/pppq1ppp/2np1n2/2b1p1B1/2B1P1b1/2NP1N2/PPPQ1PPP/R3K2R w KQkq - 6 8";
+        my_cb.SetFenPosition(test_pos_4);
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+
+        slach::Move ds_bishop_h4("Bh4", squares, slach::WHITE);
+
+        TS_ASSERT_EQUALS(ds_bishop_h4.GetOrigin()->GetFile(), 'g');
+        TS_ASSERT_EQUALS(ds_bishop_h4.GetOrigin()->GetRank(), '5');
+        TS_ASSERT_EQUALS(ds_bishop_h4.GetDestination()->GetFile(), 'h');
+        TS_ASSERT_EQUALS(ds_bishop_h4.GetDestination()->GetRank(), '4');
+
+        slach::Move ls_bishop_b3("Bb3", squares, slach::WHITE);
+
+        TS_ASSERT_EQUALS(ls_bishop_b3.GetOrigin()->GetFile(), 'c');
+        TS_ASSERT_EQUALS(ls_bishop_b3.GetOrigin()->GetRank(), '4');
+        TS_ASSERT_EQUALS(ls_bishop_b3.GetDestination()->GetFile(), 'b');
+        TS_ASSERT_EQUALS(ls_bishop_b3.GetDestination()->GetRank(), '3');
+
+        slach::Move Queen_e2("Qe2", squares, slach::WHITE);
+
+        TS_ASSERT_EQUALS(Queen_e2.GetOrigin()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(Queen_e2.GetOrigin()->GetRank(), '2');
+        TS_ASSERT_EQUALS(Queen_e2.GetDestination()->GetFile(), 'e');
+        TS_ASSERT_EQUALS(Queen_e2.GetDestination()->GetRank(), '2');
+
+        slach::Move rook_g1("Rg1", squares, slach::WHITE);
+
+        TS_ASSERT_EQUALS(rook_g1.GetOrigin()->GetFile(), 'h');
+        TS_ASSERT_EQUALS(rook_g1.GetOrigin()->GetRank(), '1');
+        TS_ASSERT_EQUALS(rook_g1.GetDestination()->GetFile(), 'g');
+        TS_ASSERT_EQUALS(rook_g1.GetDestination()->GetRank(), '1');
+
+        slach::Move king_d1("Kd1", squares, slach::WHITE);
+
+        TS_ASSERT_EQUALS(king_d1.GetOrigin()->GetFile(), 'e');
+        TS_ASSERT_EQUALS(king_d1.GetOrigin()->GetRank(), '1');
+        TS_ASSERT_EQUALS(king_d1.GetDestination()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(king_d1.GetDestination()->GetRank(), '1');
+
+        slach::Move castle("O-O", squares, slach::WHITE);
+
+         TS_ASSERT_EQUALS(castle.GetOrigin()->GetFile(), 'e');
+         TS_ASSERT_EQUALS(castle.GetOrigin()->GetRank(), '1');
+         TS_ASSERT_EQUALS(castle.GetDestination()->GetFile(), 'g');
+         TS_ASSERT_EQUALS(castle.GetDestination()->GetRank(), '1');
+         TS_ASSERT_EQUALS(castle.DoesMoveRequireSpecialGuiHandling(), true);
+         TS_ASSERT_EQUALS(castle.IsWhiteCastlingKingSide(), true);
+
+         slach::Move castle_q("O-O-O", squares, slach::WHITE);
+
+          TS_ASSERT_EQUALS(castle_q.GetOrigin()->GetFile(), 'e');
+          TS_ASSERT_EQUALS(castle_q.GetOrigin()->GetRank(), '1');
+          TS_ASSERT_EQUALS(castle_q.GetDestination()->GetFile(), 'c');
+          TS_ASSERT_EQUALS(castle_q.GetDestination()->GetRank(), '1');
+          TS_ASSERT_EQUALS(castle_q.DoesMoveRequireSpecialGuiHandling(), true);
+          TS_ASSERT_EQUALS(castle_q.IsWhiteCastlingQueenSide(), true);
+    }
+
+    void TestMovesFromSanBlack()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        //this position is stored in test/data/test_position_4.png, but white has just moved a1-b1
+        std::string test_pos_4_after_a1_b1 = "r3k2r/pppq1ppp/2np1n2/2b1p1B1/2B1P1b1/2NP1N2/PPPQ1PPP/1R2K2R b Kkq - 7 8";
+        my_cb.SetFenPosition(test_pos_4_after_a1_b1);
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+
+        slach::Move king_e7("Ke7", squares,slach::BLACK);
+        TS_ASSERT_EQUALS(king_e7.GetOrigin()->GetFile(), 'e');
+        TS_ASSERT_EQUALS(king_e7.GetOrigin()->GetRank(), '8');
+        TS_ASSERT_EQUALS(king_e7.GetDestination()->GetFile(), 'e');
+        TS_ASSERT_EQUALS(king_e7.GetDestination()->GetRank(), '7');
+
+        slach::Move castle("O-O", squares, slach::BLACK);
+
+        TS_ASSERT_EQUALS(castle.GetOrigin()->GetFile(), 'e');
+        TS_ASSERT_EQUALS(castle.GetOrigin()->GetRank(), '8');
+        TS_ASSERT_EQUALS(castle.GetDestination()->GetFile(), 'g');
+        TS_ASSERT_EQUALS(castle.GetDestination()->GetRank(), '8');
+        TS_ASSERT_EQUALS(castle.DoesMoveRequireSpecialGuiHandling(), true);
+        TS_ASSERT_EQUALS(castle.IsBlackCastlingKingSide(), true);
+
+        slach::Move castle_q("O-O-O", squares, slach::BLACK);
+
+        TS_ASSERT_EQUALS(castle_q.GetOrigin()->GetFile(), 'e');
+        TS_ASSERT_EQUALS(castle_q.GetOrigin()->GetRank(), '8');
+        TS_ASSERT_EQUALS(castle_q.GetDestination()->GetFile(), 'c');
+        TS_ASSERT_EQUALS(castle_q.GetDestination()->GetRank(), '8');
+        TS_ASSERT_EQUALS(castle_q.DoesMoveRequireSpecialGuiHandling(), true);
+        TS_ASSERT_EQUALS(castle_q.IsBlackCastlingQueenSide(), true);
+    }
+
 };
 #endif //TESTMOVE_HPP_
