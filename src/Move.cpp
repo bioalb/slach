@@ -126,8 +126,13 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
         std::size_t pos = SanMove.find_first_of("NBRKQ");
         if (pos != std::string::npos) //knight, bishop, rook or  queen move
         {
-            char dest_file = SanMove[pos+1];
-            char dest_rank = SanMove[pos+2];
+            unsigned offset = 0;
+            if (SanMove[pos+1] == 'x')
+            {
+                offset++;//make the following lines ignore the "x"
+            }
+            char dest_file = SanMove[pos + 1 + offset];
+            char dest_rank = SanMove[pos + 2 + offset];
             for (unsigned i = 0; i < pSquares.size(); ++i)
             {
                 if ( (dest_file == pSquares[i]->GetFile()) && (dest_rank == pSquares[i]->GetRank() ) )
@@ -136,7 +141,10 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
                     break;
                 }
             }
-            assert(mpDestination != NULL);
+
+            if (mpDestination == NULL) return;//destination not found, invalid SAN, out of here, both pointers still NULL
+
+            assert(mpDestination != NULL);//if we are here, it means we found it. We will be using this pointer
 
             PieceType moving_piece  = GetPieceFromCode(SanMove[pos], movingColour);
             LegalMoveChecker move_checker;
@@ -158,6 +166,13 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
                 }
             }
 
+        }
+
+        //if we have not found the origin piece, it means something is amiss, put everything back to NULL to signal that
+        //the move was not created
+        if (mpOrigin == NULL)
+        {
+            mpDestination = NULL;
         }
     }
 }

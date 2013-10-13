@@ -1002,6 +1002,13 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(king_d1.GetDestination()->GetFile(), 'd');
         TS_ASSERT_EQUALS(king_d1.GetDestination()->GetRank(), '1');
 
+        slach::Move bishop_takes_f6("Bxf6", squares, slach::WHITE);
+
+        TS_ASSERT_EQUALS(bishop_takes_f6.GetOrigin()->GetFile(), 'g');
+        TS_ASSERT_EQUALS(bishop_takes_f6.GetOrigin()->GetRank(), '5');
+        TS_ASSERT_EQUALS(bishop_takes_f6.GetDestination()->GetFile(), 'f');
+        TS_ASSERT_EQUALS(bishop_takes_f6.GetDestination()->GetRank(), '6');
+
         slach::Move castle("O-O", squares, slach::WHITE);
 
          TS_ASSERT_EQUALS(castle.GetOrigin()->GetFile(), 'e');
@@ -1053,6 +1060,57 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(castle_q.GetDestination()->GetRank(), '8');
         TS_ASSERT_EQUALS(castle_q.DoesMoveRequireSpecialGuiHandling(), true);
         TS_ASSERT_EQUALS(castle_q.IsBlackCastlingQueenSide(), true);
+    }
+
+    void TestInvalidSans()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        //this position is stored in test/data/test_position_4.png for reference
+        std::string test_pos_4 = "r3k2r/pppq1ppp/2np1n2/2b1p1B1/2B1P1b1/2NP1N2/PPPQ1PPP/R3K2R w KQkq - 6 8";
+        my_cb.SetFenPosition(test_pos_4);
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+
+        slach::Move rubbish_bishop_move("BT4", squares, slach::WHITE);
+
+        //TS_ASSERT_EQUALS(rubbish_bishop_move.GetDestination(), NULL); this doesn't compile
+        if (rubbish_bishop_move.GetOrigin() == NULL)
+        {
+            TS_ASSERT_EQUALS(1,1);//pass
+        }
+        else
+        {
+            TS_ASSERT_EQUALS(0,1);//fail
+        }
+        if (rubbish_bishop_move.GetDestination() == NULL)
+        {
+            TS_ASSERT_EQUALS(1,1);//pass
+        }
+        else
+        {
+            TS_ASSERT_EQUALS(0,1);//fail
+        }
+
+        //correct syntax, but no white bishop can go there to h8
+        slach::Move invalid_bishop_move("Bh8", squares, slach::WHITE);
+
+        //TS_ASSERT_EQUALS(invalid_bishop_move.GetDestination(), NULL); this doesn't compile
+        if (invalid_bishop_move.GetOrigin() == NULL)
+        {
+            TS_ASSERT_EQUALS(1,1);//pass
+        }
+        else
+        {
+            TS_ASSERT_EQUALS(0,1);//fail
+        }
+        if (invalid_bishop_move.GetDestination() == NULL)
+        {
+            TS_ASSERT_EQUALS(1,1);//pass
+        }
+        else
+        {
+            TS_ASSERT_EQUALS(0,1);//fail
+        }
     }
 
 };
