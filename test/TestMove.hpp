@@ -1179,6 +1179,30 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(c_promotes_knight.GetPromotionPieceCode(), "N");
     }
 
+    void TestDisambiguatedMoveFromSan()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        //saved in tets/data/test_position_7.png for reference
+        std::string fen_poistion = "r5k1/1p1b2pp/2n1pp2/2np4/1PP5/r3P1B1/2QK1PPP/R4B1R b - - 4 19";
+        my_cb.SetFenPosition(fen_poistion);
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+
+        slach::Move rook_8_a6("R8a6", squares, slach::BLACK);
+        TS_ASSERT_EQUALS(rook_8_a6.GetOrigin()->GetFile(), 'a');
+        TS_ASSERT_EQUALS(rook_8_a6.GetOrigin()->GetRank(), '8');
+        TS_ASSERT_EQUALS(rook_8_a6.GetDestination()->GetFile(), 'a');
+        TS_ASSERT_EQUALS(rook_8_a6.GetDestination()->GetRank(), '6');
+        TS_ASSERT_EQUALS(rook_8_a6.GetAmbiguityPrefix(), "8");
+
+        slach::Move rook_3_a6("R3a6", squares, slach::BLACK);
+        TS_ASSERT_EQUALS(rook_3_a6.GetOrigin()->GetFile(), 'a');
+        TS_ASSERT_EQUALS(rook_3_a6.GetOrigin()->GetRank(), '3');
+        TS_ASSERT_EQUALS(rook_3_a6.GetDestination()->GetFile(), 'a');
+        TS_ASSERT_EQUALS(rook_3_a6.GetDestination()->GetRank(), '6');
+        TS_ASSERT_EQUALS(rook_3_a6.GetAmbiguityPrefix(), "3");
+    }
+
     void TestInvalidSans()
     {
         slach::ChessBoard my_cb;

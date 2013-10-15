@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cassert>
+#include <stdio.h>
+#include <ctype.h>
 #include "Move.hpp"
 #include "LegalMoveChecker.hpp"
 #include "HelperGlobalFunctions.hpp"
@@ -129,16 +131,32 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
         {
             if (SanMove.length() == pos-1) return;//nothing after N, Q, etc, out of here!
 
-            unsigned offset = 0;
-            if (SanMove[pos+1] == 'x')
+            unsigned amb_offset = 0;//offset for disambiguation
+            bool amb_is_letter = false;//ambiguity code is a letter;
+            bool amb_is_number = false;//ambiguity code is a number;
+            if ( isdigit( SanMove[pos+1] ) )
             {
-                offset++;//make the following lines ignore the "x"
+                amb_offset++;
+                mAmbiguityPrefix = SanMove[pos+1];
+                amb_is_number = true;
+            }
+            else if ( islower( SanMove[pos+1] ) && (islower(SanMove[pos+2])) )
+            {
+                amb_offset++;
+                mAmbiguityPrefix = SanMove[pos+1];
+                amb_is_letter = true;
+            }
+
+            unsigned offset = 0;
+            if (SanMove[pos+amb_offset+1] == 'x')
+            {
+                offset ++;//make the following lines ignore the "x"
             }
 
             if (SanMove.length() <= pos+2+offset) return;//only one thing after N,Q,etc (and maybe the x, if any), out of here!
 
-            char dest_file = SanMove[pos + 1 + offset];
-            char dest_rank = SanMove[pos + 2 + offset];
+            char dest_file = SanMove[pos + 1 + amb_offset + offset];
+            char dest_rank = SanMove[pos + 2 + amb_offset + offset];
             for (unsigned i = 0; i < pSquares.size(); ++i)
             {
                 if ( (dest_file == pSquares[i]->GetFile()) && (dest_rank == pSquares[i]->GetRank() ) )
@@ -161,13 +179,21 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
                 {
                     //... can it go to destination? i.e., is this the one that should move?
                     std::vector<unsigned> pseudo_valid_destinations = move_checker.GetAttackedSquaresFromOrigin(pSquares[i], pSquares);
+                    bool found = false;
                     for (unsigned j = 0; j < pseudo_valid_destinations.size(); ++j)
                     {
                         if (pseudo_valid_destinations[j] == mpDestination->GetIndexFromA1())
                         {
                             mpOrigin = pSquares[i];
+                            found = true;
                             break;
                         }
+                    }
+                    if ( ( amb_offset == 0 || //no ambiguity or...
+                         ( mAmbiguityPrefix == pSquares[i]->GetFileAsString()  && amb_is_letter == true )||
+                         ( mAmbiguityPrefix == pSquares[i]->GetRankAsString() && amb_is_number ==  true) ) && found == true)
+                    {
+                        break;
                     }
                 }
             }
