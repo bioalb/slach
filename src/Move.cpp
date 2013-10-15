@@ -124,13 +124,19 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
     else //not a castling
     {
         std::size_t pos = SanMove.find_first_of("NBRKQ");
-        if (pos != std::string::npos) //knight, bishop, rook or  queen move
+        std::size_t pos_of_equal = SanMove.find_first_of("=");
+        if ( (pos != std::string::npos) &&  (pos_of_equal == std::string::npos))//knight, bishop, rook or  queen move (and not a promotion)
         {
+            if (SanMove.length() == pos-1) return;//nothing after N, Q, etc, out of here!
+
             unsigned offset = 0;
             if (SanMove[pos+1] == 'x')
             {
                 offset++;//make the following lines ignore the "x"
             }
+
+            if (SanMove.length() <= pos+2+offset) return;//only one thing after N,Q,etc (and maybe the x, if any), out of here!
+
             char dest_file = SanMove[pos + 1 + offset];
             char dest_rank = SanMove[pos + 2 + offset];
             for (unsigned i = 0; i < pSquares.size(); ++i)
@@ -144,7 +150,7 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
 
             if (mpDestination == NULL) return;//destination not found, invalid SAN, out of here, both pointers still NULL
 
-            assert(mpDestination != NULL);//if we are here, it means we found it. We will be using this pointer
+            assert(mpDestination != NULL);//if we are here, it means we found the destination. We will be using this pointer
 
             PieceType moving_piece  = GetPieceFromCode(SanMove[pos], movingColour);
             LegalMoveChecker move_checker;
@@ -165,8 +171,100 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
                     }
                 }
             }
-
         }
+        else //pawn move
+        {
+            if (SanMove.length() < 2) return;//only one thing
+
+            if (SanMove[1] == 'x') //pawn capture
+            {
+                if (SanMove.length() < 4) return;//not long enough for a pawn capture
+                char dest_file = SanMove[2];
+                char dest_rank = SanMove[3];
+                for (unsigned i = 0; i < pSquares.size(); ++i)
+                {
+                    if ( (dest_file == pSquares[i]->GetFile()) && (dest_rank == pSquares[i]->GetRank() ) )
+                    {
+                        mpDestination = pSquares[i];
+                        break;
+                    }
+                }
+                if (mpDestination == NULL) return;//destination not found, invalid SAN, out of here, both pointers still NULL
+                assert(mpDestination != NULL);//if we are here, it means we found the destination. We will be using this pointer
+
+                char origin_file = SanMove[0];
+                LegalMoveChecker move_checker;
+
+                for (unsigned i = 0; i < pSquares.size(); ++i)
+                {
+                    if (pSquares[i]->GetFile() == origin_file)
+                    {
+                        std::vector<unsigned> pseudo_valid_destinations = move_checker.GetAttackedSquaresFromOrigin(pSquares[i], pSquares);
+                        for (unsigned j = 0; j < pseudo_valid_destinations.size(); ++j)
+                        {
+                            if (pseudo_valid_destinations[j] == mpDestination->GetIndexFromA1())
+                            {
+                                mpOrigin = pSquares[i];
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            else //regular pawn move
+            {
+                char dest_file = SanMove[0];
+                char dest_rank = SanMove[1];
+                for (unsigned i = 0; i < pSquares.size(); ++i)
+                {
+                    if ( (dest_file == pSquares[i]->GetFile()) && (dest_rank == pSquares[i]->GetRank() ) )
+                    {
+                        mpDestination = pSquares[i];
+                        break;
+                    }
+                }
+
+                if (mpDestination == NULL) return;//destination not found, invalid SAN, out of here, both pointers still NULL
+                assert(mpDestination != NULL);//if we are here, it means we found the destination. We will be using this pointer
+
+                unsigned  poss_origin_1 = 0;
+                unsigned  poss_origin_2 = 0;
+                if (movingColour == WHITE)
+                {
+                    if ( (mpDestination->GetIndexFromA1() < 16) )
+                    {
+                        mpDestination = NULL;
+                        return; //destination at least third row
+                    }
+                    poss_origin_1 = mpDestination->GetIndexFromA1() - 8;
+                    poss_origin_2 = mpDestination->GetIndexFromA1() - 16;
+                }
+                else
+                {
+                    if ( (mpDestination->GetIndexFromA1() > 47) )
+                    {
+                        mpDestination = NULL;
+                        return; //destination at least 6th row
+                    }
+                    poss_origin_1 = mpDestination->GetIndexFromA1() + 8;
+                    poss_origin_2 = mpDestination->GetIndexFromA1() + 16;
+                }
+
+                if ( IsPawn( pSquares[poss_origin_1]->GetPieceOnThisSquare() ) &&
+                     IsPieceSameAsTurn (pSquares[poss_origin_1]->GetPieceOnThisSquare(), movingColour) )
+                {
+                    mpOrigin = pSquares[poss_origin_1];
+                    return;
+                }
+                if ( IsPawn( pSquares[poss_origin_2]->GetPieceOnThisSquare() ) &&
+                     IsPieceSameAsTurn (pSquares[poss_origin_2]->GetPieceOnThisSquare(), movingColour) )
+                {
+                    mpOrigin = pSquares[poss_origin_2];
+                    return;
+                }
+            }
+        }
+
 
         //if we have not found the origin piece, it means something is amiss, put everything back to NULL to signal that
         //the move was not created
@@ -174,7 +272,7 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
         {
             mpDestination = NULL;
         }
-    }
+    }//end of the else for "not castling move
 }
 
 slach::Move& slach::Move::operator=(const Move& from)

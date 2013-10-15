@@ -1028,6 +1028,37 @@ class TestMove : public CxxTest::TestSuite
           TS_ASSERT_EQUALS(castle_q.IsWhiteCastlingQueenSide(), true);
     }
 
+    void TestPawnMovesFromSanWhite()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        //this position is stored in test/data/test_position_4.png for reference
+        std::string test_pos_4 = "r3k2r/pppq1ppp/2np1n2/2b1p1B1/2B1P1b1/2NP1N2/PPPQ1PPP/R3K2R w KQkq - 6 8";
+        my_cb.SetFenPosition(test_pos_4);
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+
+        slach::Move h4("h4", squares, slach::WHITE);
+
+        TS_ASSERT_EQUALS(h4.GetOrigin()->GetFile(), 'h');
+        TS_ASSERT_EQUALS(h4.GetOrigin()->GetRank(), '2');
+        TS_ASSERT_EQUALS(h4.GetDestination()->GetFile(), 'h');
+        TS_ASSERT_EQUALS(h4.GetDestination()->GetRank(), '4');
+
+        slach::Move h3("h3", squares, slach::WHITE);
+
+        TS_ASSERT_EQUALS(h3.GetOrigin()->GetFile(), 'h');
+        TS_ASSERT_EQUALS(h3.GetOrigin()->GetRank(), '2');
+        TS_ASSERT_EQUALS(h3.GetDestination()->GetFile(), 'h');
+        TS_ASSERT_EQUALS(h3.GetDestination()->GetRank(), '3');
+
+        slach::Move d4("d4", squares, slach::WHITE);
+
+        TS_ASSERT_EQUALS(d4.GetOrigin()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(d4.GetOrigin()->GetRank(), '3');
+        TS_ASSERT_EQUALS(d4.GetDestination()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(d4.GetDestination()->GetRank(), '4');
+    }
+
     void TestMovesFromSanBlack()
     {
         slach::ChessBoard my_cb;
@@ -1060,6 +1091,90 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(castle_q.GetDestination()->GetRank(), '8');
         TS_ASSERT_EQUALS(castle_q.DoesMoveRequireSpecialGuiHandling(), true);
         TS_ASSERT_EQUALS(castle_q.IsBlackCastlingQueenSide(), true);
+    }
+
+    void TestPawnMovesFromSanBlack()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        //this position is stored in test/data/test_position_4.png, but white has just moved a1-b1
+        std::string test_pos_4_after_a1_b1 = "r3k2r/pppq1ppp/2np1n2/2b1p1B1/2B1P1b1/2NP1N2/PPPQ1PPP/1R2K2R b Kkq - 7 8";
+        my_cb.SetFenPosition(test_pos_4_after_a1_b1);
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+
+        slach::Move a5("a5", squares, slach::BLACK);
+
+        TS_ASSERT_EQUALS(a5.GetOrigin()->GetFile(), 'a');
+        TS_ASSERT_EQUALS(a5.GetOrigin()->GetRank(), '7');
+        TS_ASSERT_EQUALS(a5.GetDestination()->GetFile(), 'a');
+        TS_ASSERT_EQUALS(a5.GetDestination()->GetRank(), '5');
+
+        slach::Move a6("a6", squares, slach::BLACK);
+
+        TS_ASSERT_EQUALS(a6.GetOrigin()->GetFile(), 'a');
+        TS_ASSERT_EQUALS(a6.GetOrigin()->GetRank(), '7');
+        TS_ASSERT_EQUALS(a6.GetDestination()->GetFile(), 'a');
+        TS_ASSERT_EQUALS(a6.GetDestination()->GetRank(), '6');
+
+        slach::Move d5("d5", squares, slach::BLACK);
+
+        TS_ASSERT_EQUALS(d5.GetOrigin()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(d5.GetOrigin()->GetRank(), '6');
+        TS_ASSERT_EQUALS(d5.GetDestination()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(d5.GetDestination()->GetRank(), '5');
+    }
+
+    void TestPawnCapturesFromSAN()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        //saved in tets/data/test_position_7.png for reference
+        std::string fen_poistion = "r5k1/1p1b2pp/2n1pp2/2np4/1PP5/r3P1B1/2QK1PPP/R4B1R b - - 4 19";
+        my_cb.SetFenPosition(fen_poistion);
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+
+        slach::Move d_takes_c4("dxc4", squares, slach::BLACK);
+
+        TS_ASSERT_EQUALS(d_takes_c4.GetOrigin()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(d_takes_c4.GetOrigin()->GetRank(), '5');
+        TS_ASSERT_EQUALS(d_takes_c4.GetDestination()->GetFile(), 'c');
+        TS_ASSERT_EQUALS(d_takes_c4.GetDestination()->GetRank(), '4');
+    }
+
+    void TestPromotionFromSanBlack()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        //saved in tets/data/test_position_5.png for reference
+        std::string fen_poistion = "4k3/2P1P1P1/3K3P/p4b2/8/P7/1p6/8 b - - 0 59";
+        my_cb.SetFenPosition(fen_poistion);
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+        //black's turn move is b2-b1 (promotes queen)
+        slach::Move b_promotes_queen("b1=Q", squares, slach::BLACK);
+
+        TS_ASSERT_EQUALS(b_promotes_queen.GetOrigin()->GetFile(), 'b');
+        TS_ASSERT_EQUALS(b_promotes_queen.GetOrigin()->GetRank(), '2');
+        TS_ASSERT_EQUALS(b_promotes_queen.GetDestination()->GetFile(), 'b');
+        TS_ASSERT_EQUALS(b_promotes_queen.GetDestination()->GetRank(), '1');
+        TS_ASSERT_EQUALS(b_promotes_queen.IsBlackPromoting(), true);
+    }
+
+    void TestPromotionFromSanWhite()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        //saved in tets/data/test_position_5.png for reference but after black promoted
+        std::string fen_poistion = "4k3/2P1P1P1/3K3P/p4b2/8/P7/8/1q6 w - - 0 60";
+        my_cb.SetFenPosition(fen_poistion);
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+        //black's turn move is c7-c8 (promotes, choose a knight)
+        slach::Move c_promotes_knight("c8=N", squares, slach::WHITE);
+
+        TS_ASSERT_EQUALS(c_promotes_knight.GetOrigin()->GetFile(), 'c');
+        TS_ASSERT_EQUALS(c_promotes_knight.GetOrigin()->GetRank(), '7');
+        TS_ASSERT_EQUALS(c_promotes_knight.GetDestination()->GetFile(), 'c');
+        TS_ASSERT_EQUALS(c_promotes_knight.GetDestination()->GetRank(), '8');
+        TS_ASSERT_EQUALS(c_promotes_knight.IsWhitePromoting(), true);
     }
 
     void TestInvalidSans()
@@ -1104,6 +1219,96 @@ class TestMove : public CxxTest::TestSuite
             TS_ASSERT_EQUALS(0,1);//fail
         }
         if (invalid_bishop_move.GetDestination() == NULL)
+        {
+            TS_ASSERT_EQUALS(1,1);//pass
+        }
+        else
+        {
+            TS_ASSERT_EQUALS(0,1);//fail
+        }
+
+        slach::Move short_san("B", squares, slach::WHITE);
+        if (short_san.GetOrigin() == NULL)
+        {
+            TS_ASSERT_EQUALS(1,1);//pass
+        }
+        else
+        {
+            TS_ASSERT_EQUALS(0,1);//fail
+        }
+        if (short_san.GetDestination() == NULL)
+        {
+            TS_ASSERT_EQUALS(1,1);//pass
+        }
+        else
+        {
+            TS_ASSERT_EQUALS(0,1);//fail
+        }
+
+        slach::Move short_san_2("Bd", squares, slach::WHITE);
+        if (short_san_2.GetOrigin() == NULL)
+        {
+            TS_ASSERT_EQUALS(1,1);//pass
+        }
+        else
+        {
+            TS_ASSERT_EQUALS(0,1);//fail
+        }
+        if (short_san_2.GetDestination() == NULL)
+        {
+            TS_ASSERT_EQUALS(1,1);//pass
+        }
+        else
+        {
+            TS_ASSERT_EQUALS(0,1);//fail
+        }
+
+        slach::Move short_san_3("Bxd", squares, slach::WHITE);
+        if (short_san_3.GetOrigin() == NULL)
+        {
+            TS_ASSERT_EQUALS(1,1);//pass
+        }
+        else
+        {
+            TS_ASSERT_EQUALS(0,1);//fail
+        }
+        if (short_san_3.GetDestination() == NULL)
+        {
+            TS_ASSERT_EQUALS(1,1);//pass
+        }
+        else
+        {
+            TS_ASSERT_EQUALS(0,1);//fail
+        }
+
+        slach::Move wrong_pawn("a2", squares, slach::WHITE);
+        if (wrong_pawn.GetOrigin() == NULL)
+        {
+            TS_ASSERT_EQUALS(1,1);//pass
+        }
+        else
+        {
+            TS_ASSERT_EQUALS(0,1);//fail
+        }
+        if (wrong_pawn.GetDestination() == NULL)
+        {
+            TS_ASSERT_EQUALS(1,1);//pass
+        }
+        else
+        {
+            TS_ASSERT_EQUALS(0,1);//fail
+        }
+
+        slach::Move wrong_pawn_black("a7", squares, slach::BLACK);
+        if (wrong_pawn_black.GetOrigin() == NULL)
+        {
+            TS_ASSERT_EQUALS(1,1);//pass
+        }
+        else
+        {
+            TS_ASSERT_EQUALS(0,1);//fail
+        }
+        if (wrong_pawn_black.GetDestination() == NULL)
         {
             TS_ASSERT_EQUALS(1,1);//pass
         }

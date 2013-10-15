@@ -46,6 +46,30 @@ public :
      */
     Move (const Move& move);
 
+    /**
+     * Constructor that takes in the move in SAN form. Because SAN form does not specify origin,
+     * we need the squares and the turn to move.
+     *
+     * Behaviour:
+     *
+     * It tries to locate a destination square by analysing the SAN string.
+     * If it can't be found (i.e., invalid SAN), the internal variable mpOrigin and mpDestination
+     * will remain NULL. Hence this can be tested for SAN validity as well.
+     *
+     * If the destination is found, a search for the origin piece is performed:
+     * - for pieces (Q,N,K,R,B): the LegalMoveChecker is used. If a PSEUSO-legal move is found, then the origin square is found.
+     *   Note that no other legality check is performed.
+     * - for pawns: the one-step movement is sought first, if no pawn is found, then two-step move is considered.
+     *
+     * If no suitable source is found,the SAN is considered invalid, and the move will have both pointers set tto NULL.
+     *
+     * Special cases of castling (O-O and O-O-O) are handled.
+     *
+     *
+     * @param SanMove the move in SAN format
+     * @param pSquares the squares that form the board. All must be well formed and with pieces assigned.
+     * @param movingColour the colour that is making this move
+     */
     Move (const std::string& SanMove, std::vector<Square* > pSquares, Colour movingColour);
 
 
