@@ -176,6 +176,16 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
         {
             if (SanMove.length() < 2) return;//only one thing
 
+            ///Settle promotion case
+            std::size_t pos_of_equal = SanMove.find_first_of("=");
+            if (pos_of_equal != std::string::npos) //promotion
+            {
+                if (pos_of_equal < ( SanMove.length() - 1))
+                {
+                    mPromotionPieceCode = SanMove[pos_of_equal+1];
+                }
+            }
+
             if (SanMove[1] == 'x') //pawn capture
             {
                 if (SanMove.length() < 4) return;//not long enough for a pawn capture
@@ -262,8 +272,8 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
                     mpOrigin = pSquares[poss_origin_2];
                     return;
                 }
-            }
-        }
+            }//end of regular pawn move (not capture)
+        }//end of pawn move
 
 
         //if we have not found the origin piece, it means something is amiss, put everything back to NULL to signal that

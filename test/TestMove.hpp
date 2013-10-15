@@ -1157,6 +1157,7 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(b_promotes_queen.GetDestination()->GetFile(), 'b');
         TS_ASSERT_EQUALS(b_promotes_queen.GetDestination()->GetRank(), '1');
         TS_ASSERT_EQUALS(b_promotes_queen.IsBlackPromoting(), true);
+        TS_ASSERT_EQUALS(b_promotes_queen.GetPromotionPieceCode(), "Q");
     }
 
     void TestPromotionFromSanWhite()
@@ -1175,6 +1176,7 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(c_promotes_knight.GetDestination()->GetFile(), 'c');
         TS_ASSERT_EQUALS(c_promotes_knight.GetDestination()->GetRank(), '8');
         TS_ASSERT_EQUALS(c_promotes_knight.IsWhitePromoting(), true);
+        TS_ASSERT_EQUALS(c_promotes_knight.GetPromotionPieceCode(), "N");
     }
 
     void TestInvalidSans()
