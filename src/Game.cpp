@@ -109,6 +109,17 @@ slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString
     }
     while ( (closed_bracket != last_tag) &&  (closed_bracket != std::string::npos) );
 
+    //from last_tag onward
+    unsigned dot = rGameString.find('.', last_tag);
+    unsigned beginning = rGameString.find_first_not_of(' ', dot+1);
+    unsigned end = rGameString.find(' ', beginning+1);
+
+    unsigned beginning_black_move = rGameString.find_first_not_of(' ', end+1);
+    unsigned end_black_move = rGameString.find(' ', beginning_black_move+1);
+
+    std::string move_san = rGameString.substr(beginning, end -beginning);
+    std::string move_san_black = rGameString.substr(beginning_black_move, end_black_move -beginning_black_move);
+    std::cout<<std::endl<<"*******"<<move_san<<"****"<<move_san_black<<std::endl;
 
     return VALID_PGN;
 }
