@@ -1257,6 +1257,12 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(rook_e_takes_d1.GetDestination()->GetFile(), 'd');
         TS_ASSERT_EQUALS(rook_e_takes_d1.GetDestination()->GetRank(), '1');
         TS_ASSERT_EQUALS(rook_e_takes_d1.GetAmbiguityPrefix(), "e");
+
+        slach::Move queeen_h7("Qh7+", squares, slach::WHITE);
+        TS_ASSERT_EQUALS(queeen_h7.GetOrigin()->GetFile(), 'f');
+        TS_ASSERT_EQUALS(queeen_h7.GetOrigin()->GetRank(), '5');
+        TS_ASSERT_EQUALS(queeen_h7.GetDestination()->GetFile(), 'h');
+        TS_ASSERT_EQUALS(queeen_h7.GetDestination()->GetRank(), '7');
     }
 
     void TestInvalidSans()
