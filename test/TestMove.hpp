@@ -1203,6 +1203,62 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(rook_3_a6.GetAmbiguityPrefix(), "3");
     }
 
+    void TestDisambiguatedMoveFromSan2()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+
+        //test_position_6.png after white moved bishop takes f6
+        std::string fen_poistion = "r4rk1/pp1b2pp/2n1pB2/q1np4/2P5/P3P3/1PQN1PPP/R3KB1R b KQ - 4 14";
+        my_cb.SetFenPosition(fen_poistion);
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+
+        slach::Move rook_a_b8("Rab8", squares, slach::BLACK);
+        TS_ASSERT_EQUALS(rook_a_b8.GetOrigin()->GetFile(), 'a');
+        TS_ASSERT_EQUALS(rook_a_b8.GetOrigin()->GetRank(), '8');
+        TS_ASSERT_EQUALS(rook_a_b8.GetDestination()->GetFile(), 'b');
+        TS_ASSERT_EQUALS(rook_a_b8.GetDestination()->GetRank(), '8');
+        TS_ASSERT_EQUALS(rook_a_b8.GetAmbiguityPrefix(), "a");
+
+        slach::Move rook_f_b8("Rfb8", squares, slach::BLACK);
+        TS_ASSERT_EQUALS(rook_f_b8.GetOrigin()->GetFile(), 'f');
+        TS_ASSERT_EQUALS(rook_f_b8.GetOrigin()->GetRank(), '8');
+        TS_ASSERT_EQUALS(rook_f_b8.GetDestination()->GetFile(), 'b');
+        TS_ASSERT_EQUALS(rook_f_b8.GetDestination()->GetRank(), '8');
+        TS_ASSERT_EQUALS(rook_f_b8.GetAmbiguityPrefix(), "f");
+
+        slach::Move rook_takes_f6("Rxf6", squares, slach::BLACK);
+        TS_ASSERT_EQUALS(rook_takes_f6.GetOrigin()->GetFile(), 'f');
+        TS_ASSERT_EQUALS(rook_takes_f6.GetOrigin()->GetRank(), '8');
+        TS_ASSERT_EQUALS(rook_takes_f6.GetDestination()->GetFile(), 'f');
+        TS_ASSERT_EQUALS(rook_takes_f6.GetDestination()->GetRank(), '6');
+    }
+
+    void TestDisambiguatedMoveFromSan3()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+
+        //test_position_8.png
+        std::string fen_poistion = "5rk1/r2p1pp1/p1b2n1p/1p3Q2/B7/5N2/PP3PPP/R2qR1K1 w - - 4 23";
+        my_cb.SetFenPosition(fen_poistion);
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+
+        slach::Move rook_a_takes_d1("Raxd1", squares, slach::WHITE);
+        TS_ASSERT_EQUALS(rook_a_takes_d1.GetOrigin()->GetFile(), 'a');
+        TS_ASSERT_EQUALS(rook_a_takes_d1.GetOrigin()->GetRank(), '1');
+        TS_ASSERT_EQUALS(rook_a_takes_d1.GetDestination()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(rook_a_takes_d1.GetDestination()->GetRank(), '1');
+        TS_ASSERT_EQUALS(rook_a_takes_d1.GetAmbiguityPrefix(), "a");
+
+        slach::Move rook_e_takes_d1("Rexd1", squares, slach::WHITE);
+        TS_ASSERT_EQUALS(rook_e_takes_d1.GetOrigin()->GetFile(), 'e');
+        TS_ASSERT_EQUALS(rook_e_takes_d1.GetOrigin()->GetRank(), '1');
+        TS_ASSERT_EQUALS(rook_e_takes_d1.GetDestination()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(rook_e_takes_d1.GetDestination()->GetRank(), '1');
+        TS_ASSERT_EQUALS(rook_e_takes_d1.GetAmbiguityPrefix(), "e");
+    }
+
     void TestInvalidSans()
     {
         slach::ChessBoard my_cb;
