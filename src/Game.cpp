@@ -1,4 +1,6 @@
+#include <cassert>
 #include "Game.hpp"
+#include "Position.hpp"
 #include "Exception.hpp"
 
 slach::Game::Game()
@@ -78,7 +80,7 @@ std::string slach::Game::FetchFromFenList(int moveNumber, Colour toMove)
 	}
 }
 
-slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString)
+slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString, std::vector<Square* > squares)
 {
     //Find end of tag pairs
     unsigned last_tag = rGameString.rfind(']');
@@ -109,17 +111,55 @@ slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString
     }
     while ( (closed_bracket != last_tag) &&  (closed_bracket != std::string::npos) );
 
+    Position position;
+    position.SetFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", squares);
+    mListOfFenPositions.push_back(position.GetPositionAsFen());
+
     //from last_tag onward
-    unsigned dot = rGameString.find('.', last_tag);
-    unsigned beginning = rGameString.find_first_not_of(' ', dot+1);
-    unsigned end = rGameString.find(' ', beginning+1);
+    unsigned dot = 0;
+    while (dot != std::string::npos)
+    {
+        dot = rGameString.find('.', last_tag);
+        unsigned beginning = rGameString.find_first_not_of(" \n\r\t\v\f", dot+1);
+        unsigned end = rGameString.find_first_of(" \n\r\t\v\f", beginning+1);
 
-    unsigned beginning_black_move = rGameString.find_first_not_of(' ', end+1);
-    unsigned end_black_move = rGameString.find(' ', beginning_black_move+1);
+        unsigned beginning_black_move = rGameString.find_first_not_of(" \n\r\t\v\f", end+1);
+        unsigned end_black_move = rGameString.find_first_of(" \n\r\t\v\f", beginning_black_move+1);
 
-    std::string move_san = rGameString.substr(beginning, end -beginning);
-    std::string move_san_black = rGameString.substr(beginning_black_move, end_black_move -beginning_black_move);
-    std::cout<<std::endl<<"*******"<<move_san<<"****"<<move_san_black<<std::endl;
+        std::string move_san = rGameString.substr(beginning, end -beginning);
+        std::string move_san_black = rGameString.substr(beginning_black_move, end_black_move -beginning_black_move);
+
+        if ( (move_san.find("1-0") != std::string::npos) ||
+             (move_san.find("0-1") != std::string::npos) ||
+             (move_san.find("1/2-1/2") != std::string::npos) ||
+             (move_san.find("*") != std::string::npos) )
+        {
+            break;
+        }
+        mMoveListAlgFormat.push_back(move_san);
+        Move white_move(move_san, squares, WHITE);
+
+        mMoveList.push_back(white_move);
+        position.UpdatePositionWithMove(white_move, squares);
+        mListOfFenPositions.push_back(position.GetPositionAsFen());
+
+        if ( (move_san_black.find("1-0") != std::string::npos) ||
+             (move_san_black.find("0-1") != std::string::npos) ||
+             (move_san_black.find("1/2-1/2") != std::string::npos) ||
+             (move_san_black.find("*") != std::string::npos) )
+        {
+            break;
+        }
+
+        mMoveListAlgFormat.push_back(move_san_black);
+        Move black_move(move_san_black, squares, BLACK);
+        mMoveList.push_back(black_move);
+        position.UpdatePositionWithMove(black_move, squares);
+        mListOfFenPositions.push_back(position.GetPositionAsFen());
+        //std::cout<<std::endl<<"white move  "<<move_san<<" ("<<move_san.length()<<")"<< "black move  "<<move_san_black<<" ("<<move_san_black.length()<<")"<< std::endl;
+
+        last_tag = end_black_move;
+    }
 
     return VALID_PGN;
 }

@@ -6,6 +6,7 @@
 #include <sstream>
 #include <fstream>
 #include "Game.hpp"
+#include "ChessBoard.hpp"
 
 /**
  * Test suite to test the game class
@@ -329,8 +330,13 @@ public:
         std::ifstream in("test/data/pgn/one_game_ok_draw.pgn");
         std::string game_string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
 
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        my_cb.SetupInitialChessPosition();
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+
         slach::Game my_game;
-        slach::PgnValidity valid = my_game.LoadFromPgnString(game_string);
+        slach::PgnValidity valid = my_game.LoadFromPgnString(game_string, squares);
 
         TS_ASSERT_EQUALS(valid, slach::VALID_PGN);
         TS_ASSERT_EQUALS(my_game.GetSevenTagRoster().mData[0], "7th Kings Tournament");
@@ -340,6 +346,33 @@ public:
         TS_ASSERT_EQUALS(my_game.GetSevenTagRoster().mData[4], "Radjabov, Teimour");
         TS_ASSERT_EQUALS(my_game.GetSevenTagRoster().mData[5], "Ponomariov, Ruslan");
         TS_ASSERT_EQUALS(my_game.GetSevenTagRoster().mData[6], "1/2-1/2");
+
+        std::vector<slach::Move> move_list = my_game.GetMoveList();
+        std::vector<std::string> move_list_san = my_game.GetMoveListAlgebraicFormat();
+        TS_ASSERT_EQUALS(move_list.size(), 61u);
+        TS_ASSERT_EQUALS(move_list_san.size(), 61u);
+
+        TS_ASSERT_EQUALS(move_list[0].GetOrigin()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(move_list[0].GetOrigin()->GetIndexFromA1(), 11u);
+        TS_ASSERT_EQUALS(move_list[0].GetOrigin()->GetRank(), '2');
+        TS_ASSERT_EQUALS(move_list[0].GetDestination()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(move_list[0].GetDestination()->GetRank(), '4');
+
+        TS_ASSERT_EQUALS(move_list[1].GetOrigin()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(move_list[1].GetOrigin()->GetRank(), '7');
+        TS_ASSERT_EQUALS(move_list[1].GetDestination()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(move_list[1].GetDestination()->GetRank(), '5');
+
+        TS_ASSERT_EQUALS(move_list[2].GetOrigin()->GetFile(), 'c');
+        TS_ASSERT_EQUALS(move_list[2].GetOrigin()->GetRank(), '2');
+        TS_ASSERT_EQUALS(move_list[2].GetDestination()->GetFile(), 'c');
+        TS_ASSERT_EQUALS(move_list[2].GetDestination()->GetRank(), '4');
+
+        TS_ASSERT_EQUALS(move_list[3].GetOrigin()->GetFile(), 'c');
+        TS_ASSERT_EQUALS(move_list[3].GetOrigin()->GetRank(), '7');
+        TS_ASSERT_EQUALS(move_list[3].GetDestination()->GetFile(), 'c');
+        TS_ASSERT_EQUALS(move_list[3].GetDestination()->GetRank(), '6');
+
     }
 };
 #endif

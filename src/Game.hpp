@@ -59,6 +59,8 @@ private:
      */
     SevenTagRoster mSTR;
 
+    std::vector<Square* > mSquares;
+
 
 public:
     /**
@@ -113,7 +115,7 @@ public:
      */
     std::string FetchFromFenList(int moveNumber, Colour toMove);
 
-    PgnValidity LoadFromPgnString(const std::string& rGameString);
+    PgnValidity LoadFromPgnString(const std::string& rGameString, std::vector<Square* > squares);
 
     /**
      * Access method to the variable mSTR
