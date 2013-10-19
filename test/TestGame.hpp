@@ -373,6 +373,11 @@ public:
         TS_ASSERT_EQUALS(move_list[3].GetDestination()->GetFile(), 'c');
         TS_ASSERT_EQUALS(move_list[3].GetDestination()->GetRank(), '6');
 
+        TS_ASSERT_EQUALS(move_list[60].GetOrigin()->GetFile(), 'g');
+        TS_ASSERT_EQUALS(move_list[60].GetOrigin()->GetRank(), '3');
+        TS_ASSERT_EQUALS(move_list[60].GetDestination()->GetFile(), 'f');
+        TS_ASSERT_EQUALS(move_list[60].GetDestination()->GetRank(), '4');
+
     }
 };
 #endif
