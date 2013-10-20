@@ -397,7 +397,7 @@ public:
        TS_ASSERT_EQUALS(squares[58]->GetPieceOnThisSquare(), slach::BLACK_BISHOP);
        TS_ASSERT_EQUALS(squares[37]->GetPieceOnThisSquare(), slach::NO_PIECE);
 
-       std::string after_bishop_capture = "2b1k3/4P1P1/3K3P/p7/8/P7/8/1q6 w - - 1 61";
+       std::string after_bishop_capture = "2b1k3/4P1P1/3K3P/p7/8/P7/8/1q6 w - - 0 61";
        TS_ASSERT_EQUALS(after_bishop_capture,  pos.GetPositionAsFen());
 
        //white's turn--> promotes on g8 but get a knight!

@@ -61,6 +61,11 @@ private:
 
     std::vector<Square* > mSquares;
 
+    /**
+     * Helper method to clear all move and position lists.
+     */
+    void ClearAllLists();
+
 
 public:
     /**

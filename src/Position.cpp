@@ -90,7 +90,11 @@ void slach::Position::UpdatePositionWithMove(slach::Move& rMove, std::vector<Squ
         }
         mPositionFeatures.mHalfMoveClockSinceLastPawnMove = 0u;
     }
-    else//not a pawn move, increase the clock
+    else if ( rMove.GetDestination()->GetPieceOnThisSquare() != NO_PIECE)//if it is a capture
+    {
+        mPositionFeatures.mHalfMoveClockSinceLastPawnMove = 0u;
+    }
+    else//not a pawn move, not a capture, increase the clock
     {
     	mPositionFeatures.mHalfMoveClockSinceLastPawnMove++;
     }

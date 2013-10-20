@@ -932,9 +932,20 @@ public:
 
         std::string after_knight_h6 = "rnbqkb1r/ppp1pppp/7n/8/2Pp4/P6P/1P1PPPP1/RNBQKBNR w KQkq - 1 4";
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_knight_h6);
+    }
 
+    void TestCaptureGivingCheck()
+    {
+        std::string caruana_game = "2r5/pkq2p2/8/1pQ5/2nP1P2/6P1/PP6/1K5R w - - 3 33";
 
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+        my_cb.SetFenPosition(caruana_game);
+        std::vector<slach::Square*> squares = my_cb.GetSquares();
 
+        slach::Move queen_takes_b5_check(squares[34], squares[33]);//c5-b5
+
+        TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(queen_takes_b5_check));
     }
 };
 

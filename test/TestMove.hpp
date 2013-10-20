@@ -1203,6 +1203,23 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(rook_3_a6.GetAmbiguityPrefix(), "3");
     }
 
+    void TestCaptureWithCheck()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+
+        //test_position_6.png after white moved bishop takes f6
+        std::string fen_poistion = "r4rk1/pp1b2pp/2n1pB2/q1np4/2P5/P3P3/1PQN1PPP/R3KB1R b KQ - 4 14";
+        my_cb.SetFenPosition(fen_poistion);
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+
+        slach::Move queen_takes_d7_check("Qxd2+", squares, slach::BLACK);
+        TS_ASSERT_EQUALS(queen_takes_d7_check.GetOrigin()->GetFile(), 'a');
+        TS_ASSERT_EQUALS(queen_takes_d7_check.GetOrigin()->GetRank(), '5');
+        TS_ASSERT_EQUALS(queen_takes_d7_check.GetDestination()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(queen_takes_d7_check.GetDestination()->GetRank(), '2');
+    }
+
     void TestDisambiguatedMoveFromSan2()
     {
         slach::ChessBoard my_cb;

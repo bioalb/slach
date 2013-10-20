@@ -140,7 +140,7 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
                 mAmbiguityPrefix = SanMove[pos+1];
                 amb_is_number = true;
             }
-            else if ( islower( SanMove[pos+1] ) && (islower(SanMove[pos+2])) )
+            else if ( islower( SanMove[pos+1] ) && islower(SanMove[pos+2]) &&  SanMove[pos+1] != 'x' )
             {
                 amb_offset++;
                 mAmbiguityPrefix = SanMove[pos+1];
@@ -157,6 +157,7 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
 
             char dest_file = SanMove[pos + 1 + amb_offset + offset];
             char dest_rank = SanMove[pos + 2 + amb_offset + offset];
+
             for (unsigned i = 0; i < pSquares.size(); ++i)
             {
                 if ( (dest_file == pSquares[i]->GetFile()) && (dest_rank == pSquares[i]->GetRank() ) )
@@ -171,17 +172,20 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
             assert(mpDestination != NULL);//if we are here, it means we found the destination. We will be using this pointer
 
             PieceType moving_piece  = GetPieceFromCode(SanMove[pos], movingColour);
+
             LegalMoveChecker move_checker;
 
             for (unsigned i = 0; i < pSquares.size(); ++i)
             {
                 if (pSquares[i]->GetPieceOnThisSquare() == moving_piece) //found the same piece...
                 {
+
                     //... can it go to destination? i.e., is this the one that should move?
                     std::vector<unsigned> pseudo_valid_destinations = move_checker.GetAttackedSquaresFromOrigin(pSquares[i], pSquares);
                     bool found = false;
                     for (unsigned j = 0; j < pseudo_valid_destinations.size(); ++j)
                     {
+                        //std::cout<<pseudo_valid_destinations[j]<<"***"<<mpDestination->GetIndexFromA1()<<"***"<<pSquares[i]->GetIndexFromA1()<<"***"<<amb_offset<<std::endl;
                         if (pseudo_valid_destinations[j] == mpDestination->GetIndexFromA1())
                         {
                             mpOrigin = pSquares[i];
@@ -233,7 +237,9 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
 
                 for (unsigned i = 0; i < pSquares.size(); ++i)
                 {
-                    if (pSquares[i]->GetFile() == origin_file)
+                    if ((pSquares[i]->GetFile() == origin_file) &&
+                         IsPawn(pSquares[i]->GetPieceOnThisSquare()) &&
+                         IsPieceSameAsTurn(pSquares[i]->GetPieceOnThisSquare(),movingColour))
                     {
                         std::vector<unsigned> pseudo_valid_destinations = move_checker.GetAttackedSquaresFromOrigin(pSquares[i], pSquares);
                         for (unsigned j = 0; j < pseudo_valid_destinations.size(); ++j)
