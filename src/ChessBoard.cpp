@@ -46,6 +46,11 @@ void slach::ChessBoard::SetupInitialChessPosition()
     mpGame->AddPosition(initial);
 }
 
+slach::PgnValidity slach::ChessBoard::LoadGameFromPgn(const std::string& gameString)
+{
+    return mpGame->LoadFromPgnString(gameString,mSquares);
+}
+
 void slach::ChessBoard::SetupChessBoard()
 {
     unsigned row=0;//row counter

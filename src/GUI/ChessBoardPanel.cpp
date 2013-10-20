@@ -2,6 +2,9 @@
 #include <iostream>
 #include <cassert>
 #include <wx/mstream.h>
+#include <wx/wfstream.h>
+#include <wx/filedlg.h>
+#include <wx/txtstrm.h>
 #include "SlachTypes.hpp"
 #include "HelperGlobalFunctions.hpp"
 #include "ChessBoardPanel.hpp"
@@ -150,13 +153,38 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
     mpBackwardArrowPanelEnd->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
 
 
-    wxButton* rest_button  = new wxButton(mpLeftOfChessBoard, 1, wxT("Fen..."),wxDefaultPosition, wxDefaultSize);
-    rest_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ChessBoardPanel::ResetToInitialPosition, this);
+    wxButton* rest_button  = new wxButton(mpLeftOfChessBoard, 1, wxT("Pgn..."),wxDefaultPosition, wxDefaultSize);
+    rest_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ChessBoardPanel::LoadPgnFile, this);
 }
 
 slach_gui::ChessBoardPanel::~ChessBoardPanel()
 {
     delete mpChessBoardWithBorders;
+}
+
+void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& event)
+{
+    wxFileDialog* openFileDialog = new wxFileDialog(this, "Choose a file to open", wxEmptyString, wxEmptyString,
+            "PGN files (*.pgn)|*.pgn", wxFD_OPEN);
+
+    if (openFileDialog->ShowModal() == wxID_OK) // if the user click "Open" instead of "Cancel"
+    {
+        wxFile input_file(openFileDialog->GetPath());
+        if (!input_file.IsOpened())
+        {
+            wxLogError("Cannot open file '%s'.", openFileDialog->GetPath());
+            return;
+        }
+        wxString game_string;
+        input_file.ReadAll(&game_string);
+
+        slach::PgnValidity valid = mpChessBoard->LoadGameFromPgn(game_string.ToStdString());
+
+        if (valid==slach::VALID_PGN)
+        {
+            std::cout<<game_string<<std::endl;
+        }
+    }
 }
 
 void slach_gui::ChessBoardPanel::LeftMouseClick(wxMouseEvent& event)

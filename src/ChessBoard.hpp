@@ -153,6 +153,8 @@ public:
      */
     Game* GetGame() const;
 
+    PgnValidity LoadGameFromPgn(const std::string& gameString);
+
     /**
      * Allows ot set a promotion piece different from the queen.
      * It throws an exception if you set a pawn

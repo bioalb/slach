@@ -233,6 +233,8 @@ public:
 
     void ResetToInitialPosition(wxCommandEvent& event);
 
+    void LoadPgnFile(wxCommandEvent& event);
+
     /**
      * this method is activated when use clicks on one of the arrows.
      * It figure sout which arrow the use clicked and behaves accordingly.
