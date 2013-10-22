@@ -676,6 +676,37 @@ public:
         TS_ASSERT_EQUALS(p_game->GetMoveList()[0].GetDestination()->GetFile(), 'd');
         TS_ASSERT_EQUALS(p_game->GetMoveList()[0].GetDestination()->GetRank(), '4');
 
+        //move back one move
+        my_cb.ResetToPreviousMove();
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_bishop_b4_check);
+        my_cb.ResetToPreviousMove();
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_d4_takes_e5);
+        my_cb.ResetToPreviousMove();
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_e7_e5);
+        my_cb.ResetToPreviousMove();
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_d2_d4);
+        my_cb.ResetToPreviousMove();
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), initial);
+        my_cb.ResetToPreviousMove();
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), initial);
+        my_cb.ResetToPreviousMove();
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), initial);
+
+        my_cb.ResetToNextMove();
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_d2_d4);
+        my_cb.ResetToNextMove();
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_e7_e5);
+        my_cb.ResetToNextMove();
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_d4_takes_e5);
+        my_cb.ResetToNextMove();
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_bishop_b4_check);
+        my_cb.ResetToNextMove();
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_c2c3);
+        my_cb.ResetToNextMove();
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_c2c3);
+        my_cb.ResetToNextMove();
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_c2c3);
+
         ////// Trying to reset to move 2 (white to move).
         my_cb.ResetToMoveNumber(2u, slach::WHITE);
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_e7_e5);

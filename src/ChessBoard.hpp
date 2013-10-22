@@ -164,6 +164,16 @@ public:
     void SetPromotionPiece(slach::PieceType piece);
 
     Position* GetCurrentPosition() const;
+
+    /**
+     * Moves back one move. If no previous move exists, it will return the first position
+     */
+    void ResetToPreviousMove();
+
+    /**
+     * Moves one move forward. If no move exists, it will return the last position
+     */
+    void ResetToNextMove();
 };
 
 }//namespace slach

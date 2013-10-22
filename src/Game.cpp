@@ -188,6 +188,11 @@ slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString
     return VALID_PGN;
 }
 
+std::vector<std::string> slach::Game::GetFenList() const
+{
+	return mListOfFenPositions;
+}
+
 slach::SevenTagRoster slach::Game::GetSevenTagRoster() const
 {
     return mSTR;

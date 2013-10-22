@@ -126,6 +126,11 @@ public:
      * Access method to the variable mSTR
      */
     slach::SevenTagRoster GetSevenTagRoster() const;
+
+    /**
+     * Access the list of fens
+     */
+    std::vector<std::string> GetFenList() const;
 };
 
 }//namespace slach

@@ -39,6 +39,46 @@ void slach::ChessBoard::ResetToMoveNumber(int moveNumber, slach::Colour colour)
     mpPosition->SetFromFen(mpGame->FetchFromFenList(moveNumber, colour) , mSquares);
 }
 
+void slach::ChessBoard::ResetToPreviousMove()
+{
+	unsigned move_number  = GetCurrentMoveNumber();
+	slach::Colour to_move =  WhosTurnIsIt();
+	int req_index;
+	if (to_move == WHITE)
+	{
+		req_index = (move_number-1)*2-1;
+	}
+	else
+	{
+		req_index = (move_number-1)*2 ;
+	}
+
+	if (req_index < 0) req_index = 0;
+
+	std::string prev_fen = mpGame->GetFenList()[req_index];
+    mpPosition->SetFromFen(prev_fen, mSquares);
+}
+
+void slach::ChessBoard::ResetToNextMove()
+{
+	unsigned move_number  = GetCurrentMoveNumber();
+	slach::Colour to_move =  WhosTurnIsIt();
+	int req_index;
+	if (to_move == WHITE)
+	{
+		req_index = (move_number)*2- 1;
+	}
+	else
+	{
+		req_index = (move_number)*2;
+	}
+
+	if (req_index >= (mpGame->GetFenList().size())) req_index = mpGame->GetFenList().size() - 1;
+
+	std::string next_fen = mpGame->GetFenList()[req_index];
+    mpPosition->SetFromFen(next_fen, mSquares);
+}
+
 void slach::ChessBoard::SetupInitialChessPosition()
 {
     std::string initial = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
