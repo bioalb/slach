@@ -120,6 +120,7 @@ slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString
     }
     while ( (closed_bracket != last_tag) &&  (closed_bracket != std::string::npos) );
 
+    ClearAllLists();
     Position position;
     position.SetFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", squares);
     mListOfFenPositions.push_back(position.GetPositionAsFen());

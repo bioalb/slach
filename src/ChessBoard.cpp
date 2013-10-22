@@ -50,7 +50,7 @@ void slach::ChessBoard::ResetToPreviousMove()
 	}
 	else
 	{
-		req_index = (move_number-1)*2 ;
+		req_index = (move_number)*2 -2;
 	}
 
 	if (req_index < 0) req_index = 0;
@@ -66,11 +66,11 @@ void slach::ChessBoard::ResetToNextMove()
 	int req_index;
 	if (to_move == WHITE)
 	{
-		req_index = (move_number)*2- 1;
+		req_index = (move_number)*2-1;
 	}
 	else
 	{
-		req_index = (move_number)*2;
+		req_index = (move_number+1)*2-2;
 	}
 
 	if (req_index >= (mpGame->GetFenList().size())) req_index = mpGame->GetFenList().size() - 1;
@@ -83,6 +83,7 @@ void slach::ChessBoard::SetupInitialChessPosition()
 {
     std::string initial = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     mpPosition->SetFromFen(initial, mSquares);
+
     mpGame->AddPosition(initial);
 }
 

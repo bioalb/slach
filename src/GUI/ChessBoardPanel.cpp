@@ -318,18 +318,17 @@ void slach_gui::ChessBoardPanel::ArrowButtonMovement(wxMouseEvent& event)
 
     if (generating_id == ID_FORWARD_BUTTON)
     {
-        if (current_turn == slach::WHITE)//black just moved, we want next move, white to move
-        {
-            fen_to_set = mpChessBoard->GetGame()->FetchFromFenList(current_move_number, opp_col);
-        }
-        else//white just moved, we want situation on same move but white's turn
-        {
-            fen_to_set = mpChessBoard->GetGame()->FetchFromFenList(current_move_number+1, opp_col);
-        }
+        mpChessBoard->ResetToNextMove();
+        fen_to_set = mpChessBoard->GetCurrentFenPosition();
     }
     else if (generating_id == ID_FORWARD_MORE_BUTTON)
     {
-        fen_to_set = mpChessBoard->GetGame()->FetchFromFenList(current_move_number+5, opp_col);
+        mpChessBoard->ResetToNextMove();
+        mpChessBoard->ResetToNextMove();
+        mpChessBoard->ResetToNextMove();
+        mpChessBoard->ResetToNextMove();
+        mpChessBoard->ResetToNextMove();
+        fen_to_set = mpChessBoard->GetCurrentFenPosition();
     }
     else if (generating_id == ID_FORWARD_END_BUTTON)
     {
@@ -337,18 +336,17 @@ void slach_gui::ChessBoardPanel::ArrowButtonMovement(wxMouseEvent& event)
     }
     else if (generating_id == ID_BACKWARD_BUTTON)
     {
-        if (current_turn == slach::WHITE)//black just moved, we want same move, black to move
-        {
-            fen_to_set = mpChessBoard->GetGame()->FetchFromFenList(current_move_number-1, opp_col);
-        }
-        else//white just moved, we want situation on previous move but white's turn
-        {
-            fen_to_set = mpChessBoard->GetGame()->FetchFromFenList(current_move_number, opp_col);
-        }
+        mpChessBoard->ResetToPreviousMove();
+        fen_to_set = mpChessBoard->GetCurrentFenPosition();
     }
     else if (generating_id == ID_BACKWARD_MORE_BUTTON)
     {
-        fen_to_set = mpChessBoard->GetGame()->FetchFromFenList(current_move_number-5, opp_col);
+        mpChessBoard->ResetToPreviousMove();
+        mpChessBoard->ResetToPreviousMove();
+        mpChessBoard->ResetToPreviousMove();
+        mpChessBoard->ResetToPreviousMove();
+        mpChessBoard->ResetToPreviousMove();
+        fen_to_set = mpChessBoard->GetCurrentFenPosition();
     }
     else if (generating_id == ID_BACKWARD_END_BUTTON)
     {

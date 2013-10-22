@@ -588,7 +588,7 @@ public:
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), updated_endgame);
     }
 
-    void testMakingSeveralMovesFromStart()
+    void TestMakingSeveralMovesFromStart()
     {
         slach::ChessBoard my_cb;
         my_cb.SetupChessBoard();
@@ -677,6 +677,7 @@ public:
         TS_ASSERT_EQUALS(p_game->GetMoveList()[0].GetDestination()->GetRank(), '4');
 
         //move back one move
+        TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_c2c3);
         my_cb.ResetToPreviousMove();
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_bishop_b4_check);
         my_cb.ResetToPreviousMove();
