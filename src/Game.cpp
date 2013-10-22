@@ -91,7 +91,7 @@ slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString
 {
     //Find end of tag pairs
     unsigned last_tag = rGameString.rfind(']');
-    unsigned closed_bracket = 0;
+    size_t closed_bracket = 0;
     unsigned old_closed_bracket = 0;
     do
     {
@@ -125,13 +125,10 @@ slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString
     mListOfFenPositions.push_back(position.GetPositionAsFen());
 
     //from last_tag onward
-    unsigned dot = rGameString.find('.', last_tag);
+    size_t dot = rGameString.find('.', last_tag);
     while (dot != std::string::npos)
     {
-        if (dot == std::string::npos)
-        {
-            std::cout<<"here"<<std::endl;
-        }
+
         unsigned beginning = rGameString.find_first_not_of(" \n\r\t\v\f", dot+1);
         unsigned end = rGameString.find_first_of(" \n\r\t\v\f", beginning+1);
 

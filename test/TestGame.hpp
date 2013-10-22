@@ -9,7 +9,7 @@
 #include "ChessBoard.hpp"
 
 /**
- * Test suite to test the game class
+ * Test suite to Test the game class
  */
 
 class TestGame : public CxxTest::TestSuite
@@ -17,7 +17,7 @@ class TestGame : public CxxTest::TestSuite
 public:
 
 
-    void testBasicMove()
+    void TestBasicMove()
     {
         slach::Game gm;
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 0u);
@@ -48,7 +48,7 @@ public:
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat()[0], "Be4");
     }
 
-    void testPawnMove()
+    void TestPawnMove()
     {
         slach::Game gm;
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 0u);
@@ -79,7 +79,7 @@ public:
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat()[0], "a4");
     }
 
-    void testCapture()
+    void TestCapture()
     {
         slach::Game gm;
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 0u);
@@ -110,7 +110,7 @@ public:
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat()[0], "Qxa4");
     }
 
-    void testPawnCapture()
+    void TestPawnCapture()
     {
         slach::Game gm;
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 0u);
@@ -142,7 +142,7 @@ public:
         TS_ASSERT_EQUALS(gm.GetMoveListAlgebraicFormat()[0], "axb3");
     }
 
-    void testCastleKingSide()
+    void TestCastleKingSide()
     {
         slach::Game gm;
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 0u);
@@ -209,7 +209,7 @@ public:
 
     }
 
-    void testCastleQueenSide()
+    void TestCastleQueenSide()
     {
         slach::Game gm;
         TS_ASSERT_EQUALS(gm.GetMoveList().size(), 0u);
