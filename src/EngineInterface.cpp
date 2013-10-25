@@ -106,6 +106,7 @@ void slach::EngineInterface::ParseEngineOutput(const std::string& engineOutput, 
     pos = engineOutput.rfind("cp");
     pos = engineOutput.find_first_of(' ', pos);
 
+
     score = atoi(&(engineOutput[pos]))/100.0;
 
     pos = engineOutput.rfind("Line:");
