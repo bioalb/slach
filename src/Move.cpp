@@ -317,6 +317,34 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
     }//end of the else for "not castling move
 }
 
+slach::Move::Move (const std::string& originDestMove, std::vector<Square* > pSquares)
+    : mpOrigin(NULL),
+     mpDestination(NULL),
+     mGivesCheck(false),
+     mAmbiguityPrefix(""),
+     mPromotionPieceCode("Q")
+{
+    //too short
+    if (originDestMove.length() < 4) return;
+
+    char origin_file = originDestMove[0];
+    char origin_rank = originDestMove[1];
+    char destiantion_file = originDestMove[2];
+    char destiantion_rank = originDestMove[3];
+
+    for (unsigned i = 0; i < pSquares.size(); ++i)
+    {
+        assert(pSquares[i] != NULL);
+        if ( (pSquares[i]->GetFile() == origin_file) && (pSquares[i]->GetRank() == origin_rank))
+        {
+            mpOrigin = pSquares[i];
+        }
+        if ( (pSquares[i]->GetFile() == destiantion_file) && (pSquares[i]->GetRank() == destiantion_rank))
+        {
+            mpDestination = pSquares[i];
+        }
+    }
+}
 slach::Move& slach::Move::operator=(const Move& from)
 {
     if (this != &from)

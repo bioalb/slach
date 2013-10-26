@@ -1282,6 +1282,35 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(queeen_h7.GetDestination()->GetRank(), '7');
     }
 
+    void TestMoveFromOriginDestination()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+
+        //test_position_8.png
+        std::string fen_poistion = "5rk1/r2p1pp1/p1b2n1p/1p3Q2/B7/5N2/PP3PPP/R2qR1K1 w - - 4 23";
+        my_cb.SetFenPosition(fen_poistion);
+        std::vector<slach::Square* > squares = my_cb.GetSquares();
+
+        slach::Move rook_a_takes_d1("a1d1", squares);
+        TS_ASSERT_EQUALS(rook_a_takes_d1.GetOrigin()->GetFile(), 'a');
+        TS_ASSERT_EQUALS(rook_a_takes_d1.GetOrigin()->GetRank(), '1');
+        TS_ASSERT_EQUALS(rook_a_takes_d1.GetDestination()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(rook_a_takes_d1.GetDestination()->GetRank(), '1');
+
+        slach::Move rook_e_takes_d1("e1d1", squares);
+        TS_ASSERT_EQUALS(rook_e_takes_d1.GetOrigin()->GetFile(), 'e');
+        TS_ASSERT_EQUALS(rook_e_takes_d1.GetOrigin()->GetRank(), '1');
+        TS_ASSERT_EQUALS(rook_e_takes_d1.GetDestination()->GetFile(), 'd');
+        TS_ASSERT_EQUALS(rook_e_takes_d1.GetDestination()->GetRank(), '1');
+
+        slach::Move queeen_h7("f5h7", squares);
+        TS_ASSERT_EQUALS(queeen_h7.GetOrigin()->GetFile(), 'f');
+        TS_ASSERT_EQUALS(queeen_h7.GetOrigin()->GetRank(), '5');
+        TS_ASSERT_EQUALS(queeen_h7.GetDestination()->GetFile(), 'h');
+        TS_ASSERT_EQUALS(queeen_h7.GetDestination()->GetRank(), '7');
+    }
+
     void TestInvalidSans()
     {
         slach::ChessBoard my_cb;

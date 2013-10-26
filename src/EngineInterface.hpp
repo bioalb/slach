@@ -5,6 +5,7 @@
 #include "position.h"//within stockfish
 #include "Game.hpp"
 #include "Position.hpp"
+#include "ChessBoard.hpp"
 
 class TestEngineInterface;//forward declaration, for testing and accessing protected methods from the test class
 
@@ -18,8 +19,7 @@ class EngineInterface
     friend class ::TestEngineInterface;// for testing
 
   private:
-    /**Cache for a FEN string*/
-    std::string mFenString;
+
 
     /**Cache the latest depth of engine output when we tried to collect it*/
     int mLatestDepth;
@@ -32,6 +32,17 @@ class EngineInterface
 
     /**pointer to a position object within the stockfish engine*/
     stockfish::Position* mpStockfishPosition;
+
+  protected:
+
+    /**Cache for a FEN string*/
+    std::string mFenString;
+
+    /**we create a chessboard as we need squares with pieces to translate engine moves to SAN*/
+    ChessBoard* mpChessBoard;
+
+    /**same as chessboard, we store the pointers to squares*/
+    std::vector<Square*> mpSquares;
 
   protected:
 

@@ -14,11 +14,12 @@
 
 
 slach::EngineInterface::EngineInterface()
-  : mFenString(""),
-    mLatestDepth(INT_MAX),
+  : mLatestDepth(INT_MAX),
     mLatestScore(DBL_MAX),
     mLatestLine(""),
-    mpStockfishPosition (new stockfish::Position())
+    mpStockfishPosition (new stockfish::Position()),
+    mFenString(""),
+    mpChessBoard( new ChessBoard() )
 {
     stockfish::UCI::init(stockfish::Options);
     stockfish::Bitboards::init();
@@ -28,12 +29,16 @@ slach::EngineInterface::EngineInterface()
     stockfish::Eval::init();
     stockfish::Threads.init();
     stockfish::TT.set_size(stockfish::Options["Hash"]);
+
+    mpChessBoard->SetupChessBoard();
+    mpSquares = mpChessBoard->GetSquares();
 }
 
 slach::EngineInterface::~EngineInterface()
 {
     //stockfish::Threads.exit();
     delete mpStockfishPosition;
+    if (mpChessBoard != NULL) delete mpChessBoard;
 }
 
 void slach::EngineInterface::StartAnalsyingPosition(Position* pPosition, double seconds)
@@ -47,7 +52,8 @@ void slach::EngineInterface::StartAnalsyingPosition(Position* pPosition, double 
 
     std::vector< stockfish::Move > searchMoves;
     mpStockfishPosition->set(pPosition->GetPositionAsFen(), false /*not chess960*/, stockfish::Threads.main_thread());
-
+    mpChessBoard->SetFenPosition(pPosition->GetPositionAsFen());
+    mFenString = pPosition->GetPositionAsFen();
     if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
     {
         limits.movetime = 1000*seconds;//converts milliseconds to seconds...
@@ -86,7 +92,7 @@ std::string slach::EngineInterface::GetLatestEngineOutput()
         std::stringstream ss;
         ss.setf( std::ios::fixed, std::ios::floatfield );//for the score
         ss.precision(2);//for the score
-        ss<<"Depth = " << depth << "; score = " << score << "; " << line;
+        ss<<"Depth = " << depth << "; score = " << score << "; " << line << std::endl;
         ret = ss.str();
         mLatestDepth = depth;
         mLatestScore = score;
@@ -107,11 +113,45 @@ void slach::EngineInterface::ParseEngineOutput(const std::string& engineOutput, 
     pos = engineOutput.find_first_of(' ', pos);
 
 
-    score = atoi(&(engineOutput[pos]))/100.0;
+    score = atof(&(engineOutput[pos]))/100.0;
 
     pos = engineOutput.rfind("Line:");
     pos = engineOutput.find_first_of(' ', pos);
-    line  = engineOutput.substr(pos+1);
+    size_t end_of_line = engineOutput.find_first_of("\n\r", pos);
+    line  = engineOutput.substr(pos+1, end_of_line - pos);
+    Position* p_position = new Position;
+    p_position->SetFromFen(mFenString, mpSquares);
+    Colour to_move = p_position->GetTurnToMove();
+
+    std::size_t start_of_move = line.find_first_not_of(' ');
+    std::string pretty_line = "";
+    while (start_of_move != std::string::npos)
+    {
+        std::size_t end_of_move = line.find(' ', start_of_move+1);
+        //remove space at the beginning of the move (if any)
+        std::size_t start_of_move_no_space = line.find_first_not_of(' ', start_of_move);
+        std::string move_string = line.substr(start_of_move_no_space, end_of_move - start_of_move );
+        Move verbose_move(move_string, mpSquares);
+        if ( (verbose_move.GetOrigin() != NULL) && (verbose_move.GetDestination() != NULL) )
+        {
+            bool valid = p_position->IsMoveLegal(verbose_move, mpSquares);
+            pretty_line = pretty_line + verbose_move.GetMoveInAlgebraicFormat() + " ";
+            p_position->UpdatePositionWithMove(verbose_move, mpSquares);
+        }
+        start_of_move = end_of_move;
+    }
+    if (pretty_line.length() > 0)
+    {
+        line = pretty_line;
+    }
+
+    //fix the score to be positive for white and negative for black
+    if (to_move == BLACK)
+    {
+        score = (- score);
+    }
+
+
 }
 
 stockfish::Square slach::EngineInterface::ConvertSquareToStockfish(const Square* pSquare) const

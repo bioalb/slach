@@ -100,12 +100,18 @@ public:
     void TestParsingEngineOutput()
     {
         slach::EngineInterface interface;
-
+        slach::ChessBoard board;
+        board.SetupChessBoard();
+        std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
+        board.SetFenPosition(test_position);
+        interface.mFenString = test_position;
+        interface.mpChessBoard = &board;
+        interface.mpSquares = interface.mpChessBoard->GetSquares();
         std::string test_string =   std::string("Depth 1 Score cp -24 Line: f6e4 c3e4 d5e4") +
                                     "\nDepth 2 Score cp -24 Line: f6e4 c3e4 d5e4" +
                                     "\nDepth 3 Score cp -8 Line: f5d3 d2d3 e7e6" +
                                     "\nDepth 4 Score cp -12 Line: f6e4 c3e4 d5e4 g2g4" +
-                                    "\nDepth 5 Score cp -4 Line: f5d3 d2d3 c6b4 d3d2 e7e6";
+                                    "\nDepth 5 Score cp -4 Line: f5d3 d2d3 c6b4 d3d2 e7e6\n";
         int depth;
         double score;
         std::string line;
@@ -113,7 +119,9 @@ public:
 
         TS_ASSERT_EQUALS(depth,5);
         TS_ASSERT_DELTA(score, 4.0/100.0, 1e-6);
-        TS_ASSERT_EQUALS(line, "Bxd3 Qxd3 Kb4 Qd2 e6");
+        TS_ASSERT_EQUALS(line, "Bxd3 Qxd3 Nb4 Qd2 e6 ");
+
+        interface.mpChessBoard = NULL;
     }
 
 };

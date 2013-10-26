@@ -72,6 +72,24 @@ public :
      */
     Move (const std::string& SanMove, std::vector<Square* > pSquares, Colour movingColour);
 
+    /**
+     * Builds a move from a string that specifies origin and destination coordinates
+     * e.g., f5d3
+     *
+     * If the string is valid, the pointer to origin and destination are set to the squares
+     * of the vector pSquares.
+     * If the string is not valid, mpOrigin and mpDestination remains NULL
+     *
+     * NO check is performed to see whether the move is valid or not.
+     * If you sue this constructor, you must note that the move you just built is not yet
+     * ready for proper algebraic output. Ambiguity and checks are not handled here.
+     * This cobstructor simply finds the origin and destinations squares, if any.
+     *
+     * @params originDestMove the string withe move in old notation originDestination
+     * @params pSquares the vector of pointers to squares. Two of these pointers wil be selected as
+     *          mpOrigin and mpDestination
+     */
+    Move (const std::string& originDestMove, std::vector<Square* > pSquares);
 
     /**
      * Overload  = operator. It assigns
