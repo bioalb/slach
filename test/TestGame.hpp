@@ -539,11 +539,16 @@ public:
         std::vector<slach::Square* > squares = my_cb.GetSquares();
 
         slach::Game my_game;
+        TS_ASSERT_EQUALS(my_game.GetNameOfWhitePlayer(), "");
+        TS_ASSERT_EQUALS(my_game.GetNameOfBlackPlayer(), "");
+
         slach::PgnValidity valid = my_game.LoadFromPgnString(game_string, squares);
 
         TS_ASSERT_EQUALS(valid, slach::VALID_PGN);
         TS_ASSERT_EQUALS(my_game.GetMoveList().size(), 59u);
         TS_ASSERT_EQUALS(my_game.GetMoveListAlgebraicFormat().size(), 59u);
+        TS_ASSERT_EQUALS(my_game.GetNameOfWhitePlayer(), "Caruana, Fabiano");
+        TS_ASSERT_EQUALS(my_game.GetNameOfBlackPlayer(), "Radjabov, Teimour");
     }
 
     void TestReadFromPgnInvalid()

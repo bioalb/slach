@@ -123,6 +123,19 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
     right_side_sizer->Add(mpRightSideLowerPart, 1.0, wxEXPAND | wxALL);
     mpRightOfChessBoard->SetSizer(right_side_sizer, false);
 
+
+    wxBoxSizer* right_side_sizer_upper_part = new wxBoxSizer(wxVERTICAL);
+    mpNameOfPlayerTop = new wxPanel(mpRightSideUpperPart, ID_OF_UPPER_PLAYER_NAME);
+    mpNameOfPlayerBottom = new wxPanel(mpRightSideUpperPart, ID_OF_BOTTOM_PLAYER_NAME);
+    mpSpaceForMoveList = new wxPanel(mpRightSideUpperPart, ID_OF_MOVE_LIST_SPACE);
+    mpNameOfPlayerTop->SetBackgroundColour(wxT("red"));
+    mpNameOfPlayerBottom->SetBackgroundColour(wxT("green"));
+    mpSpaceForMoveList->SetBackgroundColour(wxT("blue"));
+    right_side_sizer_upper_part->Add(mpNameOfPlayerTop, 1.0, wxEXPAND | wxALL);
+    right_side_sizer_upper_part->Add(mpSpaceForMoveList, 6.0, wxEXPAND | wxALL);
+    right_side_sizer_upper_part->Add(mpNameOfPlayerBottom, 1.0, wxEXPAND | wxALL);
+    mpRightSideUpperPart->SetSizer(right_side_sizer_upper_part, false);
+
     mpForwardArrowPanel  = new wxPanel(mpRightSideLowerPart, ID_FORWARD_BUTTON);
     mpForwardArrowPanelMore  = new wxPanel(mpRightSideLowerPart, ID_FORWARD_MORE_BUTTON);
     mpForwardArrowPanelEnd  = new wxPanel(mpRightSideLowerPart, ID_FORWARD_END_BUTTON);
@@ -179,11 +192,13 @@ void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& event)
         input_file.ReadAll(&game_string);
 
         slach::PgnValidity valid = mpChessBoard->LoadGameFromPgn(game_string.ToStdString());
+        std::string name_of_white_player = mpChessBoard->GetGame()->GetNameOfWhitePlayer();
+        std::string name_of_black_player = mpChessBoard->GetGame()->GetNameOfBlackPlayer();
+        wxString name_of_white_player_wx(name_of_white_player);
+        wxString name_of_black_player_wx(name_of_black_player);
+        wxStaticText *white_player_text = new wxStaticText(mpNameOfPlayerTop, -1, name_of_white_player_wx);
+        wxStaticText *black_player_text = new wxStaticText(mpNameOfPlayerBottom, -1, name_of_black_player_wx);
 
-        if (valid==slach::VALID_PGN)
-        {
-            std::cout<<game_string<<std::endl;
-        }
     }
 }
 

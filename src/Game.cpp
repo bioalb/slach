@@ -195,3 +195,26 @@ slach::SevenTagRoster slach::Game::GetSevenTagRoster() const
 {
     return mSTR;
 }
+
+std::string slach::Game::GetNameOfWhitePlayer() const
+{
+    for (unsigned i = 0; i < mSTR.mLabels.size(); ++i)
+    {
+        if (mSTR.mLabels[i] == "White")
+        {
+            return mSTR.mData[i];
+        }
+    }
+}
+
+std::string slach::Game::GetNameOfBlackPlayer() const
+{
+    for (unsigned i = 0; i < mSTR.mLabels.size(); ++i)
+    {
+        if (mSTR.mLabels[i] == "Black")
+        {
+            return mSTR.mData[i];
+        }
+    }
+}
+

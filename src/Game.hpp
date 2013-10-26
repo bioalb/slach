@@ -131,6 +131,20 @@ public:
      * Access the list of fens
      */
     std::vector<std::string> GetFenList() const;
+
+    /**
+     * Queries the seven tag roster to find the name of the white player
+     *
+     * @return the name of the white player
+     */
+    std::string GetNameOfWhitePlayer() const;
+
+    /**
+     * Queries the seven tag roster to find the name of the black player
+     *
+     * @return the name of the black player
+     */
+    std::string GetNameOfBlackPlayer() const;
 };
 
 }//namespace slach

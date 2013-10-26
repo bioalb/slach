@@ -25,6 +25,11 @@ static const int ID_FORWARD_MORE_BUTTON = 57;
 static const int ID_BACKWARD_MORE_BUTTON = 58;
 static const int ID_FORWARD_END_BUTTON = 59;
 static const int ID_BACKWARD_END_BUTTON = 60;
+static const int ID_OF_UPPER_PLAYER_NAME = 61;
+static const int ID_OF_BOTTOM_PLAYER_NAME = 62;
+static const int ID_OF_MOVE_LIST_SPACE = 63;
+
+
 
 class ChessBoardPanel : public wxPanel
 {
@@ -68,6 +73,9 @@ private:
 
     wxPanel* mpRightSideUpperPart;
     wxPanel* mpRightSideLowerPart;
+    wxPanel* mpNameOfPlayerTop;
+    wxPanel* mpNameOfPlayerBottom ;
+    wxPanel* mpSpaceForMoveList;
 
     wxPanel* mpForwardArrowPanel;
     wxPanel* mpForwardArrowPanelMore;
