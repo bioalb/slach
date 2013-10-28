@@ -168,6 +168,11 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
 
     wxButton* rest_button  = new wxButton(mpLeftOfChessBoard, 1, wxT("Pgn..."),wxDefaultPosition, wxDefaultSize);
     rest_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ChessBoardPanel::LoadPgnFile, this);
+
+    mpWhitePlayerBox = new wxTextCtrl(mpNameOfPlayerBottom, ID_WHITE_PLAYER_BOX, wxT("White Player"), wxDefaultPosition,
+    								  wxDefaultSize, wxTE_READONLY);
+    mpBlackPlayerBox = new wxTextCtrl(mpNameOfPlayerTop, ID_BLACK_PLAYER_BOX, wxT("Black Player"), wxDefaultPosition,
+    								  wxDefaultSize, wxTE_READONLY);
 }
 
 slach_gui::ChessBoardPanel::~ChessBoardPanel()
@@ -196,9 +201,8 @@ void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& event)
         std::string name_of_black_player = mpChessBoard->GetGame()->GetNameOfBlackPlayer();
         wxString name_of_white_player_wx(name_of_white_player);
         wxString name_of_black_player_wx(name_of_black_player);
-        wxStaticText *white_player_text = new wxStaticText(mpNameOfPlayerTop, -1, name_of_white_player_wx);
-        wxStaticText *black_player_text = new wxStaticText(mpNameOfPlayerBottom, -1, name_of_black_player_wx);
-
+        mpWhitePlayerBox->SetValue(name_of_white_player_wx);
+        mpBlackPlayerBox->SetValue(name_of_black_player_wx);
     }
 }
 
@@ -318,6 +322,12 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
     wxSize chessboard_size(min_size,min_size);
     mpGridSizer->SetDimension(central_point, chessboard_size);
     mpGridSizer->Layout();
+
+    //resize and center the boxes for the name of the players
+    wxSize bottom_player_name_panel_size  = mpNameOfPlayerBottom->GetSize();
+    wxSize top_player_name_panel_size  = mpNameOfPlayerTop->GetSize();
+    mpWhitePlayerBox->SetSize(bottom_player_name_panel_size);
+    mpBlackPlayerBox->SetSize(top_player_name_panel_size);
     //skip the event. Needed as per wxWdigets documentation
     event.Skip();
 }

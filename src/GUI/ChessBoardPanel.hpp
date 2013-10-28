@@ -28,6 +28,8 @@ static const int ID_BACKWARD_END_BUTTON = 60;
 static const int ID_OF_UPPER_PLAYER_NAME = 61;
 static const int ID_OF_BOTTOM_PLAYER_NAME = 62;
 static const int ID_OF_MOVE_LIST_SPACE = 63;
+static const int ID_WHITE_PLAYER_BOX = 64;
+static const int ID_BLACK_PLAYER_BOX = 65;
 
 
 
@@ -83,6 +85,9 @@ private:
     wxPanel* mpBackwardArrowPanel;
     wxPanel* mpBackwardArrowPanelMore;
     wxPanel* mpBackwardArrowPanelEnd;
+
+    wxTextCtrl* mpWhitePlayerBox;
+    wxTextCtrl* mpBlackPlayerBox;
 
     /** stores the parent frame*/
     wxFrame* mpParent;
