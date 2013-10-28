@@ -124,17 +124,17 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
     mpRightOfChessBoard->SetSizer(right_side_sizer, false);
 
 
-    wxBoxSizer* right_side_sizer_upper_part = new wxBoxSizer(wxVERTICAL);
+    mpRightSideSizerUpperPart = new wxBoxSizer(wxVERTICAL);
     mpNameOfPlayerTop = new wxPanel(mpRightSideUpperPart, ID_OF_UPPER_PLAYER_NAME);
     mpNameOfPlayerBottom = new wxPanel(mpRightSideUpperPart, ID_OF_BOTTOM_PLAYER_NAME);
     mpSpaceForMoveList = new wxPanel(mpRightSideUpperPart, ID_OF_MOVE_LIST_SPACE);
     mpNameOfPlayerTop->SetBackgroundColour(wxT("red"));
     mpNameOfPlayerBottom->SetBackgroundColour(wxT("green"));
     mpSpaceForMoveList->SetBackgroundColour(wxT("blue"));
-    right_side_sizer_upper_part->Add(mpNameOfPlayerTop, 1.0, wxEXPAND | wxALL);
-    right_side_sizer_upper_part->Add(mpSpaceForMoveList, 6.0, wxEXPAND | wxALL);
-    right_side_sizer_upper_part->Add(mpNameOfPlayerBottom, 1.0, wxEXPAND | wxALL);
-    mpRightSideUpperPart->SetSizer(right_side_sizer_upper_part, false);
+    mpRightSideSizerUpperPart->Add(mpNameOfPlayerTop, 1.0, wxEXPAND | wxALL);
+    mpRightSideSizerUpperPart->Add(mpSpaceForMoveList, 6.0, wxEXPAND | wxALL);
+    mpRightSideSizerUpperPart->Add(mpNameOfPlayerBottom, 1.0, wxEXPAND | wxALL);
+    mpRightSideUpperPart->SetSizer(mpRightSideSizerUpperPart, false);
 
     mpForwardArrowPanel  = new wxPanel(mpRightSideLowerPart, ID_FORWARD_BUTTON);
     mpForwardArrowPanelMore  = new wxPanel(mpRightSideLowerPart, ID_FORWARD_MORE_BUTTON);
@@ -155,7 +155,12 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
 
     //Bind the button and paint  events for the left side of the board
     mpLeftOfChessBoard->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnSidesOfBoard, this);//with this-> instead of mpLeftOfChessBoard it does not work
+
     mpMidPanelOfChessBoard->Bind(wxEVT_SIZE, &ChessBoardPanel::OnSize, this);//keep the board as a square
+    mpNameOfPlayerTop->Bind(wxEVT_SIZE, &ChessBoardPanel::OnSize, this);//for the text boxes to be resized accordingly
+    mpNameOfPlayerBottom->Bind(wxEVT_SIZE, &ChessBoardPanel::OnSize, this);//for the text boxes to be resized accordingly
+    mpSpaceForMoveList->Bind(wxEVT_SIZE, &ChessBoardPanel::OnSize, this);//for the text boxes to be resized accordingly
+
 
     //BIND THE CLICKS ON THE ARROWS
     mpForwardArrowPanel->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
@@ -169,10 +174,17 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
     wxButton* rest_button  = new wxButton(mpLeftOfChessBoard, 1, wxT("Pgn..."),wxDefaultPosition, wxDefaultSize);
     rest_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ChessBoardPanel::LoadPgnFile, this);
 
-    mpWhitePlayerBox = new wxTextCtrl(mpNameOfPlayerBottom, ID_WHITE_PLAYER_BOX, wxT("White Player"), wxDefaultPosition,
-    								  wxDefaultSize, wxTE_READONLY);
-    mpBlackPlayerBox = new wxTextCtrl(mpNameOfPlayerTop, ID_BLACK_PLAYER_BOX, wxT("Black Player"), wxDefaultPosition,
-    								  wxDefaultSize, wxTE_READONLY);
+    mpWhitePlayerBox = new wxTextCtrl (mpNameOfPlayerBottom, ID_WHITE_PLAYER_BOX, wxT("White Player"), wxDefaultPosition,
+    								  wxDefaultSize, wxTE_CENTRE);
+    mpBlackPlayerBox = new wxTextCtrl (mpNameOfPlayerTop, ID_BLACK_PLAYER_BOX, wxT("Black Player"), wxDefaultPosition,
+    								  wxDefaultSize, wxTE_CENTRE);
+
+    mTextAttributes = wxTextAttr(wxColour(52,56,98),
+                                   wxNullColour,
+                                   wxFont(wxFontInfo(38).FaceName("Helvetica")),
+                                   wxTEXT_ALIGNMENT_CENTRE);
+    assert( mpWhitePlayerBox->SetDefaultStyle(mTextAttributes) );
+
 }
 
 slach_gui::ChessBoardPanel::~ChessBoardPanel()
@@ -201,8 +213,8 @@ void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& event)
         std::string name_of_black_player = mpChessBoard->GetGame()->GetNameOfBlackPlayer();
         wxString name_of_white_player_wx(name_of_white_player);
         wxString name_of_black_player_wx(name_of_black_player);
-        mpWhitePlayerBox->SetValue(name_of_white_player_wx);
-        mpBlackPlayerBox->SetValue(name_of_black_player_wx);
+        mpWhitePlayerBox->ChangeValue(name_of_white_player_wx);
+        mpBlackPlayerBox->ChangeValue(name_of_black_player_wx);
     }
 }
 
@@ -324,8 +336,8 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
     mpGridSizer->Layout();
 
     //resize and center the boxes for the name of the players
-    wxSize bottom_player_name_panel_size  = mpNameOfPlayerBottom->GetSize();
-    wxSize top_player_name_panel_size  = mpNameOfPlayerTop->GetSize();
+    wxSize bottom_player_name_panel_size  = mpRightSideSizerUpperPart->GetItem(mpNameOfPlayerBottom)->GetSize();
+    wxSize top_player_name_panel_size  = mpRightSideSizerUpperPart->GetItem(mpNameOfPlayerTop)->GetSize();
     mpWhitePlayerBox->SetSize(bottom_player_name_panel_size);
     mpBlackPlayerBox->SetSize(top_player_name_panel_size);
     //skip the event. Needed as per wxWdigets documentation
@@ -337,7 +349,6 @@ void slach_gui::ChessBoardPanel::ArrowButtonMovement(wxMouseEvent& event)
     int generating_id = ((wxPanel*) event.GetEventObject())->GetId();
     slach::Colour current_turn = mpChessBoard->WhosTurnIsIt();
     slach::Colour opp_col = slach::OppositeColour(current_turn);
-    unsigned  current_move_number = mpChessBoard->GetCurrentMoveNumber();
 
     std::string fen_to_set;
 

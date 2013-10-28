@@ -4,6 +4,8 @@
 #include <wx/wx.h>
 #include <wx/sizer.h>
 #include <wx/panel.h>
+#include <wx/textctrl.h>
+#include <wx/richtext/richtextctrl.h>
 #include <vector>
 #include "ChessBoardWithBorders.hpp"
 
@@ -63,7 +65,7 @@ private:
 
     /**The main sizer that decides where the board is*/
     wxBoxSizer* mpPrincipalSizer;
-
+    wxBoxSizer* mpRightSideSizerUpperPart;
 
 
     /** The space on the left of the board*/
@@ -86,8 +88,10 @@ private:
     wxPanel* mpBackwardArrowPanelMore;
     wxPanel* mpBackwardArrowPanelEnd;
 
-    wxTextCtrl* mpWhitePlayerBox;
-    wxTextCtrl* mpBlackPlayerBox;
+    wxTextCtrl * mpWhitePlayerBox;
+    wxTextCtrl * mpBlackPlayerBox;
+
+    wxTextAttr mTextAttributes;
 
     /** stores the parent frame*/
     wxFrame* mpParent;
