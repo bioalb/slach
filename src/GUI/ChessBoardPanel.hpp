@@ -19,8 +19,7 @@ namespace slach_gui
 static const int ID_LEFT_OF_BOARD = 50;
 static const int ID_ACTUAL_BOARD = 51;
 static const int ID_RIGHT_OF_BOARD = 52;
-static const int ID_RIGHT_OF_BOARD_UPPER = 53;
-static const int ID_RIGHT_OF_BOARD_LOWER = 54;
+static const int ID_OF_ARROW_SPACE = 53;
 static const int ID_FORWARD_BUTTON = 55;
 static const int ID_BACKWARD_BUTTON = 56;
 static const int ID_FORWARD_MORE_BUTTON = 57;
@@ -65,7 +64,7 @@ private:
 
     /**The main sizer that decides where the board is*/
     wxBoxSizer* mpPrincipalSizer;
-    wxBoxSizer* mpRightSideSizerUpperPart;
+    wxBoxSizer* mpRightSideSizer;
 
 
     /** The space on the left of the board*/
@@ -75,8 +74,7 @@ private:
     /** The space oi the right of the board*/
     wxPanel* mpRightOfChessBoard;
 
-    wxPanel* mpRightSideUpperPart;
-    wxPanel* mpRightSideLowerPart;
+    wxPanel* mpSpaceForArrows;
     wxPanel* mpNameOfPlayerTop;
     wxPanel* mpNameOfPlayerBottom ;
     wxPanel* mpSpaceForMoveList;

@@ -116,32 +116,24 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
 
 
     //divide the section on the RHS of the board
-    mpRightSideUpperPart = new wxPanel(mpRightOfChessBoard,ID_RIGHT_OF_BOARD_UPPER);
-    mpRightSideLowerPart =  new wxPanel(mpRightOfChessBoard,ID_RIGHT_OF_BOARD_LOWER);
-    wxBoxSizer* right_side_sizer = new wxBoxSizer(wxVERTICAL);
-    right_side_sizer->Add(mpRightSideUpperPart, 10.0, wxEXPAND | wxALL);
-    right_side_sizer->Add(mpRightSideLowerPart, 1.0, wxEXPAND | wxALL);
-    mpRightOfChessBoard->SetSizer(right_side_sizer, false);
+    mpNameOfPlayerTop = new wxPanel(mpRightOfChessBoard, ID_OF_UPPER_PLAYER_NAME);
+    mpNameOfPlayerBottom = new wxPanel(mpRightOfChessBoard, ID_OF_BOTTOM_PLAYER_NAME);
+    mpSpaceForMoveList = new wxPanel(mpRightOfChessBoard, ID_OF_MOVE_LIST_SPACE);
+	mpSpaceForArrows =  new wxPanel(mpRightOfChessBoard, ID_OF_ARROW_SPACE);
 
+    mpRightSideSizer = new wxBoxSizer(wxVERTICAL);
+    mpRightSideSizer->Add(mpNameOfPlayerTop, 1.0, wxEXPAND | wxALL);
+    mpRightSideSizer->Add(mpSpaceForMoveList, 10.0, wxEXPAND | wxALL);
+    mpRightSideSizer->Add(mpSpaceForArrows, 1.0, wxEXPAND | wxALL);
+    mpRightSideSizer->Add(mpNameOfPlayerBottom, 1.0, wxEXPAND | wxALL);
+    mpRightOfChessBoard->SetSizer(mpRightSideSizer, false);
 
-    mpRightSideSizerUpperPart = new wxBoxSizer(wxVERTICAL);
-    mpNameOfPlayerTop = new wxPanel(mpRightSideUpperPart, ID_OF_UPPER_PLAYER_NAME);
-    mpNameOfPlayerBottom = new wxPanel(mpRightSideUpperPart, ID_OF_BOTTOM_PLAYER_NAME);
-    mpSpaceForMoveList = new wxPanel(mpRightSideUpperPart, ID_OF_MOVE_LIST_SPACE);
-    mpNameOfPlayerTop->SetBackgroundColour(wxT("red"));
-    mpNameOfPlayerBottom->SetBackgroundColour(wxT("green"));
-    mpSpaceForMoveList->SetBackgroundColour(wxT("blue"));
-    mpRightSideSizerUpperPart->Add(mpNameOfPlayerTop, 1.0, wxEXPAND | wxALL);
-    mpRightSideSizerUpperPart->Add(mpSpaceForMoveList, 6.0, wxEXPAND | wxALL);
-    mpRightSideSizerUpperPart->Add(mpNameOfPlayerBottom, 1.0, wxEXPAND | wxALL);
-    mpRightSideUpperPart->SetSizer(mpRightSideSizerUpperPart, false);
-
-    mpForwardArrowPanel  = new wxPanel(mpRightSideLowerPart, ID_FORWARD_BUTTON);
-    mpForwardArrowPanelMore  = new wxPanel(mpRightSideLowerPart, ID_FORWARD_MORE_BUTTON);
-    mpForwardArrowPanelEnd  = new wxPanel(mpRightSideLowerPart, ID_FORWARD_END_BUTTON);
-    mpBackwardArrowPanel  = new wxPanel(mpRightSideLowerPart, ID_BACKWARD_BUTTON);
-    mpBackwardArrowPanelMore  = new wxPanel(mpRightSideLowerPart, ID_BACKWARD_MORE_BUTTON);
-    mpBackwardArrowPanelEnd  = new wxPanel(mpRightSideLowerPart, ID_BACKWARD_END_BUTTON);
+    mpForwardArrowPanel  = new wxPanel(mpSpaceForArrows, ID_FORWARD_BUTTON);
+    mpForwardArrowPanelMore  = new wxPanel(mpSpaceForArrows, ID_FORWARD_MORE_BUTTON);
+    mpForwardArrowPanelEnd  = new wxPanel(mpSpaceForArrows, ID_FORWARD_END_BUTTON);
+    mpBackwardArrowPanel  = new wxPanel(mpSpaceForArrows, ID_BACKWARD_BUTTON);
+    mpBackwardArrowPanelMore  = new wxPanel(mpSpaceForArrows, ID_BACKWARD_MORE_BUTTON);
+    mpBackwardArrowPanelEnd  = new wxPanel(mpSpaceForArrows, ID_BACKWARD_END_BUTTON);
 
     wxBoxSizer* bottom_of_right_panel_sizer = new wxBoxSizer(wxHORIZONTAL);
     bottom_of_right_panel_sizer->Add(mpBackwardArrowPanelEnd,1.0, wxEXPAND | wxALL);
@@ -150,12 +142,12 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
     bottom_of_right_panel_sizer->Add(mpForwardArrowPanel,1.0, wxEXPAND | wxALL);
     bottom_of_right_panel_sizer->Add(mpForwardArrowPanelMore,1.0, wxEXPAND | wxALL);
     bottom_of_right_panel_sizer->Add(mpForwardArrowPanelEnd,1.0, wxEXPAND | wxALL);
-    mpRightSideLowerPart->SetSizer(bottom_of_right_panel_sizer, false);
+    mpSpaceForArrows->SetSizer(bottom_of_right_panel_sizer, false);
 
 
     //Bind the button and paint  events for the left side of the board
     mpLeftOfChessBoard->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnSidesOfBoard, this);//with this-> instead of mpLeftOfChessBoard it does not work
-
+    mpRightOfChessBoard->Bind(wxEVT_SIZE, &ChessBoardPanel::OnSize, this);
     mpMidPanelOfChessBoard->Bind(wxEVT_SIZE, &ChessBoardPanel::OnSize, this);//keep the board as a square
     mpNameOfPlayerTop->Bind(wxEVT_SIZE, &ChessBoardPanel::OnSize, this);//for the text boxes to be resized accordingly
     mpNameOfPlayerBottom->Bind(wxEVT_SIZE, &ChessBoardPanel::OnSize, this);//for the text boxes to be resized accordingly
@@ -342,8 +334,8 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
     mpGridSizer->Layout();
 
     //resize and center the boxes for the name of the players
-    wxSize bottom_player_name_panel_size  = mpRightSideSizerUpperPart->GetItem(mpNameOfPlayerBottom)->GetSize();
-    wxSize top_player_name_panel_size  = mpRightSideSizerUpperPart->GetItem(mpNameOfPlayerTop)->GetSize();
+    wxSize bottom_player_name_panel_size  = mpRightSideSizer->GetItem(mpNameOfPlayerBottom)->GetSize();
+    wxSize top_player_name_panel_size  = mpRightSideSizer->GetItem(mpNameOfPlayerTop)->GetSize();
     mpWhitePlayerBox->SetSize(bottom_player_name_panel_size);
     mpBlackPlayerBox->SetSize(top_player_name_panel_size);
     //skip the event. Needed as per wxWdigets documentation
