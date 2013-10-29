@@ -174,16 +174,21 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
     wxButton* rest_button  = new wxButton(mpLeftOfChessBoard, 1, wxT("Pgn..."),wxDefaultPosition, wxDefaultSize);
     rest_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ChessBoardPanel::LoadPgnFile, this);
 
-    mpWhitePlayerBox = new wxTextCtrl (mpNameOfPlayerBottom, ID_WHITE_PLAYER_BOX, wxT("White Player"), wxDefaultPosition,
-    								  wxDefaultSize, wxTE_CENTRE);
-    mpBlackPlayerBox = new wxTextCtrl (mpNameOfPlayerTop, ID_BLACK_PLAYER_BOX, wxT("Black Player"), wxDefaultPosition,
-    								  wxDefaultSize, wxTE_CENTRE);
+    mpWhitePlayerBox = new wxRichTextCtrl (mpNameOfPlayerBottom, ID_WHITE_PLAYER_BOX, wxT("White Player"), wxDefaultPosition,
+    								  wxDefaultSize, wxRE_CENTRE_CARET);
+    mpBlackPlayerBox = new wxRichTextCtrl (mpNameOfPlayerTop, ID_BLACK_PLAYER_BOX, wxT("Black Player"), wxDefaultPosition,
+    								  wxDefaultSize, wxRE_CENTRE_CARET);
 
-    mTextAttributes = wxTextAttr(wxColour(52,56,98),
-                                   wxNullColour,
-                                   wxFont(wxFontInfo(38).FaceName("Helvetica")),
-                                   wxTEXT_ALIGNMENT_CENTRE);
-    assert( mpWhitePlayerBox->SetDefaultStyle(mTextAttributes) );
+    mTextAttributes = wxTextAttr();
+
+    mTextAttributes.SetFont(wxFont(wxFontInfo(14).FaceName("Helvetica")));
+    mTextAttributes.SetTextColour(wxColour(152,6,198));
+    mTextAttributes.SetBackgroundColour (wxNullColour);
+    mTextAttributes.SetAlignment(wxTEXT_ALIGNMENT_CENTRE);
+    mpWhitePlayerBox->SetDefaultStyle(mTextAttributes);
+    mpBlackPlayerBox->SetDefaultStyle(mTextAttributes);
+    mpWhitePlayerBox->ChangeValue(wxT("white player"));
+    mpBlackPlayerBox->ChangeValue(wxT("black player"));
 
 }
 
@@ -211,6 +216,7 @@ void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& event)
         slach::PgnValidity valid = mpChessBoard->LoadGameFromPgn(game_string.ToStdString());
         std::string name_of_white_player = mpChessBoard->GetGame()->GetNameOfWhitePlayer();
         std::string name_of_black_player = mpChessBoard->GetGame()->GetNameOfBlackPlayer();
+
         wxString name_of_white_player_wx(name_of_white_player);
         wxString name_of_black_player_wx(name_of_black_player);
         mpWhitePlayerBox->ChangeValue(name_of_white_player_wx);

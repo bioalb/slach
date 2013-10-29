@@ -88,8 +88,8 @@ private:
     wxPanel* mpBackwardArrowPanelMore;
     wxPanel* mpBackwardArrowPanelEnd;
 
-    wxTextCtrl * mpWhitePlayerBox;
-    wxTextCtrl * mpBlackPlayerBox;
+    wxRichTextCtrl * mpWhitePlayerBox;
+    wxRichTextCtrl * mpBlackPlayerBox;
 
     wxTextAttr mTextAttributes;
 
