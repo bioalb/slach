@@ -135,14 +135,14 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
     mpBackwardArrowPanelMore  = new wxPanel(mpSpaceForArrows, ID_BACKWARD_MORE_BUTTON);
     mpBackwardArrowPanelEnd  = new wxPanel(mpSpaceForArrows, ID_BACKWARD_END_BUTTON);
 
-    wxBoxSizer* bottom_of_right_panel_sizer = new wxBoxSizer(wxHORIZONTAL);
-    bottom_of_right_panel_sizer->Add(mpBackwardArrowPanelEnd,1.0, wxEXPAND | wxALL);
-    bottom_of_right_panel_sizer->Add(mpBackwardArrowPanelMore,1.0, wxEXPAND | wxALL);
-    bottom_of_right_panel_sizer->Add(mpBackwardArrowPanel,1.0, wxEXPAND | wxALL);
-    bottom_of_right_panel_sizer->Add(mpForwardArrowPanel,1.0, wxEXPAND | wxALL);
-    bottom_of_right_panel_sizer->Add(mpForwardArrowPanelMore,1.0, wxEXPAND | wxALL);
-    bottom_of_right_panel_sizer->Add(mpForwardArrowPanelEnd,1.0, wxEXPAND | wxALL);
-    mpSpaceForArrows->SetSizer(bottom_of_right_panel_sizer, false);
+    wxBoxSizer* sizer_of_arrows = new wxBoxSizer(wxHORIZONTAL);
+    sizer_of_arrows->Add(mpBackwardArrowPanelEnd,1.0, wxEXPAND | wxALL);
+    sizer_of_arrows->Add(mpBackwardArrowPanelMore,1.0, wxEXPAND | wxALL);
+    sizer_of_arrows->Add(mpBackwardArrowPanel,1.0, wxEXPAND | wxALL);
+    sizer_of_arrows->Add(mpForwardArrowPanel,1.0, wxEXPAND | wxALL);
+    sizer_of_arrows->Add(mpForwardArrowPanelMore,1.0, wxEXPAND | wxALL);
+    sizer_of_arrows->Add(mpForwardArrowPanelEnd,1.0, wxEXPAND | wxALL);
+    mpSpaceForArrows->SetSizer(sizer_of_arrows, false);
 
 
     //Bind the button and paint  events for the left side of the board
@@ -171,14 +171,14 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
     mpBlackPlayerBox = new wxRichTextCtrl (mpNameOfPlayerTop, ID_BLACK_PLAYER_BOX, wxT("Black Player"), wxDefaultPosition,
     								  wxDefaultSize, wxRE_CENTRE_CARET);
 
-    mTextAttributes = wxTextAttr();
+    mTextAttributesPlayerNames = wxTextAttr();
 
-    mTextAttributes.SetFont(wxFont(wxFontInfo(14).FaceName("Helvetica")));
-    mTextAttributes.SetTextColour(wxColour(152,6,198));
-    mTextAttributes.SetBackgroundColour (wxNullColour);
-    mTextAttributes.SetAlignment(wxTEXT_ALIGNMENT_CENTRE);
-    mpWhitePlayerBox->SetDefaultStyle(mTextAttributes);
-    mpBlackPlayerBox->SetDefaultStyle(mTextAttributes);
+    mTextAttributesPlayerNames.SetFont(wxFont(wxFontInfo(14).FaceName("Helvetica")));
+    mTextAttributesPlayerNames.SetTextColour(wxColour(32,107,129));
+    mTextAttributesPlayerNames.SetBackgroundColour (wxNullColour);
+    mTextAttributesPlayerNames.SetAlignment(wxTEXT_ALIGNMENT_CENTRE);
+    mpWhitePlayerBox->SetDefaultStyle(mTextAttributesPlayerNames);
+    mpBlackPlayerBox->SetDefaultStyle(mTextAttributesPlayerNames);
     mpWhitePlayerBox->ChangeValue(wxT("white player"));
     mpBlackPlayerBox->ChangeValue(wxT("black player"));
 
@@ -338,6 +338,7 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
     wxSize top_player_name_panel_size  = mpRightSideSizer->GetItem(mpNameOfPlayerTop)->GetSize();
     mpWhitePlayerBox->SetSize(bottom_player_name_panel_size);
     mpBlackPlayerBox->SetSize(top_player_name_panel_size);
+
     //skip the event. Needed as per wxWdigets documentation
     event.Skip();
 }

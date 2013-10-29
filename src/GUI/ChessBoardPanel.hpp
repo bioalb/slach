@@ -71,14 +71,16 @@ private:
     wxPanel* mpLeftOfChessBoard;
     /** A panel that will contain the board*/
     wxPanel* mpMidPanelOfChessBoard;
-    /** The space oi the right of the board*/
+    /** The space on the right of the board*/
     wxPanel* mpRightOfChessBoard;
 
+    /**Panels fon the RHS of the board*/
     wxPanel* mpSpaceForArrows;
     wxPanel* mpNameOfPlayerTop;
     wxPanel* mpNameOfPlayerBottom ;
     wxPanel* mpSpaceForMoveList;
 
+    /**Panels for each arrows*/
     wxPanel* mpForwardArrowPanel;
     wxPanel* mpForwardArrowPanelMore;
     wxPanel* mpForwardArrowPanelEnd;
@@ -86,10 +88,11 @@ private:
     wxPanel* mpBackwardArrowPanelMore;
     wxPanel* mpBackwardArrowPanelEnd;
 
+    /**Text control for the players' names*/
     wxRichTextCtrl * mpWhitePlayerBox;
     wxRichTextCtrl * mpBlackPlayerBox;
 
-    wxTextAttr mTextAttributes;
+    wxTextAttr mTextAttributesPlayerNames;
 
     /** stores the parent frame*/
     wxFrame* mpParent;
