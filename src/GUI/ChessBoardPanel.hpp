@@ -89,11 +89,12 @@ private:
     wxPanel* mpBackwardArrowPanelEnd;
 
     /**Text control for the players' names*/
-    wxRichTextCtrl * mpWhitePlayerBox;
-    wxRichTextCtrl * mpBlackPlayerBox;
+    wxTextCtrl * mpWhitePlayerBox;
+    wxTextCtrl * mpBlackPlayerBox;
 
     wxTextAttr mTextAttributesPlayerNames;
 
+    wxSize mSize;
     /** stores the parent frame*/
     wxFrame* mpParent;
 
