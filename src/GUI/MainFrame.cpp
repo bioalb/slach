@@ -28,15 +28,15 @@ slach_gui::MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const
     mpRightPanel = new RightPanel(this);
     mpBottomPanel = new BottomPanel(this);
     mpBoardPanel = new ChessBoardPanel(this);
-
+    mpBottomPanel->SetMinSize(wxSize(50, 20));
     wxBoxSizer* h_sizer = new wxBoxSizer(wxHORIZONTAL);
 
     wxBoxSizer* v_sizer = new wxBoxSizer(wxVERTICAL);
-    v_sizer->Add(mpBoardPanel, 5.0, wxGROW);
-    v_sizer->Add(mpBottomPanel, 1.0, wxGROW);
+    v_sizer->Add(mpBoardPanel, 5, wxEXPAND);
+    v_sizer->Add(mpBottomPanel, 1, wxEXPAND);
 
-    h_sizer->Add(v_sizer,3.3,wxEXPAND);
-    h_sizer->Add(mpRightPanel, 1.0, wxEXPAND);
+    h_sizer->Add(v_sizer,3,wxEXPAND);
+    h_sizer->Add(mpRightPanel, 1, wxEXPAND);
     this->SetSizer(h_sizer);
 }
 

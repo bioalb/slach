@@ -42,7 +42,7 @@
 #include "bitmaps/pieces/xpm/white_king.xpm"
 #include "bitmaps/pieces/xpm/no_piece.xpm"
 
-slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, const wxPoint& pos, const wxSize& size)
+slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID WXUNUSED(id), const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size),
       mPngPieceDirectory("../../src/GUI/bitmaps/pieces/png/"),
       mPngBackgroundDirectory("../../src/GUI/bitmaps/squares/png/"),
@@ -51,10 +51,13 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
       mpChessBoard(NULL),
       mpGridSizer ( new wxFlexGridSizer(slach::gBoardRowSize+2,slach::gBoardColumnSize+2,0,0) ),
       mpPrincipalSizer (new wxBoxSizer(wxHORIZONTAL)),
+      mpRightSideSizer ( new wxBoxSizer(wxVERTICAL)),
       mpLeftOfChessBoard (new wxPanel(this, ID_LEFT_OF_BOARD)),
       mpMidPanelOfChessBoard(new wxPanel(this, ID_ACTUAL_BOARD)),
       mpRightOfChessBoard(new wxPanel(this, ID_RIGHT_OF_BOARD)),
       mpParent(parent),
+      mWhitePlayerName(wxT("white player")),
+      mBlackPlayerName(wxT("black player")),
       mDrawPiece(true),
       mSourceIndex(0u)
 {
@@ -109,11 +112,10 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
     }
 
     //Arrange the panels
-    mpPrincipalSizer->Add(mpLeftOfChessBoard, 1.0, wxEXPAND | wxALL);
-    mpPrincipalSizer->Add(mpMidPanelOfChessBoard, 6.0, wxEXPAND | wxALL);
-    mpPrincipalSizer->Add(mpRightOfChessBoard, 2.0, wxEXPAND | wxALL);
+    mpPrincipalSizer->Add(mpLeftOfChessBoard, 1, wxEXPAND | wxALL);
+    mpPrincipalSizer->Add(mpMidPanelOfChessBoard, 6, wxEXPAND | wxALL);
+    mpPrincipalSizer->Add(mpRightOfChessBoard, 2, wxEXPAND | wxALL);
     this->SetSizer(mpPrincipalSizer, false);
-
 
     //divide the section on the RHS of the board
     mpNameOfPlayerTop = new wxPanel(mpRightOfChessBoard, ID_OF_UPPER_PLAYER_NAME, wxDefaultPosition, wxSize(170,42));
@@ -121,12 +123,11 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
     mpSpaceForMoveList = new wxPanel(mpRightOfChessBoard, ID_OF_MOVE_LIST_SPACE);
 	mpSpaceForArrows =  new wxPanel(mpRightOfChessBoard, ID_OF_ARROW_SPACE);
 
-    mpRightSideSizer = new wxBoxSizer(wxVERTICAL);
-    mpRightSideSizer->Add(mpNameOfPlayerTop, 1.0, wxEXPAND | wxALL);
-    mpRightSideSizer->Add(mpSpaceForMoveList, 10.0, wxEXPAND | wxALL);
-    mpRightSideSizer->Add(mpSpaceForArrows, 1.0, wxEXPAND | wxALL);
-    mpRightSideSizer->Add(mpNameOfPlayerBottom, 1.0, wxEXPAND | wxALL);
-    mpRightOfChessBoard->SetSizer(mpRightSideSizer, false);
+    mpRightSideSizer->Add(mpNameOfPlayerTop, 1, wxEXPAND);
+    mpRightSideSizer->Add(mpSpaceForMoveList, 7, wxEXPAND);
+    mpRightSideSizer->Add(mpSpaceForArrows, 1, wxEXPAND);
+    mpRightSideSizer->Add(mpNameOfPlayerBottom, 1, wxEXPAND);
+    mpRightOfChessBoard->SetSizer(mpRightSideSizer, true);
 
     mpForwardArrowPanel  = new wxPanel(mpSpaceForArrows, ID_FORWARD_BUTTON);
     mpForwardArrowPanelMore  = new wxPanel(mpSpaceForArrows, ID_FORWARD_MORE_BUTTON);
@@ -162,33 +163,46 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID id, cons
     rest_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ChessBoardPanel::LoadPgnFile, this);
 
     mpWhitePlayerBox = new wxTextCtrl (mpNameOfPlayerBottom, ID_WHITE_PLAYER_BOX, wxT(""), wxDefaultPosition,
-    								  wxDefaultSize, wxTE_CENTRE | wxTE_RICH | wxTE_MULTILINE );
+    								  wxDefaultSize, wxTE_LEFT | wxTE_RICH | wxTE_MULTILINE | wxTE_DONTWRAP | wxBORDER_NONE);
     mpBlackPlayerBox = new wxTextCtrl (mpNameOfPlayerTop, ID_BLACK_PLAYER_BOX, wxT(""), wxDefaultPosition,
-    								  wxDefaultSize, wxTE_CENTRE | wxTE_RICH | wxTE_MULTILINE );
+    								  wxDefaultSize, wxTE_LEFT | wxTE_RICH | wxTE_MULTILINE | wxTE_DONTWRAP | wxBORDER_NONE);
 
     //Make the white player box fill in the entire space
-    wxBoxSizer* white_player_box_sizer =  new wxBoxSizer(wxHORIZONTAL);
-    white_player_box_sizer->Add(mpWhitePlayerBox,1.0, wxEXPAND | wxALL);
+    wxPanel* above_white_player_name  = new wxPanel(mpNameOfPlayerBottom, ID_ABOVE_WHITE_PLAYER_NAME);
+    wxPanel* below_white_player_name  = new wxPanel(mpNameOfPlayerBottom, ID_BELOW_WHITE_PLAYER_NAME);
+    above_white_player_name->SetMinSize(wxSize(0,0));
+    below_white_player_name->SetMinSize(wxSize(0,0));
+    above_white_player_name->SetBackgroundColour(wxT("white"));
+    below_white_player_name->SetBackgroundColour(wxT("white"));
+    wxBoxSizer* white_player_box_sizer =  new wxBoxSizer(wxVERTICAL);
+    white_player_box_sizer->Add(above_white_player_name,1, wxEXPAND | wxALL);
+    white_player_box_sizer->Add(mpWhitePlayerBox,2, wxEXPAND | wxALL);
+    white_player_box_sizer->Add(below_white_player_name,1, wxEXPAND | wxALL);
     mpNameOfPlayerBottom->SetSizer(white_player_box_sizer, false);
 
     //Make the black player box fill in the entire space
-    wxBoxSizer* black_player_box_sizer =  new wxBoxSizer(wxHORIZONTAL);
-    black_player_box_sizer->Add(mpBlackPlayerBox,1.0, wxEXPAND | wxALL);
+    wxPanel* above_black_player_name  = new wxPanel(mpNameOfPlayerTop, ID_ABOVE_BLACK_PLAYER_NAME);
+    wxPanel* below_black_player_name  = new wxPanel(mpNameOfPlayerTop, ID_BELOW_BLACK_PLAYER_NAME);
+    above_black_player_name->SetMinSize(wxSize(0,0));
+    below_black_player_name->SetMinSize(wxSize(0,0));
+    above_black_player_name->SetBackgroundColour(wxT("white"));
+    below_black_player_name->SetBackgroundColour(wxT("white"));
+    wxBoxSizer* black_player_box_sizer =  new wxBoxSizer(wxVERTICAL);
+    black_player_box_sizer->Add(above_black_player_name,1, wxEXPAND | wxALL);
+    black_player_box_sizer->Add(mpBlackPlayerBox,2, wxEXPAND | wxALL);
+    black_player_box_sizer->Add(below_black_player_name,1, wxEXPAND | wxALL);
     mpNameOfPlayerTop->SetSizer(black_player_box_sizer, false);
 
 
     mTextAttributesPlayerNames = wxTextAttr(wxColour(32,7,129),
     										wxNullColour,
-    										wxFont(wxFontInfo(34).FaceName("Helvetica")),
+    										wxFont(wxFontInfo(14).FaceName("Helvetica")),
     										wxTEXT_ALIGNMENT_CENTRE);
     mTextAttributesPlayerNames.SetFlags(wxTEXT_ATTR_TEXT_COLOUR);
     mTextAttributesPlayerNames.SetFlags(wxTEXT_ATTR_FONT);
     mTextAttributesPlayerNames.SetFlags(wxTEXT_ATTR_ALIGNMENT);
-    mpWhitePlayerBox->SetDefaultStyle(mTextAttributesPlayerNames);
-    mpBlackPlayerBox->SetDefaultStyle(mTextAttributesPlayerNames);
 
-    mpWhitePlayerBox->WriteText(wxT("white player"));
-    mpBlackPlayerBox->WriteText(wxT("black player"));
+    WritePlayerNames();
 
     mSize = mpNameOfPlayerTop->GetSize();
 }
@@ -198,7 +212,18 @@ slach_gui::ChessBoardPanel::~ChessBoardPanel()
     delete mpChessBoardWithBorders;
 }
 
-void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& event)
+void slach_gui::ChessBoardPanel::WritePlayerNames()
+{
+    mpWhitePlayerBox->ChangeValue("");
+    mpWhitePlayerBox->SetDefaultStyle(mTextAttributesPlayerNames);
+    mpWhitePlayerBox->WriteText(mWhitePlayerName);
+
+    mpBlackPlayerBox->ChangeValue("");
+    mpBlackPlayerBox->SetDefaultStyle(mTextAttributesPlayerNames);
+    mpBlackPlayerBox->WriteText(mBlackPlayerName);
+}
+
+void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
 {
     wxFileDialog* openFileDialog = new wxFileDialog(this, "Choose a file to open", wxEmptyString, wxEmptyString,
             "PGN files (*.pgn)|*.pgn", wxFD_OPEN);
@@ -220,8 +245,9 @@ void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& event)
 
         wxString name_of_white_player_wx(name_of_white_player);
         wxString name_of_black_player_wx(name_of_black_player);
-        mpWhitePlayerBox->ChangeValue(name_of_white_player_wx);
-        mpBlackPlayerBox->ChangeValue(name_of_black_player_wx);
+        mWhitePlayerName = name_of_white_player_wx;
+        mBlackPlayerName = name_of_black_player_wx;
+        WritePlayerNames();
     }
 }
 
@@ -343,10 +369,8 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
     mpGridSizer->Layout();
 
     wxSize box_size = mpBlackPlayerBox->GetClientSize();
-    mTextAttributesPlayerNames.SetFontPixelSize((int) box_size.y);
-    mpBlackPlayerBox->ChangeValue("");
-    mpBlackPlayerBox->SetDefaultStyle(mTextAttributesPlayerNames);
-    mpBlackPlayerBox->WriteText(wxT("black player"));
+    mTextAttributesPlayerNames.SetFontPixelSize((int) box_size.y - (int)box_size.y/10);
+    WritePlayerNames();
 
     //skip the event. Needed as per wxWdigets documentation
     event.Skip();
@@ -399,7 +423,7 @@ void slach_gui::ChessBoardPanel::ArrowButtonMovement(wxMouseEvent& event)
     DrawAndSetFenPositionOnBoard(fen_to_set);
 }
 
-void slach_gui::ChessBoardPanel::PaintOnSidesOfBoard(wxPaintEvent& event)
+void slach_gui::ChessBoardPanel::PaintOnSidesOfBoard(wxPaintEvent& WXUNUSED(event))
 {
     wxPaintDC dc(mpLeftOfChessBoard);
     DoPaintVerticalGradient(dc, mpLeftOfChessBoard);

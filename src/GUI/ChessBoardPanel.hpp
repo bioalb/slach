@@ -31,6 +31,10 @@ static const int ID_OF_BOTTOM_PLAYER_NAME = 62;
 static const int ID_OF_MOVE_LIST_SPACE = 63;
 static const int ID_WHITE_PLAYER_BOX = 64;
 static const int ID_BLACK_PLAYER_BOX = 65;
+static const int ID_ABOVE_WHITE_PLAYER_NAME = 66;
+static const int ID_BELOW_WHITE_PLAYER_NAME = 67;
+static const int ID_ABOVE_BLACK_PLAYER_NAME = 68;
+static const int ID_BELOW_BLACK_PLAYER_NAME = 69;
 
 
 
@@ -101,6 +105,9 @@ private:
     /** cache for the icon near the mouse for drag and drop*/
     wxIcon mIconNearTheMouse;
 
+    wxString mWhitePlayerName;
+    wxString mBlackPlayerName;
+
     /**
      * when refreshing a square of the board, sometimes you need to draw the piece
      * sometimes not. This boolean regulates the behaviour
@@ -112,6 +119,13 @@ private:
      * the index of the square where it starts is stored here
      */
     unsigned mSourceIndex;
+
+    /**
+     * HElper method that goes into the text control of the white and black player
+     * Delete the content and write the names according to mWhitePlayerName and mBlackPlayerName
+     * The text attributes are the ones set by mTextAttributesPlayerNames
+     */
+    void WritePlayerNames();
 
     /**
      * Helper method to load all the images (backgrounds, pieces and coordinates)
