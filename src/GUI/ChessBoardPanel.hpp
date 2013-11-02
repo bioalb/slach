@@ -36,7 +36,8 @@ static const int ID_ABOVE_WHITE_PLAYER_NAME = 66;
 static const int ID_BELOW_WHITE_PLAYER_NAME = 67;
 static const int ID_ABOVE_BLACK_PLAYER_NAME = 68;
 static const int ID_BELOW_BLACK_PLAYER_NAME = 69;
-static const int OFFSET_OF_MOVE_LIST_ID = 1200;
+static const int OFFSET_OF_MOVE_LIST_ID = 1100;
+static const int OFFSET_OF_MOVE_NUMBER_ID = 1300;
 
 static const int MAX_NUMBER_OF_VISIBLE_MOVES = 20;//in the movelist window, this is the max number visible (no-scroll)
 
@@ -274,12 +275,20 @@ public:
     void LoadPgnFile(wxCommandEvent& event);
 
     /**
-     * this method is activated when use clicks on one of the arrows.
-     * It figure sout which arrow the use clicked and behaves accordingly.
+     * this method is activated when user clicks on one of the arrows.
+     * It figures out which arrow the use clicked and behaves accordingly.
      *
      * @param event the generating event
      */
     void ArrowButtonMovement(wxMouseEvent& event);
+
+    /**
+     * this method is activated when user clicks on one of the moves in the move list.
+     * It figures out which move and set the chessboard accordingly.
+     *
+     * @param event the generating event
+     */
+    void OnClickOnMoveList(wxMouseEvent& event);
 
     void DrawAndSetFenPositionOnBoard(const std::string& rFenPosition);
 

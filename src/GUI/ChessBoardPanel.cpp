@@ -265,7 +265,7 @@ void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
 
             mpSpaceForMoveList->SetVirtualSize(window_size.x, virtual_size_y);
 
-            unsigned number_of_panels_to_add = move_list.size() + static_cast<unsigned> (move_list.size()/2 );
+            unsigned number_of_panels_to_add = move_list.size() + static_cast<unsigned> (move_list.size()/2 + 1);
             mMoveListPanels.clear();
             unsigned move_index = 0;
             for (unsigned i = 0; i < number_of_panels_to_add; ++i)
@@ -277,21 +277,27 @@ void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
                 {
                     int move_number  = (int) i/3 + 1;
                     wxString move_number_string = wxString::Format(wxT("%i"),move_number);
-                    wxStaticText* p_move_number = new wxStaticText(mMoveListPanels[i], OFFSET_OF_MOVE_LIST_ID + (int) i, move_number_string,
+                    wxStaticText* p_move_number = new wxStaticText(mMoveListPanels[i], OFFSET_OF_MOVE_NUMBER_ID + (int) i, move_number_string,
                                                                    wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE_HORIZONTAL);
                     p_move_number->Show();
                 }
                 else
                 {
-                    wxString san_move(move_list_san[move_index]);
-                    wxStaticText* p_move_number = new wxStaticText(mMoveListPanels[i], OFFSET_OF_MOVE_LIST_ID + (int) i, san_move,
-                                                                   wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE_HORIZONTAL);
-                    p_move_number->Show();
-                    move_index++;
+                    if (move_index < move_list.size())
+                    {
+                        wxString san_move(move_list_san[move_index]);
+                        wxStaticText* p_move_number = new wxStaticText(mMoveListPanels[i], OFFSET_OF_MOVE_LIST_ID + (int) move_index, san_move,
+                                                                       wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE_HORIZONTAL);
+                        p_move_number->Show();
+                        //Bind to the event both the text box and the panel, so the user can click anywhere
+                        mMoveListPanels[i]->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::OnClickOnMoveList, this);
+                        p_move_number->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::OnClickOnMoveList, this);
+                        move_index++;
+                    }
                 }
             }
             mpSpaceForMoveList->Layout();
-            //mpSpaceForMoveList->SetScrollbar(wxVERTICAL, 0, 8*window_size.y,500*(virtual_size_y+window_size.y) );
+            //mpSpaceForMoveList->SetScrollbar(wxVERTICAL, 0, 8*window_size.y,500*(virtual_size_y+window_size.y) ); not needed
             mpSpaceForMoveList->SetScrollRate(0, 5);
             mpMoveListSizer->Layout();//force to layout, otherwise it is only done on resize...
         }
@@ -423,6 +429,21 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
 
     //skip the event. Needed as per wxWdigets documentation
     event.Skip();
+}
+
+void slach_gui::ChessBoardPanel::OnClickOnMoveList(wxMouseEvent& event)
+{
+    int move_index = ((wxPanel*) event.GetEventObject())->GetId() - OFFSET_OF_MOVE_LIST_ID;
+    std::string fen_to_set;
+    if (move_index >= (mpChessBoard->GetGame()->GetFenList().size() - 1))
+    {
+        fen_to_set = mpChessBoard->GetGame()->GetFenList()[move_index];
+    }
+    else
+    {
+        fen_to_set = mpChessBoard->GetGame()->GetFenList()[move_index+1];
+    }
+    DrawAndSetFenPositionOnBoard(fen_to_set);
 }
 
 void slach_gui::ChessBoardPanel::ArrowButtonMovement(wxMouseEvent& event)
