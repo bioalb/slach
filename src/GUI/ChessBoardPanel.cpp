@@ -49,7 +49,8 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID WXUNUSED
       mPngArrowsDirectory("../../src/GUI/bitmaps/arrows/png/"),
       mpChessBoardWithBorders ( new slach::ChessBoardWithBorders() ),
       mpChessBoard(NULL),
-      mpGridSizer ( new wxFlexGridSizer(slach::gBoardRowSize+2,slach::gBoardColumnSize+2,0,0) ),
+      mpBoardGridSizer ( new wxFlexGridSizer(slach::gBoardRowSize+2,slach::gBoardColumnSize+2,0,0) ),
+      mpMoveListSizer ( new wxFlexGridSizer(3)), //3 columns for move list sizer
       mpPrincipalSizer (new wxBoxSizer(wxHORIZONTAL)),
       mpRightSideSizer ( new wxBoxSizer(wxVERTICAL)),
       mpLeftOfChessBoard (new wxPanel(this, ID_LEFT_OF_BOARD)),
@@ -66,27 +67,27 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID WXUNUSED
 
     //now the grid sizer.
     int square_to_border_prop = 3;//proportion between border and square
-    mpGridSizer->AddGrowableCol(0,1);//border
-    mpGridSizer->AddGrowableCol(1,square_to_border_prop);
-    mpGridSizer->AddGrowableCol(2,square_to_border_prop);
-    mpGridSizer->AddGrowableCol(3,square_to_border_prop);
-    mpGridSizer->AddGrowableCol(4,square_to_border_prop);
-    mpGridSizer->AddGrowableCol(5,square_to_border_prop);
-    mpGridSizer->AddGrowableCol(6,square_to_border_prop);
-    mpGridSizer->AddGrowableCol(7,square_to_border_prop);
-    mpGridSizer->AddGrowableCol(8,square_to_border_prop);
-    mpGridSizer->AddGrowableCol(9,1);//border
+    mpBoardGridSizer->AddGrowableCol(0,1);//border
+    mpBoardGridSizer->AddGrowableCol(1,square_to_border_prop);
+    mpBoardGridSizer->AddGrowableCol(2,square_to_border_prop);
+    mpBoardGridSizer->AddGrowableCol(3,square_to_border_prop);
+    mpBoardGridSizer->AddGrowableCol(4,square_to_border_prop);
+    mpBoardGridSizer->AddGrowableCol(5,square_to_border_prop);
+    mpBoardGridSizer->AddGrowableCol(6,square_to_border_prop);
+    mpBoardGridSizer->AddGrowableCol(7,square_to_border_prop);
+    mpBoardGridSizer->AddGrowableCol(8,square_to_border_prop);
+    mpBoardGridSizer->AddGrowableCol(9,1);//border
 
-    mpGridSizer->AddGrowableRow(0,1);//border
-    mpGridSizer->AddGrowableRow(1,square_to_border_prop);
-    mpGridSizer->AddGrowableRow(2,square_to_border_prop);
-    mpGridSizer->AddGrowableRow(3,square_to_border_prop);
-    mpGridSizer->AddGrowableRow(4,square_to_border_prop);
-    mpGridSizer->AddGrowableRow(5,square_to_border_prop);
-    mpGridSizer->AddGrowableRow(6,square_to_border_prop);
-    mpGridSizer->AddGrowableRow(7,square_to_border_prop);
-    mpGridSizer->AddGrowableRow(8,square_to_border_prop);
-    mpGridSizer->AddGrowableRow(9,1);//border
+    mpBoardGridSizer->AddGrowableRow(0,1);//border
+    mpBoardGridSizer->AddGrowableRow(1,square_to_border_prop);
+    mpBoardGridSizer->AddGrowableRow(2,square_to_border_prop);
+    mpBoardGridSizer->AddGrowableRow(3,square_to_border_prop);
+    mpBoardGridSizer->AddGrowableRow(4,square_to_border_prop);
+    mpBoardGridSizer->AddGrowableRow(5,square_to_border_prop);
+    mpBoardGridSizer->AddGrowableRow(6,square_to_border_prop);
+    mpBoardGridSizer->AddGrowableRow(7,square_to_border_prop);
+    mpBoardGridSizer->AddGrowableRow(8,square_to_border_prop);
+    mpBoardGridSizer->AddGrowableRow(9,1);//border
 
     LoadBoardImages();
 
@@ -99,7 +100,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID WXUNUSED
     for (unsigned i = 0; i < mpAllSquares.size(); ++i)
     {
         mSquarePanels[i] = new wxPanel( mpMidPanelOfChessBoard, /*ID*/ (int) i );
-        mpGridSizer->Add(mSquarePanels[i], 0, wxEXPAND | wxALL);
+        mpBoardGridSizer->Add(mSquarePanels[i], 0, wxEXPAND | wxALL);
         //bind the paint event
         mSquarePanels[i]->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnSquare, this);
         if (mpAllSquares[i]->IsBorderSquare() == false)
@@ -118,16 +119,21 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID WXUNUSED
     this->SetSizer(mpPrincipalSizer, false);
 
     //divide the section on the RHS of the board
-    mpNameOfPlayerTop = new wxPanel(mpRightOfChessBoard, ID_OF_UPPER_PLAYER_NAME, wxDefaultPosition, wxSize(170,42));
+    mpNameOfPlayerTop = new wxPanel(mpRightOfChessBoard, ID_OF_UPPER_PLAYER_NAME);
     mpNameOfPlayerBottom = new wxPanel(mpRightOfChessBoard, ID_OF_BOTTOM_PLAYER_NAME);
-    mpSpaceForMoveList = new wxPanel(mpRightOfChessBoard, ID_OF_MOVE_LIST_SPACE);
+    mpSpaceForMoveList = new wxScrolledWindow(mpRightOfChessBoard, ID_OF_MOVE_LIST_SPACE);//, wxDefaultPosition, wxDefaultSize , wxVSCROLL);
 	mpSpaceForArrows =  new wxPanel(mpRightOfChessBoard, ID_OF_ARROW_SPACE);
 
     mpRightSideSizer->Add(mpNameOfPlayerTop, 1, wxEXPAND);
-    mpRightSideSizer->Add(mpSpaceForMoveList, 7, wxEXPAND);
+    mpRightSideSizer->Add(mpSpaceForMoveList, 7, wxALL|wxGROW);
     mpRightSideSizer->Add(mpSpaceForArrows, 1, wxEXPAND);
     mpRightSideSizer->Add(mpNameOfPlayerBottom, 1, wxEXPAND);
     mpRightOfChessBoard->SetSizer(mpRightSideSizer, true);
+
+    mpMoveListSizer->AddGrowableCol(0,1);
+    mpMoveListSizer->AddGrowableCol(1,3);
+    mpMoveListSizer->AddGrowableCol(2,3);
+    mpSpaceForMoveList->SetSizer(mpMoveListSizer);
 
     mpForwardArrowPanel  = new wxPanel(mpSpaceForArrows, ID_FORWARD_BUTTON);
     mpForwardArrowPanelMore  = new wxPanel(mpSpaceForArrows, ID_FORWARD_MORE_BUTTON);
@@ -203,8 +209,6 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID WXUNUSED
     mTextAttributesPlayerNames.SetFlags(wxTEXT_ATTR_ALIGNMENT);
 
     WritePlayerNames();
-
-    mSize = mpNameOfPlayerTop->GetSize();
 }
 
 slach_gui::ChessBoardPanel::~ChessBoardPanel()
@@ -217,10 +221,12 @@ void slach_gui::ChessBoardPanel::WritePlayerNames()
     mpWhitePlayerBox->ChangeValue("");
     mpWhitePlayerBox->SetDefaultStyle(mTextAttributesPlayerNames);
     mpWhitePlayerBox->WriteText(mWhitePlayerName);
+    mpWhitePlayerBox->SetInsertionPoint(0);
 
     mpBlackPlayerBox->ChangeValue("");
     mpBlackPlayerBox->SetDefaultStyle(mTextAttributesPlayerNames);
     mpBlackPlayerBox->WriteText(mBlackPlayerName);
+    mpBlackPlayerBox->SetInsertionPoint(0);
 }
 
 void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
@@ -243,11 +249,54 @@ void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
         std::string name_of_white_player = mpChessBoard->GetGame()->GetNameOfWhitePlayer();
         std::string name_of_black_player = mpChessBoard->GetGame()->GetNameOfBlackPlayer();
 
-        wxString name_of_white_player_wx(name_of_white_player);
-        wxString name_of_black_player_wx(name_of_black_player);
-        mWhitePlayerName = name_of_white_player_wx;
-        mBlackPlayerName = name_of_black_player_wx;
-        WritePlayerNames();
+        if (valid == slach::VALID_PGN)
+        {
+            wxString name_of_white_player_wx(name_of_white_player);
+            wxString name_of_black_player_wx(name_of_black_player);
+            mWhitePlayerName = name_of_white_player_wx;
+            mBlackPlayerName = name_of_black_player_wx;
+            WritePlayerNames();
+
+            std::vector<slach::Move> move_list = mpChessBoard->GetGame()->GetMoveList();
+            std::vector<std::string > move_list_san = mpChessBoard->GetGame()->GetMoveListAlgebraicFormat();
+            wxSize window_size = mpSpaceForMoveList->GetSize();
+            int size_of_one_move  = window_size.y/MAX_NUMBER_OF_VISIBLE_MOVES;
+            int virtual_size_y = size_of_one_move * (static_cast<int> ( move_list.size()/2 + 2));//plus two for safety
+
+            mpSpaceForMoveList->SetVirtualSize(window_size.x, virtual_size_y);
+
+            unsigned number_of_panels_to_add = move_list.size() + static_cast<unsigned> (move_list.size()/2 );
+            mMoveListPanels.clear();
+            unsigned move_index = 0;
+            for (unsigned i = 0; i < number_of_panels_to_add; ++i)
+            {
+                mMoveListPanels.push_back( new wxPanel( mpSpaceForMoveList, /*ID*/ OFFSET_OF_MOVE_LIST_ID + (int) i ) );
+                mMoveListPanels[i]->SetMinSize(wxSize(0,size_of_one_move));
+                mpMoveListSizer->Add(mMoveListPanels[i], 0, wxEXPAND | wxALL);
+                if (i%3 == 0)
+                {
+                    int move_number  = (int) i/3 + 1;
+                    wxString move_number_string = wxString::Format(wxT("%i"),move_number);
+                    wxStaticText* p_move_number = new wxStaticText(mMoveListPanels[i], OFFSET_OF_MOVE_LIST_ID + (int) i, move_number_string,
+                                                                   wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE_HORIZONTAL);
+                    p_move_number->Show();
+                }
+                else
+                {
+                    wxString san_move(move_list_san[move_index]);
+                    wxStaticText* p_move_number = new wxStaticText(mMoveListPanels[i], OFFSET_OF_MOVE_LIST_ID + (int) i, san_move,
+                                                                   wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE_HORIZONTAL);
+                    p_move_number->Show();
+                    move_index++;
+                }
+            }
+            mpSpaceForMoveList->Layout();
+            //mpSpaceForMoveList->SetScrollbar(wxVERTICAL, 0, 8*window_size.y,500*(virtual_size_y+window_size.y) );
+            mpSpaceForMoveList->SetScrollRate(0, 5);
+            mpMoveListSizer->Layout();//force to layout, otherwise it is only done on resize...
+        }
+
+        mpChessBoard->ResetToMoveNumber(1,slach::WHITE);//otherwise, on an immediate resize, it will skip to the last move
     }
 }
 
@@ -365,8 +414,8 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
     }
     //...now resize the chess board accordingly
     wxSize chessboard_size(min_size,min_size);
-    mpGridSizer->SetDimension(central_point, chessboard_size);
-    mpGridSizer->Layout();
+    mpBoardGridSizer->SetDimension(central_point, chessboard_size);
+    //mpBoardGridSizer->Layout();
 
     wxSize box_size = mpBlackPlayerBox->GetClientSize();
     mTextAttributesPlayerNames.SetFontPixelSize((int) box_size.y - (int)box_size.y/10);

@@ -4,6 +4,7 @@
 #include <wx/wx.h>
 #include <wx/sizer.h>
 #include <wx/panel.h>
+#include <wx/vscroll.h>
 #include <wx/textctrl.h>
 #include <wx/richtext/richtextctrl.h>
 #include <vector>
@@ -35,7 +36,9 @@ static const int ID_ABOVE_WHITE_PLAYER_NAME = 66;
 static const int ID_BELOW_WHITE_PLAYER_NAME = 67;
 static const int ID_ABOVE_BLACK_PLAYER_NAME = 68;
 static const int ID_BELOW_BLACK_PLAYER_NAME = 69;
+static const int OFFSET_OF_MOVE_LIST_ID = 1200;
 
+static const int MAX_NUMBER_OF_VISIBLE_MOVES = 20;//in the movelist window, this is the max number visible (no-scroll)
 
 
 class ChessBoardPanel : public wxPanel
@@ -64,12 +67,15 @@ private:
     /** Stores the playable part of the underlying chessboard */
     slach::ChessBoard* mpChessBoard;
     /** cache of the gridsizer that organizes the board*/
-    wxFlexGridSizer* mpGridSizer;
-
+    wxFlexGridSizer* mpBoardGridSizer;
+    /**cahce for the sizer of the space containing the move list*/
+    wxFlexGridSizer* mpMoveListSizer;
     /**The main sizer that decides where the board is*/
     wxBoxSizer* mpPrincipalSizer;
     wxBoxSizer* mpRightSideSizer;
 
+    /** Stores the panels that show the move list*/
+    std::vector<wxPanel* > mMoveListPanels;
 
     /** The space on the left of the board*/
     wxPanel* mpLeftOfChessBoard;
@@ -82,7 +88,7 @@ private:
     wxPanel* mpSpaceForArrows;
     wxPanel* mpNameOfPlayerTop;
     wxPanel* mpNameOfPlayerBottom ;
-    wxPanel* mpSpaceForMoveList;
+    wxScrolledWindow* mpSpaceForMoveList;
 
     /**Panels for each arrows*/
     wxPanel* mpForwardArrowPanel;
@@ -98,7 +104,6 @@ private:
 
     wxTextAttr mTextAttributesPlayerNames;
 
-    wxSize mSize;
     /** stores the parent frame*/
     wxFrame* mpParent;
 
