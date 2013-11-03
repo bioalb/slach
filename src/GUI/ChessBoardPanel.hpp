@@ -69,6 +69,8 @@ private:
     slach::ChessBoard* mpChessBoard;
     /** cache of the gridsizer that organizes the board*/
     wxFlexGridSizer* mpBoardGridSizer;
+    /** cache for the sizer of the arrows buttons*/
+    wxBoxSizer* mpSizerForArrows;
     /**cahce for the sizer of the space containing the move list*/
     wxFlexGridSizer* mpMoveListSizer;
     /**The main sizer that decides where the board is*/
@@ -76,7 +78,7 @@ private:
     wxBoxSizer* mpRightSideSizer;
 
     /** Stores the panels that show the move list*/
-    std::vector<wxPanel* > mMoveListPanels;
+    std::vector<wxTextCtrl* > mMoveListPanels;
 
     /** The space on the left of the board*/
     wxPanel* mpLeftOfChessBoard;
