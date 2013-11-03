@@ -63,6 +63,9 @@ private:
     /**All the squares on this chessboard with the borders*/
     std::vector<Square* > mSquares;
 
+    /**All the squares on this chessboard with the borders, ordered from top left (h1) to bottom right (a8)*/
+    std::vector<Square* > mSquaresFromBlackPerspective;
+
     std::vector<Square* > mPlayableSquares;
 
     /**the underlying playable chassboard (64 squares, no borders)*/
@@ -91,6 +94,13 @@ public:
      * Access method for the vector of squares (mSquares)
      */
     std::vector<slach::Square* > GetSquares() const;
+
+    /**
+     * Access method for the vector of squares (mSquaresFromBlackPerspective)
+     * from the black perspective
+     */
+    std::vector<slach::Square* > GetSquaresBlackPerspective() const;
+
 
     /**
      * Access method for the underlying playable (no border) square

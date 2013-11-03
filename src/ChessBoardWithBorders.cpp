@@ -19,6 +19,8 @@ slach::ChessBoardWithBorders::ChessBoardWithBorders()
 
     //allocate memory for the vectors
     mSquares.resize(gChessBoardSizeWB);
+    mSquaresFromBlackPerspective.resize(gChessBoardSizeWB);
+
     for (unsigned i = 0; i <mSquares.size(); ++i )
     {
         mSquares[i] = new Square();
@@ -112,6 +114,13 @@ slach::ChessBoardWithBorders::ChessBoardWithBorders()
     {
         mSquares[i]->SetIndexFromTopLeft(i);
     }
+
+    unsigned index_from_white = mSquares.size() - 1;
+    for (unsigned i = 0; i < mSquaresFromBlackPerspective.size(); ++i)
+    {
+        mSquaresFromBlackPerspective[i] = mSquares[index_from_white];
+        index_from_white--;
+    }
 }
 
 slach::ChessBoardWithBorders::~ChessBoardWithBorders()
@@ -129,6 +138,11 @@ slach::ChessBoardWithBorders::~ChessBoardWithBorders()
 std::vector<slach::Square* > slach::ChessBoardWithBorders::GetSquares() const
 {
     return mSquares;
+}
+
+std::vector<slach::Square* > slach::ChessBoardWithBorders::GetSquaresBlackPerspective() const
+{
+    return mSquaresFromBlackPerspective;
 }
 
 slach::ChessBoard* slach::ChessBoardWithBorders::GetPlayableChessBoard() const

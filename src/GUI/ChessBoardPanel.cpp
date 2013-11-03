@@ -588,7 +588,6 @@ void slach_gui::ChessBoardPanel::PaintOnSidesOfBoard(wxPaintEvent& WXUNUSED(even
     wxPaintDC dc2(mpRightOfChessBoard);
     DoPaintVerticalGradient(dc2, mpRightOfChessBoard);
 
-
     wxPaintDC dcBE(mpBackwardArrowPanelEnd);
     DoPaintImageOnPanel(dcBE, mpBackwardArrowPanelEnd, mArrowImages[5]);
 
