@@ -123,6 +123,10 @@ private:
     bool mDrawPiece;
 
     /**
+     * A flag to signal when a game is loaded from pgn
+     */
+    bool mGameIsLoaded;
+    /**
      * Upon initiation of drag and drop,
      * the index of the square where it starts is stored here
      */
@@ -221,6 +225,12 @@ private:
      * @param Image the image we wish to draw
      */
     void DoPaintImageOnPanel(wxPaintDC& dc, wxPanel* pPanel, wxImage& Image);
+
+    /**
+     * Highlights the move in the move list with the specified ID.
+     * All the other moves are set with white background
+     */
+    void HighlightMoveListPanelWithThisID(int ID);
 
 public:
 

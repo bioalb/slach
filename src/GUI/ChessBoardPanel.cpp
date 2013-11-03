@@ -61,6 +61,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID WXUNUSED
       mWhitePlayerName(wxT("white player")),
       mBlackPlayerName(wxT("black player")),
       mDrawPiece(true),
+      mGameIsLoaded(false),
       mSourceIndex(0u)
 {
 
@@ -266,7 +267,12 @@ void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
 
             mpSpaceForMoveList->SetVirtualSize(window_size.x, virtual_size_y);
 
-            unsigned number_of_panels_to_add = move_list.size() + static_cast<unsigned> (move_list.size()/2 + 1);
+
+            unsigned number_of_panels_to_add = move_list.size() + static_cast<unsigned> (std::div(move_list.size(),2).quot + std::div(move_list.size(),2).rem);
+            for (unsigned i = 0; i < mMoveListPanels.size(); ++i)
+            {
+                mMoveListPanels[i]->Destroy();
+            }
             mMoveListPanels.clear();
             unsigned move_index = 0;
             for (unsigned i = 0; i < number_of_panels_to_add; ++i)
@@ -301,6 +307,7 @@ void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
             //mpSpaceForMoveList->SetScrollbar(wxVERTICAL, 0, 8*window_size.y,500*(virtual_size_y+window_size.y) ); not needed
             mpSpaceForMoveList->SetScrollRate(0, 5);
             mpMoveListSizer->Layout();//force to layout, otherwise it is only done on resize...
+            mGameIsLoaded = true;
         }
         mpChessBoard->ResetToMoveNumber(1,slach::WHITE);//otherwise, on an immediate resize, it will skip to the last move
     }
@@ -433,7 +440,7 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
 
 void slach_gui::ChessBoardPanel::OnClickOnMoveList(wxMouseEvent& event)
 {
-    int index_in_vector = ((wxPanel*) event.GetEventObject())->GetId() - OFFSET_OF_MOVE_LIST_ID;
+    int index_in_vector = ((wxTextCtrl*) event.GetEventObject())->GetId() - OFFSET_OF_MOVE_LIST_ID;
     unsigned move_index = index_in_vector - std::div(index_in_vector,3).quot - 1;
     std::string fen_to_set;
     if (move_index >= (mpChessBoard->GetGame()->GetFenList().size() - 1))
@@ -445,16 +452,24 @@ void slach_gui::ChessBoardPanel::OnClickOnMoveList(wxMouseEvent& event)
         fen_to_set = mpChessBoard->GetGame()->GetFenList()[move_index+1];
     }
     DrawAndSetFenPositionOnBoard(fen_to_set);
+    HighlightMoveListPanelWithThisID(((wxTextCtrl*) event.GetEventObject())->GetId());
+}
+
+void slach_gui::ChessBoardPanel::HighlightMoveListPanelWithThisID(int ID)
+{
     for (unsigned i =0; i < mMoveListPanels.size(); ++i)
     {
         mMoveListPanels[i]->SetBackgroundColour(wxT("white"));
+        if ( (int) i == ( ID -  OFFSET_OF_MOVE_LIST_ID) )
+        {
+            mMoveListPanels[i]->SetBackgroundColour(*wxYELLOW);
+        }
     }
-    ((wxPanel*) event.GetEventObject())->SetBackgroundColour(*wxYELLOW);
-}
 
+}
 void slach_gui::ChessBoardPanel::OnMouseEnteringSingleMoveArea(wxMouseEvent& event)
 {
-    int generating_index = ((wxPanel*) event.GetEventObject())->GetId() - OFFSET_OF_MOVE_LIST_ID;
+    int generating_index = ((wxTextCtrl*) event.GetEventObject())->GetId() - OFFSET_OF_MOVE_LIST_ID;
     if (mMoveListPanels[generating_index]->GetBackgroundColour() != *wxYELLOW)
     {
         mMoveListPanels[generating_index]->SetBackgroundColour(*wxLIGHT_GREY);
@@ -463,7 +478,7 @@ void slach_gui::ChessBoardPanel::OnMouseEnteringSingleMoveArea(wxMouseEvent& eve
 
 void slach_gui::ChessBoardPanel::OnMouseLeavingSingleMoveArea(wxMouseEvent& event)
 {
-    int generating_index = ((wxPanel*) event.GetEventObject())->GetId() - OFFSET_OF_MOVE_LIST_ID;
+    int generating_index = ((wxTextCtrl*) event.GetEventObject())->GetId() - OFFSET_OF_MOVE_LIST_ID;
     if (mMoveListPanels[generating_index]->GetBackgroundColour() != *wxYELLOW)
     {
         mMoveListPanels[generating_index]->SetBackgroundColour(*wxWHITE);
@@ -476,12 +491,32 @@ void slach_gui::ChessBoardPanel::ArrowButtonMovement(wxMouseEvent& event)
     slach::Colour current_turn = mpChessBoard->WhosTurnIsIt();
     slach::Colour opp_col = slach::OppositeColour(current_turn);
 
-    std::string fen_to_set;
+    int index_of_currently_highlighted_move = 0;
+    for (unsigned i = 0; i  < mMoveListPanels.size(); ++i )
+    {
+        if (mMoveListPanels[i]->GetBackgroundColour() == (*wxYELLOW))
+        {
+            index_of_currently_highlighted_move = (int) i;
+            break;
+        }
+    }
 
+    std::string fen_to_set;
     if (generating_id == ID_FORWARD_BUTTON)
     {
         mpChessBoard->ResetToNextMove();
         fen_to_set = mpChessBoard->GetCurrentFenPosition();
+        //skip the move numbers...
+        if (std::div(index_of_currently_highlighted_move,3).rem == 2)
+        {
+            index_of_currently_highlighted_move++;
+        }
+        //prevent de-highlighting of last move
+        if (index_of_currently_highlighted_move == (mMoveListPanels.size() - 1))
+        {
+            index_of_currently_highlighted_move--;
+        }
+        HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 1);
     }
     else if (generating_id == ID_FORWARD_MORE_BUTTON)
     {
@@ -491,15 +526,33 @@ void slach_gui::ChessBoardPanel::ArrowButtonMovement(wxMouseEvent& event)
         mpChessBoard->ResetToNextMove();
         mpChessBoard->ResetToNextMove();
         fen_to_set = mpChessBoard->GetCurrentFenPosition();
+        //skip the move numbers...
+        if (std::div(index_of_currently_highlighted_move,3).rem == 2)
+        {
+            index_of_currently_highlighted_move++;
+        }
+        //prevent de-highlighting of last move
+        if ( (index_of_currently_highlighted_move + 5) >= (mMoveListPanels.size() - 1))
+        {
+            index_of_currently_highlighted_move = mMoveListPanels.size() - 1 - 7;
+        }
+        HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 7);
     }
     else if (generating_id == ID_FORWARD_END_BUTTON)
     {
         fen_to_set = mpChessBoard->GetGame()->FetchFromFenList(100000000, opp_col);
+        HighlightMoveListPanelWithThisID(mMoveListPanels.back()->GetId());
     }
     else if (generating_id == ID_BACKWARD_BUTTON)
     {
         mpChessBoard->ResetToPreviousMove();
         fen_to_set = mpChessBoard->GetCurrentFenPosition();
+        //skip the move numbers...
+        if (std::div(index_of_currently_highlighted_move,3).rem == 1)
+        {
+            index_of_currently_highlighted_move--;
+        }
+        HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID - 1);
     }
     else if (generating_id == ID_BACKWARD_MORE_BUTTON)
     {
@@ -509,10 +562,17 @@ void slach_gui::ChessBoardPanel::ArrowButtonMovement(wxMouseEvent& event)
         mpChessBoard->ResetToPreviousMove();
         mpChessBoard->ResetToPreviousMove();
         fen_to_set = mpChessBoard->GetCurrentFenPosition();
+        //skip the move numbers...
+        if (std::div(index_of_currently_highlighted_move,3).rem == 1)
+        {
+            index_of_currently_highlighted_move--;
+        }
+        HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID - 7);
     }
     else if (generating_id == ID_BACKWARD_END_BUTTON)
     {
         fen_to_set = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        HighlightMoveListPanelWithThisID(-1);//do not colour anything
     }
     DrawAndSetFenPositionOnBoard(fen_to_set);
 }
