@@ -275,7 +275,7 @@ void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
                                                wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_CENTRE) );
                 mMoveListPanels[i]->SetMinSize(wxSize(0,size_of_one_move));
                 mpMoveListSizer->Add(mMoveListPanels[i], 0, wxEXPAND | wxALL);
-                mMoveListPanels[i]->SetBackgroundColour(wxT("white"));
+                mMoveListPanels[i]->SetBackgroundColour(*wxWHITE);
                 if (i%3 == 0)
                 {
                     int move_number  = (int) i/3 + 1;
@@ -290,8 +290,8 @@ void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
                         mMoveListPanels[i]->WriteText(san_move);
                         //Bind to the event both the text box and the panel, so the user can click anywhere
                         mMoveListPanels[i]->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::OnClickOnMoveList, this);
-//                        mMoveListPanels[i]->Bind(wxEVT_ENTER_WINDOW, &ChessBoardPanel::OnMouseEnteringMoveArea, this);
-//                        mMoveListPanels[i]->Bind(wxEVT_LEAVE_WINDOW, &ChessBoardPanel::OnMouseLeavingMoveArea, this);
+                        mMoveListPanels[i]->Bind(wxEVT_ENTER_WINDOW, &ChessBoardPanel::OnMouseEnteringSingleMoveArea, this);
+                        mMoveListPanels[i]->Bind(wxEVT_LEAVE_WINDOW, &ChessBoardPanel::OnMouseLeavingSingleMoveArea, this);
 
                         move_index++;
                     }
@@ -449,14 +449,26 @@ void slach_gui::ChessBoardPanel::OnClickOnMoveList(wxMouseEvent& event)
     {
         mMoveListPanels[i]->SetBackgroundColour(wxT("white"));
     }
-    ((wxPanel*) event.GetEventObject())->SetBackgroundColour(wxT("yellow"));
+    ((wxPanel*) event.GetEventObject())->SetBackgroundColour(*wxYELLOW);
 }
 
-//void slach_gui::ChessBoardPanel::OnMouseEnteringMoveArea(wxMouseEvent& event)
-//{
-//    int move_index = ((wxPanel*) event.GetEventObject())->GetId() - OFFSET_OF_MOVE_LIST_ID;
-//
-//}
+void slach_gui::ChessBoardPanel::OnMouseEnteringSingleMoveArea(wxMouseEvent& event)
+{
+    int generating_index = ((wxPanel*) event.GetEventObject())->GetId() - OFFSET_OF_MOVE_LIST_ID;
+    if (mMoveListPanels[generating_index]->GetBackgroundColour() != *wxYELLOW)
+    {
+        mMoveListPanels[generating_index]->SetBackgroundColour(*wxLIGHT_GREY);
+    }
+}
+
+void slach_gui::ChessBoardPanel::OnMouseLeavingSingleMoveArea(wxMouseEvent& event)
+{
+    int generating_index = ((wxPanel*) event.GetEventObject())->GetId() - OFFSET_OF_MOVE_LIST_ID;
+    if (mMoveListPanels[generating_index]->GetBackgroundColour() != *wxYELLOW)
+    {
+        mMoveListPanels[generating_index]->SetBackgroundColour(*wxWHITE);
+    }
+}
 
 void slach_gui::ChessBoardPanel::ArrowButtonMovement(wxMouseEvent& event)
 {

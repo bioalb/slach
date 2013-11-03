@@ -272,6 +272,9 @@ public:
      */
     void LeftMouseClick(wxMouseEvent& event);
 
+    void OnMouseEnteringSingleMoveArea(wxMouseEvent& event);
+    void OnMouseLeavingSingleMoveArea(wxMouseEvent& event);
+
     void ResetToInitialPosition(wxCommandEvent& event);
 
     void LoadPgnFile(wxCommandEvent& event);
