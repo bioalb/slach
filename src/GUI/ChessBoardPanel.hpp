@@ -32,10 +32,12 @@ static const int ID_OF_BOTTOM_PLAYER_NAME = 62;
 static const int ID_OF_MOVE_LIST_SPACE = 63;
 static const int ID_WHITE_PLAYER_BOX = 64;
 static const int ID_BLACK_PLAYER_BOX = 65;
-static const int ID_ABOVE_WHITE_PLAYER_NAME = 66;
-static const int ID_BELOW_WHITE_PLAYER_NAME = 67;
-static const int ID_ABOVE_BLACK_PLAYER_NAME = 68;
-static const int ID_BELOW_BLACK_PLAYER_NAME = 69;
+static const int ID_ABOVE_WHITE_PLAYER_BOX = 65;
+static const int ID_ABOVE_BLACK_PLAYER_BOX = 66;
+static const int ID_ABOVE_BOTTOM_PLAYER_NAME = 67;
+static const int ID_BELOW_BOTTOM_PLAYER_NAME = 68;
+static const int ID_ABOVE_TOP_PLAYER_NAME = 69;
+static const int ID_BELOW_TOP_PLAYER_NAME = 70;
 static const int OFFSET_OF_MOVE_LIST_ID = 1100;
 static const int OFFSET_OF_MOVE_NUMBER_ID = 1300;
 
@@ -92,6 +94,10 @@ private:
     wxPanel* mpNameOfPlayerTop;
     wxPanel* mpNameOfPlayerBottom ;
     wxScrolledWindow* mpSpaceForMoveList;
+    wxPanel* mAboveBotoomPlayerName;
+    wxPanel* mBelowBotoomPlayerName;
+    wxPanel* mAboveTopPlayerName;
+    wxPanel* mBelowTopPlayerName;
 
     /**Panels for each arrows*/
     wxPanel* mpForwardArrowPanel;
@@ -102,8 +108,10 @@ private:
     wxPanel* mpBackwardArrowPanelEnd;
 
     /**Text control for the players' names*/
-    wxTextCtrl * mpWhitePlayerBox;
-    wxTextCtrl * mpBlackPlayerBox;
+    wxTextCtrl * mpBottomPlayerBox;
+    wxTextCtrl * mpTopPlayerBox;
+    wxTextCtrl * mpAboveBottomPlayerBox;
+    wxTextCtrl * mpAboveTopPlayerBox;
 
     wxTextAttr mTextAttributesPlayerNames;
 
