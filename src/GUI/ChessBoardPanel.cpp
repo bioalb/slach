@@ -62,6 +62,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID WXUNUSED
       mBlackPlayerName(wxT("black player")),
       mDrawPiece(true),
       mGameIsLoaded(false),
+      mPerspectiveIsFromWhite(true),
       mSourceIndex(0u)
 {
 
@@ -167,8 +168,11 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID WXUNUSED
     mpBackwardArrowPanelEnd->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
 
 
-    wxButton* rest_button  = new wxButton(mpLeftOfChessBoard, 1, wxT("Pgn..."),wxDefaultPosition, wxDefaultSize);
-    rest_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ChessBoardPanel::LoadPgnFile, this);
+    wxButton* pgn_button  = new wxButton(mpLeftOfChessBoard, 1, wxT("Pgn..."),wxDefaultPosition, wxDefaultSize);
+    pgn_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ChessBoardPanel::LoadPgnFile, this);
+
+    wxButton* flip_view_button  = new wxButton(mpLeftOfChessBoard, 2, wxT("flip..."),wxPoint(0,55), wxDefaultSize);
+    flip_view_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ChessBoardPanel::FlipView, this);
 
     mpWhitePlayerBox = new wxTextCtrl (mpNameOfPlayerBottom, ID_WHITE_PLAYER_BOX, wxT(""), wxDefaultPosition,
     								  wxDefaultSize, wxTE_LEFT | wxTE_RICH | wxTE_MULTILINE | wxTE_DONTWRAP | wxBORDER_NONE);
@@ -229,6 +233,32 @@ void slach_gui::ChessBoardPanel::WritePlayerNames()
     mpBlackPlayerBox->SetDefaultStyle(mTextAttributesPlayerNames);
     mpBlackPlayerBox->WriteText(mBlackPlayerName);
     mpBlackPlayerBox->SetInsertionPoint(0);
+}
+
+void slach_gui::ChessBoardPanel::FlipView(wxCommandEvent& WXUNUSED(event))
+{
+    if (mPerspectiveIsFromWhite == true)
+    {
+        mpAllSquares = mpChessBoardWithBorders->GetSquaresBlackPerspective();
+        mPerspectiveIsFromWhite = false;
+    }
+    else
+    {
+        mpAllSquares = mpChessBoardWithBorders->GetSquares();
+        mPerspectiveIsFromWhite = true;
+    }
+
+//    unsigned index_from_white = mSquarePanels.size() - 1;
+//    std::vector<wxPanel*> temp;
+//    temp.resize(mSquarePanels.size());
+//    for (unsigned i = 0; i < mSquarePanels.size(); ++i)
+//    {
+//        temp[i] = mSquarePanels[index_from_white];
+//        index_from_white--;
+//    }
+//    mSquarePanels = temp;
+    mpMidPanelOfChessBoard->Refresh();
+    mpBoardGridSizer->Layout();
 }
 
 void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
@@ -318,10 +348,10 @@ void slach_gui::ChessBoardPanel::LeftMouseClick(wxMouseEvent& event)
 	int square_index_int = (static_cast<wxWindow*> (event.GetEventObject()))->GetId();
 	mSourceIndex = (unsigned) square_index_int;
 
-    wxDropSource drop_source(mSquarePanels[mSourceIndex], GetIconFromPiece(mpAllSquares[mSourceIndex]->GetPieceOnThisSquare()),
-                                                          GetIconFromPiece(mpAllSquares[mSourceIndex]->GetPieceOnThisSquare()));
+    wxDropSource drop_source(mSquarePanels[mSourceIndex], GetIconFromPiece(mpAllSquares[square_index_int]->GetPieceOnThisSquare()),
+                                                          GetIconFromPiece(mpAllSquares[square_index_int]->GetPieceOnThisSquare()));
 
-    wxBitmapDataObject piece_to_be_moved(GetImageFromPiece(mpAllSquares[mSourceIndex]->GetPieceOnThisSquare()));
+    wxBitmapDataObject piece_to_be_moved(GetImageFromPiece(mpAllSquares[square_index_int]->GetPieceOnThisSquare()));
     drop_source.SetData( piece_to_be_moved );
 
     mDrawPiece = false;
@@ -348,14 +378,23 @@ void slach_gui::ChessBoardPanel::LeftMouseRelease(unsigned destinationIndex)
 	assert(mSourceIndex<mpAllSquares.size());
 	assert(destinationIndex<mpAllSquares.size());
     slach::Move candidate_move(mpAllSquares[mSourceIndex], mpAllSquares[destinationIndex]);
-
     ProcessMoveInGui(candidate_move);
 }
 
 void slach_gui::ChessBoardPanel::ProcessMoveInGui(slach::Move & move)
 {
-	unsigned destination_index = move.GetDestination()->GetIndexFromTopLeft();
-	unsigned source_index = move.GetOrigin()->GetIndexFromTopLeft();
+    unsigned destination_index = 0;
+    unsigned source_index = 0;
+    if (mPerspectiveIsFromWhite == true)
+    {
+        destination_index = move.GetDestination()->GetIndexFromTopLeft();
+        source_index = move.GetOrigin()->GetIndexFromTopLeft();
+    }
+    else
+    {
+        destination_index = move.GetDestination()->GetIndexFromBottomRight();
+        source_index = move.GetOrigin()->GetIndexFromBottomRight();
+    }
 
     if (mpChessBoard->IsLegalMove(move)==true)
     {

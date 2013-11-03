@@ -43,10 +43,13 @@ public:
         TS_ASSERT_EQUALS(sq1.GetRankAsString(), "4");
         TS_ASSERT_EQUALS(sq1.GetFileAsString(), "a");
         TS_ASSERT_EQUALS(sq1.GetIndexFromA1(), UINT_MAX);
+        TS_ASSERT_EQUALS(sq1.GetIndexFromBottomRight(), UINT_MAX);
         sq1.SetIndexFromA1(24u);
         sq1.SetIndexFromTopLeft(41u);
+        sq1.SetIndexFromBottomRight(45u);
         TS_ASSERT_EQUALS(sq1.GetIndexFromA1(), 24u);
         TS_ASSERT_EQUALS(sq1.GetIndexFromTopLeft(), 41u);
+        TS_ASSERT_EQUALS(sq1.GetIndexFromBottomRight(), 45u);
         TS_ASSERT_EQUALS(sq1.GetRankAsInt(), 3);
         TS_ASSERT_EQUALS(sq1.GetFileAsInt(), 0);
         TS_ASSERT_EQUALS(sq1.Getx88Index(), 48);

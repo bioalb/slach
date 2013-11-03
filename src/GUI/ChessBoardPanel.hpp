@@ -126,6 +126,13 @@ private:
      * A flag to signal when a game is loaded from pgn
      */
     bool mGameIsLoaded;
+
+    /**
+     * A flag to keep track where the perspective is from
+     * True by default
+     */
+    bool mPerspectiveIsFromWhite;
+
     /**
      * Upon initiation of drag and drop,
      * the index of the square where it starts is stored here
@@ -288,6 +295,8 @@ public:
     void ResetToInitialPosition(wxCommandEvent& event);
 
     void LoadPgnFile(wxCommandEvent& event);
+
+    void FlipView(wxCommandEvent& WXUNUSED(event));
 
     /**
      * this method is activated when user clicks on one of the arrows.

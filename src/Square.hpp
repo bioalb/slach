@@ -57,6 +57,15 @@ private:
      */
     unsigned mIndexFromTopLeft;
 
+    /**
+     * The index of this square on a chessboard counting from bottom right of the board
+     * INCLUDING borders.
+     * Meaning that this index is zero in the border square bottom right of H1
+     *
+     * it is initialised to UINT_MAX in the constructor
+     */
+    unsigned mIndexFromBottomRight;
+
 public:
     /**Constructor*/
     Square();
@@ -253,6 +262,22 @@ public:
      * counting from top left (near a8) AND including borders
      */
     unsigned GetIndexFromTopLeft() const;
+
+    /**
+     * Sets the index of this square
+     * counting from bottom right (near h1) AND including borders
+     * This method PERFORMS NO CHECKS. whatever is passed in, gets assigned to the mIndexFromBottomRight
+     * member variable.
+     *
+     * @param index the index we wish to set
+     */
+    void SetIndexFromBottomRight(unsigned index);
+
+    /**
+     * Gets the index of this square
+     * counting from top left (near h1) AND including borders
+     */
+    unsigned GetIndexFromBottomRight() const;
 
     int Getx88Index() const;
 

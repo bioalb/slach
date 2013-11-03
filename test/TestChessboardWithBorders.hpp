@@ -121,6 +121,8 @@ public:
         TS_ASSERT_EQUALS(squares[14]->IsLightSquare(), false);
         TS_ASSERT_EQUALS(squares[14]->GetFile(), 'd');
         TS_ASSERT_EQUALS(squares[14]->GetRank(), '8');
+        TS_ASSERT_EQUALS(squares[14]->GetIndexFromTopLeft(), 14u);
+        TS_ASSERT_EQUALS(squares[14]->GetIndexFromBottomRight(), 85u);
 
         //e8
         TS_ASSERT_EQUALS(squares[15]->IsCornerSquare(), false);
@@ -430,6 +432,8 @@ public:
         TS_ASSERT_EQUALS(squares[12]->GetFile(), 'g');
         TS_ASSERT_EQUALS(squares[12]->GetRank(), '1');
         TS_ASSERT_EQUALS(squares[12]->IsCoordinatePrintable(), false);
+        TS_ASSERT_EQUALS(squares[12]->GetIndexFromTopLeft(),87u);
+        TS_ASSERT_EQUALS(squares[12]->GetIndexFromBottomRight(), 12u);
 
 
         //f1

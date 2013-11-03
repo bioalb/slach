@@ -113,6 +113,7 @@ slach::ChessBoardWithBorders::ChessBoardWithBorders()
     for (unsigned i = 0; i <mSquares.size(); ++i )
     {
         mSquares[i]->SetIndexFromTopLeft(i);
+        mSquares[i]->SetIndexFromBottomRight(mSquares.size() - 1 - i);
     }
 
     unsigned index_from_white = mSquares.size() - 1;
