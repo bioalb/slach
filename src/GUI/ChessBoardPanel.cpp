@@ -166,7 +166,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID WXUNUSED
     mpBackwardArrowPanel->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
     mpBackwardArrowPanelMore->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
     mpBackwardArrowPanelEnd->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
-
+    this->Bind(wxEVT_KEY_DOWN, &ChessBoardPanel::ArrowKeyMovement, this);
 
     wxButton* pgn_button  = new wxButton(mpLeftOfChessBoard, 1, wxT("Pgn..."),wxDefaultPosition, wxDefaultSize);
     pgn_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ChessBoardPanel::LoadPgnFile, this);
@@ -555,96 +555,125 @@ void slach_gui::ChessBoardPanel::OnMouseLeavingSingleMoveArea(wxMouseEvent& even
     }
 }
 
-void slach_gui::ChessBoardPanel::ArrowButtonMovement(wxMouseEvent& event)
+void slach_gui::ChessBoardPanel::DoAdvanceOneMove()
 {
-    int generating_id = ((wxPanel*) event.GetEventObject())->GetId();
+    int highlighted_move = GetCurrentlyHighlightedMove();
+    mpChessBoard->ResetToNextMove();
+    std::string fen_to_set = mpChessBoard->GetCurrentFenPosition();
+    //skip the move numbers...
+    if (std::div(highlighted_move,3).rem == 2)
+    {
+        highlighted_move++;
+    }
+    //prevent de-highlighting of last move
+    if (highlighted_move == (mMoveListPanels.size() - 1))
+    {
+        highlighted_move--;
+    }
+    HighlightMoveListPanelWithThisID(highlighted_move + OFFSET_OF_MOVE_LIST_ID + 1);
+    DrawAndSetFenPositionOnBoard(fen_to_set);
+
+}
+
+void slach_gui::ChessBoardPanel::DoAdvanceSeveralMoves()
+{
+    int index_of_currently_highlighted_move = GetCurrentlyHighlightedMove();
+    mpChessBoard->ResetToNextMove();
+    mpChessBoard->ResetToNextMove();
+    mpChessBoard->ResetToNextMove();
+    mpChessBoard->ResetToNextMove();
+    mpChessBoard->ResetToNextMove();
+    std::string fen_to_set = mpChessBoard->GetCurrentFenPosition();
+    //skip the move numbers...
+    if (std::div(index_of_currently_highlighted_move,3).rem == 2)
+    {
+        index_of_currently_highlighted_move++;
+    }
+    //prevent de-highlighting of last move
+    if ( (index_of_currently_highlighted_move + 5) >= (mMoveListPanels.size() - 1))
+    {
+        index_of_currently_highlighted_move = mMoveListPanels.size() - 1 - 7;
+    }
+    HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 7);
+    DrawAndSetFenPositionOnBoard(fen_to_set);
+}
+
+void slach_gui::ChessBoardPanel::DoAdvanceUntilEnd()
+{
     slach::Colour current_turn = mpChessBoard->WhosTurnIsIt();
     slach::Colour opp_col = slach::OppositeColour(current_turn);
+    std::string fen_to_set = mpChessBoard->GetGame()->FetchFromFenList(100000000, opp_col);
+    HighlightMoveListPanelWithThisID(mMoveListPanels.back()->GetId());
+    DrawAndSetFenPositionOnBoard(fen_to_set);
+}
+void slach_gui::ChessBoardPanel::DoGoBackOneMove()
+{
+    int index_of_currently_highlighted_move = GetCurrentlyHighlightedMove();
+    mpChessBoard->ResetToPreviousMove();
+    std::string fen_to_set = mpChessBoard->GetCurrentFenPosition();
+    //skip the move numbers...
+    if (std::div(index_of_currently_highlighted_move,3).rem == 1)
+    {
+        index_of_currently_highlighted_move--;
+    }
+    HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID - 1);
+    DrawAndSetFenPositionOnBoard(fen_to_set);
+}
+void slach_gui::ChessBoardPanel::DoGoBackSeveralMoves()
+{
+    int index_of_currently_highlighted_move = GetCurrentlyHighlightedMove();
+    mpChessBoard->ResetToPreviousMove();
+    mpChessBoard->ResetToPreviousMove();
+    mpChessBoard->ResetToPreviousMove();
+    mpChessBoard->ResetToPreviousMove();
+    mpChessBoard->ResetToPreviousMove();
+    std::string fen_to_set = mpChessBoard->GetCurrentFenPosition();
+    //skip the move numbers...
+    if (std::div(index_of_currently_highlighted_move,3).rem == 1)
+    {
+        index_of_currently_highlighted_move--;
+    }
+    HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID - 7);
+    DrawAndSetFenPositionOnBoard(fen_to_set);
+}
 
+void slach_gui::ChessBoardPanel::DoGoBackToBeginning()
+{
+    std::string fen_to_set = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    HighlightMoveListPanelWithThisID(-1);//do not colour anything
+    DrawAndSetFenPositionOnBoard(fen_to_set);
+}
+
+int slach_gui::ChessBoardPanel::GetCurrentlyHighlightedMove()
+{
     int index_of_currently_highlighted_move = 0;
     for (unsigned i = 0; i  < mMoveListPanels.size(); ++i )
     {
         if (mMoveListPanels[i]->GetBackgroundColour() == (*wxYELLOW))
         {
-            index_of_currently_highlighted_move = (int) i;
-            break;
+            return (int) i;
         }
     }
+    return index_of_currently_highlighted_move;
+}
 
-    std::string fen_to_set;
-    if (generating_id == ID_FORWARD_BUTTON)
-    {
-        mpChessBoard->ResetToNextMove();
-        fen_to_set = mpChessBoard->GetCurrentFenPosition();
-        //skip the move numbers...
-        if (std::div(index_of_currently_highlighted_move,3).rem == 2)
-        {
-            index_of_currently_highlighted_move++;
-        }
-        //prevent de-highlighting of last move
-        if (index_of_currently_highlighted_move == (mMoveListPanels.size() - 1))
-        {
-            index_of_currently_highlighted_move--;
-        }
-        HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 1);
-    }
-    else if (generating_id == ID_FORWARD_MORE_BUTTON)
-    {
-        mpChessBoard->ResetToNextMove();
-        mpChessBoard->ResetToNextMove();
-        mpChessBoard->ResetToNextMove();
-        mpChessBoard->ResetToNextMove();
-        mpChessBoard->ResetToNextMove();
-        fen_to_set = mpChessBoard->GetCurrentFenPosition();
-        //skip the move numbers...
-        if (std::div(index_of_currently_highlighted_move,3).rem == 2)
-        {
-            index_of_currently_highlighted_move++;
-        }
-        //prevent de-highlighting of last move
-        if ( (index_of_currently_highlighted_move + 5) >= (mMoveListPanels.size() - 1))
-        {
-            index_of_currently_highlighted_move = mMoveListPanels.size() - 1 - 7;
-        }
-        HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 7);
-    }
-    else if (generating_id == ID_FORWARD_END_BUTTON)
-    {
-        fen_to_set = mpChessBoard->GetGame()->FetchFromFenList(100000000, opp_col);
-        HighlightMoveListPanelWithThisID(mMoveListPanels.back()->GetId());
-    }
-    else if (generating_id == ID_BACKWARD_BUTTON)
-    {
-        mpChessBoard->ResetToPreviousMove();
-        fen_to_set = mpChessBoard->GetCurrentFenPosition();
-        //skip the move numbers...
-        if (std::div(index_of_currently_highlighted_move,3).rem == 1)
-        {
-            index_of_currently_highlighted_move--;
-        }
-        HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID - 1);
-    }
-    else if (generating_id == ID_BACKWARD_MORE_BUTTON)
-    {
-        mpChessBoard->ResetToPreviousMove();
-        mpChessBoard->ResetToPreviousMove();
-        mpChessBoard->ResetToPreviousMove();
-        mpChessBoard->ResetToPreviousMove();
-        mpChessBoard->ResetToPreviousMove();
-        fen_to_set = mpChessBoard->GetCurrentFenPosition();
-        //skip the move numbers...
-        if (std::div(index_of_currently_highlighted_move,3).rem == 1)
-        {
-            index_of_currently_highlighted_move--;
-        }
-        HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID - 7);
-    }
-    else if (generating_id == ID_BACKWARD_END_BUTTON)
-    {
-        fen_to_set = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-        HighlightMoveListPanelWithThisID(-1);//do not colour anything
-    }
-    DrawAndSetFenPositionOnBoard(fen_to_set);
+void slach_gui::ChessBoardPanel::ArrowKeyMovement(wxKeyEvent& event)
+{
+    std::cout<<"hello"<<std::endl;
+    if (event.GetKeyCode() == WXK_RIGHT) DoAdvanceOneMove();
+    event.Skip();
+}
+
+void slach_gui::ChessBoardPanel::ArrowButtonMovement(wxMouseEvent& event)
+{
+    int generating_id = ((wxPanel*) event.GetEventObject())->GetId();
+
+    if (generating_id == ID_FORWARD_BUTTON) DoAdvanceOneMove();
+    else if (generating_id == ID_FORWARD_MORE_BUTTON) DoAdvanceSeveralMoves();
+    else if (generating_id == ID_FORWARD_END_BUTTON) DoAdvanceUntilEnd();
+    else if (generating_id == ID_BACKWARD_BUTTON) DoGoBackOneMove();
+    else if (generating_id == ID_BACKWARD_MORE_BUTTON) DoGoBackSeveralMoves();
+    else if (generating_id == ID_BACKWARD_END_BUTTON) DoGoBackToBeginning();
 }
 
 void slach_gui::ChessBoardPanel::PaintOnSidesOfBoard(wxPaintEvent& WXUNUSED(event))

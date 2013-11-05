@@ -247,6 +247,14 @@ private:
      */
     void HighlightMoveListPanelWithThisID(int ID);
 
+    int GetCurrentlyHighlightedMove();
+    void DoAdvanceOneMove();
+    void DoAdvanceSeveralMoves();
+    void DoAdvanceUntilEnd();
+    void DoGoBackOneMove();
+    void DoGoBackSeveralMoves();
+    void DoGoBackToBeginning();
+
 public:
 
     /**
@@ -313,6 +321,8 @@ public:
      * @param event the generating event
      */
     void ArrowButtonMovement(wxMouseEvent& event);
+
+    void ArrowKeyMovement(wxKeyEvent& event);
 
     /**
      * this method is activated when user clicks on one of the moves in the move list.
