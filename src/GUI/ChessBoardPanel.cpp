@@ -159,14 +159,14 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID WXUNUSED
     mpLeftOfChessBoard->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnSidesOfBoard, this);//with this-> instead of mpLeftOfChessBoard it does not work
     mpRightOfChessBoard->Bind(wxEVT_SIZE, &ChessBoardPanel::OnSize, this);
 
-    //BIND THE CLICKS ON THE ARROWS
+    //BIND THE CLICKS ON THE ARROWS and teh keys
     mpForwardArrowPanel->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
     mpForwardArrowPanelMore->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
     mpForwardArrowPanelEnd->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
     mpBackwardArrowPanel->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
     mpBackwardArrowPanelMore->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
     mpBackwardArrowPanelEnd->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
-    this->Bind(wxEVT_KEY_DOWN, &ChessBoardPanel::ArrowKeyMovement, this);
+    this->Bind(wxEVT_CHAR_HOOK, &ChessBoardPanel::ArrowKeyMovement, this);//char hook needed for it to work
 
     wxButton* pgn_button  = new wxButton(mpLeftOfChessBoard, 1, wxT("Pgn..."),wxDefaultPosition, wxDefaultSize);
     pgn_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &ChessBoardPanel::LoadPgnFile, this);
@@ -659,8 +659,13 @@ int slach_gui::ChessBoardPanel::GetCurrentlyHighlightedMove()
 
 void slach_gui::ChessBoardPanel::ArrowKeyMovement(wxKeyEvent& event)
 {
-    std::cout<<"hello"<<std::endl;
     if (event.GetKeyCode() == WXK_RIGHT) DoAdvanceOneMove();
+    if (event.GetKeyCode() == WXK_LEFT) DoGoBackOneMove();
+    if (event.GetKeyCode() == WXK_PAGEUP) DoGoBackSeveralMoves();
+    if (event.GetKeyCode() == WXK_PAGEDOWN) DoAdvanceSeveralMoves();
+    if (event.GetKeyCode() == WXK_HOME) DoGoBackToBeginning();
+    if (event.GetKeyCode() == WXK_END) DoAdvanceUntilEnd();
+
     event.Skip();
 }
 
