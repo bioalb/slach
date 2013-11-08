@@ -660,6 +660,8 @@ int slach_gui::ChessBoardPanel::GetCurrentlyHighlightedMove()
 void slach_gui::ChessBoardPanel::ArrowKeyMovement(wxKeyEvent& event)
 {
     if (event.GetKeyCode() == WXK_RIGHT) DoAdvanceOneMove();
+    if (event.GetKeyCode() == WXK_DOWN) DoAdvanceOneMove();
+    if (event.GetKeyCode() == WXK_UP) DoGoBackOneMove();
     if (event.GetKeyCode() == WXK_LEFT) DoGoBackOneMove();
     if (event.GetKeyCode() == WXK_PAGEUP) DoGoBackSeveralMoves();
     if (event.GetKeyCode() == WXK_PAGEDOWN) DoAdvanceSeveralMoves();
