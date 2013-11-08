@@ -7,7 +7,7 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
       mpStartEngineButton ( new wxButton(this, 1, wxT("Start Engine"),wxDefaultPosition, wxDefaultSize) ),
       mpStopEngineButton ( new wxButton(this, 2, wxT("Stop Engine"),wxDefaultPosition, wxDefaultSize) ),
       mpEngineTextBox ( new wxTextCtrl(this, wxID_ANY, wxT("Engine output"), wxDefaultPosition, wxSize(150,60), wxTE_MULTILINE | wxBORDER_SIMPLE) ),
-      mpScoreTextBox ( new wxRichTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE) ),
+      mpScoreTextBox ( new wxRichTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxBORDER_NONE) ),
       mTimer(this, 1),
       mEngineIsRunning(false)
 {
@@ -137,18 +137,17 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
 		mpScoreTextBox->BeginAlignment(wxTEXT_ALIGNMENT_LEFT);
 		mpScoreTextBox->WriteText( wxT("Depth = "));
 		mpScoreTextBox->WriteText( wxString::Format(wxT("%d"), mpEngineInterface->GetLatestDepth()) );
-        mpScoreTextBox->Newline();
-        mpScoreTextBox->EndAlignment();
+        mpScoreTextBox->LineBreak();
+
 		mpScoreTextBox->BeginBold();
-        mpScoreTextBox->BeginAlignment(wxTEXT_ALIGNMENT_CENTRE);
 		mpScoreTextBox->WriteText( wxT("Score "));
-        mpScoreTextBox->Newline();
+        mpScoreTextBox->LineBreak();
 		mpScoreTextBox->BeginFontSize(18);
 		mpScoreTextBox->WriteText( wxString::Format(wxT("%.2f"), mpEngineInterface->GetLatestScore()) );
-		mpScoreTextBox->EndBold();
 		mpScoreTextBox->EndFontSize();
+		mpScoreTextBox->EndAlignment();
+        mpScoreTextBox->EndBold();
 		mpScoreTextBox->EndTextColour();
-        mpScoreTextBox->EndAlignment();
 	}
 	evt.Skip();
 }
