@@ -13,6 +13,7 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
 {
     this->SetBackgroundColour(wxColour(35,87,102));
     mpEngineTextBox->SetEditable(false);
+    mpScoreTextBox->SetEditable(false);
     mpScoreTextBox->SetBackgroundColour(wxColour(35,87,102));
     wxFont font(12, wxROMAN, wxNORMAL, wxNORMAL);
     mpScoreTextBox->SetFont(font);
@@ -134,16 +135,20 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
 		mpScoreTextBox->BeginTextColour(wxColour(255, 255, 255));
 		mpScoreTextBox->ChangeValue("");
 		mpScoreTextBox->BeginAlignment(wxTEXT_ALIGNMENT_LEFT);
-		mpScoreTextBox->WriteText( wxT("Depth: "));
+		mpScoreTextBox->WriteText( wxT("Depth = "));
 		mpScoreTextBox->WriteText( wxString::Format(wxT("%d"), mpEngineInterface->GetLatestDepth()) );
-		mpScoreTextBox->Newline();
-		mpScoreTextBox->WriteText( wxT("Score: "));
-		mpScoreTextBox->BeginAlignment(wxTEXT_ALIGNMENT_CENTRE);
+        mpScoreTextBox->Newline();
+        mpScoreTextBox->EndAlignment();
+		mpScoreTextBox->BeginBold();
+        mpScoreTextBox->BeginAlignment(wxTEXT_ALIGNMENT_CENTRE);
+		mpScoreTextBox->WriteText( wxT("Score "));
+        mpScoreTextBox->Newline();
 		mpScoreTextBox->BeginFontSize(18);
-		mpScoreTextBox->WriteText( wxString::Format(wxT("%f"), mpEngineInterface->GetLatestScore()) );
-		mpScoreTextBox->EndAlignment();
+		mpScoreTextBox->WriteText( wxString::Format(wxT("%.2f"), mpEngineInterface->GetLatestScore()) );
+		mpScoreTextBox->EndBold();
 		mpScoreTextBox->EndFontSize();
 		mpScoreTextBox->EndTextColour();
+        mpScoreTextBox->EndAlignment();
 	}
 	evt.Skip();
 }
