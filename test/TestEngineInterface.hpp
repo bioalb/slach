@@ -79,6 +79,10 @@ public:
         std::vector<slach::Square*> squares =  my_cb.GetSquares();//already numbered and well defined.
 
         slach::EngineInterface interface;
+        //coverage
+        TS_ASSERT_EQUALS(interface.GetLatestDepth(), INT_MAX);
+        TS_ASSERT_EQUALS(interface.GetLatestScore(), DBL_MAX);
+
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
         slach::Position position;
         position.SetFromFen(test_position, squares);

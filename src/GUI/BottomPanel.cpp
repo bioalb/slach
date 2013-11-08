@@ -6,15 +6,19 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
       mpEngineInterface( new slach::EngineInterface() ),
       mpStartEngineButton ( new wxButton(this, 1, wxT("Start Engine"),wxDefaultPosition, wxDefaultSize) ),
       mpStopEngineButton ( new wxButton(this, 2, wxT("Stop Engine"),wxDefaultPosition, wxDefaultSize) ),
-      mpEngineTextBox ( new wxTextCtrl(this, wxID_ANY, wxT("Engine output"), wxDefaultPosition, wxSize(150,60), wxTE_MULTILINE) ),
+      mpEngineTextBox ( new wxTextCtrl(this, wxID_ANY, wxT("Engine output"), wxDefaultPosition, wxSize(150,60), wxTE_MULTILINE | wxBORDER_SIMPLE) ),
+      mpScoreTextBox ( new wxRichTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE) ),
       mTimer(this, 1),
       mEngineIsRunning(false)
 {
     this->SetBackgroundColour(wxColour(35,87,102));
     mpEngineTextBox->SetEditable(false);
-    wxBoxSizer *topsizer = new wxBoxSizer( wxVERTICAL );
+    mpScoreTextBox->SetBackgroundColour(wxT("yellow"));
+    wxBoxSizer *topsizer = new wxBoxSizer( wxHORIZONTAL );
     topsizer->Add(mpEngineTextBox,
-        wxSizerFlags(1).Align(wxALIGN_CENTER).Expand().Border(wxALL, 10));
+    wxSizerFlags(6).Align(wxALIGN_CENTER).Expand().Border(wxALL, 10));
+    topsizer->Add(mpScoreTextBox, 
+    wxSizerFlags(1).Align(wxALIGN_CENTER).Expand());
 
     wxBoxSizer *button_sizer = new wxBoxSizer( wxHORIZONTAL );
     button_sizer->Add(mpStartEngineButton,
@@ -24,6 +28,8 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
         wxSizerFlags(0).Align(wxALIGN_LEFT).Border(wxALL, 10));
 
     topsizer->Add(button_sizer, wxSizerFlags(0).Left() );
+
+
 
     this->SetSizer(topsizer, false);
     mTimer.Start(1500);//every 1500 ms
@@ -121,6 +127,8 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
 	{
 		//wxStreamToTextRedirector redirect(mpEngineTextBox); //not working
 		(*mpEngineTextBox)<<mpEngineInterface->GetLatestEngineOutput();
+		mpScoreTextBox->ChangeValue("");
+		mpScoreTextBox->WriteText( wxString::Format(wxT("%f"), mpEngineInterface->GetLatestScore()) );
 	}
 	evt.Skip();
 }

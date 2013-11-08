@@ -102,6 +102,16 @@ std::string slach::EngineInterface::GetLatestEngineOutput()
 	return ret;
 }
 
+double  slach::EngineInterface::GetLatestScore() const
+{
+	return mLatestScore;
+}
+
+int  slach::EngineInterface::GetLatestDepth() const
+{
+	return mLatestDepth;
+}
+
 void slach::EngineInterface::ParseEngineOutput(const std::string& engineOutput, int& depth, double& score, std::string& line)
 {
     size_t pos = engineOutput.rfind("Depth");

@@ -5,6 +5,7 @@
 #include <wx/sizer.h>
 #include <wx/panel.h>
 #include <wx/textctrl.h>
+#include <wx/richtext/richtextctrl.h>
 #include <wx/button.h>
 #include <wx/thread.h>
 #include "EngineInterface.hpp"
@@ -22,6 +23,7 @@ protected:
     wxButton* mpStartEngineButton;
     wxButton* mpStopEngineButton;
     wxTextCtrl* mpEngineTextBox;
+    wxRichTextCtrl* mpScoreTextBox;
     slach::Position* mpPosition;
     wxTimer mTimer;
     bool mEngineIsRunning;

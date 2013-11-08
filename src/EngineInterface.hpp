@@ -84,6 +84,19 @@ class EngineInterface
     void StopEngine();
 
     std::string GetLatestEngineOutput();
+
+    /**
+     * Returns the latest score by returning the variable mLatestScore
+     * This variable is assigned meaningful values upon calling GetLatestEngineOutput()
+     */
+    double  GetLatestScore() const;
+
+    /**
+     * Returns the latest analysis depth by returning the variable mLatestDepth
+     * This variable is assigned meaningful values upon calling GetLatestEngineOutput()
+     */
+    int GetLatestDepth() const;
+
 };
 
 }//namespace slach
