@@ -327,8 +327,6 @@ void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
             int virtual_size_y = size_of_one_move * (static_cast<int> ( move_list.size()/2 + 2));//plus two for safety
 
             mpSpaceForMoveList->SetVirtualSize(window_size.x, virtual_size_y);
-
-
             unsigned number_of_panels_to_add = move_list.size() + static_cast<unsigned> (std::div(move_list.size(),2).quot + std::div(move_list.size(),2).rem);
             for (unsigned i = 0; i < mMoveListPanels.size(); ++i)
             {
@@ -339,7 +337,7 @@ void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
             for (unsigned i = 0; i < number_of_panels_to_add; ++i)
             {
                 mMoveListPanels.push_back( new wxTextCtrl( mpSpaceForMoveList, /*ID*/ OFFSET_OF_MOVE_LIST_ID + (int) i,
-                                               wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_CENTRE) );
+                                               wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_CENTRE | wxBORDER_NONE) );
                 mMoveListPanels[i]->SetMinSize(wxSize(0,size_of_one_move));
                 mpMoveListSizer->Add(mMoveListPanels[i], 0, wxEXPAND | wxALL);
                 mMoveListPanels[i]->SetBackgroundColour(*wxWHITE);
@@ -364,6 +362,24 @@ void slach_gui::ChessBoardPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
                     }
                 }
             }
+            //push back the result
+            //if the last move was black's...shift by one panel
+            if (std::div(number_of_panels_to_add,3).rem == 0)
+            {
+                mMoveListPanels.push_back( new wxTextCtrl( mpSpaceForMoveList, /*ID*/ ID_OF_GAME_RESULT,
+                                               wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_CENTRE | wxBORDER_NONE) );
+                mMoveListPanels.back()->SetMinSize(wxSize(0,size_of_one_move));
+                mpMoveListSizer->Add(mMoveListPanels.back(), 0, wxEXPAND | wxALL);
+            }
+
+            mMoveListPanels.push_back( new wxTextCtrl( mpSpaceForMoveList, /*ID*/ ID_OF_GAME_RESULT+1,
+                                           wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_CENTRE | wxBORDER_NONE) );
+            mMoveListPanels.back()->SetBackgroundColour(*wxLIGHT_GREY);
+            mMoveListPanels.back()->SetMinSize(wxSize(0,size_of_one_move));
+            mpMoveListSizer->Add(mMoveListPanels.back(), 0, wxEXPAND | wxALL);
+            wxString result(mpChessBoard->GetGame()->GetGameResult() );
+            mMoveListPanels.back()->WriteText(result);
+
             mpSpaceForMoveList->Layout();
             //mpSpaceForMoveList->SetScrollbar(wxVERTICAL, 0, 8*window_size.y,500*(virtual_size_y+window_size.y) ); not needed
             mpSpaceForMoveList->SetScrollRate(0, 5);
@@ -534,6 +550,10 @@ void slach_gui::ChessBoardPanel::HighlightMoveListPanelWithThisID(int ID)
         {
             mMoveListPanels[i]->SetBackgroundColour(*wxYELLOW);
         }
+    }
+    if (mGameIsLoaded == true)
+    {
+        mMoveListPanels.back()->SetBackgroundColour(*wxLIGHT_GREY);
     }
 
 }

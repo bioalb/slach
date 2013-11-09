@@ -40,6 +40,7 @@ static const int ID_ABOVE_TOP_PLAYER_NAME = 69;
 static const int ID_BELOW_TOP_PLAYER_NAME = 70;
 static const int OFFSET_OF_MOVE_LIST_ID = 1100;
 static const int OFFSET_OF_MOVE_NUMBER_ID = 1300;
+static const int ID_OF_GAME_RESULT = 1600;
 
 static const int MAX_NUMBER_OF_VISIBLE_MOVES = 20;//in the movelist window, this is the max number visible (no-scroll)
 
@@ -114,6 +115,7 @@ private:
     wxTextCtrl * mpAboveTopPlayerBox;
 
     wxTextAttr mTextAttributesPlayerNames;
+    wxTextAttr mTextAttributesGameResultBox;
 
     /** stores the parent frame*/
     wxFrame* mpParent;
