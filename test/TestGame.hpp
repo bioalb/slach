@@ -504,6 +504,8 @@ public:
         TS_ASSERT_EQUALS(my_game.GetFenList()[59], "8/rp2k2p/1Rpnb1p1/r2p1p2/P2P3P/2NBPPK1/6P1/1R6 b - - 4 30");
         TS_ASSERT_EQUALS(my_game.GetFenList()[60], "8/rp2k3/1Rpnb1pp/r2p1p2/P2P3P/2NBPPK1/6P1/1R6 w - - 0 31");
         TS_ASSERT_EQUALS(my_game.GetFenList()[61], "8/rp2k3/1Rpnb1pp/r2p1p2/P2P1K1P/2NBPP2/6P1/1R6 b - - 1 31");
+
+        TS_ASSERT_EQUALS(my_game.GetGameResult(), "1/2-1/2");
     }
 
     void TestReadFromPgn2()
@@ -524,6 +526,7 @@ public:
         TS_ASSERT_EQUALS(valid, slach::VALID_PGN);
         TS_ASSERT_EQUALS(my_game.GetMoveList().size(), 114u);
         TS_ASSERT_EQUALS(my_game.GetMoveListAlgebraicFormat().size(), 114u);
+        TS_ASSERT_EQUALS(my_game.GetGameResult(), "0-1");
     }
 
     void TestReadFromPgn3()
@@ -539,6 +542,7 @@ public:
         std::vector<slach::Square* > squares = my_cb.GetSquares();
 
         slach::Game my_game;
+        TS_ASSERT_EQUALS(my_game.GetGameResult(), "*");
         TS_ASSERT_EQUALS(my_game.GetNameOfWhitePlayer(), "");
         TS_ASSERT_EQUALS(my_game.GetNameOfBlackPlayer(), "");
 
@@ -549,6 +553,7 @@ public:
         TS_ASSERT_EQUALS(my_game.GetMoveListAlgebraicFormat().size(), 59u);
         TS_ASSERT_EQUALS(my_game.GetNameOfWhitePlayer(), "Caruana, Fabiano");
         TS_ASSERT_EQUALS(my_game.GetNameOfBlackPlayer(), "Radjabov, Teimour");
+        TS_ASSERT_EQUALS(my_game.GetGameResult(), "1-0");
     }
 
     void TestReadFromPgnInvalid()

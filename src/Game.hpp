@@ -61,11 +61,23 @@ private:
 
     std::vector<Square* > mSquares;
 
+    /**stores the reuslt of the game. Initialize to **/
+    std::string mGameResult;
+
     /**
      * Helper method to clear all move and position lists.
      */
     void ClearAllLists();
 
+    /**
+     * Helper method that returns true if the string passed in cprresponds to one of
+     * the possible game results (1-0,0-1,1/2-1/2,*)
+     * In such case, it also changes the variable mGameResult accordingly.
+     *
+     * @param toBeChecked the string to be checked
+     * @return true if toBeChecked is one of the possible results.
+     */
+    bool IsThisTheGameResult(const std::string& toBeChecked);
 
 public:
     /**
@@ -145,6 +157,16 @@ public:
      * @return the name of the black player
      */
     std::string GetNameOfBlackPlayer() const;
+
+    /**
+     * Accesses the variable mGameResult thats tores the result of the game
+     *  - * if in progress
+     *  - 1-0 if white wins
+     *  - 0-1 if black wins
+     *  - 1/2-1/2 if it is a draw
+     *
+     */
+    std::string GetGameResult() const;
 };
 
 }//namespace slach
