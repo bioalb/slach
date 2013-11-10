@@ -127,6 +127,8 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxFrame* parent, wxWindowID WXUNUSED
     mpSpaceForMoveList = new wxScrolledWindow(mpRightOfChessBoard, ID_OF_MOVE_LIST_SPACE);//, wxDefaultPosition, wxDefaultSize , wxVSCROLL);
 	mpSpaceForArrows =  new wxPanel(mpRightOfChessBoard, ID_OF_ARROW_SPACE);
 
+	mpSpaceForMoveList->SetBackgroundColour(*wxWHITE);
+
     mpRightSideSizer->Add(mpNameOfPlayerTop, 1, wxEXPAND);
     mpRightSideSizer->Add(mpSpaceForMoveList, 7, wxALL|wxGROW);
     mpRightSideSizer->Add(mpSpaceForArrows, 1, wxEXPAND);
