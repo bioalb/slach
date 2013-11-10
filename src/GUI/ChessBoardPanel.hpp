@@ -8,47 +8,19 @@
 #include <wx/textctrl.h>
 #include <wx/richtext/richtextctrl.h>
 #include <vector>
+#include "IDContainer.hpp"
 #include "ChessBoardWithBorders.hpp"
 
 namespace slach_gui
 {
-
-/**
- * Major GUI class that holds the chessboard
- */
-
-static const int ID_LEFT_OF_BOARD = 50;
-static const int ID_ACTUAL_BOARD = 51;
-static const int ID_RIGHT_OF_BOARD = 52;
-static const int ID_OF_ARROW_SPACE = 53;
-static const int ID_FORWARD_BUTTON = 55;
-static const int ID_BACKWARD_BUTTON = 56;
-static const int ID_FORWARD_MORE_BUTTON = 57;
-static const int ID_BACKWARD_MORE_BUTTON = 58;
-static const int ID_FORWARD_END_BUTTON = 59;
-static const int ID_BACKWARD_END_BUTTON = 60;
-static const int ID_OF_UPPER_PLAYER_NAME = 61;
-static const int ID_OF_BOTTOM_PLAYER_NAME = 62;
-static const int ID_OF_MOVE_LIST_SPACE = 63;
-static const int ID_WHITE_PLAYER_BOX = 64;
-static const int ID_BLACK_PLAYER_BOX = 65;
-static const int ID_ABOVE_WHITE_PLAYER_BOX = 65;
-static const int ID_ABOVE_BLACK_PLAYER_BOX = 66;
-static const int ID_ABOVE_BOTTOM_PLAYER_NAME = 67;
-static const int ID_BELOW_BOTTOM_PLAYER_NAME = 68;
-static const int ID_ABOVE_TOP_PLAYER_NAME = 69;
-static const int ID_BELOW_TOP_PLAYER_NAME = 70;
-static const int OFFSET_OF_MOVE_LIST_ID = 1100;
-static const int OFFSET_OF_MOVE_NUMBER_ID = 1300;
-static const int ID_OF_GAME_RESULT = 1600;
-
-static const int MAX_NUMBER_OF_VISIBLE_MOVES = 20;//in the movelist window, this is the max number visible (no-scroll)
 
 
 class ChessBoardPanel : public wxPanel
 {
 
 private:
+
+    wxPanel* mpParent;
 
 	/** Directory where png of the pieces are*/
     std::string mPngPieceDirectory;
@@ -72,59 +44,21 @@ private:
     slach::ChessBoard* mpChessBoard;
     /** cache of the gridsizer that organizes the board*/
     wxFlexGridSizer* mpBoardGridSizer;
+    /**cache for the main sizer, arranges space for board and arrows*/
+    wxBoxSizer *mpPrincipalSizer;
     /** cache for the sizer of the arrows buttons*/
     wxBoxSizer* mpSizerForArrows;
-    /**cahce for the sizer of the space containing the move list*/
-    wxFlexGridSizer* mpMoveListSizer;
-    /**The main sizer that decides where the board is*/
-    wxBoxSizer* mpPrincipalSizer;
-    wxBoxSizer* mpRightSideSizer;
-
-    /** Stores the panels that show the move list*/
-    std::vector<wxTextCtrl* > mMoveListPanels;
-
-    /** The space on the left of the board*/
-    wxPanel* mpLeftOfChessBoard;
-    /** A panel that will contain the board*/
-    wxPanel* mpMidPanelOfChessBoard;
-    /** The space on the right of the board*/
-    wxPanel* mpRightOfChessBoard;
-
-    /**Panels fon the RHS of the board*/
-    wxPanel* mpSpaceForArrows;
-    wxPanel* mpNameOfPlayerTop;
-    wxPanel* mpNameOfPlayerBottom ;
-    wxScrolledWindow* mpSpaceForMoveList;
-    wxPanel* mAboveBotoomPlayerName;
-    wxPanel* mBelowBotoomPlayerName;
-    wxPanel* mAboveTopPlayerName;
-    wxPanel* mBelowTopPlayerName;
 
     /**Panels for each arrows*/
+    wxPanel* mpSpaceForArrows;
+    wxPanel* mpSpaceForActualBoard;
     wxPanel* mpForwardArrowPanel;
     wxPanel* mpForwardArrowPanelMore;
     wxPanel* mpForwardArrowPanelEnd;
     wxPanel* mpBackwardArrowPanel;
     wxPanel* mpBackwardArrowPanelMore;
     wxPanel* mpBackwardArrowPanelEnd;
-
-    /**Text control for the players' names*/
-    wxTextCtrl * mpBottomPlayerBox;
-    wxTextCtrl * mpTopPlayerBox;
-    wxTextCtrl * mpAboveBottomPlayerBox;
-    wxTextCtrl * mpAboveTopPlayerBox;
-
-    wxTextAttr mTextAttributesPlayerNames;
-    wxTextAttr mTextAttributesGameResultBox;
-
-    /** stores the parent frame*/
-    wxFrame* mpParent;
-
-    /** cache for the icon near the mouse for drag and drop*/
-    wxIcon mIconNearTheMouse;
-
-    wxString mWhitePlayerName;
-    wxString mBlackPlayerName;
+    wxPanel* mpDummyPanelAfterLastArrow;
 
     /**
      * when refreshing a square of the board, sometimes you need to draw the piece
@@ -149,12 +83,8 @@ private:
      */
     unsigned mSourceIndex;
 
-    /**
-     * HElper method that goes into the text control of the white and black player
-     * Delete the content and write the names according to mWhitePlayerName and mBlackPlayerName
-     * The text attributes are the ones set by mTextAttributesPlayerNames
-     */
-    void WritePlayerNames();
+    wxPoint mCachedArrowsStartPoint;
+    wxSize mCachedArrowSpace;
 
     /**
      * Helper method to load all the images (backgrounds, pieces and coordinates)
@@ -227,14 +157,6 @@ private:
     wxIcon GetIconFromPiece(slach::PieceType piece);
 
     /**
-     * Helper method that paints a vertical gradient on the panel
-     *
-     * @param dc thed evice context
-     * @param  pPanel the panel we wish to paint on
-     */
-    void DoPaintVerticalGradient(wxPaintDC& dc, wxPanel* pPanel);
-
-    /**
      * Helper method to draw an image on a panel. The image is resized to fit into the panel.
      *
      * @param dc thed evice context (paint device context)
@@ -243,19 +165,8 @@ private:
      */
     void DoPaintImageOnPanel(wxPaintDC& dc, wxPanel* pPanel, wxImage& Image);
 
-    /**
-     * Highlights the move in the move list with the specified ID.
-     * All the other moves are set with white background
-     */
-    void HighlightMoveListPanelWithThisID(int ID);
+    //int GetCurrentlyHighlightedMove();
 
-    int GetCurrentlyHighlightedMove();
-    void DoAdvanceOneMove();
-    void DoAdvanceSeveralMoves();
-    void DoAdvanceUntilEnd();
-    void DoGoBackOneMove();
-    void DoGoBackSeveralMoves();
-    void DoGoBackToBeginning();
 
 public:
 
@@ -270,7 +181,7 @@ public:
      * @param pos the position of this panel (defaults to wxDefaultPosition)
      * @param size the size of this panel in pixel (wxDefaultSize)
      */
-    ChessBoardPanel(wxFrame* parent,  wxWindowID id = wxID_ANY, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
+    ChessBoardPanel(wxPanel* parent,  wxWindowID id = wxID_ANY, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
 
     /**
      * Destructor
@@ -290,16 +201,6 @@ public:
     void PaintOnSquare(wxPaintEvent& event);
 
     /**
-     * Paints background gradient and various things near the board.
-     * It takes care of:
-     *   - gradient backgrounds
-     *   - arrows
-     *
-     * @param event the paint event
-     */
-    void PaintOnSidesOfBoard(wxPaintEvent& event);
-
-    /**
      * This method captures the initiation of the drag and drop between squares.
      * The children panel of this class (the squares) connects their mouse event to this method.
      *
@@ -307,14 +208,13 @@ public:
      */
     void LeftMouseClick(wxMouseEvent& event);
 
-    void OnMouseEnteringSingleMoveArea(wxMouseEvent& event);
-    void OnMouseLeavingSingleMoveArea(wxMouseEvent& event);
 
     void ResetToInitialPosition(wxCommandEvent& event);
 
-    void LoadPgnFile(wxCommandEvent& event);
 
-    void FlipView(wxCommandEvent& WXUNUSED(event));
+    void DoFlipView();
+
+    bool IsItFromWhitePerspective() const;
 
     /**
      * this method is activated when user clicks on one of the arrows.
@@ -324,17 +224,16 @@ public:
      */
     void ArrowButtonMovement(wxMouseEvent& event);
 
-    void ArrowKeyMovement(wxKeyEvent& event);
-
-    /**
-     * this method is activated when user clicks on one of the moves in the move list.
-     * It figures out which move and set the chessboard accordingly.
-     *
-     * @param event the generating event
-     */
-    void OnClickOnMoveList(wxMouseEvent& event);
+    void PaintArrows(wxPaintEvent& event);
 
     void DrawAndSetFenPositionOnBoard(const std::string& rFenPosition);
+
+    void DoAdvanceOneMove();
+    void DoAdvanceSeveralMoves();
+    void DoAdvanceUntilEnd();
+    void DoGoBackOneMove();
+    void DoGoBackSeveralMoves();
+    void DoGoBackToBeginning();
 
     /**
      * This method captures the mouse release for drag and drop.
@@ -351,12 +250,14 @@ public:
 
     void ProcessMoveInGui(slach::Move & move);
 
-
+    /**
+     * Provide access to the underlying playable chessboard object.
+     */
+    slach::ChessBoard* GetChessBoard();
 
     /**
      * Resizing method. It figures out the new size and resize everything accordingly.
      *
-     * @param event the size event
      */
     void OnSize(wxSizeEvent& event);
 
