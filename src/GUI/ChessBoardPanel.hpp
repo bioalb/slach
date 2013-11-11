@@ -22,6 +22,9 @@ private:
 
     wxPanel* mpParent;
 
+    /**tells whether this is the main board or a secondary one, false by default*/
+    bool mIamTheMainBoard;
+
 	/** Directory where png of the pieces are*/
     std::string mPngPieceDirectory;
     /** Directory where png of the backgrounds are*/
@@ -260,6 +263,12 @@ public:
      *
      */
     void OnSize(wxSizeEvent& event);
+
+    /**
+     * Sets whether this is the main board or not.
+     * Changes the variable mIamTheMainBoard
+     */
+    void SetAsMainBoard(bool flag = true);
 
 };
 

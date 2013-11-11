@@ -26,6 +26,7 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
       mGameIsLoaded(false)
 {
 
+    mpChessBoardPanel->SetAsMainBoard(true);
     mpChessBoard = mpChessBoardPanel->GetChessBoard();
 
     //Arrange the panels
@@ -237,7 +238,6 @@ void slach_gui::CentralPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
                         mMoveListPanels[i]->Bind(wxEVT_LEFT_DOWN, &CentralPanel::OnClickOnMoveList, this);
                         mMoveListPanels[i]->Bind(wxEVT_ENTER_WINDOW, &CentralPanel::OnMouseEnteringSingleMoveArea, this);
                         mMoveListPanels[i]->Bind(wxEVT_LEAVE_WINDOW, &CentralPanel::OnMouseLeavingSingleMoveArea, this);
-
                         move_index++;
                     }
                 }
@@ -357,6 +357,70 @@ int slach_gui::CentralPanel::GetCurrentlyHighlightedMove()
         }
     }
     return index_of_currently_highlighted_move;
+}
+
+void slach_gui::CentralPanel::HighlightNextMove()
+{
+    int highlighted_move = GetCurrentlyHighlightedMove();
+    //skip the move numbers...
+    if (std::div(highlighted_move,3).rem == 2)
+    {
+        highlighted_move++;
+    }
+    //prevent de-highlighting of last move
+    if (highlighted_move == int (mMoveListPanels.size() - 1))
+    {
+        highlighted_move--;
+    }
+    HighlightMoveListPanelWithThisID(highlighted_move + OFFSET_OF_MOVE_LIST_ID + 1);
+}
+
+void slach_gui::CentralPanel::HighlightSeveralMovesAhead()
+{
+    int index_of_currently_highlighted_move = GetCurrentlyHighlightedMove();
+    //skip the move numbers...
+    if (std::div(index_of_currently_highlighted_move,3).rem == 2)
+    {
+        index_of_currently_highlighted_move++;
+    }
+    //prevent de-highlighting of last move
+    if ( (index_of_currently_highlighted_move + 5) >= mMoveListPanels.size() - 1)
+    {
+        index_of_currently_highlighted_move = mMoveListPanels.size() - 1 - 7;
+    }
+    HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 7);
+}
+
+void slach_gui::CentralPanel::HighlightLastMove()
+{
+    HighlightMoveListPanelWithThisID(mMoveListPanels.back()->GetId());
+}
+
+void slach_gui::CentralPanel::HighlightPreviousMove()
+{
+    int index_of_currently_highlighted_move = GetCurrentlyHighlightedMove();
+    //skip the move numbers...
+    if (std::div(index_of_currently_highlighted_move,3).rem == 1)
+    {
+        index_of_currently_highlighted_move--;
+    }
+    HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID - 1);
+}
+
+void slach_gui::CentralPanel::HighlightSeveralMovesBack()
+{
+    int index_of_currently_highlighted_move = GetCurrentlyHighlightedMove();
+    //skip the move numbers...
+    if (std::div(index_of_currently_highlighted_move,3).rem == 1)
+    {
+        index_of_currently_highlighted_move--;
+    }
+    HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID - 7);
+}
+
+void slach_gui::CentralPanel::HighlightBeforeFirstMove()
+{
+    HighlightMoveListPanelWithThisID(-1);//do not colour anything
 }
 
 

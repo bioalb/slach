@@ -45,6 +45,7 @@
 slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED(id), const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size),
       mpParent(parent),
+      mIamTheMainBoard(false),
       mPngPieceDirectory("../../src/GUI/bitmaps/pieces/png/"),
       mPngBackgroundDirectory("../../src/GUI/bitmaps/squares/png/"),
       mPngArrowsDirectory("../../src/GUI/bitmaps/arrows/png/"),
@@ -157,6 +158,10 @@ slach_gui::ChessBoardPanel::~ChessBoardPanel()
     delete mpChessBoardWithBorders;
 }
 
+void slach_gui::ChessBoardPanel::SetAsMainBoard(bool flag)
+{
+    mIamTheMainBoard = flag;
+}
 void slach_gui::ChessBoardPanel::DoFlipView()
 {
     if (mPerspectiveIsFromWhite == true)
@@ -318,43 +323,27 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
 
 void slach_gui::ChessBoardPanel::DoAdvanceOneMove()
 {
-    int highlighted_move = (static_cast<CentralPanel*> (mpParent))->GetCurrentlyHighlightedMove();
     mpChessBoard->ResetToNextMove();
     std::string fen_to_set = mpChessBoard->GetCurrentFenPosition();
-    //skip the move numbers...
-    if (std::div(highlighted_move,3).rem == 2)
+    if (mIamTheMainBoard == true)
     {
-        highlighted_move++;
+        (static_cast<CentralPanel*> (mpParent))->HighlightNextMove();
     }
-    //prevent de-highlighting of last move
-    if (highlighted_move == ((static_cast<CentralPanel*> (mpParent))->GetMoveListPanels().size() - 1))
-    {
-        highlighted_move--;
-    }
-    (static_cast<CentralPanel*> (mpParent))->HighlightMoveListPanelWithThisID(highlighted_move + OFFSET_OF_MOVE_LIST_ID + 1);
     DrawAndSetFenPositionOnBoard(fen_to_set);
 }
 
 void slach_gui::ChessBoardPanel::DoAdvanceSeveralMoves()
 {
-    int index_of_currently_highlighted_move = (static_cast<CentralPanel*> (mpParent))->GetCurrentlyHighlightedMove();
     mpChessBoard->ResetToNextMove();
     mpChessBoard->ResetToNextMove();
     mpChessBoard->ResetToNextMove();
     mpChessBoard->ResetToNextMove();
     mpChessBoard->ResetToNextMove();
     std::string fen_to_set = mpChessBoard->GetCurrentFenPosition();
-    //skip the move numbers...
-    if (std::div(index_of_currently_highlighted_move,3).rem == 2)
+    if (mIamTheMainBoard == true)
     {
-        index_of_currently_highlighted_move++;
+        (static_cast<CentralPanel*> (mpParent))->HighlightSeveralMovesAhead();
     }
-    //prevent de-highlighting of last move
-    if ( (index_of_currently_highlighted_move + 5) >= ((static_cast<CentralPanel*> (mpParent))->GetMoveListPanels().size() - 1))
-    {
-        index_of_currently_highlighted_move = (static_cast<CentralPanel*> (mpParent))->GetMoveListPanels().size() - 1 - 7;
-    }
-    (static_cast<CentralPanel*> (mpParent))->HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 7);
     DrawAndSetFenPositionOnBoard(fen_to_set);
 }
 
@@ -363,44 +352,44 @@ void slach_gui::ChessBoardPanel::DoAdvanceUntilEnd()
     slach::Colour current_turn = mpChessBoard->WhosTurnIsIt();
     slach::Colour opp_col = slach::OppositeColour(current_turn);
     std::string fen_to_set = mpChessBoard->GetGame()->FetchFromFenList(100000000, opp_col);
-    (static_cast<CentralPanel*> (mpParent))->HighlightMoveListPanelWithThisID((static_cast<CentralPanel*> (mpParent))->GetMoveListPanels().back()->GetId());
+    if (mIamTheMainBoard == true)
+    {
+        (static_cast<CentralPanel*> (mpParent))->HighlightLastMove();
+    }
     DrawAndSetFenPositionOnBoard(fen_to_set);
 }
 void slach_gui::ChessBoardPanel::DoGoBackOneMove()
 {
-    int index_of_currently_highlighted_move = (static_cast<CentralPanel*> (mpParent))->GetCurrentlyHighlightedMove();
     mpChessBoard->ResetToPreviousMove();
     std::string fen_to_set = mpChessBoard->GetCurrentFenPosition();
-    //skip the move numbers...
-    if (std::div(index_of_currently_highlighted_move,3).rem == 1)
+    if (mIamTheMainBoard == true)
     {
-        index_of_currently_highlighted_move--;
+        (static_cast<CentralPanel*> (mpParent))->HighlightPreviousMove();
     }
-    (static_cast<CentralPanel*> (mpParent))->HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID - 1);
     DrawAndSetFenPositionOnBoard(fen_to_set);
 }
 void slach_gui::ChessBoardPanel::DoGoBackSeveralMoves()
 {
-    int index_of_currently_highlighted_move = (static_cast<CentralPanel*> (mpParent))->GetCurrentlyHighlightedMove();
     mpChessBoard->ResetToPreviousMove();
     mpChessBoard->ResetToPreviousMove();
     mpChessBoard->ResetToPreviousMove();
     mpChessBoard->ResetToPreviousMove();
     mpChessBoard->ResetToPreviousMove();
     std::string fen_to_set = mpChessBoard->GetCurrentFenPosition();
-    //skip the move numbers...
-    if (std::div(index_of_currently_highlighted_move,3).rem == 1)
+    if (mIamTheMainBoard == true)
     {
-        index_of_currently_highlighted_move--;
+        (static_cast<CentralPanel*> (mpParent))->HighlightSeveralMovesBack();
     }
-    (static_cast<CentralPanel*> (mpParent))->HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID - 7);
     DrawAndSetFenPositionOnBoard(fen_to_set);
 }
 
 void slach_gui::ChessBoardPanel::DoGoBackToBeginning()
 {
     std::string fen_to_set = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-    (static_cast<CentralPanel*> (mpParent))->HighlightMoveListPanelWithThisID(-1);//do not colour anything
+    if (mIamTheMainBoard == true)
+    {
+        (static_cast<CentralPanel*> (mpParent))->HighlightBeforeFirstMove();
+    }
     DrawAndSetFenPositionOnBoard(fen_to_set);
 }
 

@@ -171,6 +171,12 @@ public:
 
     int GetCurrentlyHighlightedMove();
 
+    void HighlightNextMove();
+    void HighlightSeveralMovesAhead();
+    void HighlightLastMove();
+    void HighlightPreviousMove();
+    void HighlightSeveralMovesBack();
+    void HighlightBeforeFirstMove();
     /**
      * access method to the variable mMoveListPanels;
      * Used by chessboard child.
