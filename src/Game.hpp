@@ -42,17 +42,17 @@ private:
     /**
      * Stores the list of moves
      */
-    std::vector<Move> mMoveList;
+    std::vector<Move> mMoveListMainLine;
 
     /**
      * Stores the list of in algebraic format (for easy pgn output)
      */
-    std::vector<std::string> mMoveListAlgFormat;
+    std::vector<std::string> mMoveListMainLineAlgFormat;
 
     /**
      * Stores the list of positions in this game
      */
-    std::vector<std::string> mListOfFenPositions;
+    std::vector<std::string> mListOfFenPositionsMainLine;
 
     /**
      * Structure to store the information of the seven tag roster
@@ -97,20 +97,18 @@ public:
 
     /**
      * Access method for the variable containing the move list in algebraic format
-     * (mMoveListAlgFormat)
+     * (mMoveListMainLineAlgFormat)
      */
     std::vector<std::string> GetMoveListAlgebraicFormat() const;
 
     /**
-     * Adds a move to the move list (mMoveList)
+     * Adds a move to the move list (mMoveListMainLine)
      * and also to the move list in algebraic format
      * (e.g., Ne2 for knight to e2).
      *
      * It does nothing if the move originates from an empty square.
      *
      * @param move: the move to be added to the list
-     * @param ambiguityPrefix: to go in algebraic notation between the piece code and the destination
-     *                         coordinate (e.g., Rad1, the a rook to d1. Can also be used for the X capture sign)
      */
     void AddMove(const Move& rMove);
 

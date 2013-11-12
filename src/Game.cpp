@@ -4,9 +4,9 @@
 #include "Exception.hpp"
 
 slach::Game::Game()
-  : mMoveList {},
-    mMoveListAlgFormat {},
-    mListOfFenPositions {},
+  : mMoveListMainLine {},
+    mMoveListMainLineAlgFormat {},
+    mListOfFenPositionsMainLine {},
     mSTR(),
     mGameResult("*")
 {
@@ -18,17 +18,17 @@ slach::Game::~Game()
 
 std::vector<slach::Move> slach::Game::GetMoveList() const
 {
-    return mMoveList;
+    return mMoveListMainLine;
 }
 
 std::vector<std::string> slach::Game::GetMoveListAlgebraicFormat() const
 {
-    return mMoveListAlgFormat;
+    return mMoveListMainLineAlgFormat;
 }
 
 void slach::Game::AddPosition(std::string fenPosition)
 {
-    mListOfFenPositions.push_back(fenPosition);
+    mListOfFenPositionsMainLine.push_back(fenPosition);
 }
 
 std::string slach::Game::GetGameResult() const
@@ -38,56 +38,56 @@ std::string slach::Game::GetGameResult() const
 
 void slach::Game::AddMove(const Move& rMove)
 {
-    mMoveList.push_back(rMove);
-    mMoveListAlgFormat.push_back(rMove.GetMoveInAlgebraicFormat());
+    mMoveListMainLine.push_back(rMove);
+    mMoveListMainLineAlgFormat.push_back(rMove.GetMoveInAlgebraicFormat());
 }
 
 void slach::Game::ClearAllLists()
 {
-    mListOfFenPositions.clear();
-    mMoveList.clear();
-    mMoveListAlgFormat.clear();
+    mListOfFenPositionsMainLine.clear();
+    mMoveListMainLine.clear();
+    mMoveListMainLineAlgFormat.clear();
 }
 
 std::string slach::Game::FetchFromFenList(int moveNumber, Colour toMove)
 {
-	if (mListOfFenPositions.size() == 0u)
+	if (mListOfFenPositionsMainLine.size() == 0u)
 	{
 		return "";//empty string
 	}
-	else if (mListOfFenPositions.size() == 1u)
+	else if (mListOfFenPositionsMainLine.size() == 1u)
 	{
-		return mListOfFenPositions[0];
+		return mListOfFenPositionsMainLine[0];
 	}
 	else
 	{
 		if (moveNumber<=0)
 		{
-			return mListOfFenPositions[0];
+			return mListOfFenPositionsMainLine[0];
 		}
 
 		unsigned index = moveNumber*2;
 
 		if (toMove == WHITE)
 		{
-			if ((index - 2)>=mListOfFenPositions.size())
+			if ((index - 2)>=mListOfFenPositionsMainLine.size())
 			{
-				return mListOfFenPositions.back();
+				return mListOfFenPositionsMainLine.back();
 			}
 			else
 			{
-			    return mListOfFenPositions[index - 2];
+			    return mListOfFenPositionsMainLine[index - 2];
 			}
 		}
 		else
 		{
-			if ((index - 1)>=mListOfFenPositions.size())
+			if ((index - 1)>=mListOfFenPositionsMainLine.size())
 			{
-				return mListOfFenPositions.back();
+				return mListOfFenPositionsMainLine.back();
 			}
 			else
 			{
-				return mListOfFenPositions[index-1];
+				return mListOfFenPositionsMainLine[index-1];
 			}
 		}
 	}
@@ -154,7 +154,7 @@ slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString
     ClearAllLists();
     Position position;
     position.SetFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", squares);
-    mListOfFenPositions.push_back(position.GetPositionAsFen());
+    mListOfFenPositionsMainLine.push_back(position.GetPositionAsFen());
 
     //from last_tag onward
     size_t dot = rGameString.find('.', last_tag);
@@ -172,7 +172,7 @@ slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString
 
         //if (IsThisTheGameResult(move_san)) break;
 
-        mMoveListAlgFormat.push_back(move_san);
+        mMoveListMainLineAlgFormat.push_back(move_san);
         Move white_move(move_san, squares, WHITE);
         if ( (white_move.GetOrigin()==NULL) || (white_move.GetDestination() == NULL) )
         {
@@ -180,13 +180,13 @@ slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString
             return INVALID_PGN;
         }
 
-        mMoveList.push_back(white_move);
+        mMoveListMainLine.push_back(white_move);
         position.UpdatePositionWithMove(white_move, squares);
-        mListOfFenPositions.push_back(position.GetPositionAsFen());
+        mListOfFenPositionsMainLine.push_back(position.GetPositionAsFen());
 
         if (IsThisTheGameResult(move_san_black)) break; //case of result coming after white move (would be move_san_black here)
 
-        mMoveListAlgFormat.push_back(move_san_black);
+        mMoveListMainLineAlgFormat.push_back(move_san_black);
         Move black_move(move_san_black, squares, BLACK);
         if ( (black_move.GetOrigin()==NULL) || (black_move.GetDestination() == NULL) )
         {
@@ -194,9 +194,9 @@ slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString
             return INVALID_PGN;
         }
 
-        mMoveList.push_back(black_move);
+        mMoveListMainLine.push_back(black_move);
         position.UpdatePositionWithMove(black_move, squares);
-        mListOfFenPositions.push_back(position.GetPositionAsFen());
+        mListOfFenPositionsMainLine.push_back(position.GetPositionAsFen());
 
         last_tag = end_black_move;
         dot = rGameString.find('.', last_tag);
@@ -214,7 +214,7 @@ slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString
 
 std::vector<std::string> slach::Game::GetFenList() const
 {
-	return mListOfFenPositions;
+	return mListOfFenPositionsMainLine;
 }
 
 slach::SevenTagRoster slach::Game::GetSevenTagRoster() const
