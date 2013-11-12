@@ -80,6 +80,13 @@ private:
      */
     bool mGameIsLoaded;
 
+    /**
+     * This is a cache for the ID
+     * of the panel in the move list where the last actual move is stored.
+     * Initialized to INT_MAX
+     */
+    int mIdOfPanelWithLastMove;
+
 
     /**
      * HElper method that goes into the text control of the white and black player

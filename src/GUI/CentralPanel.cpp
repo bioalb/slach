@@ -23,7 +23,8 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
       mpParent(parent),
       mWhitePlayerName(wxT("white player")),
       mBlackPlayerName(wxT("black player")),
-      mGameIsLoaded(false)
+      mGameIsLoaded(false),
+      mIdOfPanelWithLastMove(INT_MAX)
 {
 
     mpChessBoardPanel->SetAsMainBoard(true);
@@ -239,6 +240,8 @@ void slach_gui::CentralPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
                         mMoveListPanels[i]->Bind(wxEVT_ENTER_WINDOW, &CentralPanel::OnMouseEnteringSingleMoveArea, this);
                         mMoveListPanels[i]->Bind(wxEVT_LEAVE_WINDOW, &CentralPanel::OnMouseLeavingSingleMoveArea, this);
                         move_index++;
+                        //store the index of the panel with the move. At the end of the loop, this wil be the last...
+                        mIdOfPanelWithLastMove = mMoveListPanels[i]->GetId();
                     }
                 }
             }
@@ -368,7 +371,7 @@ void slach_gui::CentralPanel::HighlightNextMove()
         highlighted_move++;
     }
     //prevent de-highlighting of last move
-    if (highlighted_move == int (mMoveListPanels.size() - 1))
+    if (mMoveListPanels[highlighted_move]->GetId() == mIdOfPanelWithLastMove)
     {
         highlighted_move--;
     }
@@ -384,11 +387,14 @@ void slach_gui::CentralPanel::HighlightSeveralMovesAhead()
         index_of_currently_highlighted_move++;
     }
     //prevent de-highlighting of last move
-    if ( (index_of_currently_highlighted_move + 5) >= mMoveListPanels.size() - 1)
+    if ( mMoveListPanels[index_of_currently_highlighted_move]->GetId() >= (mIdOfPanelWithLastMove - 8))
     {
-        index_of_currently_highlighted_move = mMoveListPanels.size() - 1 - 7;
+    	HighlightMoveListPanelWithThisID(mIdOfPanelWithLastMove);
     }
-    HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 7);
+    else
+    {
+    	HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 7);
+    }
 }
 
 void slach_gui::CentralPanel::HighlightLastMove()
