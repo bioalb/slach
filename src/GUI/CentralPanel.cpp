@@ -371,11 +371,14 @@ void slach_gui::CentralPanel::HighlightNextMove()
         highlighted_move++;
     }
     //prevent de-highlighting of last move
-    if (mMoveListPanels[highlighted_move]->GetId() == mIdOfPanelWithLastMove)
+    if (mMoveListPanels[highlighted_move]->GetId() >= mIdOfPanelWithLastMove)
     {
-        highlighted_move--;
+    	HighlightMoveListPanelWithThisID(mIdOfPanelWithLastMove);
     }
-    HighlightMoveListPanelWithThisID(highlighted_move + OFFSET_OF_MOVE_LIST_ID + 1);
+    else
+    {
+    	HighlightMoveListPanelWithThisID(highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 1);
+    }
 }
 
 void slach_gui::CentralPanel::HighlightSeveralMovesAhead()
@@ -399,7 +402,7 @@ void slach_gui::CentralPanel::HighlightSeveralMovesAhead()
 
 void slach_gui::CentralPanel::HighlightLastMove()
 {
-    HighlightMoveListPanelWithThisID(mMoveListPanels.back()->GetId());
+	HighlightMoveListPanelWithThisID(mIdOfPanelWithLastMove);
 }
 
 void slach_gui::CentralPanel::HighlightPreviousMove()

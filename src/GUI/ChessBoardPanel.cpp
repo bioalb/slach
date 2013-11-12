@@ -45,7 +45,7 @@
 slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED(id), const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size),
       mpParent(parent),
-      mIamTheMainBoard(false),
+      mIamTheMainBoard(true),
       mPngPieceDirectory("../../src/GUI/bitmaps/pieces/png/"),
       mPngBackgroundDirectory("../../src/GUI/bitmaps/squares/png/"),
       mPngArrowsDirectory("../../src/GUI/bitmaps/arrows/png/"),
@@ -63,8 +63,8 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
       mCachedArrowsStartPoint (wxPoint(0,0)),
       mCachedArrowSpace (wxSize(10,10))
 {
-    mpSpaceForActualBoard->SetBackgroundColour(wxT("red"));
-    mpSpaceForArrows->SetBackgroundColour(wxT("yellow"));
+    mpSpaceForActualBoard->SetBackgroundColour(*wxWHITE);
+    mpSpaceForArrows->SetBackgroundColour(*wxWHITE);
     mpPrincipalSizer->Add(mpSpaceForActualBoard,15, wxGROW | wxALL);
     mpPrincipalSizer->Add(mpSpaceForArrows, 1, wxGROW | wxALL);
     this->SetSizer(mpPrincipalSizer);
@@ -98,7 +98,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
 
     mpChessBoard = mpChessBoardWithBorders->GetPlayableChessBoard();
     mpChessBoard->SetupInitialChessPosition();
-    //(static_cast<CentralPanel*> (mpParent))->UpdateChessPositionForEngine(mpChessBoard->GetCurrentPosition());
+    DoCommunicateTheCurrentPositionForEngine();
     mpAllSquares = mpChessBoardWithBorders->GetSquares();
 
     assert(mpAllSquares.size() == mSquarePanels.size());
@@ -125,7 +125,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
     mpBackwardArrowPanelMore  = new wxPanel(mpSpaceForArrows, ID_BACKWARD_MORE_BUTTON);
     mpBackwardArrowPanelEnd  = new wxPanel(mpSpaceForArrows, ID_BACKWARD_END_BUTTON);
     mpDummyPanelAfterLastArrow = new wxPanel(mpSpaceForArrows, ID_DUMMY_AFTER_LAST_ARROW);
-    mpDummyPanelAfterLastArrow->SetBackgroundColour(wxT("green"));
+    mpDummyPanelAfterLastArrow->SetBackgroundColour(*wxWHITE);
     mpSizerForArrows->Add(mpBackwardArrowPanelEnd,1.0, wxEXPAND | wxALL);
     mpSizerForArrows->Add(mpBackwardArrowPanelMore,1.0, wxEXPAND | wxALL);
     mpSizerForArrows->Add(mpBackwardArrowPanel,1.0, wxEXPAND | wxALL);
@@ -268,7 +268,7 @@ void slach_gui::ChessBoardPanel::ProcessMoveInGui(slach::Move & move)
             //paint piece on destination
             mSquarePanels[destination_index]->Refresh();
         }
-        //(static_cast<MainFrame*> (mpParent))->UpdateChessPositionForEngine(mpChessBoard->GetCurrentPosition());
+        DoCommunicateTheCurrentPositionForEngine();
     }
     else
     {
@@ -486,7 +486,16 @@ void slach_gui::ChessBoardPanel::DrawAndSetFenPositionOnBoard(const std::string&
             mSquarePanels[i]->Refresh();
         }
     }
-    //(static_cast<MainFrame*> (mpParent))->UpdateChessPositionForEngine(mpChessBoard->GetCurrentPosition());
+    DoCommunicateTheCurrentPositionForEngine();
+}
+
+void slach_gui::ChessBoardPanel::DoCommunicateTheCurrentPositionForEngine()
+{
+	//engine is driven only by events on main board
+    if ( (mIamTheMainBoard == true) && GetGrandParent() != NULL)
+    {
+    	(static_cast<MainFrame*> (GetGrandParent()))->UpdateChessPositionForEngine(mpChessBoard->GetCurrentPosition());
+    }
 }
 
 void slach_gui::ChessBoardPanel::ResetToInitialPosition(wxCommandEvent& event)

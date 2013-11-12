@@ -146,6 +146,15 @@ public:
      */
     void PaintOnSidesOfBoard(wxPaintEvent& event);
 
+    /**
+     * Handles the event of pressing keys on teh keyboard
+     * - arrow up and arrow right: one move forward
+     * - arrow down and left: one move backward
+     * - home: start of the game
+     * - End: end of the game
+     * - Page up back 5 half moves
+     * - Page down forward 5 half moves
+     */
     void ArrowKeyMovement(wxKeyEvent& event);
 
     void OnMouseEnteringSingleMoveArea(wxMouseEvent& event);

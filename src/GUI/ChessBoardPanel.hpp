@@ -22,7 +22,7 @@ private:
 
     wxPanel* mpParent;
 
-    /**tells whether this is the main board or a secondary one, false by default*/
+    /**tells whether this is the main board or a secondary one, true by default*/
     bool mIamTheMainBoard;
 
 	/** Directory where png of the pieces are*/
@@ -168,8 +168,11 @@ private:
      */
     void DoPaintImageOnPanel(wxPaintDC& dc, wxPanel* pPanel, wxImage& Image);
 
-    //int GetCurrentlyHighlightedMove();
-
+    /**
+     * Private helper method to encapsulate all the times we need to communicate an update in chess position to the
+     * computer, e.g., when drawing a fen, when drag and drop occurs...
+     */
+    void DoCommunicateTheCurrentPositionForEngine();
 
 public:
 
