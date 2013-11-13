@@ -8,7 +8,6 @@
 #include "SlachTypes.hpp"
 #include "HelperGlobalFunctions.hpp"
 #include "ChessBoardPanel.hpp"
-#include "DropTargetPanel.hpp"
 #include "MainFrame.hpp"
 #include "bitmaps/letters/png/a.png.h"
 #include "bitmaps/letters/png/b.png.h"
@@ -111,9 +110,8 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
         if (mpAllSquares[i]->IsBorderSquare() == false)
         {
         	mSquarePanels[i]->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::LeftMouseClick, this);
-        	DropTargetPanel* p_target_panel = new DropTargetPanel(this);
-        	p_target_panel->SetIndexOfSquare(i);
-        	mSquarePanels[i]->SetDropTarget(p_target_panel);
+        	mSquarePanels[i]->Bind(wxEVT_MOTION, &ChessBoardPanel::LeftMouseClick, this);
+        	mSquarePanels[i]->Bind(wxEVT_LEFT_UP, &ChessBoardPanel::LeftMouseRelease, this);
         }
     }
     mpSpaceForActualBoard->SetSizer(mpBoardGridSizer);
@@ -185,39 +183,43 @@ bool slach_gui::ChessBoardPanel::IsItFromWhitePerspective() const
 void slach_gui::ChessBoardPanel::LeftMouseClick(wxMouseEvent& event)
 {
 	int square_index_int = (static_cast<wxWindow*> (event.GetEventObject()))->GetId();
-	mSourceIndex = (unsigned) square_index_int;
 
-    wxDropSource drop_source(mSquarePanels[mSourceIndex], GetIconFromPiece(mpAllSquares[square_index_int]->GetPieceOnThisSquare()),
-                                                          GetIconFromPiece(mpAllSquares[square_index_int]->GetPieceOnThisSquare()));
-
-    wxBitmapDataObject piece_to_be_moved(GetImageFromPiece(mpAllSquares[square_index_int]->GetPieceOnThisSquare()));
-    drop_source.SetData( piece_to_be_moved );
-
-    mDrawPiece = false;
-    mSquarePanels[mSourceIndex]->Refresh();///remove the source piece while dragging...
-
-    wxDragResult result = drop_source.DoDragDrop( wxDragMove );
-
-    mDrawPiece = true;
-    switch (result)
-    {
-        case wxDragCopy: break;
-        case wxDragMove: break;
-        case wxDragCancel:
-            mDrawPiece = true;
-            //need to re-paint the piece as it was deleted upon initiation of dragging
-            mSquarePanels[mSourceIndex]->Refresh();
-            break;
-        default: break;
-    }
+	//prepare the cursor
+	wxImage curs_image = GetImageFromPiece(mpAllSquares[square_index_int]->GetPieceOnThisSquare());
+    int width = mSquarePanels[square_index_int]->GetClientSize().GetWidth();
+    int height = mSquarePanels[square_index_int]->GetClientSize().GetHeight();
+    curs_image.Rescale(width, height);
+	curs_image.SetOption(wxIMAGE_OPTION_CUR_HOTSPOT_X, width/2);
+	curs_image.SetOption(wxIMAGE_OPTION_CUR_HOTSPOT_Y, height/2);
+	wxCursor piece_cursor( curs_image );
+	//set if it is dragging....
+	if (event.Dragging())
+	{
+		wxSetCursor(piece_cursor);
+		mSourceIndex = (unsigned) square_index_int;
+		mDrawPiece = false;
+		mSquarePanels[mSourceIndex]->Refresh();///remove the source piece while dragging...
+	}
+	event.Skip();
 }
 
-void slach_gui::ChessBoardPanel::LeftMouseRelease(unsigned destinationIndex)
+void slach_gui::ChessBoardPanel::LeftMouseRelease(wxMouseEvent& event)
 {
+	unsigned destination_index = 0;
+	for (unsigned i = 0; i < mpAllSquares.size(); ++i)
+	{
+		if (mSquarePanels[i]->GetClientRect().Contains(mSquarePanels[i]->ScreenToClient( wxGetMousePosition() )))
+		{
+			destination_index = i;//found it!
+			break;
+		}
+	}
+	wxSetCursor(wxNullCursor);
 	assert(mSourceIndex<mpAllSquares.size());
-	assert(destinationIndex<mpAllSquares.size());
-    slach::Move candidate_move(mpAllSquares[mSourceIndex], mpAllSquares[destinationIndex]);
+	assert(destination_index<mpAllSquares.size());
+    slach::Move candidate_move(mpAllSquares[mSourceIndex], mpAllSquares[destination_index]);
     ProcessMoveInGui(candidate_move);
+    event.Skip();
 }
 
 void slach_gui::ChessBoardPanel::ProcessMoveInGui(slach::Move & move)

@@ -252,7 +252,7 @@ public:
      *
      * @param destinationIndex the index of the destination square
      */
-    void LeftMouseRelease(unsigned destinationIndex);
+    void LeftMouseRelease(wxMouseEvent& event);
 
     void ProcessMoveInGui(slach::Move & move);
 
