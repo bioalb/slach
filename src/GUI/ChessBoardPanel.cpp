@@ -27,20 +27,6 @@
 #include "bitmaps/numbers/png/seven.png.h"
 #include "bitmaps/numbers/png/eight.png.h"
 
-#include "bitmaps/pieces/xpm/black_rook.xpm"
-#include "bitmaps/pieces/xpm/black_king.xpm"
-#include "bitmaps/pieces/xpm/black_queen.xpm"
-#include "bitmaps/pieces/xpm/black_bishop.xpm"
-#include "bitmaps/pieces/xpm/black_knight.xpm"
-#include "bitmaps/pieces/xpm/black_pawn.xpm"
-#include "bitmaps/pieces/xpm/white_pawn.xpm"
-#include "bitmaps/pieces/xpm/white_knight.xpm"
-#include "bitmaps/pieces/xpm/white_bishop.xpm"
-#include "bitmaps/pieces/xpm/white_rook.xpm"
-#include "bitmaps/pieces/xpm/white_queen.xpm"
-#include "bitmaps/pieces/xpm/white_king.xpm"
-#include "bitmaps/pieces/xpm/no_piece.xpm"
-
 slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED(id), const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size),
       mpParent(parent),
@@ -552,57 +538,6 @@ void slach_gui::ChessBoardPanel::PaintPiece(wxPaintDC& dc, unsigned squareIndex)
     dc.DrawBitmap( piece_image, 0, 0, true );
 }
 
-wxIcon slach_gui::ChessBoardPanel::GetIconFromPiece(slach::PieceType piece)
-{
-    wxIcon piece_icon;
-    switch(piece)
-    {
-        case slach::WHITE_KING:
-            piece_icon = wxDROP_ICON(white_king);
-            break;
-        case slach::BLACK_KING:
-            piece_icon = wxDROP_ICON(black_king);
-            break;
-        case slach::WHITE_QUEEN:
-            piece_icon = wxDROP_ICON(white_queen);
-            break;
-        case slach::BLACK_QUEEN:
-            piece_icon = wxDROP_ICON(black_queen);
-            break;
-        case slach::WHITE_ROOK:
-            piece_icon = wxDROP_ICON(white_rook);
-            break;
-        case slach::BLACK_ROOK:
-            piece_icon = wxDROP_ICON(black_rook);
-            break;
-        case slach::WHITE_BISHOP:
-            piece_icon = wxDROP_ICON(white_bishop);
-            break;
-        case slach::BLACK_BISHOP:
-            piece_icon = wxDROP_ICON(black_bishop);
-            break;
-        case slach::WHITE_KNIGHT:
-            piece_icon = wxDROP_ICON(white_knight);
-            break;
-        case slach::BLACK_KNIGHT:
-            piece_icon = wxDROP_ICON(black_knight);
-            break;
-        case slach::WHITE_PAWN:
-            piece_icon = wxDROP_ICON(white_pawn);
-            break;
-        case slach::BLACK_PAWN:
-            piece_icon = wxDROP_ICON(black_pawn);
-            break;
-        case slach::NO_PIECE:
-            piece_icon = wxDROP_ICON(no_piece);
-            break;
-        default:
-            //NEVER_REACHED;
-            break;
-    }
-
-    return piece_icon;
-}
 wxImage slach_gui::ChessBoardPanel::GetImageFromPiece(slach::PieceType piece)
 {
 	wxImage piece_image;

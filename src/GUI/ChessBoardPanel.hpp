@@ -154,12 +154,6 @@ private:
     wxImage GetImageFromPiece(slach::PieceType piece);
 
     /**
-     * Same as GetImageFromPiece but gets you the icon corresponding to the piece.
-     * Uses wxICON macro to create what is returned
-     */
-    wxIcon GetIconFromPiece(slach::PieceType piece);
-
-    /**
      * Helper method to draw an image on a panel. The image is resized to fit into the panel.
      *
      * @param dc thed evice context (paint device context)
