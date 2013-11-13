@@ -45,6 +45,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
       mGameIsLoaded(false),
       mPerspectiveIsFromWhite(true),
       mSourceIndex(0u),
+      mDestinationIndex(0u),
       mCachedArrowsStartPoint (wxPoint(0,0)),
       mCachedArrowSpace (wxSize(10,10))
 {
@@ -204,8 +205,23 @@ void slach_gui::ChessBoardPanel::LeftMouseRelease(wxMouseEvent& event)
 	assert(mSourceIndex<mpAllSquares.size());
 	assert(destination_index<mpAllSquares.size());
     slach::Move candidate_move(mpAllSquares[mSourceIndex], mpAllSquares[destination_index]);
+    if (destination_index > 0 )
+    {
+        mDestinationIndex = destination_index;
+    }
     ProcessMoveInGui(candidate_move);
     event.Skip();
+}
+
+void slach_gui::ChessBoardPanel::ClearCurrentHighlighting()
+{
+    for (unsigned i = 0; i  < mSquarePanels.size(); ++i)
+    {
+        if (! ( mpChessBoardWithBorders->GetSquares()[i]->IsBorderSquare()))
+        {
+            mSquarePanels[i]->Refresh();
+        }
+    }
 }
 
 void slach_gui::ChessBoardPanel::ProcessMoveInGui(slach::Move & move)
@@ -225,16 +241,19 @@ void slach_gui::ChessBoardPanel::ProcessMoveInGui(slach::Move & move)
 
     if (mpChessBoard->IsLegalMove(move)==true)
     {
+        ClearCurrentHighlighting();
         if (move.DoesMoveRequireSpecialGuiHandling())
         {
             mpChessBoard->MakeThisMove(move);
 
             //delete piece on origin
             mDrawPiece = false;
+            mpAllSquares[source_index]->SetAsToBeHighlightable(true);
             mSquarePanels[source_index]->Refresh();
             mDrawPiece = true;
 
             //paint piece on destination
+            mpAllSquares[destination_index]->SetAsToBeHighlightable(true);
             mSquarePanels[destination_index]->Refresh();
 
 			for (unsigned i = 0; i  < mSquarePanels.size(); ++i)
@@ -250,10 +269,12 @@ void slach_gui::ChessBoardPanel::ProcessMoveInGui(slach::Move & move)
             mpChessBoard->MakeThisMove(move);
             //delete piece on origin
             mDrawPiece = false;
+            mpAllSquares[source_index]->SetAsToBeHighlightable(true);
             mSquarePanels[source_index]->Refresh();
             mDrawPiece = true;
 
             //paint piece on destination
+            mpAllSquares[destination_index]->SetAsToBeHighlightable(true);
             mSquarePanels[destination_index]->Refresh();
         }
         DoCommunicateTheCurrentPositionForEngine();
@@ -461,6 +482,16 @@ void slach_gui::ChessBoardPanel::PaintOnSquare(wxPaintEvent& event)
 			PaintPiece(dc, square_index);
 		}
 	}
+
+	if (mpAllSquares[square_index]->IsHighlightable() == true)
+	{
+	    // draw a rectangle
+	    dc.SetBrush(wxNullBrush); // no filling
+	    dc.SetPen( wxPen( wxColor(0,153,76), 4 ) ); // 4-pixels-thick green outline
+	    wxSize win_size =  mSquarePanels[square_index]->GetClientSize();
+	    dc.DrawRectangle( 0, 0, win_size.x, win_size.y );
+	}
+    mpAllSquares[square_index]->SetAsToBeHighlightable(false);
 	//event .Skip();
 }
 

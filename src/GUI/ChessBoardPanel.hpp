@@ -86,6 +86,11 @@ private:
      */
     unsigned mSourceIndex;
 
+    /**
+     * Cache for the destination square
+     */
+    unsigned mDestinationIndex;
+
     wxPoint mCachedArrowsStartPoint;
     wxSize mCachedArrowSpace;
 
@@ -167,6 +172,8 @@ private:
      * computer, e.g., when drawing a fen, when drag and drop occurs...
      */
     void DoCommunicateTheCurrentPositionForEngine();
+
+    void ClearCurrentHighlighting();
 
 public:
 

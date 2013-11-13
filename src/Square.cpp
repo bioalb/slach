@@ -14,7 +14,8 @@ slach::Square::Square()
     mPieceOnThisSquare(NO_PIECE),
     mIndexFromA1(UINT_MAX),
     mIndexFromTopLeft(UINT_MAX),
-    mIndexFromBottomRight(UINT_MAX)
+    mIndexFromBottomRight(UINT_MAX),
+    mIshighlightable(false)
 {
 
 }
@@ -240,3 +241,14 @@ bool slach::Square::IsSixthRank() const
         return false;
     }
 }
+
+void slach::Square::SetAsToBeHighlightable(bool flag)
+{
+    mIshighlightable = flag;
+}
+
+bool slach::Square::IsHighlightable() const
+{
+    return mIshighlightable;
+}
+

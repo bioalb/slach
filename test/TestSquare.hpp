@@ -31,10 +31,12 @@ public:
         TS_ASSERT_EQUALS(sq1.IsLightSquare(), false);
         TS_ASSERT_EQUALS(sq1.GetIndexFromA1(), UINT_MAX);
         TS_ASSERT_EQUALS(sq1.GetIndexFromTopLeft(), UINT_MAX);
+        TS_ASSERT_EQUALS(sq1.IsHighlightable(), false);
         TS_ASSERT_THROWS_THIS(sq1.GetRankAsInt(),
                 "slach::Square::GetRankAsInt the square index must be initialised before calling this method");
         TS_ASSERT_THROWS_THIS(sq1.GetFileAsInt(),
                 "slach::Square::GetFileAsInt the square index must be initialised before calling this method");
+
 
         sq1.SetFile('a');
         sq1.SetRank('4');
@@ -57,6 +59,10 @@ public:
         TS_ASSERT_EQUALS(sq1.IsSeventhRank(), false);
         TS_ASSERT_EQUALS(sq1.IsThirdRank(), false);
         TS_ASSERT_EQUALS(sq1.IsSixthRank(), false);
+        sq1.SetAsToBeHighlightable(true);
+        TS_ASSERT_EQUALS(sq1.IsHighlightable(), true);
+        sq1.SetAsToBeHighlightable(false);
+        TS_ASSERT_EQUALS(sq1.IsHighlightable(), false);
 
 
         sq1.SetIndexFromA1(25u);//b4

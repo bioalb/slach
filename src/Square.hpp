@@ -66,6 +66,9 @@ private:
      */
     unsigned mIndexFromBottomRight;
 
+    /**flag that stores whether this suqare can be highlighted or not. False by default*/
+    bool mIshighlightable;
+
 public:
     /**Constructor*/
     Square();
@@ -312,6 +315,18 @@ public:
      * @return true if the square is on the sixth rank
      */
     bool IsSixthRank() const;
+
+    /**
+     * Switch the member variable mIshighlightable
+     *
+     * @param flag true (default) if we want this square to be highlightable
+     */
+    void SetAsToBeHighlightable(bool flag = true);
+
+    /**
+     * True if this square can be highlighted
+     */
+    bool IsHighlightable() const;
 };
 
 }//namespace slach
