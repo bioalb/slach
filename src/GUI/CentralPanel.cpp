@@ -270,6 +270,7 @@ void slach_gui::CentralPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
             mGameIsLoaded = true;
         }
         mpChessBoard->ResetToMoveNumber(1,slach::WHITE);//otherwise, on an immediate resize, it will skip to the last move
+        mpChessBoardPanel->DoGoBackToBeginning();//make sure all goes to beginning when loading a game
     }
 }
 

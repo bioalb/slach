@@ -170,6 +170,30 @@ unsigned slach::ChessBoard::GetCurrentMoveNumber() const
     return mpPosition->GetPositionFeatures().mMoveCounter;
 }
 
+unsigned slach::ChessBoard::GetIndexInMoveListOfCurrentMoveJustPlayed() const
+{
+    unsigned move_number = GetCurrentMoveNumber();
+    Colour to_move = WhosTurnIsIt();
+
+    if (to_move == WHITE)
+    {
+        if (move_number ==1)
+        {
+            return UINT_MAX;
+        }
+        else
+        {
+            return (move_number*2 - 2);
+        }
+    }
+    else // black to move
+    {
+        return (move_number*2 - 1);
+    }
+
+
+}
+
 void slach::ChessBoard::SetPromotionPiece(slach::PieceType piece)
 {
 	mpPosition->SetPromotionPiece(piece);

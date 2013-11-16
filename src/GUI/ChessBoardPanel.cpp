@@ -248,7 +248,7 @@ void slach_gui::ChessBoardPanel::ProcessMoveInGui(slach::Move & move)
 
             //delete piece on origin
             mDrawPiece = false;
-            mpAllSquares[source_index]->SetAsToBeHighlightable(true);
+            mpAllSquares[source_index]->SetAsToBeHighlightable(true);//paint event activated at next line
             mSquarePanels[source_index]->Refresh();
             mDrawPiece = true;
 
@@ -487,7 +487,7 @@ void slach_gui::ChessBoardPanel::PaintOnSquare(wxPaintEvent& event)
 	{
 	    // draw a rectangle
 	    dc.SetBrush(wxNullBrush); // no filling
-	    dc.SetPen( wxPen( wxColor(0,153,76), 4 ) ); // 4-pixels-thick green outline
+	    dc.SetPen( wxPen( wxColor(155,10,10), 5 ) ); // 5-pixels-thick outline
 	    wxSize win_size =  mSquarePanels[square_index]->GetClientSize();
 	    dc.DrawRectangle( 0, 0, win_size.x, win_size.y );
 	}
@@ -505,6 +505,36 @@ void slach_gui::ChessBoardPanel::DrawAndSetFenPositionOnBoard(const std::string&
             mSquarePanels[i]->Refresh();
         }
     }
+
+    //Here we figure out what we need to highlight ON THE BOARD!
+    unsigned index_of_last_played_move = mpChessBoard->GetIndexInMoveListOfCurrentMoveJustPlayed();
+    if (index_of_last_played_move <= mpChessBoard->GetGame()->GetMoveList().size() &&
+        index_of_last_played_move > 0)
+    {
+        ClearCurrentHighlighting();
+        slach::Move last_move_played = mpChessBoard->GetGame()->GetMoveList()[index_of_last_played_move-1];
+        assert(last_move_played.GetDestination() != NULL);
+        assert(last_move_played.GetOrigin() != NULL);
+
+        unsigned source_index;
+        unsigned destination_index;
+        if (mPerspectiveIsFromWhite == true)
+        {
+            destination_index = last_move_played.GetDestination()->GetIndexFromTopLeft();
+            source_index = last_move_played.GetOrigin()->GetIndexFromTopLeft();
+        }
+        else
+        {
+            destination_index = last_move_played.GetDestination()->GetIndexFromBottomRight();
+            source_index = last_move_played.GetOrigin()->GetIndexFromBottomRight();
+        }
+        mpAllSquares[source_index]->SetAsToBeHighlightable(true);//paint event activated at next line
+        mSquarePanels[source_index]->Refresh();
+        mpAllSquares[destination_index]->SetAsToBeHighlightable(true);//paint event activated at next line
+        mSquarePanels[destination_index]->Refresh();
+    }
+
+
     DoCommunicateTheCurrentPositionForEngine();
 }
 

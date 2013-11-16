@@ -127,6 +127,16 @@ public:
     unsigned GetCurrentMoveNumber() const;
 
     /**
+     * this calls GetCurrentMoveNumber and WhosTurnIsIt and returns the index
+     * of the last move played in the game.
+     *
+     * It returns UINT_MAX if no move was played
+     *
+     * @return the index of the last move played in the game
+     */
+    unsigned GetIndexInMoveListOfCurrentMoveJustPlayed() const;
+
+    /**
      * Access method for the variable mCurrentFenPosition
      *
      * @return a string containing the current FEN position.

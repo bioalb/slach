@@ -602,6 +602,9 @@ public:
         std::vector<slach::Square*> squares = my_cb.GetSquares();
         CheckInitialPosition(squares);
 
+        TS_ASSERT_EQUALS(my_cb.GetCurrentMoveNumber(), 1u);
+        TS_ASSERT_EQUALS(my_cb.GetIndexInMoveListOfCurrentMoveJustPlayed(), UINT_MAX);//no move played
+
         /////Initial position done, move d2-d4 now
         slach::Move d2_d4(squares[11], squares[27]);//d2-d4
 
@@ -612,6 +615,7 @@ public:
 
         std::string after_d2_d4 = "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq d3 0 1";
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_d2_d4);
+        TS_ASSERT_EQUALS(my_cb.GetIndexInMoveListOfCurrentMoveJustPlayed(), 1u);//d2-d4 played
 
         //////Black now moves e7-e5
         slach::Move e7_e5(squares[52],squares[36]);//e7-e5
@@ -623,6 +627,7 @@ public:
 
         std::string after_e7_e5 = "rnbqkbnr/pppp1ppp/8/4p3/3P4/8/PPP1PPPP/RNBQKBNR w KQkq e6 0 2";
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_e7_e5);
+        TS_ASSERT_EQUALS(my_cb.GetIndexInMoveListOfCurrentMoveJustPlayed(), 2u);
 
         ///white captures the pawn on e5
         slach::Move d4_takes_e5(squares[27], squares[36]);//d4-e5
@@ -634,6 +639,7 @@ public:
 
         std::string after_d4_takes_e5 = "rnbqkbnr/pppp1ppp/8/4P3/8/8/PPP1PPPP/RNBQKBNR b KQkq - 0 2";
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_d4_takes_e5);
+        TS_ASSERT_EQUALS(my_cb.GetIndexInMoveListOfCurrentMoveJustPlayed(), 3u);
 
         ///black plays bishop b4 check
         slach::Move bishop_b4_check(squares[61], squares[25]);//f8-b4
@@ -645,6 +651,7 @@ public:
 
         std::string after_bishop_b4_check = "rnbqk1nr/pppp1ppp/8/4P3/1b6/8/PPP1PPPP/RNBQKBNR w KQkq - 1 3";
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_bishop_b4_check);
+        TS_ASSERT_EQUALS(my_cb.GetIndexInMoveListOfCurrentMoveJustPlayed(), 4u);
 
         ///now white tries an illegal move (h2-h4) it's under check and not allowed
         slach::Move illegal_h2_h4( squares[15], squares[31]);//h2-h4
@@ -661,6 +668,7 @@ public:
 
         std::string after_c2c3 =  "rnbqk1nr/pppp1ppp/8/4P3/1b6/2P5/PP2PPPP/RNBQKBNR b KQkq - 0 3";
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_c2c3);
+        TS_ASSERT_EQUALS(my_cb.GetIndexInMoveListOfCurrentMoveJustPlayed(), 5u);
 
         slach::Game* p_game =  my_cb.GetGame();
         TS_ASSERT_EQUALS(p_game->GetMoveList().size(), 5u);
