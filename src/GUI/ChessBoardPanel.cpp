@@ -33,7 +33,6 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
       mIamTheMainBoard(true),
       mPngPieceDirectory("../../src/GUI/bitmaps/pieces/png/"),
       mPngBackgroundDirectory("../../src/GUI/bitmaps/squares/png/"),
-      mPngArrowsDirectory("../../src/GUI/bitmaps/arrows/png/"),
       mpChessBoardWithBorders ( new slach::ChessBoardWithBorders() ),
       mpChessBoard(NULL),
       mpBoardGridSizer ( new wxFlexGridSizer(slach::gBoardRowSize+2,slach::gBoardColumnSize+2,0,0) ),
@@ -430,35 +429,114 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
     mpSizerForArrows->SetDimension(mCachedArrowsStartPoint, mCachedArrowSpace);
     mpSizerForArrows->Layout();
 
+    mpBackwardArrowPanelEnd->SetBackgroundColour (wxColour(35,87,102));
+    mpBackwardArrowPanelMore->SetBackgroundColour (wxColour(35,87,102));
+    mpBackwardArrowPanel->SetBackgroundColour (wxColour(35,87,102));
+    mpForwardArrowPanel->SetBackgroundColour (wxColour(35,87,102));
+    mpForwardArrowPanelMore->SetBackgroundColour (wxColour(35,87,102));
+    mpForwardArrowPanelEnd->SetBackgroundColour (wxColour(35,87,102));
+    double margin_x_dir = 0.3;//fractional margin between arrow and border of panel, x direction
+    double margin_y_dir = 0.1;//fractional margin between arrow and border of panel, y direction
+    double double_arrow_offset = 0.5;//fractional offset for doublw arrows
     if (generating_id == ID_BACKWARD_END_BUTTON)
     {
         wxPaintDC dcBE(mpBackwardArrowPanelEnd);
-        DoPaintImageOnPanel(dcBE, mpBackwardArrowPanelEnd, mArrowImages[5]);
+        wxSize panel_size = mpSizerForArrows->GetItem(mpBackwardArrowPanelEnd)->GetSize();
+        int origin_y = panel_size.y*0.5;
+        int origin_x = panel_size.x*margin_x_dir;
+
+        dcBE.SetBrush(wxBrush(wxColour(207,239,235))); // filling,
+        dcBE.SetPen( wxNullPen );
+        wxPoint point_list [] = {wxPoint(0,0),
+                                 wxPoint((1.0 - 2*margin_x_dir)*panel_size.x,-0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
+                                 wxPoint((1.0 - 2*margin_x_dir)*panel_size.x, 0.5*(1.0-2.0*margin_y_dir)*panel_size.y)};
+        dcBE.DrawPolygon(3, point_list, origin_x, origin_y);
+
+        dcBE.SetPen( wxPen( wxColor(207,239,235), 2 ) ); // 2-pixels-thick outline
+        dcBE.DrawLine(origin_x, margin_y_dir*panel_size.y,
+                      origin_x, (1.0-margin_y_dir)*panel_size.y);
     }
     else if (generating_id == ID_BACKWARD_MORE_BUTTON)
     {
         wxPaintDC dcBM(mpBackwardArrowPanelMore);
-        DoPaintImageOnPanel(dcBM, mpBackwardArrowPanelMore, mArrowImages[4]);
+        wxSize panel_size = mpSizerForArrows->GetItem(mpBackwardArrowPanelMore)->GetSize();
+        int origin_y = panel_size.y/2;
+        int origin_x = panel_size.x*margin_x_dir;
+
+        dcBM.SetBrush(wxBrush(wxColour(207,239,235))); // filling,
+        dcBM.SetPen( wxNullPen );
+        wxPoint point_list [] = {wxPoint(0,0),
+                                 wxPoint((1.0 - 2*margin_x_dir)*panel_size.x,-0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
+                                 wxPoint((1.0 - 2*margin_x_dir)*panel_size.x, 0.5*(1.0-2.0*margin_y_dir)*panel_size.y)};
+        wxPoint point_list_2 [] = {wxPoint( - panel_size.x*margin_x_dir*double_arrow_offset,0),
+                                   wxPoint(double_arrow_offset*(1.0 - 2*margin_x_dir)*panel_size.x,-0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
+                                   wxPoint(double_arrow_offset*(1.0 - 2*margin_x_dir)*panel_size.x, 0.5*(1.0-2.0*margin_y_dir)*panel_size.y)};
+        dcBM.DrawPolygon(3, point_list, origin_x, origin_y);
+        dcBM.DrawPolygon(3, point_list_2, origin_x, origin_y);
     }
     else if (generating_id == ID_BACKWARD_BUTTON)
     {
         wxPaintDC dcBACK(mpBackwardArrowPanel);
-        DoPaintImageOnPanel(dcBACK, mpBackwardArrowPanel, mArrowImages[3]);
+        wxSize panel_size = mpSizerForArrows->GetItem(mpBackwardArrowPanel)->GetSize();
+        int origin_y = panel_size.y/2;
+        int origin_x = panel_size.x*margin_x_dir;
+
+        dcBACK.SetBrush(wxBrush(wxColour(207,239,235))); // filling,
+        dcBACK.SetPen( wxNullPen );
+        wxPoint point_list [] = {wxPoint(0,0),
+                                 wxPoint((1.0 - 2*margin_x_dir)*panel_size.x,-0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
+                                 wxPoint((1.0 - 2*margin_x_dir)*panel_size.x, 0.5*(1.0-2.0*margin_y_dir)*panel_size.y)};
+        dcBACK.DrawPolygon(3, point_list, origin_x, origin_y);
     }
     else if (generating_id == ID_FORWARD_BUTTON)
     {
         wxPaintDC dcFOR(mpForwardArrowPanel);
-        DoPaintImageOnPanel(dcFOR, mpForwardArrowPanel, mArrowImages[0]);
+        wxSize panel_size = mpSizerForArrows->GetItem(mpForwardArrowPanel)->GetSize();
+        int origin_y = panel_size.y/2;
+        int origin_x = panel_size.x*margin_x_dir;
+
+        dcFOR.SetBrush(wxBrush(wxColour(207,239,235))); // filling,
+        dcFOR.SetPen( wxNullPen );
+        wxPoint point_list [] = {wxPoint(0,0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
+                                 wxPoint(0,-0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
+                                 wxPoint((1.0 - 2*margin_x_dir)*panel_size.x, 0)};
+        dcFOR.DrawPolygon(3, point_list, origin_x, origin_y);
     }
     else if (generating_id == ID_FORWARD_MORE_BUTTON)
     {
         wxPaintDC dcFM(mpForwardArrowPanelMore);
-        DoPaintImageOnPanel(dcFM, mpForwardArrowPanelMore, mArrowImages[1]);
+        wxSize panel_size = mpSizerForArrows->GetItem(mpForwardArrowPanelMore)->GetSize();
+        int origin_y = panel_size.y/2;
+        int origin_x = panel_size.x*margin_x_dir;
+
+        dcFM.SetBrush(wxBrush(wxColour(207,239,235))); // filling,
+        dcFM.SetPen( wxNullPen );
+        wxPoint point_list [] = {wxPoint(0,0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
+                                 wxPoint(0,-0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
+                                 wxPoint((1.0 - 2*margin_x_dir)*panel_size.x, 0)};
+        wxPoint point_list_2 [] = {wxPoint(double_arrow_offset*(1.0-2*margin_x_dir)*panel_size.x,0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
+                                   wxPoint(double_arrow_offset*(1.0-2*margin_x_dir)*panel_size.x,-0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
+                                   wxPoint((1.0+double_arrow_offset)*(1.0 - 2*margin_x_dir)*panel_size.x, 0)};
+        dcFM.DrawPolygon(3, point_list, origin_x, origin_y);
+        dcFM.DrawPolygon(3, point_list_2, origin_x, origin_y);
     }
     else if ( generating_id == ID_FORWARD_END_BUTTON)
     {
         wxPaintDC dcFE(mpForwardArrowPanelEnd);
-        DoPaintImageOnPanel(dcFE, mpForwardArrowPanelEnd, mArrowImages[2]);
+        wxSize panel_size = mpSizerForArrows->GetItem(mpForwardArrowPanelEnd)->GetSize();
+        int origin_y = panel_size.y/2;
+        int origin_x = panel_size.x*margin_x_dir;
+
+        dcFE.SetBrush(wxBrush(wxColour(207,239,235))); // filling,
+        dcFE.SetPen( wxNullPen );
+        wxPoint point_list [] = {wxPoint(0,0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
+                                 wxPoint(0,-0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
+                                 wxPoint((1.0 - 2*margin_x_dir)*panel_size.x, 0)};
+        dcFE.DrawPolygon(3, point_list, origin_x, origin_y);
+
+        dcFE.SetPen( wxPen( wxColor(207,239,235), 2 ) ); // 2-pixels-thick outline
+        dcFE.DrawLine((1.0 - margin_x_dir)*panel_size.x, margin_y_dir*panel_size.y,
+                      (1.0 - margin_x_dir)*panel_size.x, (1.0-margin_y_dir)*panel_size.y);
     }
 
 }
@@ -576,14 +654,6 @@ void slach_gui::ChessBoardPanel::LoadBoardImages()
     mPieceImages[13].LoadFile(wxString((mPngBackgroundDirectory+"dark_square.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
     mPieceImages[14].LoadFile(wxString((mPngBackgroundDirectory+"light_square.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
     mPieceImages[15].LoadFile(wxString((mPngBackgroundDirectory+"border_square.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
-
-    mArrowImages.resize(6u);
-    mArrowImages[0].LoadFile(wxString((mPngArrowsDirectory+"forward.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
-    mArrowImages[1].LoadFile(wxString((mPngArrowsDirectory+"forward_more.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
-    mArrowImages[2].LoadFile(wxString((mPngArrowsDirectory+"forward_end.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
-    mArrowImages[3].LoadFile(wxString((mPngArrowsDirectory+"backward.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
-    mArrowImages[4].LoadFile(wxString((mPngArrowsDirectory+"backward_more.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
-    mArrowImages[5].LoadFile(wxString((mPngArrowsDirectory+"backward_end.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
 }
 
 void slach_gui::ChessBoardPanel::PaintPiece(wxPaintDC& dc, unsigned squareIndex)

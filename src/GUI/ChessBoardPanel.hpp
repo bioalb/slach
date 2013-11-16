@@ -29,13 +29,9 @@ private:
     std::string mPngPieceDirectory;
     /** Directory where png of the backgrounds are*/
     std::string mPngBackgroundDirectory;
-    /** Directory where the png of the arrows are*/
-    std::string mPngArrowsDirectory;
 
     /** Stores pointers of the images of the pieces */
     std::vector<wxImage> mPieceImages;
-    /** Stores pointers of the images of the arrows */
-    std::vector<wxImage> mArrowImages;
 
     /** Stores the panels that make up the chessboard*/
     std::vector<wxPanel* > mSquarePanels;
