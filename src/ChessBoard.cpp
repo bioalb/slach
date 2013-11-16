@@ -147,7 +147,7 @@ void slach::ChessBoard::MakeThisMove(Move& rMove)
 
 int slach::ChessBoard::SetFenPosition(const std::string &rFenPosition)
 {
-    return mpPosition->SetFromFen(rFenPosition, mSquares);
+    return mpPosition->SetFromFen(rFenPosition, mSquares);//Check for validity performed here
 }
 
 std::string slach::ChessBoard::GetCurrentFenPosition() const

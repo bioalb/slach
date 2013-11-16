@@ -63,6 +63,9 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     wxButton* flip_view_button  = new wxButton(mpLeftOfChessBoard, 2, wxT("flip..."),wxPoint(0,55), wxDefaultSize);
     flip_view_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &CentralPanel::FlipView, this);
 
+    wxButton* fen_button  = new wxButton(mpLeftOfChessBoard, 3, wxT("Fen..."),wxPoint(0,95), wxDefaultSize);
+    fen_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &CentralPanel::LoadFen, this);
+
     mpBottomPlayerBox = new wxTextCtrl (mpNameOfPlayerBottom, ID_WHITE_PLAYER_BOX, wxT(""), wxDefaultPosition,
     								  wxDefaultSize, wxTE_LEFT | wxTE_RICH | wxTE_MULTILINE | wxTE_DONTWRAP | wxBORDER_NONE);
     mpTopPlayerBox = new wxTextCtrl (mpNameOfPlayerTop, ID_BLACK_PLAYER_BOX, wxT(""), wxDefaultPosition,
@@ -119,6 +122,21 @@ slach_gui::CentralPanel::~CentralPanel()
 
 }
 
+
+void slach_gui::CentralPanel::LoadFen (wxCommandEvent& WXUNUSED(event))
+{
+    wxTextEntryDialog* fen_dialogue =  new wxTextEntryDialog(this, wxT("Enter a position in FEN notation"), wxT("caption"),  wxEmptyString);
+    if ( fen_dialogue->ShowModal() == wxID_OK )
+    {
+        mpChessBoardPanel->DrawAndSetFenPositionOnBoard(fen_dialogue->GetValue().ToStdString());
+    }
+    else
+    {
+        //else: dialog was cancelled or some another button pressed
+        fen_dialogue->Destroy();
+    }
+
+}
 
 void slach_gui::CentralPanel::FlipView (wxCommandEvent& WXUNUSED(event))
 {

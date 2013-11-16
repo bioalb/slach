@@ -164,6 +164,8 @@ public:
 
     void FlipView (wxCommandEvent& WXUNUSED(event));
 
+    void LoadFen (wxCommandEvent& WXUNUSED(event));
+
     /**
      * this method is activated when user clicks on one of the moves in the move list.
      * It figures out which move and set the chessboard accordingly.
