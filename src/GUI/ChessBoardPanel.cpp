@@ -16,7 +16,6 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
       mpParent(parent),
       mIamTheMainBoard(true),
       mPngPieceDirectory("../../src/GUI/bitmaps/pieces/png/"),
-      mPngBackgroundDirectory("../../src/GUI/bitmaps/squares/png/"),
       mpChessBoardWithBorders ( new slach::ChessBoardWithBorders() ),
       mpChessBoard(NULL),
       mpBoardGridSizer ( new wxFlexGridSizer(slach::gBoardRowSize+2,slach::gBoardColumnSize+2,0,0) ),
@@ -531,19 +530,11 @@ void slach_gui::ChessBoardPanel::PaintOnSquare(wxPaintEvent& event)
 	unsigned square_index = (unsigned) square_index_int;
 
 	wxPaintDC dc(mSquarePanels[square_index]);
-	if (mpAllSquares[square_index]->IsBorderSquare())
-	{
-		PaintBackground(dc, square_index);
-		PaintOnBorder(dc, square_index);
-	}
-	else
-	{
-		PaintBackground(dc, square_index);
-		if (mDrawPiece == true)
-		{
-			PaintPiece(dc, square_index);
-		}
-	}
+    PaintBackground(dc, square_index);
+    if (mDrawPiece == true)
+    {
+        PaintPiece(dc, square_index);
+    }
 
 	if (mpAllSquares[square_index]->IsHighlightable() == true)
 	{
@@ -635,9 +626,6 @@ void slach_gui::ChessBoardPanel::LoadBoardImages()
     mPieceImages[10].LoadFile(wxString((mPngPieceDirectory+"white_pawn.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
     mPieceImages[11].LoadFile(wxString((mPngPieceDirectory+"black_pawn.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
     mPieceImages[12].LoadFile(wxString((mPngPieceDirectory+"no_piece.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
-    mPieceImages[13].LoadFile(wxString((mPngBackgroundDirectory+"dark_square.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
-    mPieceImages[14].LoadFile(wxString((mPngBackgroundDirectory+"light_square.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
-    mPieceImages[15].LoadFile(wxString((mPngBackgroundDirectory+"border_square.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
 }
 
 void slach_gui::ChessBoardPanel::PaintPiece(wxPaintDC& dc, unsigned squareIndex)
@@ -653,9 +641,61 @@ void slach_gui::ChessBoardPanel::PaintPiece(wxPaintDC& dc, unsigned squareIndex)
     dc.DrawBitmap( piece_image, 0, 0, true );
 }
 
+void slach_gui::ChessBoardPanel::PaintBackground(wxPaintDC& dc, unsigned squareIndex)
+{
+    if ( (mpAllSquares[squareIndex]->IsDarkSquare() == true) && (mpAllSquares[squareIndex]->IsBorderSquare() == false))
+    {
+        mSquarePanels[squareIndex]->SetBackgroundColour(wxColour(32,107,129));
+    }
+    if ( (mpAllSquares[squareIndex]->IsLightSquare() == true) && (mpAllSquares[squareIndex]->IsBorderSquare() == false))
+    {
+        mSquarePanels[squareIndex]->SetBackgroundColour(wxColour(235,241,246));
+    }
+    if (mpAllSquares[squareIndex]->IsBorderSquare())
+    {
+        mSquarePanels[squareIndex]->SetBackgroundColour(wxColour(35,87,102));
+        PaintOnBorder(dc, squareIndex);
+    }
+}
+
+void slach_gui::ChessBoardPanel::PaintOnBorder(wxPaintDC& dc, unsigned squareIndex)
+{
+    if ( (mpAllSquares[squareIndex]->IsBorderSquare()==true &&
+    	  mpAllSquares[squareIndex]->IsCornerSquare()==false &&
+    	  mpAllSquares[squareIndex]->IsCoordinatePrintable()))
+    {
+        wxString file(mpAllSquares[squareIndex]->GetFileAsString());
+        wxString rank(mpAllSquares[squareIndex]->GetRankAsString());
+        wxString to_print;
+        if (file == "0")
+        {
+            to_print = rank;
+        }
+        else
+        {
+            to_print = file;
+        }
+        dc.SetFont( wxFont(wxFontInfo(15).FaceName("Helvetica").Bold()) );
+        dc.SetTextForeground ( wxColour (200, 220, 220) );
+        wxSize text_size = dc.GetTextExtent(to_print);
+
+        int width = mSquarePanels[squareIndex]->GetClientSize().GetWidth();
+        int height = mSquarePanels[squareIndex]->GetClientSize().GetHeight();
+        int xcoord = (width - text_size.x)/2;
+        int ycoord = (height - text_size.y)/2;
+
+        dc.DrawText(to_print,xcoord,ycoord);
+    }
+}
+
+slach::ChessBoard* slach_gui::ChessBoardPanel::GetChessBoard()
+{
+    return mpChessBoard;
+}
+
 wxImage slach_gui::ChessBoardPanel::GetImageFromPiece(slach::PieceType piece)
 {
-	wxImage piece_image;
+    wxImage piece_image;
     switch(piece)
     {
         case slach::WHITE_KING:
@@ -702,66 +742,4 @@ wxImage slach_gui::ChessBoardPanel::GetImageFromPiece(slach::PieceType piece)
             break;
     }
     return piece_image;
-}
-
-
-void slach_gui::ChessBoardPanel::PaintBackground(wxPaintDC& dc, unsigned squareIndex)
-{
-    assert(mPieceImages.size() == 16u);
-    int width = mSquarePanels[squareIndex]->GetClientSize().GetWidth();
-    int height = mSquarePanels[squareIndex]->GetClientSize().GetHeight();
-
-    if ( (mpAllSquares[squareIndex]->IsDarkSquare() == true) && (mpAllSquares[squareIndex]->IsBorderSquare() == false))
-    {
-        mPieceImages[13].Rescale(width, height);//rgb 32,107,129
-        //now really draw the rendered image
-        dc.DrawBitmap( mPieceImages[13], 0, 0, true );
-    }
-    if ( (mpAllSquares[squareIndex]->IsLightSquare() == true) && (mpAllSquares[squareIndex]->IsBorderSquare() == false))
-    {
-        mPieceImages[14].Rescale(width, height);//rgb 235.241,246
-        //now really draw the rendered image
-        dc.DrawBitmap( mPieceImages[14], 0, 0, true );
-    }
-    if (mpAllSquares[squareIndex]->IsBorderSquare())
-    {
-        mPieceImages[15].Rescale(width, height);//rgb 35,87,102
-        //now really draw the rendered image
-        dc.DrawBitmap( mPieceImages[15], 0, 0, true );
-    }
-}
-
-void slach_gui::ChessBoardPanel::PaintOnBorder(wxPaintDC& dc, unsigned squareIndex)
-{
-    if ( (mpAllSquares[squareIndex]->IsBorderSquare()==true &&
-    	  mpAllSquares[squareIndex]->IsCornerSquare()==false &&
-    	  mpAllSquares[squareIndex]->IsCoordinatePrintable()))
-    {
-        wxString file(mpAllSquares[squareIndex]->GetFileAsString());
-        wxString rank(mpAllSquares[squareIndex]->GetRankAsString());
-        wxString to_print;
-        if (file == "0")
-        {
-            to_print = rank;
-        }
-        else
-        {
-            to_print = file;
-        }
-        dc.SetFont( wxFont(wxFontInfo(15).FaceName("Helvetica").Bold()) );
-        dc.SetTextForeground ( wxColour (200, 220, 220) );
-        wxSize text_size = dc.GetTextExtent(to_print);
-
-        int width = mSquarePanels[squareIndex]->GetClientSize().GetWidth();
-        int height = mSquarePanels[squareIndex]->GetClientSize().GetHeight();
-        int xcoord = (width - text_size.x)/2;
-        int ycoord = (height - text_size.y)/2;
-
-        dc.DrawText(to_print,xcoord,ycoord);
-    }
-}
-
-slach::ChessBoard* slach_gui::ChessBoardPanel::GetChessBoard()
-{
-    return mpChessBoard;
 }

@@ -27,8 +27,6 @@ private:
 
 	/** Directory where png of the pieces are*/
     std::string mPngPieceDirectory;
-    /** Directory where png of the backgrounds are*/
-    std::string mPngBackgroundDirectory;
 
     /** Stores pointers of the images of the pieces */
     std::vector<wxImage> mPieceImages;
