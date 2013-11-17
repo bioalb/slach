@@ -385,18 +385,21 @@ void slach_gui::CentralPanel::HighlightNextMove()
 {
     int highlighted_move = GetCurrentlyHighlightedMove();
     //skip the move numbers...
-    if (std::div(highlighted_move,3).rem == 2)
+    if ( (std::div(highlighted_move,3).rem == 2))
     {
         highlighted_move++;
     }
     //prevent de-highlighting of last move
-    if (mMoveListPanels[highlighted_move]->GetId() >= mIdOfPanelWithLastMove)
+    if ((unsigned) highlighted_move < mMoveListPanels.size())
     {
-    	HighlightMoveListPanelWithThisID(mIdOfPanelWithLastMove);
-    }
-    else
-    {
-    	HighlightMoveListPanelWithThisID(highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 1);
+        if (mMoveListPanels[highlighted_move]->GetId() >= mIdOfPanelWithLastMove)
+        {
+            HighlightMoveListPanelWithThisID(mIdOfPanelWithLastMove);
+        }
+        else
+        {
+            HighlightMoveListPanelWithThisID(highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 1);
+        }
     }
 }
 
@@ -409,13 +412,16 @@ void slach_gui::CentralPanel::HighlightSeveralMovesAhead()
         index_of_currently_highlighted_move++;
     }
     //prevent de-highlighting of last move
-    if ( mMoveListPanels[index_of_currently_highlighted_move]->GetId() >= (mIdOfPanelWithLastMove - 8))
+    if ((unsigned) index_of_currently_highlighted_move < mMoveListPanels.size())
     {
-    	HighlightMoveListPanelWithThisID(mIdOfPanelWithLastMove);
-    }
-    else
-    {
-    	HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 7);
+        if ( mMoveListPanels[index_of_currently_highlighted_move]->GetId() >= (mIdOfPanelWithLastMove - 8))
+        {
+            HighlightMoveListPanelWithThisID(mIdOfPanelWithLastMove);
+        }
+        else
+        {
+            HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 7);
+        }
     }
 }
 
