@@ -9,23 +9,7 @@
 #include "HelperGlobalFunctions.hpp"
 #include "ChessBoardPanel.hpp"
 #include "MainFrame.hpp"
-#include "bitmaps/letters/png/a.png.h"
-#include "bitmaps/letters/png/b.png.h"
-#include "bitmaps/letters/png/c.png.h"
-#include "bitmaps/letters/png/d.png.h"
-#include "bitmaps/letters/png/e.png.h"
-#include "bitmaps/letters/png/f.png.h"
-#include "bitmaps/letters/png/g.png.h"
-#include "bitmaps/letters/png/h.png.h"
 
-#include "bitmaps/numbers/png/one.png.h"
-#include "bitmaps/numbers/png/two.png.h"
-#include "bitmaps/numbers/png/three.png.h"
-#include "bitmaps/numbers/png/four.png.h"
-#include "bitmaps/numbers/png/five.png.h"
-#include "bitmaps/numbers/png/six.png.h"
-#include "bitmaps/numbers/png/seven.png.h"
-#include "bitmaps/numbers/png/eight.png.h"
 
 slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED(id), const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size),
@@ -753,121 +737,28 @@ void slach_gui::ChessBoardPanel::PaintOnBorder(wxPaintDC& dc, unsigned squareInd
     	  mpAllSquares[squareIndex]->IsCornerSquare()==false &&
     	  mpAllSquares[squareIndex]->IsCoordinatePrintable()))
     {
-        double fractional_occupancy_of_space= 0.7;
-        int dim = 0;
-        int xcoord = 0;
-        int ycoord = 0;
-        int width = mSquarePanels[squareIndex]->GetClientSize().GetWidth();
-        int height = mSquarePanels[squareIndex]->GetClientSize().GetHeight();
-        if (width<=height)
+        wxString file(mpAllSquares[squareIndex]->GetFileAsString());
+        wxString rank(mpAllSquares[squareIndex]->GetRankAsString());
+        wxString to_print;
+        if (file == "0")
         {
-            dim =  width*fractional_occupancy_of_space;
-            xcoord = 0.0;//for some reason it does not want to center itself when it is small
-            ycoord = (height-dim)/2;
+            to_print = rank;
         }
         else
         {
-            dim = height*fractional_occupancy_of_space;
-            xcoord = (width-dim)/2;
-            ycoord = (height-dim)/2;;
+            to_print = file;
         }
+        dc.SetFont( wxFont(wxFontInfo(15).FaceName("Helvetica").Bold()) );
+        dc.SetTextForeground ( wxColour (200, 220, 220) );
+        wxSize text_size = dc.GetTextExtent(to_print);
 
-        wxImage ret = DetermineCoordinateToPrint(squareIndex);
-        ret.Rescale(dim, dim);
-        dc.DrawBitmap(ret, xcoord, ycoord, true );
-    }
-}
+        int width = mSquarePanels[squareIndex]->GetClientSize().GetWidth();
+        int height = mSquarePanels[squareIndex]->GetClientSize().GetHeight();
+        int xcoord = (width - text_size.x)/2;
+        int ycoord = (height - text_size.y)/2;
 
-wxImage slach_gui::ChessBoardPanel::DetermineCoordinateToPrint(unsigned squareIndex)
-{
-	wxImage ret;
-    if (mpAllSquares[squareIndex]->GetFile()=='a')
-    {
-        wxMemoryInputStream istream(a_img, sizeof a_img);
-        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
+        dc.DrawText(to_print,xcoord,ycoord);
     }
-    else if (mpAllSquares[squareIndex]->GetFile()=='b')
-    {
-        wxMemoryInputStream istream(b_img, sizeof b_img);
-        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
-    }
-    else if (mpAllSquares[squareIndex]->GetFile()=='c')
-    {
-        wxMemoryInputStream istream(c_img, sizeof c_img);
-        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
-    }
-    else if (mpAllSquares[squareIndex]->GetFile()=='d')
-    {
-        wxMemoryInputStream istream(d_img, sizeof d_img);
-        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
-    }
-    else if (mpAllSquares[squareIndex]->GetFile()=='e')
-    {
-        wxMemoryInputStream istream(e_img, sizeof e_img);
-        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
-    }
-    else if (mpAllSquares[squareIndex]->GetFile()=='f')
-    {
-        wxMemoryInputStream istream(f_img, sizeof f_img);
-        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
-    }
-    else if (mpAllSquares[squareIndex]->GetFile()=='g')
-    {
-        wxMemoryInputStream istream(g_img, sizeof g_img);
-        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
-    }
-    else if (mpAllSquares[squareIndex]->GetFile()=='h')
-    {
-        wxMemoryInputStream istream(h_img, sizeof h_img);
-        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
-    }
-
-    else if (mpAllSquares[squareIndex]->GetRank()=='1')
-    {
-        wxMemoryInputStream istream(one_img, sizeof one_img);
-        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
-    }
-    else if (mpAllSquares[squareIndex]->GetRank()=='2')
-    {
-        wxMemoryInputStream istream(two_img, sizeof two_img);
-        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
-    }
-    else if (mpAllSquares[squareIndex]->GetRank()=='3')
-    {
-        wxMemoryInputStream istream(three_img, sizeof three_img);
-        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
-    }
-    else if (mpAllSquares[squareIndex]->GetRank()=='4')
-    {
-        wxMemoryInputStream istream(four_img, sizeof four_img);
-        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
-    }
-    else if (mpAllSquares[squareIndex]->GetRank()=='5')
-    {
-        wxMemoryInputStream istream(five_img, sizeof five_img);
-        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
-    }
-    else if (mpAllSquares[squareIndex]->GetRank()=='6')
-    {
-        wxMemoryInputStream istream(six_img, sizeof six_img);
-        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
-    }
-    else if (mpAllSquares[squareIndex]->GetRank()=='7')
-    {
-        wxMemoryInputStream istream(seven_img, sizeof seven_img);
-        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
-    }
-    else if (mpAllSquares[squareIndex]->GetRank()=='8')
-    {
-        wxMemoryInputStream istream(eight_img, sizeof eight_img);
-        ret.LoadFile(istream, wxBITMAP_TYPE_PNG);
-    }
-    else
-    {
-        //we should never be here
-    }
-
-    return ret;
 }
 
 slach::ChessBoard* slach_gui::ChessBoardPanel::GetChessBoard()

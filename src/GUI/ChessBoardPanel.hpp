@@ -135,16 +135,6 @@ private:
 
     /**
      * Helper method to figure out the image
-     * of the coordinate to print on the border.
-     * Called by PaintOnBorder.
-     *
-     * @param squareIndex the index of the square where to paint
-     * @return the image of the coordinate to be printed.
-     */
-    wxImage DetermineCoordinateToPrint(unsigned squareIndex);
-
-    /**
-     * Helper method to figure out the image
      * of a piece given the piece itself.
      *
      * Called by PaintPiece.
