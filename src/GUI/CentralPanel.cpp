@@ -125,7 +125,7 @@ slach_gui::CentralPanel::~CentralPanel()
 
 void slach_gui::CentralPanel::LoadFen (wxCommandEvent& WXUNUSED(event))
 {
-    wxTextEntryDialog* fen_dialogue =  new wxTextEntryDialog(this, wxT("Enter a position in FEN notation"), wxT("caption"),  wxEmptyString);
+    wxTextEntryDialog* fen_dialogue =  new wxTextEntryDialog(this, wxT("Enter a position in FEN notation"), wxT("Fen input"),  wxEmptyString);
     if ( fen_dialogue->ShowModal() == wxID_OK )
     {
         mpChessBoardPanel->DrawAndSetFenPositionOnBoard(fen_dialogue->GetValue().ToStdString());
@@ -411,9 +411,10 @@ void slach_gui::CentralPanel::HighlightSeveralMovesAhead()
     {
         index_of_currently_highlighted_move++;
     }
-    //prevent de-highlighting of last move
+
     if ((unsigned) index_of_currently_highlighted_move < mMoveListPanels.size())
     {
+        //prevent de-highlighting of last move
         if ( mMoveListPanels[index_of_currently_highlighted_move]->GetId() >= (mIdOfPanelWithLastMove - 8))
         {
             HighlightMoveListPanelWithThisID(mIdOfPanelWithLastMove);
