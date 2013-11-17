@@ -396,15 +396,6 @@ void slach_gui::ChessBoardPanel::ArrowButtonMovement(wxMouseEvent& event)
     else if (generating_id == ID_BACKWARD_END_BUTTON) DoGoBackToBeginning();
 }
 
-void slach_gui::ChessBoardPanel::DoPaintImageOnPanel(wxPaintDC& dc, wxPanel* pPanel, wxImage& Image)
-{
-    int width = pPanel->GetClientSize().GetWidth();
-    int height = pPanel->GetClientSize().GetHeight();
-    Image.Rescale(width, height);
-    //now really draw the rendered image;
-    dc.DrawBitmap(Image, 0, 0, true );
-}
-
 void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
 {
     int generating_id = ((wxPanel*) event.GetEventObject())->GetId();

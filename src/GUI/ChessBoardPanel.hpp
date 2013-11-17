@@ -142,14 +142,6 @@ private:
      */
     wxImage GetImageFromPiece(slach::PieceType piece);
 
-    /**
-     * Helper method to draw an image on a panel. The image is resized to fit into the panel.
-     *
-     * @param dc thed evice context (paint device context)
-     * @param pPanel the panel we want to draw upon
-     * @param Image the image we wish to draw
-     */
-    void DoPaintImageOnPanel(wxPaintDC& dc, wxPanel* pPanel, wxImage& Image);
 
     /**
      * Private helper method to encapsulate all the times we need to communicate an update in chess position to the
