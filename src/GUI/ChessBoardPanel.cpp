@@ -545,7 +545,7 @@ void slach_gui::ChessBoardPanel::PaintOnSquare(wxPaintEvent& event)
 	    dc.DrawRectangle( 0, 0, win_size.x, win_size.y );
 	}
     mpAllSquares[square_index]->SetAsToBeHighlightable(false);
-	//event .Skip();
+	event .Skip();
 }
 
 void slach_gui::ChessBoardPanel::DrawAndSetFenPositionOnBoard(const std::string& rFenPosition)
