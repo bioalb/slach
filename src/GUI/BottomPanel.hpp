@@ -24,7 +24,7 @@ protected:
     wxButton* mpStopEngineButton;
     wxTextCtrl* mpEngineTextBox;
     wxRichTextCtrl* mpScoreTextBox;
-    slach::Position* mpPosition;
+    slach::ChessBoard* mpHelperChessBoard;
     wxTimer mTimer;
     bool mEngineIsRunning;
     // in wxThreadHelper
