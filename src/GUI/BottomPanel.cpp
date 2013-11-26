@@ -137,9 +137,9 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
 	{
 	    mpEngineTextBox->Clear();//clear the box
 		//wxStreamToTextRedirector redirect(mpEngineTextBox); //not working
-	    for (unsigned pv = 0; pv < mNumberOfEngineLinesShown; ++pv)
+	    for (unsigned pv = mNumberOfEngineLinesShown; pv > 0 ; pv--)
 	    {
-	        (*mpEngineTextBox)<<mpEngineInterface->GetLatestEngineOutput()[pv];
+	        (*mpEngineTextBox)<<mpEngineInterface->GetLatestEngineOutput()[pv-1];
 	    }
 		mpScoreTextBox->BeginTextColour(wxColour(255, 255, 255));
 		mpScoreTextBox->ChangeValue("");
