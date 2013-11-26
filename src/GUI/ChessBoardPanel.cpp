@@ -578,7 +578,6 @@ void slach_gui::ChessBoardPanel::DrawAndSetFenPositionOnBoard(const std::string&
         mSquarePanels[destination_index]->Refresh();
     }
 
-
     DoCommunicateTheCurrentPositionForEngine();
 }
 

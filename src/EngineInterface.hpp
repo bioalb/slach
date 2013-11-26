@@ -24,6 +24,7 @@ class EngineInterface
     unsigned mNumberOfLinesToBeShown;
 
   protected:
+    std::string mCachedFenPositiontoBeanalysed;
 
     /**Cache the latest depths of engine output when we tried to collect it, as big as mNumberOfLinesToBeShown*/
     std::vector<int> mLatestDepths;
@@ -36,9 +37,6 @@ class EngineInterface
     std::vector<std::string> mLatestRootMoves;
     /**pointer to a position object within the stockfish engine*/
     stockfish::Position* mpStockfishPosition;
-
-    /**Cache for a FEN string*/
-    std::string mFenString;
 
     /**we create a chessboard as we need squares with pieces to translate engine moves to SAN*/
     ChessBoard* mpChessBoard;
@@ -62,23 +60,28 @@ class EngineInterface
     void InitialiseEngine();
 
   public :
+    /**
+     * Helper method only used for testing private methods.
+     */
+    void SetPositionToInternalChessBoard(const std::string& fenPosition);
 
     /**
      * Constructor
      *
      * @param pChessBoard the chessboard object we wish the engine to interact with.
      */
-    EngineInterface(ChessBoard* pChessBoard);
+    EngineInterface();
     ~EngineInterface();
 
     /**
      * This method triggers the engine to analyse the position and outputs to std::output the engine analysis.
      * It thinks for the number of seconds specified by the parameter "seconds"
      *
+     * @param pPosition the position to analyse
      * @param seconds the number of seconds we want the engine to analyse the position for. Iif no parameter is specified,
      *        the engine will think for an infinite time
      */
-    void StartAnalsyingPosition(double seconds = std::numeric_limits<double>::max());
+    void StartAnalsyingPosition(slach::Position* pPosition, double seconds = std::numeric_limits<double>::max());
 
     void StopEngine();
 
@@ -103,6 +106,11 @@ class EngineInterface
      * @param num the number of lines to be shown
      */
     void SetNumberOfLinesToBeShown(unsigned num);
+
+    ChessBoard* GetChessBoard()
+    {
+        return mpChessBoard;
+    }
 
 };
 

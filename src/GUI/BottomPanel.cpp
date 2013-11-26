@@ -3,6 +3,9 @@
 
 slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,-1, pos,size),
+      mpEngineInterface  (new slach::EngineInterface() ),
+      mNumberOfEngineLinesShown(1),
+      mpPosition ( new slach::Position() ),
       mpStartEngineButton ( new wxButton(this, 1, wxT("Start Engine"),wxDefaultPosition, wxDefaultSize) ),
       mpStopEngineButton ( new wxButton(this, 2, wxT("Stop Engine"),wxDefaultPosition, wxDefaultSize) ),
       mpEngineTextBox ( new wxTextCtrl(this, wxID_ANY, wxT("Engine output"), wxDefaultPosition, wxSize(150,60), wxTE_MULTILINE | wxBORDER_SIMPLE) ),
@@ -10,10 +13,7 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
       mTimer(this, 1),
       mEngineIsRunning(false)
 {
-    mpHelperChessBoard = new slach::ChessBoard;
-    mpHelperChessBoard->SetupChessBoard();
-    mpHelperChessBoard->SetupInitialChessPosition();
-    mpEngineInterface =  new slach::EngineInterface(mpHelperChessBoard);
+
 
     this->SetBackgroundColour(wxColour(35,87,102));
     mpEngineTextBox->SetEditable(false);
@@ -37,16 +37,16 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
 
     topsizer->Add(button_sizer, wxSizerFlags(0).Left() );
 
-
-
     this->SetSizer(topsizer, false);
     mTimer.Start(1500);//every 1500 ms
-
+    mNumberOfEngineLinesShown = 3;
+    mpEngineInterface->SetNumberOfLinesToBeShown(mNumberOfEngineLinesShown);
 }
 
 slach_gui::BottomPanel::~BottomPanel()
 {
     delete mpEngineInterface;
+    //delete mpPosition;
 }
 
 void slach_gui::BottomPanel::OnSize(wxSizeEvent& event)
@@ -59,7 +59,8 @@ void slach_gui::BottomPanel::OnSize(wxSizeEvent& event)
 
 void slach_gui::BottomPanel::SetPositionToAnalyse(slach::Position* pPosition)
 {
-    mpHelperChessBoard->SetFenPosition(pPosition->GetPositionAsFen());
+    mpPosition = pPosition;
+    mpEngineInterface->SetPositionToInternalChessBoard(mpPosition->GetPositionAsFen());
     mpEngineTextBox->Clear();//clear the box
     if (mEngineIsRunning == true)
     {
@@ -110,7 +111,7 @@ wxThread::ExitCode slach_gui::BottomPanel::Entry()
 {
     // IMPORTANT:this function gets executed in the secondary thread context!
 	wxCriticalSectionLocker lock(mCritSect);
-	mpEngineInterface->StartAnalsyingPosition(); //infinite
+	mpEngineInterface->StartAnalsyingPosition(mpPosition); //infinite
     return (wxThread::ExitCode)0;
 }
 
@@ -134,8 +135,12 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
 {
 	if (mEngineIsRunning == true)
 	{
+	    mpEngineTextBox->Clear();//clear the box
 		//wxStreamToTextRedirector redirect(mpEngineTextBox); //not working
-		(*mpEngineTextBox)<<mpEngineInterface->GetLatestEngineOutput()[0];
+	    for (unsigned pv = 0; pv < mNumberOfEngineLinesShown; ++pv)
+	    {
+	        (*mpEngineTextBox)<<mpEngineInterface->GetLatestEngineOutput()[pv];
+	    }
 		mpScoreTextBox->BeginTextColour(wxColour(255, 255, 255));
 		mpScoreTextBox->ChangeValue("");
 		mpScoreTextBox->BeginAlignment(wxTEXT_ALIGNMENT_LEFT);

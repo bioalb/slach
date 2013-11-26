@@ -13,16 +13,17 @@
 #include "misc.h"
 
 
-slach::EngineInterface::EngineInterface(slach::ChessBoard* pChessBoard)
+slach::EngineInterface::EngineInterface()
   : mNumberOfLinesToBeShown(1u),
+    mCachedFenPositiontoBeanalysed(""),
     mLatestDepths(mNumberOfLinesToBeShown, INT_MAX),
     mLatestScores(mNumberOfLinesToBeShown, DBL_MAX),
     mLatestLines(mNumberOfLinesToBeShown, ""),
     mLatestRootMoves (mNumberOfLinesToBeShown, ""),
     mpStockfishPosition (new stockfish::Position()),
-    mFenString(""),
-    mpChessBoard( pChessBoard )
+    mpChessBoard( new slach::ChessBoard() )
 {
+    mpChessBoard->SetupChessBoard();
     InitialiseEngine();
 }
 
@@ -30,6 +31,7 @@ slach::EngineInterface::~EngineInterface()
 {
     //stockfish::Threads.exit();
     delete mpStockfishPosition;
+    delete mpChessBoard;
 }
 
 void slach::EngineInterface::InitialiseEngine()
@@ -56,15 +58,22 @@ void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)
     stockfish::Options["MultiPV"] = stockfish::UCI::Option(mNumberOfLinesToBeShown, 1, 500);
 }
 
-void slach::EngineInterface::StartAnalsyingPosition(double seconds)
+void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, double seconds)
 {
     InitialiseEngine();
     stockfish::Search::Signals.stop = false;
     stockfish::Search::LimitsType limits;
+    assert(pPosition != NULL);
+
+    //critically important to clear the stream.
+    stockfish::global_stream.str(std::string());
+    stockfish::global_stream.clear();
 
     std::vector< stockfish::Move > searchMoves;
-    mpStockfishPosition->set(mpChessBoard->GetCurrentFenPosition(), false /*not chess960*/, stockfish::Threads.main_thread());
-    mFenString = mpChessBoard->GetCurrentFenPosition();
+    mpStockfishPosition->set(pPosition->GetPositionAsFen(), false /*not chess960*/, stockfish::Threads.main_thread());
+    mpChessBoard->SetFenPosition(pPosition->GetPositionAsFen()); //set the helper board with this position
+    mCachedFenPositiontoBeanalysed = pPosition->GetPositionAsFen();
+
     if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
     {
         limits.movetime = 1000*seconds;//converts milliseconds to seconds...
@@ -104,6 +113,13 @@ std::vector<std::string> slach::EngineInterface::GetLatestEngineOutput()
     }
 	return pv_lines;
 }
+
+void slach::EngineInterface::SetPositionToInternalChessBoard(const std::string& fenPosition)
+{
+    mCachedFenPositiontoBeanalysed = fenPosition;
+    mpChessBoard->SetFenPosition(mCachedFenPositiontoBeanalysed);
+}
+
 void slach::EngineInterface::ParseWholeEngineOutput(const std::string& rawOutput)
 {
     unsigned diverse_lines = 0;
@@ -111,7 +127,6 @@ void slach::EngineInterface::ParseWholeEngineOutput(const std::string& rawOutput
     while (diverse_lines < mNumberOfLinesToBeShown)
     {
         size_t line_begin = rawOutput.rfind("Depth", previous_begin - 4);
-        //std::cout<<rawOutput.substr(line_begin, previous_begin - line_begin)<<std::endl;
         std::string to_be_parsed = rawOutput.substr(line_begin, previous_begin - line_begin);
         previous_begin = line_begin;
 
@@ -120,19 +135,21 @@ void slach::EngineInterface::ParseWholeEngineOutput(const std::string& rawOutput
         std::string move_list("");
         std::string root_move("");
 
+        mpChessBoard->SetFenPosition(mCachedFenPositiontoBeanalysed);
         ParseALineofStockfishOutput(to_be_parsed, depth, score, move_list,root_move);
-        mpChessBoard->SetFenPosition(mFenString);//reset to initial fen
-        if ( (depth !=  mLatestDepths[diverse_lines]) ||
-             (root_move != mLatestRootMoves[diverse_lines]) ||
+        mpChessBoard->SetFenPosition(mCachedFenPositiontoBeanalysed);//reset to initial fen
+
+        if ( (depth !=  mLatestDepths[diverse_lines] && move_list.length() >= mLatestLines[diverse_lines].length() ) ||
+             (root_move != mLatestRootMoves[diverse_lines] ) ||
              (fabs(score - mLatestScores[diverse_lines]) > 0.01 ) ||
-             (move_list != mLatestLines[diverse_lines] && move_list.length() > mLatestLines[diverse_lines].length() ) )
+             (move_list != mLatestLines[diverse_lines] && move_list.length() >= mLatestLines[diverse_lines].length() ) )
         {
             mLatestDepths[diverse_lines] = depth;
             mLatestScores[diverse_lines] = score;
             mLatestLines[diverse_lines] = move_list;
             mLatestRootMoves[diverse_lines] = root_move;
-            diverse_lines++;
         }
+        diverse_lines++;
     }
 }
 std::pair<double, int>  slach::EngineInterface::GetLatestBestScoreAndDepth() const
@@ -155,7 +172,7 @@ std::pair<double, int>  slach::EngineInterface::GetLatestBestScoreAndDepth() con
 
 void slach::EngineInterface::ParseALineofStockfishOutput(const std::string& stockfishLine, int & depth, double & score, std::string &  move_list, std::string& rootMove)
 {
-    mpChessBoard->SetFenPosition(mFenString);
+
     //depth
     size_t pos = stockfishLine.find("Depth");
     pos = stockfishLine.find_first_of(' ', pos);
@@ -172,7 +189,8 @@ void slach::EngineInterface::ParseALineofStockfishOutput(const std::string& stoc
         score = (- score);
     }
 
-    std::size_t start_of_move = stockfishLine.find_first_not_of(' ');
+    std::size_t start_of_move_list = stockfishLine.find("Line:");
+    size_t start_of_move = stockfishLine.find_first_not_of(" ", start_of_move_list+6);
     std::string pretty_line = "";
     int i = 0;
     while (start_of_move != std::string::npos)
@@ -184,8 +202,12 @@ void slach::EngineInterface::ParseALineofStockfishOutput(const std::string& stoc
         if ( (verbose_move.GetOrigin() != NULL) && (verbose_move.GetDestination() != NULL) )
         {
             bool valid = mpChessBoard->IsLegalMove(verbose_move);
+            if (!valid)
+            {
+                break;//wait to sync engine and output in case they are in two threads...
+            }
+            //assert(valid);
             std::string pretty_move = verbose_move.GetMoveInAlgebraicFormat();
-            assert(valid);
             pretty_line = pretty_line + pretty_move + " ";
             if (i == 0)
             {

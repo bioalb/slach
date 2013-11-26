@@ -23,15 +23,17 @@ public:
         slach::ChessBoard* p_board = new slach::ChessBoard();
         p_board->SetupChessBoard();
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
-        p_board->SetFenPosition(test_position);
+        slach::Position* p_position = new slach::Position();
+        std::vector<slach::Square* > squares = p_board->GetSquares();
+        p_position->SetFromFen(test_position, squares);
 
-        slach::EngineInterface interface(p_board);
-
+        slach::EngineInterface interface;
         std::cout<<std::endl<<"*******"<<"Starting analysis. I will analyse for 3 seconds"<<"*******"<<std::endl;
-        interface.StartAnalsyingPosition(3.0);
+        interface.StartAnalsyingPosition(p_position, 3.0);
         std::cout<<std::endl<<"Done analysing for 3 seconds, engine output follows"<<std::endl;
         std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
         delete p_board;
+        delete p_position;
     }
 
     void TestStartInfiniteAndStop()
@@ -39,15 +41,17 @@ public:
         slach::ChessBoard* p_board = new slach::ChessBoard();
         p_board->SetupChessBoard();
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
-        p_board->SetFenPosition(test_position);
+        slach::Position* p_position = new slach::Position();
+        std::vector<slach::Square* > squares = p_board->GetSquares();
+        p_position->SetFromFen(test_position, squares);
 
-        slach::EngineInterface interface(p_board);
+        slach::EngineInterface interface;
         //coverage
         TS_ASSERT_EQUALS(interface.GetLatestBestScoreAndDepth().second, INT_MAX);
         TS_ASSERT_EQUALS(interface.GetLatestBestScoreAndDepth().first, DBL_MAX);
 
         std::cout<<std::endl<<"*******"<<"Starting analysis. I will start with infinite analysis"<<"*******"<<std::endl;
-        interface.StartAnalsyingPosition();
+        interface.StartAnalsyingPosition(p_position);
 
 		std::time_t time_now = 0;
 		std::time_t start_time = 0;
@@ -60,6 +64,33 @@ public:
         interface.StopEngine();
         std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
         delete p_board;
+        delete p_position;
+    }
+
+    void TestStopMakeAMoveAndRestart()
+    {
+        slach::ChessBoard* p_board = new slach::ChessBoard();
+        p_board->SetupChessBoard();
+        std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
+        slach::Position* p_position = new slach::Position();
+        std::vector<slach::Square* > squares = p_board->GetSquares();
+        p_position->SetFromFen(test_position, squares);
+
+        slach::EngineInterface interface;
+
+        std::cout<<std::endl<<"*******"<<"Starting analysis for 3 seconds"<<"*******"<<std::endl;
+        interface.StartAnalsyingPosition(p_position, 3.0);
+        std::cout<<std::endl<<"Done analysing for 3 seconds, now making a move"<<std::endl;
+        slach::Move test_move("f5d3",p_board->GetSquares() );
+        assert(test_move.GetOrigin() != NULL);
+        assert(test_move.GetDestination() != NULL);
+        p_board->MakeThisMove(test_move);
+
+        std::cout<<std::endl<<"*******"<<"Starting analysis after Bxd3"<<"*******"<<std::endl;
+        interface.StartAnalsyingPosition(p_position, 3.0);
+        std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
+        delete p_board;
+        delete p_position;
     }
 
     void TestStartInfiniteMultiplePV()
@@ -67,15 +98,17 @@ public:
         slach::ChessBoard* p_board = new slach::ChessBoard();
         p_board->SetupChessBoard();
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
-        p_board->SetFenPosition(test_position);
+        slach::Position* p_position = new slach::Position();
+        std::vector<slach::Square* > squares = p_board->GetSquares();
+        p_position->SetFromFen(test_position, squares);
 
-        slach::EngineInterface interface(p_board);
+        slach::EngineInterface interface;
         //coverage
         TS_ASSERT_EQUALS(interface.GetLatestBestScoreAndDepth().second, INT_MAX);
         TS_ASSERT_EQUALS(interface.GetLatestBestScoreAndDepth().first, DBL_MAX);
         interface.SetNumberOfLinesToBeShown(4);
         std::cout<<std::endl<<"*******"<<"Starting analysis, multiple output"<<"*******"<<std::endl;
-        interface.StartAnalsyingPosition();
+        interface.StartAnalsyingPosition(p_position);
 
         std::time_t time_now = 0;
         std::time_t start_time = 0;
@@ -91,6 +124,7 @@ public:
         std::cout<<interface.GetLatestEngineOutput()[2]<<std::endl;
         std::cout<<interface.GetLatestEngineOutput()[3]<<std::endl;
         delete p_board;
+        delete p_position;
 
     }
 
@@ -98,14 +132,9 @@ public:
     {
         std::string test_string = "Depth 5 Score cp -4 Line: f5d3 d2d3 c6b4 d3d2 e7e6";
 
-        slach::ChessBoard* p_board = new slach::ChessBoard();
-        p_board->SetupChessBoard();
-        std::vector<slach::Square*> squares =  p_board->GetSquares();//already numbered and well defined.
-
-        slach::EngineInterface interface(p_board);
+        slach::EngineInterface interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
-        p_board->SetFenPosition(test_position);
-        interface.mFenString = test_position;
+        interface.SetPositionToInternalChessBoard(test_position);
 
         int depth = 0;
         double score = 0.0;
@@ -116,22 +145,15 @@ public:
         TS_ASSERT_EQUALS(root_move, "Bxd3");
         TS_ASSERT_EQUALS(depth, 5);
         TS_ASSERT_DELTA(score, 0.04, 1e-3);
-
-        delete p_board;
     }
 
     void TestParseStockfishMoveListWithEndline()
     {
         std::string test_string = "Depth 5 Score cp -4 Line: f5d3 d2d3 c6b4 d3d2 e7e6\n";
 
-        slach::ChessBoard* p_board = new slach::ChessBoard();
-        p_board->SetupChessBoard();
-        std::vector<slach::Square*> squares =  p_board->GetSquares();//already numbered and well defined.
-
-        slach::EngineInterface interface(p_board);
+        slach::EngineInterface interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
-        p_board->SetFenPosition(test_position);
-        interface.mFenString = test_position;
+        interface.SetPositionToInternalChessBoard(test_position);
 
         int depth = 0;
         double score = 0.0;
@@ -142,22 +164,15 @@ public:
         TS_ASSERT_EQUALS(root_move, "Bxd3");
         TS_ASSERT_EQUALS(depth, 5);
         TS_ASSERT_DELTA(score, 0.04, 1e-3);
-
-        delete p_board;
     }
 
     void TestParseStockfishMoveListWithSpaces()
     {
         std::string test_string = "        Depth 5 Score cp -4 Line: f5d3 d2d3 c6b4 d3d2 e7e6  ";
 
-        slach::ChessBoard* p_board = new slach::ChessBoard();
-        p_board->SetupChessBoard();
-        std::vector<slach::Square*> squares =  p_board->GetSquares();//already numbered and well defined.
-
-        slach::EngineInterface interface(p_board);
+        slach::EngineInterface interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
-        p_board->SetFenPosition(test_position);
-        interface.mFenString = test_position;
+        interface.SetPositionToInternalChessBoard(test_position);
 
         int depth = 0;
         double score = 0.0;
@@ -168,22 +183,15 @@ public:
         TS_ASSERT_EQUALS(root_move, "Bxd3");
         TS_ASSERT_EQUALS(depth, 5);
         TS_ASSERT_DELTA(score, 0.04, 1e-3);
-
-        delete p_board;
     }
 
     void TestParseStockfishMoveListWithSpaces2()
     {
         std::string test_string = "            Depth 5 Score cp -4 Line: f5d3 d2d3 c6b4 d3d2 e7e6  \n";
 
-        slach::ChessBoard* p_board = new slach::ChessBoard();
-        p_board->SetupChessBoard();
-        std::vector<slach::Square*> squares =  p_board->GetSquares();//already numbered and well defined.
-
-        slach::EngineInterface interface(p_board);
+        slach::EngineInterface interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
-        p_board->SetFenPosition(test_position);
-        interface.mFenString = test_position;
+        interface.SetPositionToInternalChessBoard(test_position);
 
         int depth = 0;
         double score = 0.0;
@@ -194,8 +202,6 @@ public:
         TS_ASSERT_EQUALS(root_move, "Bxd3");
         TS_ASSERT_EQUALS(depth, 5);
         TS_ASSERT_DELTA(score, 0.04, 1e-3);
-
-        delete p_board;
     }
 
     void TestParseEngineOutputSingleLine()
@@ -206,14 +212,9 @@ public:
                                     "\nDepth 4 Score cp -12 Line: f6e4 c3e4 d5e4 g2g4" +
                                     "\nDepth 5 Score cp -4 Line: f5d3 d2d3 c6b4 d3d2 e7e6\n";
 
-        slach::ChessBoard* p_board = new slach::ChessBoard();
-        p_board->SetupChessBoard();
-        std::vector<slach::Square*> squares =  p_board->GetSquares();//already numbered and well defined.
-
-        slach::EngineInterface interface(p_board);
+        slach::EngineInterface interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
-        p_board->SetFenPosition(test_position);
-        interface.mFenString = test_position;
+        interface.SetPositionToInternalChessBoard(test_position);
 
         interface.ParseWholeEngineOutput(test_string);
 
@@ -228,8 +229,6 @@ public:
 
         TS_ASSERT_EQUALS(interface.mLatestLines.size(), 1u);
         TS_ASSERT_EQUALS(interface.mLatestLines[0], "Bxd3 Qxd3 Nb4 Qd2 e6 ");
-
-        delete p_board;
     }
 
     void TestParseEngineOutputWithBestMoveNote()
@@ -253,14 +252,10 @@ public:
          "\nDepth 17 Score cp -4 Line: f5d3 c2d3 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 d5d4 c3e2 f7f6 g2g4 f6g5 g4h5 d4e3 f2e3 f8e7 e2d4 e8g8 a1c1" +
          "bestmove f5d3 ponder c2d3";
 
-        slach::ChessBoard* p_board = new slach::ChessBoard();
-        p_board->SetupChessBoard();
-        std::vector<slach::Square*> squares =  p_board->GetSquares();//already numbered and well defined.
 
-        slach::EngineInterface interface(p_board);
+        slach::EngineInterface interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
-        p_board->SetFenPosition(test_position);
-        interface.mFenString = test_position;
+        interface.SetPositionToInternalChessBoard(test_position);
 
         interface.ParseWholeEngineOutput(test_string);
 
@@ -275,10 +270,6 @@ public:
 
         TS_ASSERT_EQUALS(interface.mLatestLines.size(), 1u);
         TS_ASSERT_EQUALS(interface.mLatestLines[0], "Bxd3 cxd3 e6 Ne5 Nxe5 dxe5 Nh5 Bg5 d4 Ne2 f6 g4 fxg5 gxh5 dxe3 fxe3 Be7 Nd4 O-O Rc1 ");
-
-        delete p_board;
-
-
     }
     void TestParseEngineOutputMultipleLines()
     {
@@ -384,14 +375,9 @@ public:
         + "\nDepth 11 Score cp -36 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
         + "\nDepth 11 Score cp -48 Line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 e1c1 d7d2 d1d2 g7g5 f4g3 f8g7 g1d1";
 
-        slach::ChessBoard* p_board = new slach::ChessBoard();
-        p_board->SetupChessBoard();
-        std::vector<slach::Square*> squares =  p_board->GetSquares();//already numbered and well defined.
-
-        slach::EngineInterface interface(p_board);
+        slach::EngineInterface interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
-        p_board->SetFenPosition(test_position);
-        interface.mFenString = test_position;
+        interface.SetPositionToInternalChessBoard(test_position);
 
         interface.SetNumberOfLinesToBeShown(4u);//asking stockfish to display 4 lines
         interface.ParseWholeEngineOutput(test_string);
@@ -418,8 +404,6 @@ public:
         TS_ASSERT_EQUALS(interface.mLatestLines[2], "Bg6 O-O-O e6 Kb1 Be7 Bxg6 hxg6 h3 Kf8 Rge1 Bb4 Ng5 Kg8 Qd3 Bd6 ");
         TS_ASSERT_EQUALS(interface.mLatestLines[1], "e6 Bxf5 exf5 Ne5 Qe6 O-O-O Be7 f3 O-O Kb1 Rfe8 Nxc6 Qxc6 h4 ");
         TS_ASSERT_EQUALS(interface.mLatestLines[0], "h6 Ne5 Nxe5 dxe5 Ne4 Bxe4 dxe4 O-O-O Qxd2+ Rxd2 g5 Bg3 Bg7 Rgd1 ");
-
-        delete p_board;
     }
 
 

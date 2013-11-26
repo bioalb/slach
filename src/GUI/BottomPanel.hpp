@@ -20,11 +20,13 @@ protected:
     // critical section protects access to all of the fields below
     wxCriticalSection mCritSect;
     slach::EngineInterface* mpEngineInterface;
+    unsigned mNumberOfEngineLinesShown;
+    slach::Position* mpPosition;
     wxButton* mpStartEngineButton;
     wxButton* mpStopEngineButton;
     wxTextCtrl* mpEngineTextBox;
     wxRichTextCtrl* mpScoreTextBox;
-    slach::ChessBoard* mpHelperChessBoard;
+
     wxTimer mTimer;
     bool mEngineIsRunning;
     // in wxThreadHelper
