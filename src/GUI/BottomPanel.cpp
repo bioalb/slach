@@ -8,7 +8,7 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
       mpPosition ( new slach::Position() ),
       mpStartEngineButton ( new wxButton(this, 1, wxT("Start Engine"),wxDefaultPosition, wxDefaultSize) ),
       mpStopEngineButton ( new wxButton(this, 2, wxT("Stop Engine"),wxDefaultPosition, wxDefaultSize) ),
-      mpEngineTextBox ( new wxTextCtrl(this, wxID_ANY, wxT("Engine output"), wxDefaultPosition, wxSize(150,60), wxTE_MULTILINE | wxBORDER_SIMPLE) ),
+      mpEngineTextBox ( new wxTextCtrl(this, wxID_ANY, wxT("Engine output"), wxDefaultPosition, wxSize(150,60), wxTE_MULTILINE | wxBORDER_SIMPLE | wxHSCROLL) ),
       mpScoreTextBox ( new wxRichTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxBORDER_NONE) ),
       mTimer(this, 1),
       mEngineIsRunning(false)
@@ -22,12 +22,6 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
     wxFont font(12, wxROMAN, wxNORMAL, wxNORMAL);
     mpScoreTextBox->SetFont(font);
 
-    wxBoxSizer *topsizer = new wxBoxSizer( wxHORIZONTAL );
-    topsizer->Add(mpEngineTextBox,
-    wxSizerFlags(6).Align(wxALIGN_CENTER).Expand().Border(wxALL, 10));
-    topsizer->Add(mpScoreTextBox, 
-    wxSizerFlags(1).Align(wxALIGN_CENTER).Expand());
-
     wxBoxSizer *button_sizer = new wxBoxSizer( wxHORIZONTAL );
     button_sizer->Add(mpStartEngineButton,
         wxSizerFlags(0).Align(wxALIGN_LEFT).Border(wxALL, 10));
@@ -35,7 +29,17 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
     button_sizer->Add(mpStopEngineButton,
         wxSizerFlags(0).Align(wxALIGN_LEFT).Border(wxALL, 10));
 
-    topsizer->Add(button_sizer, wxSizerFlags(0).Left() );
+    wxBoxSizer* right_side_sizer = new wxBoxSizer( wxVERTICAL );
+    right_side_sizer->Add(mpEngineTextBox,
+    wxSizerFlags(7).Align(wxALIGN_CENTER).Expand().Border(wxALL, 10));
+    right_side_sizer->Add(button_sizer, wxSizerFlags(1).Left() );
+
+    wxBoxSizer *topsizer = new wxBoxSizer( wxHORIZONTAL );
+    topsizer->Add(right_side_sizer,
+    wxSizerFlags(6).Align(wxALIGN_CENTER).Expand().Border(wxALL, 10));
+    topsizer->Add(mpScoreTextBox, 
+    wxSizerFlags(1).Align(wxALIGN_CENTER).Expand());
+
 
     this->SetSizer(topsizer, false);
     mTimer.Start(1500);//every 1500 ms
@@ -110,8 +114,8 @@ void slach_gui::BottomPanel::DoStartEngine()
 wxThread::ExitCode slach_gui::BottomPanel::Entry()
 {
     // IMPORTANT:this function gets executed in the secondary thread context!
-	wxCriticalSectionLocker lock(mCritSect);
-	mpEngineInterface->StartAnalsyingPosition(mpPosition); //infinite
+    wxCriticalSectionLocker lock(mCritSect);
+    mpEngineInterface->StartAnalsyingPosition(mpPosition); //infinite
     return (wxThread::ExitCode)0;
 }
 
@@ -139,6 +143,8 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
 		//wxStreamToTextRedirector redirect(mpEngineTextBox); //not working
 	    for (unsigned pv = mNumberOfEngineLinesShown; pv > 0 ; pv--)
 	    {
+            wxColour backgroundcolour(255 - 20*pv, 255 -  20*pv, 255 - 20*pv);
+            mpEngineTextBox->SetDefaultStyle(wxTextAttr(*wxBLACK, backgroundcolour));
 	        (*mpEngineTextBox)<<mpEngineInterface->GetLatestEngineOutput()[pv-1];
 	    }
 		mpScoreTextBox->BeginTextColour(wxColour(255, 255, 255));
