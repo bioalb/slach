@@ -1545,14 +1545,14 @@ split_point_start: // At split points actual search starts from here
         if (s.rdbuf()->in_avail()) // Not at first line
             s << "\n";
 
-        s << " Depth " << d
+        s << " depth " << d
           /*<< " seldepth "  << selDepth*/
-          << " Score "     << (i == PVIdx ? score_to_uci(v, alpha, beta) : score_to_uci(v))
+          << " score "     << (i == PVIdx ? score_to_uci(v, alpha, beta) : score_to_uci(v))
           /*<< " nodes "     << pos.nodes_searched()
           << " nps "       << pos.nodes_searched() * 1000 / elaspsed
           << " time "      << elaspsed
           << " multipv "   << i + 1*/
-          << " Line:";
+          << " line:";
 
         for (size_t j = 0; RootMoves[i].pv[j] != MOVE_NONE; j++)
             s <<  " " << move_to_uci(RootMoves[i].pv[j], pos.is_chess960());

@@ -128,9 +128,48 @@ public:
 
     }
 
+    void TestMateInOneThreePlysOutput()
+    {
+        slach::ChessBoard* p_board = new slach::ChessBoard();
+        p_board->SetupChessBoard();
+        std::string fools_mate_in_one = "rnbqkbnr/ppppp2p/8/5pp1/4P3/3P4/PPP2PPP/RNBQKBNR w KQkq g6 0 3";
+        slach::Position* p_position = new slach::Position();
+        std::vector<slach::Square* > squares = p_board->GetSquares();
+        p_position->SetFromFen(fools_mate_in_one, squares);
+
+        slach::EngineInterface interface;
+        interface.SetNumberOfLinesToBeShown(3);
+        std::cout<<std::endl<<"*******"<<"Starting analysis of Mate in one"<<"*******"<<std::endl;
+        interface.StartAnalsyingPosition(p_position, 3.0);
+        std::cout<<std::endl<<"Done analysing for 3 seconds the fools mate, engine output follows"<<std::endl;
+        std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
+        std::cout<<interface.GetLatestEngineOutput()[1]<<std::endl;
+        std::cout<<interface.GetLatestEngineOutput()[2]<<std::endl;
+        delete p_board;
+        delete p_position;
+    }
+
+    void TestCheckMate()
+    {
+        slach::ChessBoard* p_board = new slach::ChessBoard();
+        p_board->SetupChessBoard();
+        std::string fools_mate = "rnbqkbnr/ppppp2p/8/5ppQ/4P3/3P4/PPP2PPP/RNB1KBNR b KQkq - 1 3";
+        slach::Position* p_position = new slach::Position();
+        std::vector<slach::Square* > squares = p_board->GetSquares();
+        p_position->SetFromFen(fools_mate, squares);
+
+        slach::EngineInterface interface;
+        std::cout<<std::endl<<"*******"<<"Starting analysis of fools mate"<<"*******"<<std::endl;
+        interface.StartAnalsyingPosition(p_position, 3.0);
+        std::cout<<std::endl<<"Done analysing for 3 seconds the fools mate, engine output follows"<<std::endl;
+        std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
+        delete p_board;
+        delete p_position;
+    }
+
     void TestParseStockfishMoveList()
     {
-        std::string test_string = "Depth 5 Score cp -4 Line: f5d3 d2d3 c6b4 d3d2 e7e6";
+        std::string test_string = "depth 5 Score cp -4 line: f5d3 d2d3 c6b4 d3d2 e7e6";
 
         slach::EngineInterface interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
@@ -149,7 +188,7 @@ public:
 
     void TestParseStockfishMoveListWithEndline()
     {
-        std::string test_string = "Depth 5 Score cp -4 Line: f5d3 d2d3 c6b4 d3d2 e7e6\n";
+        std::string test_string = "depth 5 Score cp -4 line: f5d3 d2d3 c6b4 d3d2 e7e6\n";
 
         slach::EngineInterface interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
@@ -168,7 +207,7 @@ public:
 
     void TestParseStockfishMoveListWithSpaces()
     {
-        std::string test_string = "        Depth 5 Score cp -4 Line: f5d3 d2d3 c6b4 d3d2 e7e6  ";
+        std::string test_string = "        depth 5 Score cp -4 line: f5d3 d2d3 c6b4 d3d2 e7e6  ";
 
         slach::EngineInterface interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
@@ -187,7 +226,7 @@ public:
 
     void TestParseStockfishMoveListWithSpaces2()
     {
-        std::string test_string = "            Depth 5 Score cp -4 Line: f5d3 d2d3 c6b4 d3d2 e7e6  \n";
+        std::string test_string = "            depth 5 Score cp -4 line: f5d3 d2d3 c6b4 d3d2 e7e6  \n";
 
         slach::EngineInterface interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
@@ -206,11 +245,11 @@ public:
 
     void TestParseEngineOutputSingleLine()
     {
-        std::string test_string =   std::string("Depth 1 Score cp -24 Line: f6e4 c3e4 d5e4") +
-                                    "\nDepth 2 Score cp -24 Line: f6e4 c3e4 d5e4" +
-                                    "\nDepth 3 Score cp -8 Line: f5d3 d2d3 e7e6" +
-                                    "\nDepth 4 Score cp -12 Line: f6e4 c3e4 d5e4 g2g4" +
-                                    "\nDepth 5 Score cp -4 Line: f5d3 d2d3 c6b4 d3d2 e7e6\n";
+        std::string test_string =   std::string("depth 1 Score cp -24 line: f6e4 c3e4 d5e4") +
+                                    "\ndepth 2 Score cp -24 line: f6e4 c3e4 d5e4" +
+                                    "\ndepth 3 Score cp -8 line: f5d3 d2d3 e7e6" +
+                                    "\ndepth 4 Score cp -12 line: f6e4 c3e4 d5e4 g2g4" +
+                                    "\ndepth 5 Score cp -4 line: f5d3 d2d3 c6b4 d3d2 e7e6\n";
 
         slach::EngineInterface interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
@@ -233,23 +272,23 @@ public:
 
     void TestParseEngineOutputWithBestMoveNote()
     {
-        std::string test_string = std::string( " Depth 1 Score cp -24 Line: f6e4 c3e4 d5e4 ") +
-         "\nDepth 2 Score cp -24 Line: f6e4 c3e4 d5e4" +
-         "\nDepth 3 Score cp -8 Line: f5d3 d2d3 e7e6" +
-         "\nDepth 4 Score cp -12 Line: f6e4 c3e4 d5e4 g2g4" +
-         "\nDepth 5 Score cp -4 Line: f5d3 d2d3 c6b4 d3d2 e7e6" +
-         "\nDepth 6 Score cp -24 Line: f5d3 d2d3 e7e6 e1c1 f8d6 f4d6 c7d6" +
-         "\nDepth 7 Score cp -12 Line: f5d3 d2d3 e7e6 e1c1 f8d6 f4d6 c7d6 h2h3 h7h6" +
-         "\nDepth 8 Score cp -4 Line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 h5f4 e3f4 f8c5" +
-         "\nDepth 9 Score cp -4 Line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 h5f4 e3f4 f8e7 c1b1 e8g8" +
-         "\nDepth 10 Score cp 0 Line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 h5f4 e3f4 f8e7 c1b1 e8g8 g2g4" +
-         "\nDepth 11 Score cp -4 Line: f5d3 c2d3 e7e6 g2g4 d7d8 f3e5 c6e5 f4e5 f8d6 e5f6 g7f6 h2h4 c7c6" +
-         "\nDepth 12 Score cp -8 Line: f5d3 c2d3 e7e6 g2g4 d7d8 e1c1 f8d6 e3e4 d6b4 g4g5 f6h5 c1b1 h5f4 d2f4 e8g8 h2h4 b4d6" +
-         "\nDepth 13 Score cp -4 Line: f5d3 c2d3 e7e6 g2g4 d7d8 e1c1 f8d6 e3e4 d6b4 g4g5 f6h5 c1b1 e8g8 h2h4 f7f5 e4d5 b4c3 b2c3 d8d5" +
-         "\nDepth 14 Score cp -4 Line: f5d3 c2d3 e7e6 g2g4 d7d8 e1c1 f8d6 e3e4 d6b4 g4g5 f6h5 c1b1 e8g8 h2h4 f7f5 e4d5 b4c3 b2c3 d8d5" +
-         "\nDepth 15 Score cp -4 Line: f5d3 c2d3 e7e6 g2g4 d7d8 e1c1 f8d6 e3e4 d6b4 g4g5 f6h5 c1b1 e8g8 h2h4 f7f5 e4d5 b4c3 b2c3 d8d5" +
-         "\nDepth 16 Score cp -4 Line: f5d3 c2d3 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 d5d4 c3e2 f7f6 g2g4 f6g5 g4h5 d4e3 f2e3 f8e7 e2d4 e8g8 a1c1" +
-         "\nDepth 17 Score cp -4 Line: f5d3 c2d3 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 d5d4 c3e2 f7f6 g2g4 f6g5 g4h5 d4e3 f2e3 f8e7 e2d4 e8g8 a1c1" +
+        std::string test_string = std::string( " depth 1 Score cp -24 Line: f6e4 c3e4 d5e4 ") +
+         "\ndepth 2 Score cp -24 line: f6e4 c3e4 d5e4" +
+         "\ndepth 3 Score cp -8 line: f5d3 d2d3 e7e6" +
+         "\ndepth 4 Score cp -12 line: f6e4 c3e4 d5e4 g2g4" +
+         "\ndepth 5 Score cp -4 line: f5d3 d2d3 c6b4 d3d2 e7e6" +
+         "\ndepth 6 Score cp -24 line: f5d3 d2d3 e7e6 e1c1 f8d6 f4d6 c7d6" +
+         "\ndepth 7 Score cp -12 line: f5d3 d2d3 e7e6 e1c1 f8d6 f4d6 c7d6 h2h3 h7h6" +
+         "\ndepth 8 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 h5f4 e3f4 f8c5" +
+         "\ndepth 9 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 h5f4 e3f4 f8e7 c1b1 e8g8" +
+         "\ndepth 10 Score cp 0 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 h5f4 e3f4 f8e7 c1b1 e8g8 g2g4" +
+         "\ndepth 11 Score cp -4 line: f5d3 c2d3 e7e6 g2g4 d7d8 f3e5 c6e5 f4e5 f8d6 e5f6 g7f6 h2h4 c7c6" +
+         "\ndepth 12 Score cp -8 line: f5d3 c2d3 e7e6 g2g4 d7d8 e1c1 f8d6 e3e4 d6b4 g4g5 f6h5 c1b1 h5f4 d2f4 e8g8 h2h4 b4d6" +
+         "\ndepth 13 Score cp -4 line: f5d3 c2d3 e7e6 g2g4 d7d8 e1c1 f8d6 e3e4 d6b4 g4g5 f6h5 c1b1 e8g8 h2h4 f7f5 e4d5 b4c3 b2c3 d8d5" +
+         "\ndepth 14 Score cp -4 line: f5d3 c2d3 e7e6 g2g4 d7d8 e1c1 f8d6 e3e4 d6b4 g4g5 f6h5 c1b1 e8g8 h2h4 f7f5 e4d5 b4c3 b2c3 d8d5" +
+         "\ndepth 15 Score cp -4 line: f5d3 c2d3 e7e6 g2g4 d7d8 e1c1 f8d6 e3e4 d6b4 g4g5 f6h5 c1b1 e8g8 h2h4 f7f5 e4d5 b4c3 b2c3 d8d5" +
+         "\ndepth 16 Score cp -4 line: f5d3 c2d3 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 d5d4 c3e2 f7f6 g2g4 f6g5 g4h5 d4e3 f2e3 f8e7 e2d4 e8g8 a1c1" +
+         "\ndepth 17 Score cp -4 line: f5d3 c2d3 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 d5d4 c3e2 f7f6 g2g4 f6g5 g4h5 d4e3 f2e3 f8e7 e2d4 e8g8 a1c1" +
          "bestmove f5d3 ponder c2d3";
 
 
@@ -274,106 +313,106 @@ public:
     void TestParseEngineOutputMultipleLines()
     {
 
-        std::string test_string = std::string("Depth 1 Score cp -24 Line: f6e4 c3e4 d5e4")
-        + "\nDepth 1 Score cp -24 Line: h7h6 d3f5 d7f5"
-        + "\nDepth 1 Score cp -36 Line: e7e6 d3f5 e6f5"
-        + "\nDepth 1 Score cp -48 Line: f5d3 d2d3"
-        + "\nDepth 2 Score cp -24 Line: f6e4 c3e4 d5e4"
-        + "\nDepth 2 Score cp -48 Line: f5d3 d2d3"
-        + "\nDepth 2 Score cp -56 Line: e7e6 e1c1 f5d3 d2d3"
-        + "\nDepth 2 Score cp -64 Line: f6g4 h2h3"
-        + "\nDepth 3 Score cp -8 Line: f5d3 d2d3 e7e6"
-        + "\nDepth 3 Score cp -24 Line: f6e4 c3e4 d5e4"
-        + "\nDepth 3 Score cp -48 Line: c6b4 d3f5 d7f5"
-        + "\nDepth 3 Score cp -56 Line: e7e6 e1c1 f5d3 d2d3"
-        + "\nDepth 4 Score cp -12 Line: f6e4 c3e4 d5e4 g2g4"
-        + "\nDepth 4 Score cp -40 Line: f5d3 d2d3 c6b4 d3d2"
-        + "\nDepth 4 Score cp -40 Line: c6b4 d3f5 d7f5 e1c1 e7e6"
-        + "\nDepth 4 Score cp -44 Line: e7e6 e1c1 f5d3 d2d3 f8d6"
-        + "\nDepth 5 Score cp -4 Line: f5d3 d2d3 c6b4 d3d2 e7e6"
-        + "\nDepth 5 Score cp -44 Line: e7e6 e1c1 f5d3 d2d3 f8d6 c1b1 d6f4 e3f4"
-        + "\nDepth 5 Score cp -68 Line: f5g6 e1c1 g6d3 c2d3 e7e6 c1b1"
-        + "\nDepth 5 Score cp -68 Line: f5e4 e1c1 e4d3 c2d3 e7e6 c1b1"
-        + "\nDepth 6 Score cp -24 Line: f5d3 d2d3 e7e6 e1c1 f8d6 f4d6 c7d6"
-        + "\nDepth 6 Score cp -32 Line: e7e6 d3f5 e6f5 f3e5 c6e5 d4e5"
-        + "\nDepth 6 Score cp -52 Line: f5g6 e1c1 g6d3 c2d3 e7e6 c1b1 f8d6"
-        + "\nDepth 6 Score cp -64 Line: f5e4 d3e4 f6e4 c3e4 d5e4 f3e5 c6e5 f4e5"
-        + "\nDepth 7 Score cp -28 Line: f5d3 d2d3 e7e6 e1c1 f8d6 f3e5 d6e5 f4e5 c6e5 d4e5"
-        + "\nDepth 7 Score cp -60 Line: f6e4 d3e4 f5e4 e1c1 e4g6 f3e5 c6e5 f4e5"
-        + "\nDepth 7 Score cp -64 Line: e7e6 d3f5 e6f5 f3e5 c6e5 d4e5 f6e4 d2d5 e4c3 d5d7 e8d7 b2c3"
-        + "\nDepth 7 Score cp -64 Line: f5g6 e1c1 e7e6 c1b1 f8e7 f3e5 c6e5 f4e5 g6d3 d2d3"
-        + "\nDepth 8 Score cp -16 Line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8c5 f4g5"
-        + "\nDepth 8 Score cp -28 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7d6"
-        + "\nDepth 8 Score cp -48 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\nDepth 8 Score cp -56 Line: f6e4 d3e4 f5e4 c3e4 d5e4 f3e5 c6e5 f4e5 f7f6"
-        + "\nDepth 9 Score cp -4 Line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8"
-        + "\nDepth 9 Score cp -28 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7d6"
-        + "\nDepth 9 Score cp -48 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\nDepth 9 Score cp -48 Line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\nDepth 10 Score cp -24 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\nDepth 9 Score cp -4 Line: f5d3 c2d3 e7e6 g2g4 h7h6 f3e5"
-        + "\nDepth 9 Score cp -48 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\nDepth 9 Score cp -48 Line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\nDepth 10 Score cp -24 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\nDepth 10 Score cp -12 Line: f5d3 c2d3 e7e6 g2g4 h7h6 f3e5"
-        + "\nDepth 9 Score cp -48 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\nDepth 9 Score cp -48 Line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\nDepth 10 Score cp -24 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\nDepth 10 Score cp -20 Line: f5d3 c2d3 e7e6 g2g4 h7h6 f3e5"
-        + "\nDepth 9 Score cp -48 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\nDepth 9 Score cp -48 Line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\nDepth 10 Score cp -24 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\nDepth 10 Score cp -32 Line: f5d3 c2d3 e7e6 g2g4 h7h6 f3e5"
-        + "\nDepth 9 Score cp -48 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\nDepth 9 Score cp -48 Line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\nDepth 10 Score cp -4 Line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\nDepth 10 Score cp -24 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\nDepth 9 Score cp -48 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\nDepth 9 Score cp -48 Line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\nDepth 10 Score cp -4 Line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\nDepth 10 Score cp -24 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\nDepth 10 Score cp -40 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\nDepth 9 Score cp -48 Line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\nDepth 10 Score cp -4 Line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\nDepth 10 Score cp -24 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\nDepth 10 Score cp -32 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\nDepth 9 Score cp -48 Line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\nDepth 10 Score cp -4 Line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\nDepth 10 Score cp -24 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\nDepth 10 Score cp -36 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\nDepth 9 Score cp -48 Line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\nDepth 10 Score cp -4 Line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\nDepth 10 Score cp -24 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\nDepth 10 Score cp -36 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\nDepth 10 Score cp -40 Line: h7h6 e1c1 f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 c1b1 h5f4 e3f4 f8c5"
-        + "\nDepth 10 Score cp -4 Line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\nDepth 10 Score cp -24 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\nDepth 10 Score cp -36 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\nDepth 10 Score cp -56 Line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 f5e4 c3e4 d5e4 e1c1"
-        + "\nDepth 10 Score cp -4 Line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\nDepth 10 Score cp -24 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\nDepth 10 Score cp -36 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\nDepth 10 Score cp -68 Line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 f5e4 c3e4 d5e4 d2d7 e8d7 e1c1"
-        + "\nDepth 10 Score cp -4 Line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\nDepth 10 Score cp -24 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\nDepth 10 Score cp -36 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\nDepth 10 Score cp -48 Line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 e1c1 d7d2 d1d2 g7g5 f4g3 f8g7 g1d1"
-        + "\nDepth 11 Score cp -4 Line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\nDepth 10 Score cp -24 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\nDepth 10 Score cp -36 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\nDepth 10 Score cp -48 Line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 e1c1 d7d2 d1d2 g7g5 f4g3 f8g7 g1d1"
-        + "\nDepth 11 Score cp -4 Line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\nDepth 11 Score cp -24 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\nDepth 10 Score cp -36 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\nDepth 10 Score cp -48 Line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 e1c1 d7d2 d1d2 g7g5 f4g3 f8g7 g1d1"
-        + "\nDepth 11 Score cp -4 Line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\nDepth 11 Score cp -24 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\nDepth 11 Score cp -36 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\nDepth 10 Score cp -48 Line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 e1c1 d7d2 d1d2 g7g5 f4g3 f8g7 g1d1"
-        + "\nDepth 11 Score cp -4 Line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\nDepth 11 Score cp -24 Line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\nDepth 11 Score cp -36 Line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\nDepth 11 Score cp -48 Line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 e1c1 d7d2 d1d2 g7g5 f4g3 f8g7 g1d1";
+        std::string test_string = std::string("depth 1 Score cp -24 line: f6e4 c3e4 d5e4")
+        + "\ndepth 1 Score cp -24 line: h7h6 d3f5 d7f5"
+        + "\ndepth 1 Score cp -36 line: e7e6 d3f5 e6f5"
+        + "\ndepth 1 Score cp -48 line: f5d3 d2d3"
+        + "\ndepth 2 Score cp -24 line: f6e4 c3e4 d5e4"
+        + "\ndepth 2 Score cp -48 line: f5d3 d2d3"
+        + "\ndepth 2 Score cp -56 line: e7e6 e1c1 f5d3 d2d3"
+        + "\ndepth 2 Score cp -64 line: f6g4 h2h3"
+        + "\ndepth 3 Score cp -8 line: f5d3 d2d3 e7e6"
+        + "\ndepth 3 Score cp -24 line: f6e4 c3e4 d5e4"
+        + "\ndepth 3 Score cp -48 line: c6b4 d3f5 d7f5"
+        + "\ndepth 3 Score cp -56 line: e7e6 e1c1 f5d3 d2d3"
+        + "\ndepth 4 Score cp -12 line: f6e4 c3e4 d5e4 g2g4"
+        + "\ndepth 4 Score cp -40 line: f5d3 d2d3 c6b4 d3d2"
+        + "\ndepth 4 Score cp -40 line: c6b4 d3f5 d7f5 e1c1 e7e6"
+        + "\ndepth 4 Score cp -44 line: e7e6 e1c1 f5d3 d2d3 f8d6"
+        + "\ndepth 5 Score cp -4 line: f5d3 d2d3 c6b4 d3d2 e7e6"
+        + "\ndepth 5 Score cp -44 line: e7e6 e1c1 f5d3 d2d3 f8d6 c1b1 d6f4 e3f4"
+        + "\ndepth 5 Score cp -68 line: f5g6 e1c1 g6d3 c2d3 e7e6 c1b1"
+        + "\ndepth 5 Score cp -68 line: f5e4 e1c1 e4d3 c2d3 e7e6 c1b1"
+        + "\ndepth 6 Score cp -24 line: f5d3 d2d3 e7e6 e1c1 f8d6 f4d6 c7d6"
+        + "\ndepth 6 Score cp -32 line: e7e6 d3f5 e6f5 f3e5 c6e5 d4e5"
+        + "\ndepth 6 Score cp -52 line: f5g6 e1c1 g6d3 c2d3 e7e6 c1b1 f8d6"
+        + "\ndepth 6 Score cp -64 line: f5e4 d3e4 f6e4 c3e4 d5e4 f3e5 c6e5 f4e5"
+        + "\ndepth 7 Score cp -28 line: f5d3 d2d3 e7e6 e1c1 f8d6 f3e5 d6e5 f4e5 c6e5 d4e5"
+        + "\ndepth 7 Score cp -60 line: f6e4 d3e4 f5e4 e1c1 e4g6 f3e5 c6e5 f4e5"
+        + "\ndepth 7 Score cp -64 line: e7e6 d3f5 e6f5 f3e5 c6e5 d4e5 f6e4 d2d5 e4c3 d5d7 e8d7 b2c3"
+        + "\ndepth 7 Score cp -64 line: f5g6 e1c1 e7e6 c1b1 f8e7 f3e5 c6e5 f4e5 g6d3 d2d3"
+        + "\ndepth 8 Score cp -16 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8c5 f4g5"
+        + "\ndepth 8 Score cp -28 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7d6"
+        + "\ndepth 8 Score cp -48 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
+        + "\ndepth 8 Score cp -56 line: f6e4 d3e4 f5e4 c3e4 d5e4 f3e5 c6e5 f4e5 f7f6"
+        + "\ndepth 9 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8"
+        + "\ndepth 9 Score cp -28 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7d6"
+        + "\ndepth 9 Score cp -48 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
+        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
+        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
+        + "\ndepth 9 Score cp -4 line: f5d3 c2d3 e7e6 g2g4 h7h6 f3e5"
+        + "\ndepth 9 Score cp -48 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
+        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
+        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
+        + "\ndepth 10 Score cp -12 line: f5d3 c2d3 e7e6 g2g4 h7h6 f3e5"
+        + "\ndepth 9 Score cp -48 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
+        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
+        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
+        + "\ndepth 10 Score cp -20 line: f5d3 c2d3 e7e6 g2g4 h7h6 f3e5"
+        + "\ndepth 9 Score cp -48 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
+        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
+        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
+        + "\ndepth 10 Score cp -32 line: f5d3 c2d3 e7e6 g2g4 h7h6 f3e5"
+        + "\ndepth 9 Score cp -48 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
+        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
+        + "\ndepth 10 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
+        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
+        + "\ndepth 9 Score cp -48 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
+        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
+        + "\ndepth 10 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
+        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
+        + "\ndepth 10 Score cp -40 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
+        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
+        + "\ndepth 10 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
+        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
+        + "\ndepth 10 Score cp -32 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
+        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
+        + "\ndepth 10 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
+        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
+        + "\ndepth 10 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
+        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
+        + "\ndepth 10 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
+        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
+        + "\ndepth 10 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
+        + "\ndepth 10 Score cp -40 line: h7h6 e1c1 f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 c1b1 h5f4 e3f4 f8c5"
+        + "\ndepth 10 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
+        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
+        + "\ndepth 10 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
+        + "\ndepth 10 Score cp -56 line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 f5e4 c3e4 d5e4 e1c1"
+        + "\ndepth 10 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
+        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
+        + "\ndepth 10 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
+        + "\ndepth 10 Score cp -68 line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 f5e4 c3e4 d5e4 d2d7 e8d7 e1c1"
+        + "\ndepth 10 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
+        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
+        + "\ndepth 10 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
+        + "\ndepth 10 Score cp -48 line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 e1c1 d7d2 d1d2 g7g5 f4g3 f8g7 g1d1"
+        + "\ndepth 11 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
+        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
+        + "\ndepth 10 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
+        + "\ndepth 10 Score cp -48 line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 e1c1 d7d2 d1d2 g7g5 f4g3 f8g7 g1d1"
+        + "\ndepth 11 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
+        + "\ndepth 11 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
+        + "\ndepth 10 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
+        + "\ndepth 10 Score cp -48 line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 e1c1 d7d2 d1d2 g7g5 f4g3 f8g7 g1d1"
+        + "\ndepth 11 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
+        + "\ndepth 11 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
+        + "\ndepth 11 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
+        + "\ndepth 10 Score cp -48 line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 e1c1 d7d2 d1d2 g7g5 f4g3 f8g7 g1d1"
+        + "\ndepth 11 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
+        + "\ndepth 11 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
+        + "\ndepth 11 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
+        + "\ndepth 11 Score cp -48 line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 e1c1 d7d2 d1d2 g7g5 f4g3 f8g7 g1d1";
 
         slach::EngineInterface interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";

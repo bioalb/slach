@@ -126,7 +126,7 @@ void slach::EngineInterface::ParseWholeEngineOutput(const std::string& rawOutput
     size_t previous_begin = rawOutput.rfind("bestmove");
     while (diverse_lines < mNumberOfLinesToBeShown)
     {
-        size_t line_begin = rawOutput.rfind("Depth", previous_begin - 4);
+        size_t line_begin = rawOutput.rfind("depth", previous_begin-1);
         std::string to_be_parsed = rawOutput.substr(line_begin, previous_begin - line_begin);
         previous_begin = line_begin;
 
@@ -137,6 +137,17 @@ void slach::EngineInterface::ParseWholeEngineOutput(const std::string& rawOutput
 
         mpChessBoard->SetFenPosition(mCachedFenPositiontoBeanalysed);
         ParseALineofStockfishOutput(to_be_parsed, depth, score, move_list,root_move);
+        if (move_list == "CHECKMATE")
+        {
+            for (unsigned index = 0; index < mNumberOfLinesToBeShown; ++index)
+            {
+                mLatestDepths[index] = 0;
+                mLatestScores[index] = 0;
+                mLatestLines[index] = "CHECKMATE";
+                mLatestRootMoves[index] = "";
+            }
+            break;
+        }
         mpChessBoard->SetFenPosition(mCachedFenPositiontoBeanalysed);//reset to initial fen
 
         if ( (depth !=  mLatestDepths[diverse_lines] && move_list.length() >= mLatestLines[diverse_lines].length() ) ||
@@ -172,16 +183,25 @@ std::pair<double, int>  slach::EngineInterface::GetLatestBestScoreAndDepth() con
 
 void slach::EngineInterface::ParseALineofStockfishOutput(const std::string& stockfishLine, int & depth, double & score, std::string &  move_list, std::string& rootMove)
 {
-
     //depth
-    size_t pos = stockfishLine.find("Depth");
+    size_t pos = stockfishLine.find("depth");
     pos = stockfishLine.find_first_of(' ', pos);
     depth = atoi(&(stockfishLine[pos]));
 
     //score
+    bool mate_found = false;
     pos = stockfishLine.rfind("cp");
-    pos = stockfishLine.find_first_of(' ', pos);
-    score = atof(&(stockfishLine[pos]))/100.0;
+    if (pos == std::string::npos)
+    {
+        pos = stockfishLine.rfind("mate");
+        score = 100;
+        mate_found = true;
+    }
+    else
+    {
+        pos = stockfishLine.find_first_of(' ', pos);
+        score = atof(&(stockfishLine[pos]))/100.0;
+    }
     //fix the score to be positive for white and negative for black
     Colour to_move = mpChessBoard->WhosTurnIsIt();
     if (to_move == BLACK)
@@ -189,7 +209,12 @@ void slach::EngineInterface::ParseALineofStockfishOutput(const std::string& stoc
         score = (- score);
     }
 
-    std::size_t start_of_move_list = stockfishLine.find("Line:");
+    std::size_t start_of_move_list = stockfishLine.find("line:");
+    if (start_of_move_list == std::string::npos)//e.g., mate
+    {
+        move_list = "CHECKMATE";
+        return;
+    }
     size_t start_of_move = stockfishLine.find_first_not_of(" ", start_of_move_list+6);
     std::string pretty_line = "";
     int i = 0;
@@ -222,6 +247,10 @@ void slach::EngineInterface::ParseALineofStockfishOutput(const std::string& stoc
     if (pretty_line.length() > 0)
     {
         move_list = pretty_line;
+        if (mate_found)
+        {
+            move_list += "mate";
+        }
     }
 }
 
