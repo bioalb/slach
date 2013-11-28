@@ -124,15 +124,21 @@ void slach::EngineInterface::SetPositionToInternalChessBoard(const std::string& 
 void slach::EngineInterface::ParseWholeEngineOutput(const std::string& rawOutput)
 {
     unsigned diverse_lines = 0;
-
     size_t previous_mid_of_useful_line = std::string::npos;
-    while (diverse_lines < mNumberOfLinesToBeShown)
+    size_t mid_of_useful_line = 0;
+    mLatestRootMoves.assign(mNumberOfLinesToBeShown, "");
+    while (mid_of_useful_line != std::string::npos)
     {
-        size_t mid_of_useful_line = rawOutput.rfind("score cp", previous_mid_of_useful_line);
+        mid_of_useful_line = rawOutput.rfind("score cp", previous_mid_of_useful_line);
+        size_t line_with_mate =  rawOutput.rfind("score mate", previous_mid_of_useful_line);
+        if ( line_with_mate > mid_of_useful_line && line_with_mate != std::string::npos)
+        {
+            mid_of_useful_line = line_with_mate;
+        }
         size_t line_begin = rawOutput.rfind("\n", mid_of_useful_line);
         size_t line_end = rawOutput.find("\n", mid_of_useful_line);
         std::string to_be_parsed = rawOutput.substr(line_begin, line_end - line_begin);
-        previous_mid_of_useful_line = mid_of_useful_line;
+        previous_mid_of_useful_line = mid_of_useful_line - 1;
 
         int depth = INT_MAX;
         double score = DBL_MAX;
@@ -154,17 +160,27 @@ void slach::EngineInterface::ParseWholeEngineOutput(const std::string& rawOutput
         }
         mpChessBoard->SetFenPosition(mCachedFenPositiontoBeanalysed);//reset to initial fen
 
-        if ( (depth !=  mLatestDepths[diverse_lines] && move_list.length() >= mLatestLines[diverse_lines].length() ) ||
-             (root_move != mLatestRootMoves[diverse_lines] ) ||
-             (fabs(score - mLatestScores[diverse_lines]) > 0.01 ) ||
-             (move_list != mLatestLines[diverse_lines] && move_list.length() >= mLatestLines[diverse_lines].length() ) )
-        {
-            mLatestDepths[diverse_lines] = depth;
-            mLatestScores[diverse_lines] = score;
-            mLatestLines[diverse_lines] = move_list;
-            mLatestRootMoves[diverse_lines] = root_move;
-        }
-        diverse_lines++;
+//        if ( (depth !=  mLatestDepths[diverse_lines] && move_list.length() >= mLatestLines[diverse_lines].length() ) ||
+//             (root_move != mLatestRootMoves[diverse_lines] ) ||
+//             (fabs(score - mLatestScores[diverse_lines]) > 0.01 ) ||
+//             (move_list != mLatestLines[diverse_lines] && move_list.length() >= mLatestLines[diverse_lines].length() ) )
+//        {
+
+            bool found = (std::find(mLatestRootMoves.begin(), mLatestRootMoves.end(), root_move)!=mLatestRootMoves.end());
+            if (!found)
+            {
+                mLatestDepths[diverse_lines] = depth;
+                mLatestScores[diverse_lines] = score;
+                mLatestLines[diverse_lines] = move_list;
+                mLatestRootMoves[diverse_lines] = root_move;
+                diverse_lines++;
+            }
+
+            if (diverse_lines >= mNumberOfLinesToBeShown)
+            {
+                break;
+            }
+
     }
 }
 std::pair<double, int>  slach::EngineInterface::GetLatestBestScoreAndDepth() const
@@ -253,6 +269,7 @@ void slach::EngineInterface::ParseALineofStockfishOutput(const std::string& stoc
         move_list = pretty_line;
         if (mate_found)
         {
+            depth = 0;
             move_list += "mate";
         }
     }

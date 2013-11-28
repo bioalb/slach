@@ -146,12 +146,15 @@ public:
         std::cout<<std::endl<<"Done analysing for 3 seconds the fools mate, engine output follows"<<std::endl;
         std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
         std::cout<<interface.GetLatestEngineOutput()[1]<<std::endl;
-        std::cout<<interface.GetLatestEngineOutput()[2]<<std::endl;
+        std::string mate_line  = interface.GetLatestEngineOutput()[2];
+        std::cout<<mate_line<<std::endl;
+
+        TS_ASSERT_EQUALS(mate_line, "Depth = 0; score = 100.00; Qh5+ mate\n");
         delete p_board;
         delete p_position;
     }
 
-    void xTestCheckMate()
+    void TestCheckMate()
     {
         slach::ChessBoard* p_board = new slach::ChessBoard();
         p_board->SetupChessBoard();
@@ -164,7 +167,34 @@ public:
         std::cout<<std::endl<<"*******"<<"Starting analysis of fools mate"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(p_position, 3.0);
         std::cout<<std::endl<<"Done analysing for 3 seconds the fools mate, engine output follows"<<std::endl;
-        std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
+
+        std::string engine_output = interface.GetLatestEngineOutput()[0];
+        TS_ASSERT_EQUALS(engine_output, "Depth = 0; score = 0.00; CHECKMATE\n");
+        std::cout<<engine_output<<std::endl;
+
+        delete p_board;
+        delete p_position;
+    }
+
+    void TestCheckMateMultplepv()
+    {
+        slach::ChessBoard* p_board = new slach::ChessBoard();
+        p_board->SetupChessBoard();
+        std::string fools_mate = "rnbqkbnr/ppppp2p/8/5ppQ/4P3/3P4/PPP2PPP/RNB1KBNR b KQkq - 1 3";
+        slach::Position* p_position = new slach::Position();
+        std::vector<slach::Square* > squares = p_board->GetSquares();
+        p_position->SetFromFen(fools_mate, squares);
+
+        slach::EngineInterface interface;
+        interface.SetNumberOfLinesToBeShown(3);
+        std::cout<<std::endl<<"*******"<<"Starting analysis of fools mate, multiple pv"<<"*******"<<std::endl;
+        interface.StartAnalsyingPosition(p_position, 3.0);
+        std::cout<<std::endl<<"Done analysing for 3 seconds the fools mate, engine output follows"<<std::endl;
+
+        std::string engine_output = interface.GetLatestEngineOutput()[0];
+        TS_ASSERT_EQUALS(engine_output, "Depth = 0; score = 0.00; CHECKMATE\n");
+        std::cout<<engine_output<<std::endl;
+
         delete p_board;
         delete p_position;
     }
@@ -317,109 +347,224 @@ public:
         TS_ASSERT_EQUALS(interface.mLatestLines[0], "Bxd3 Qxd3 e6 O-O-O Bd6 h3 O-O a3 h6 Ne5 Qe8 Kb1 Bxe5 Bxe5 Nxe5 dxe5 Nd7 f4 ");
     }
 
-    void xTestParseEngineOutputMultipleLines()
+    void TestParseEngineOutputMultipleLines()
     {
 
-        std::string test_string = std::string("depth 1 Score cp -24 line: f6e4 c3e4 d5e4")
-        + "\ndepth 1 Score cp -24 line: h7h6 d3f5 d7f5"
-        + "\ndepth 1 Score cp -36 line: e7e6 d3f5 e6f5"
-        + "\ndepth 1 Score cp -48 line: f5d3 d2d3"
-        + "\ndepth 2 Score cp -24 line: f6e4 c3e4 d5e4"
-        + "\ndepth 2 Score cp -48 line: f5d3 d2d3"
-        + "\ndepth 2 Score cp -56 line: e7e6 e1c1 f5d3 d2d3"
-        + "\ndepth 2 Score cp -64 line: f6g4 h2h3"
-        + "\ndepth 3 Score cp -8 line: f5d3 d2d3 e7e6"
-        + "\ndepth 3 Score cp -24 line: f6e4 c3e4 d5e4"
-        + "\ndepth 3 Score cp -48 line: c6b4 d3f5 d7f5"
-        + "\ndepth 3 Score cp -56 line: e7e6 e1c1 f5d3 d2d3"
-        + "\ndepth 4 Score cp -12 line: f6e4 c3e4 d5e4 g2g4"
-        + "\ndepth 4 Score cp -40 line: f5d3 d2d3 c6b4 d3d2"
-        + "\ndepth 4 Score cp -40 line: c6b4 d3f5 d7f5 e1c1 e7e6"
-        + "\ndepth 4 Score cp -44 line: e7e6 e1c1 f5d3 d2d3 f8d6"
-        + "\ndepth 5 Score cp -4 line: f5d3 d2d3 c6b4 d3d2 e7e6"
-        + "\ndepth 5 Score cp -44 line: e7e6 e1c1 f5d3 d2d3 f8d6 c1b1 d6f4 e3f4"
-        + "\ndepth 5 Score cp -68 line: f5g6 e1c1 g6d3 c2d3 e7e6 c1b1"
-        + "\ndepth 5 Score cp -68 line: f5e4 e1c1 e4d3 c2d3 e7e6 c1b1"
-        + "\ndepth 6 Score cp -24 line: f5d3 d2d3 e7e6 e1c1 f8d6 f4d6 c7d6"
-        + "\ndepth 6 Score cp -32 line: e7e6 d3f5 e6f5 f3e5 c6e5 d4e5"
-        + "\ndepth 6 Score cp -52 line: f5g6 e1c1 g6d3 c2d3 e7e6 c1b1 f8d6"
-        + "\ndepth 6 Score cp -64 line: f5e4 d3e4 f6e4 c3e4 d5e4 f3e5 c6e5 f4e5"
-        + "\ndepth 7 Score cp -28 line: f5d3 d2d3 e7e6 e1c1 f8d6 f3e5 d6e5 f4e5 c6e5 d4e5"
-        + "\ndepth 7 Score cp -60 line: f6e4 d3e4 f5e4 e1c1 e4g6 f3e5 c6e5 f4e5"
-        + "\ndepth 7 Score cp -64 line: e7e6 d3f5 e6f5 f3e5 c6e5 d4e5 f6e4 d2d5 e4c3 d5d7 e8d7 b2c3"
-        + "\ndepth 7 Score cp -64 line: f5g6 e1c1 e7e6 c1b1 f8e7 f3e5 c6e5 f4e5 g6d3 d2d3"
-        + "\ndepth 8 Score cp -16 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8c5 f4g5"
-        + "\ndepth 8 Score cp -28 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7d6"
-        + "\ndepth 8 Score cp -48 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\ndepth 8 Score cp -56 line: f6e4 d3e4 f5e4 c3e4 d5e4 f3e5 c6e5 f4e5 f7f6"
-        + "\ndepth 9 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8"
-        + "\ndepth 9 Score cp -28 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7d6"
-        + "\ndepth 9 Score cp -48 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\ndepth 9 Score cp -4 line: f5d3 c2d3 e7e6 g2g4 h7h6 f3e5"
-        + "\ndepth 9 Score cp -48 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\ndepth 10 Score cp -12 line: f5d3 c2d3 e7e6 g2g4 h7h6 f3e5"
-        + "\ndepth 9 Score cp -48 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\ndepth 10 Score cp -20 line: f5d3 c2d3 e7e6 g2g4 h7h6 f3e5"
-        + "\ndepth 9 Score cp -48 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\ndepth 10 Score cp -32 line: f5d3 c2d3 e7e6 g2g4 h7h6 f3e5"
-        + "\ndepth 9 Score cp -48 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\ndepth 10 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\ndepth 9 Score cp -48 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\ndepth 10 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\ndepth 10 Score cp -40 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\ndepth 10 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\ndepth 10 Score cp -32 line: e7e6 d3f5 e6f5 f3e5 d7e6 e5c6 e6c6 e1c1 f8e7 c1b1 e8g8"
-        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\ndepth 10 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\ndepth 10 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\ndepth 9 Score cp -48 line: h7h6 h2h3 f6e4 d3e4 d5e4 f3h4 e7e5 f4e5 c6e5 d4e5"
-        + "\ndepth 10 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\ndepth 10 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\ndepth 10 Score cp -40 line: h7h6 e1c1 f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 c1b1 h5f4 e3f4 f8c5"
-        + "\ndepth 10 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\ndepth 10 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\ndepth 10 Score cp -56 line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 f5e4 c3e4 d5e4 e1c1"
-        + "\ndepth 10 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\ndepth 10 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\ndepth 10 Score cp -68 line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 f5e4 c3e4 d5e4 d2d7 e8d7 e1c1"
-        + "\ndepth 10 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\ndepth 10 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\ndepth 10 Score cp -48 line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 e1c1 d7d2 d1d2 g7g5 f4g3 f8g7 g1d1"
-        + "\ndepth 11 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\ndepth 10 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\ndepth 10 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\ndepth 10 Score cp -48 line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 e1c1 d7d2 d1d2 g7g5 f4g3 f8g7 g1d1"
-        + "\ndepth 11 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\ndepth 11 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\ndepth 10 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\ndepth 10 Score cp -48 line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 e1c1 d7d2 d1d2 g7g5 f4g3 f8g7 g1d1"
-        + "\ndepth 11 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\ndepth 11 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\ndepth 11 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\ndepth 10 Score cp -48 line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 e1c1 d7d2 d1d2 g7g5 f4g3 f8g7 g1d1"
-        + "\ndepth 11 Score cp -4 line: f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 e1c1 f8e7 c1b1 h5f4 e3f4 e8g8 g2g4 e7c5 c3e4 c5b6"
-        + "\ndepth 11 Score cp -24 line: f5g6 e1c1 e7e6 c1b1 f8e7 d3g6 h7g6 h2h3 e8f8 g1e1 e7b4 f3g5 f8g8 d2d3 b4d6"
-        + "\ndepth 11 Score cp -36 line: e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 f2f3 e8g8 c1b1 f8e8 e5c6 e6c6 h2h4"
-        + "\ndepth 11 Score cp -48 line: h7h6 f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 e1c1 d7d2 d1d2 g7g5 f4g3 f8g7 g1d1";
+        std::string test_string = std::string("info depth 1 seldepth 1 score cp 6 nodes 522 nps 130500 time 4 multipv 1 pv f6e4 c3e4 d5e4")
+                                                +"\ninfo depth 1 seldepth 1 score cp -2 nodes 522 nps 130500 time 4 multipv 2 pv h7h6 d3f5 d7f5"
+                                                +"\ninfo depth 1 seldepth 1 score cp -6 nodes 522 nps 130500 time 4 multipv 3 pv e7e6 d3f5 e6f5"
+                                                +"\ninfo depth 1 seldepth 1 score cp -16 nodes 522 nps 130500 time 4 multipv 4 pv f5d3 c2d3"
+                                                +"\ninfo depth 2 seldepth 3 score cp 6 nodes 1373 nps 137300 time 10 multipv 1 pv f6e4 c3e4 d5e4"
+                                                +"\ninfo depth 2 seldepth 3 score cp -16 nodes 1373 nps 137300 time 10 multipv 2 pv f5d3 c2d3"
+                                                +"\ninfo depth 2 seldepth 3 score cp -28 nodes 1373 nps 137300 time 10 multipv 3 pv c6b4 d3f5 d7f5"
+                                                +"\ninfo depth 2 seldepth 3 score cp -40 nodes 1373 nps 137300 time 10 multipv 4 pv e7e6 e1c1 f5d3 d2d3"
+                                                +"\ninfo depth 3 seldepth 4 score cp 18 nodes 2519 nps 132578 time 19 multipv 1 pv f5d3 c2d3 e7e6"
+                                                +"\ninfo depth 3 seldepth 4 score cp 6 nodes 2519 nps 132578 time 19 multipv 2 pv f6e4 c3e4 d5e4"
+                                                +"\ninfo depth 3 seldepth 4 score cp -28 nodes 2519 nps 132578 time 19 multipv 3 pv c6b4 d3f5 d7f5"
+                                                +"\ninfo depth 3 seldepth 4 score cp -40 nodes 2519 nps 132578 time 19 multipv 4 pv e7e6 e1c1 f5d3 d2d3"
+                                                +"\ninfo depth 4 seldepth 5 score cp -6 nodes 4622 nps 171185 time 27 multipv 1 pv f6e4 c3e4 d5e4 g2g4"
+                                                +"\ninfo depth 4 seldepth 5 score cp -10 nodes 4622 nps 171185 time 27 multipv 2 pv f5d3 c2d3 e7e6 e1e2"
+                                                +"\ninfo depth 4 seldepth 5 score cp -30 nodes 4622 nps 171185 time 27 multipv 3 pv c6b4 d3f5 d7f5 e1c1 e7e6"
+                                                +"\ninfo depth 4 seldepth 5 score cp -50 nodes 4622 nps 171185 time 27 multipv 4 pv e7e6 d3f5 e6f5 e1c1 f6e4"
+                                                +"\ninfo depth 5 seldepth 6 score cp 8 nodes 11440 nps 178750 time 64 multipv 1 pv f5d3 c2d3 e7e6 e1c1 f8d6 f4d6 c7d6"
+                                                +"\ninfo depth 5 seldepth 6 score cp -14 nodes 11440 nps 178750 time 64 multipv 2 pv f6e4 c3e4 d5e4 g2g4 e4d3 g4f5"
+                                                +"\ninfo depth 5 seldepth 6 score cp -50 nodes 11440 nps 178750 time 64 multipv 3 pv e7e6 d3f5 e6f5 e1c1 f6e4 d2e1"
+                                                +"\ninfo depth 5 seldepth 6 score cp -68 nodes 11440 nps 178750 time 64 multipv 4 pv h7h6 e1c1 f6e4 d3e4 d5e4 f3e5 c6e5 d4e5 d7d2 c1d2"
+                                                +"\ninfo depth 6 seldepth 8 score cp 16 nodes 16330 nps 192117 time 85 multipv 1 pv f5d3 c2d3 e7e6 e1c1 f8e7 f3e5 c6e5 d4e5"
+                                                +"\ninfo depth 6 seldepth 8 score cp -36 nodes 16330 nps 192117 time 85 multipv 2 pv e7e6 d3f5 e6f5 e1c1 f6e4 d2e1 f8e7"
+                                                +"\ninfo depth 6 seldepth 8 score cp -38 nodes 16330 nps 192117 time 85 multipv 3 pv f6e4 d3e4 d5e4 f3g5 e7e5 f4e5"
+                                                +"\ninfo depth 6 seldepth 8 score cp -52 nodes 16330 nps 192117 time 85 multipv 4 pv h7h6 e1c1 f5d3 d2d3 c6b4 d3e2 e7e6"
+                                                +"\ninfo depth 7 seldepth 11 score cp -6 nodes 35426 nps 199022 time 178 multipv 1 pv f5d3 c2d3 e7e6 a2a3 h7h6 e1e2 f8e7 h2h3"
+                                                +"\ninfo depth 7 seldepth 11 score cp -38 nodes 35426 nps 199022 time 178 multipv 2 pv e7e6 d3f5 e6f5 e1c1 f6e4 c3e4 f5e4 f3e5 c6e5 f4e5"
+                                                +"\ninfo depth 7 seldepth 11 score cp -66 nodes 35426 nps 199022 time 178 multipv 3 pv f5g4 e1c1 f6h5 c3e2 h5f4 e2f4 e7e5 d4e5 g4f3 g2f3 c6e5"
+                                                +"\ninfo depth 7 seldepth 11 score cp -68 nodes 35426 nps 199022 time 178 multipv 4 pv f6e4 d3e4 d5e4 f3g5 e7e5 d4e5 d7d2 e1d2 c8d8 d2e2"
+                                                +"\ninfo depth 8 seldepth 14 score cp -14 nodes 60788 nps 198006 time 307 multipv 1 pv f5d3 c2d3 f6h5 f4g5 e7e6 e1c1 f8d6 g2g4 h5f6 g5f6 g7f6"
+                                                +"\ninfo depth 8 seldepth 14 score cp -32 nodes 60788 nps 198006 time 307 multipv 2 pv e7e6 d3f5 e6f5 f3e5 c6e5 d4e5 f6e4 d2d5 e4c3 d5d7 e8d7 b2c3"
+                                                +"\ninfo depth 8 seldepth 14 score cp -54 nodes 60788 nps 198006 time 307 multipv 3 pv h7h6 e1c1 f5d3 d2d3 e7e6 c1b1 f8e7 f3e5 c6e5 f4e5"
+                                                +"\ninfo depth 8 seldepth 14 score cp -68 nodes 60788 nps 198006 time 307 multipv 4 pv f5g4 e1c1 f6h5 c3e2 h5f4 e2f4 g7g5 f4e2 f8h6 c1b1 e8g8 e2c3 d7e6 h2h3"
+                                                +"\ninfo depth 9 seldepth 16 score cp -14 nodes 85697 nps 204040 time 420 multipv 1 pv f5d3 c2d3 f6h5 f4g5 e7e6 e1c1 f8d6 g2g4 h5f6 g5f6 g7f6"
+                                                +"\ninfo depth 9 seldepth 16 score cp -28 nodes 85697 nps 204040 time 420 multipv 2 pv f6e4 d3e4 f5e4 e1c1 e4g6 c1b1 e7e6 f3h4 f8d6 h4g6 h7g6 f4d6 c7d6"
+                                                +"\ninfo depth 9 seldepth 16 score cp -32 nodes 85697 nps 204040 time 420 multipv 3 pv e7e6 d3f5 e6f5 f3e5 c6e5 d4e5 f6e4 d2d5 e4c3 d5d7 e8d7 b2c3"
+                                                +"\ninfo depth 9 seldepth 16 score cp -50 nodes 85697 nps 204040 time 420 multipv 4 pv h7h6 e1c1 f5d3 d2d3 e7e6 c1b1 f8e7 f3e5 c6e5 d4e5 f6g4 f2f3"
+                                                +"\ninfo depth 10 seldepth 18 score cp -40 nodes 178497 nps 212496 time 840 multipv 1 pv f5d3 c2d3 f6h5 f4g5 h5f6 e1c1 e7e6 g5f6 g7f6 c1b1 f8e7 e3e4 e8g8 e4d5 e6d5 g1e1"
+                                                +"\ninfo depth 10 seldepth 18 score cp -40 nodes 178497 nps 212496 time 840 multipv 2 pv f5g6 e1c1 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 g6d3 d2d3 h7h6 g5h4 f8e7 h4e7 e8e7"
+                                                +"\ninfo depth 10 seldepth 18 score cp -46 nodes 178497 nps 212496 time 840 multipv 3 pv f6e4 d3e4 f5e4 c3e4 d5e4 f3e5 c6e5 f4e5 f7f6 e5g3 e8f7 e1c1 c8d8"
+                                                +"\ninfo depth 10 seldepth 18 score cp -52 nodes 178497 nps 212496 time 840 multipv 4 pv e7e6 d3f5 e6f5 f3e5 c6e5 d4e5 f6e4 c3e4 f5e4 e1c1 c7c6 f2f3 e4f3 g2f3 d7h3"
+                                                +"\ninfo depth 11 seldepth 20 score cp -40 nodes 253005 nps 213326 time 1186 multipv 1 pv f5d3 c2d3 e7e6 g2g4 f8e7 f3e5 c6e5 d4e5 f6g8 g4g5 d5d4 c3e4 d4e3 f2e3"
+                                                +"\ninfo depth 11 seldepth 20 score cp -44 nodes 253005 nps 213326 time 1186 multipv 2 pv e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8e7 c1b1 e8g8 e5c6 e6c6 f2f3 c8e8 d2d3 c6d7"
+                                                +"\ninfo depth 11 seldepth 20 score cp -46 nodes 253005 nps 213326 time 1186 multipv 3 pv f6e4 d3e4 f5e4 c3e4 d5e4 f3e5 c6e5 f4e5 f7f6 e5g3 e8f7 d2b4 c7c6"
+                                                +"\ninfo depth 11 seldepth 20 score cp -52 nodes 253005 nps 213326 time 1186 multipv 4 pv f5g6 e1c1 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 g6d3 d2d3 h7h6 g5h4 f8e7 h4e7 e8e7 g2g4"
+                                                +"\ninfo depth 12 seldepth 21 score cp -22 nodes 391446 nps 216149 time 1811 multipv 1 pv f5d3 c2d3 e7e6 g2g4 f8e7 f3e5 c6e5 d4e5 f6g8 e1e2 g7g5 f4g3 g8h6 h2h3 e8g8 f2f4 g8g7 f4g5 e7g5"
+                                                +"\ninfo depth 12 seldepth 21 score cp -28 nodes 391446 nps 216149 time 1811 multipv 2 pv e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8b4 f2f3 e8g8 c1b1 f8e8 f4g3 b4d6 g1e1 c6e5 d4e5 d6e5 c3d5 e5g3 h2g3 f6d5 d2d5 e6d5 d1d5"
+                                                +"\ninfo depth 12 seldepth 21 score cp -46 nodes 391446 nps 216149 time 1811 multipv 3 pv f6e4 d3e4 f5e4 c3e4 d5e4 f3e5 c6e5 f4e5 f7f6 e5g3 e8f7 d2b4 c7c6 e1c1"
+                                                +"\ninfo depth 12 seldepth 21 score cp -52 nodes 391446 nps 216149 time 1811 multipv 4 pv f5g6 e1c1 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 f7f6 e5f6 h5f6 d3g6 h7g6 h2h3 f8d6 d2d3 e8f7 c1b1"
+                                                +"\ninfo depth 13 seldepth 22 score cp -20 nodes 616566 nps 218950 time 2816 multipv 1 pv f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 f7f6 g2g4 f6g5 g4h5 f8e7 e1d2"
+                                                +"\ninfo depth 13 seldepth 22 score cp -34 nodes 616566 nps 218950 time 2816 multipv 2 pv e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8b4 f2f3 e8g8 c1b1 f8e8 h2h3 b4d6 g1e1 c6e5 d4e5 d6e5 c3d5 e5f4 e3f4"
+                                                +"\ninfo depth 13 seldepth 22 score cp -48 nodes 616566 nps 218950 time 2816 multipv 3 pv f6e4 d3e4 f5e4 c3e4 d5e4 f3e5 c6e5 d4e5 d7d2 e1d2 e7e6 g1d1 f8e7 d2e2 g7g5 f4g3 c8d8"
+                                                +"\ninfo depth 13 seldepth 22 score cp -52 nodes 616566 nps 218950 time 2816 multipv 4 pv f5g6 e1c1 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 f7f6 e5f6 h5f6 d3g6 h7g6 h2h3 f8d6 d2d3 e8f7 c1b1"
+                                                +"\ninfo depth 14 seldepth 22 score cp -12 lowerbound nodes 663085 nps 218048 time 3041 multipv 1 pv f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 f7f6 g2g4 f6g5 g4h5 f8e7 e1d2 c8d8"
+                                                +"\ninfo depth 13 seldepth 22 score cp -34 nodes 663085 nps 218048 time 3041 multipv 2 pv e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8b4 f2f3 e8g8 c1b1 f8e8 h2h3 b4d6 g1e1 c6e5 d4e5 d6e5 c3d5 e5f4 e3f4"
+                                                +"\ninfo depth 13 seldepth 22 score cp -48 nodes 663085 nps 218048 time 3041 multipv 3 pv f6e4 d3e4 f5e4 c3e4 d5e4 f3e5 c6e5 d4e5 d7d2 e1d2 e7e6 g1d1 f8e7 d2e2 g7g5 f4g3 c8d8"
+                                                +"\ninfo depth 13 seldepth 22 score cp -52 nodes 663085 nps 218048 time 3041 multipv 4 pv f5g6 e1c1 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 f7f6 e5f6 h5f6 d3g6 h7g6 h2h3 f8d6 d2d3 e8f7 c1b1"
+                                                +"\ninfo depth 14 currmove f5d3 currmovenumber 1"
+                                                +"\ninfo depth 14 seldepth 22 score cp -4 lowerbound nodes 693158 nps 218386 time 3174 multipv 1 pv f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 f7f6 g2g4 f6g5 g4h5 d7f7 g1g5 f8e7"
+                                                +"\ninfo depth 13 seldepth 22 score cp -34 nodes 693158 nps 218386 time 3174 multipv 2 pv e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8b4 f2f3 e8g8 c1b1 f8e8 h2h3 b4d6 g1e1 c6e5 d4e5 d6e5 c3d5 e5f4 e3f4"
+                                                +"\ninfo depth 13 seldepth 22 score cp -48 nodes 693158 nps 218386 time 3174 multipv 3 pv f6e4 d3e4 f5e4 c3e4 d5e4 f3e5 c6e5 d4e5 d7d2 e1d2 e7e6 g1d1 f8e7 d2e2 g7g5 f4g3 c8d8"
+                                                +"\ninfo depth 13 seldepth 22 score cp -52 nodes 693158 nps 218386 time 3174 multipv 4 pv f5g6 e1c1 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 f7f6 e5f6 h5f6 d3g6 h7g6 h2h3 f8d6 d2d3 e8f7 c1b1"
+                                                +"\ninfo depth 14 currmove f5d3 currmovenumber 1"
+                                                +"\ninfo depth 14 seldepth 22 score cp 8 lowerbound nodes 749055 nps 218766 time 3424 multipv 1 pv f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 f7f6 g2g4 f6g5 g4h5 d7f7 g1g5 f8e7"
+                                                +"\ninfo depth 13 seldepth 22 score cp -34 nodes 749055 nps 218766 time 3424 multipv 2 pv e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8b4 f2f3 e8g8 c1b1 f8e8 h2h3 b4d6 g1e1 c6e5 d4e5 d6e5 c3d5 e5f4 e3f4"
+                                                +"\ninfo depth 13 seldepth 22 score cp -48 nodes 749055 nps 218766 time 3424 multipv 3 pv f6e4 d3e4 f5e4 c3e4 d5e4 f3e5 c6e5 d4e5 d7d2 e1d2 e7e6 g1d1 f8e7 d2e2 g7g5 f4g3 c8d8"
+                                                +"\ninfo depth 13 seldepth 22 score cp -52 nodes 749055 nps 218766 time 3424 multipv 4 pv f5g6 e1c1 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 f7f6 e5f6 h5f6 d3g6 h7g6 h2h3 f8d6 d2d3 e8f7 c1b1"
+                                                +"\ninfo depth 14 currmove f5d3 currmovenumber 1"
+                                                +"\ninfo depth 14 currmove f6e4 currmovenumber 2"
+                                                +"\ninfo depth 14 currmove e7e6 currmovenumber 3"
+                                                +"\ninfo depth 14 currmove f5g6 currmovenumber 4"
+                                                +"\ninfo depth 14 currmove f6g4 currmovenumber 5"
+                                                +"\ninfo depth 14 currmove c6b4 currmovenumber 6"
+                                                +"\ninfo depth 14 currmove f6h5 currmovenumber 7"
+                                                +"\ninfo depth 14 currmove g7g5 currmovenumber 8"
+                                                +"\ninfo depth 14 currmove f5g4 currmovenumber 9"
+                                                +"\ninfo depth 14 currmove d7e6 currmovenumber 10"
+                                                +"\ninfo depth 14 currmove f5h3 currmovenumber 11"
+                                                +"\ninfo depth 14 currmove f5e6 currmovenumber 12"
+                                                +"\ninfo depth 14 currmove c8d8 currmovenumber 13"
+                                                +"\ninfo depth 14 currmove d7d6 currmovenumber 14"
+                                                +"\ninfo depth 14 currmove f5e4 currmovenumber 15"
+                                                +"\ninfo depth 14 currmove e7e5 currmovenumber 16"
+                                                +"\ninfo depth 14 currmove g7g6 currmovenumber 17"
+                                                +"\ninfo depth 14 currmove c6d8 currmovenumber 18"
+                                                +"\ninfo depth 14 currmove h7h6 currmovenumber 19"
+                                                +"\ninfo depth 14 currmove h7h5 currmovenumber 20"
+                                                +"\ninfo depth 14 currmove c6b8 currmovenumber 21"
+                                                +"\ninfo depth 14 currmove c6e5 currmovenumber 22"
+                                                +"\ninfo depth 14 currmove f6g8 currmovenumber 23"
+                                                +"\ninfo depth 14 currmove c6a7 currmovenumber 24"
+                                                +"\ninfo depth 14 currmove c8a8 currmovenumber 25"
+                                                +"\ninfo depth 14 currmove a6a5 currmovenumber 26"
+                                                +"\ninfo depth 14 currmove c6a5 currmovenumber 27"
+                                                +"\ninfo depth 14 currmove b7b5 currmovenumber 28"
+                                                +"\ninfo depth 14 currmove e8d8 currmovenumber 29"
+                                                +"\ninfo depth 14 currmove d7d8 currmovenumber 30"
+                                                +"\ninfo depth 14 currmove c8b8 currmovenumber 31"
+                                                +"\ninfo depth 14 currmove h8g8 currmovenumber 32"
+                                                +"\ninfo depth 14 currmove b7b6 currmovenumber 33"
+                                                +"\ninfo depth 14 currmove c6d4 currmovenumber 34"
+                                                +"\ninfo depth 14 seldepth 24 score cp -2 nodes 843846 nps 218104 time 3869 multipv 1 pv f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 g2g3 f8c5 e1c1 e8g8 c1b1 d7e8 h2h4 c5e7 e3e4 h5f4 g3f4 e7h4 e4d5 h4f2"
+                                                +"\ninfo depth 13 seldepth 24 score cp -34 nodes 843846 nps 218104 time 3869 multipv 2 pv e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8b4 f2f3 e8g8 c1b1 f8e8 h2h3 b4d6 g1e1 c6e5 d4e5 d6e5 c3d5 e5f4 e3f4"
+                                                +"\ninfo depth 13 seldepth 24 score cp -48 nodes 843846 nps 218104 time 3869 multipv 3 pv f6e4 d3e4 f5e4 c3e4 d5e4 f3e5 c6e5 d4e5 d7d2 e1d2 e7e6 g1d1 f8e7 d2e2 g7g5 f4g3 c8d8"
+                                                +"\ninfo depth 13 seldepth 24 score cp -52 nodes 843846 nps 218104 time 3869 multipv 4 pv f5g6 e1c1 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 f7f6 e5f6 h5f6 d3g6 h7g6 h2h3 f8d6 d2d3 e8f7 c1b1"
+                                                +"\ninfo depth 14 currmove e7e6 currmovenumber 2"
+                                                +"\ninfo depth 14 currmove f6e4 currmovenumber 3"
+                                                +"\ninfo depth 14 currmove f6h5 currmovenumber 4"
+                                                +"\ninfo depth 14 currmove f6g4 currmovenumber 5"
+                                                +"\ninfo depth 14 currmove c6b4 currmovenumber 6"
+                                                +"\ninfo depth 14 currmove f5g6 currmovenumber 7"
+                                                +"\ninfo depth 14 currmove d7e6 currmovenumber 8"
+                                                +"\ninfo depth 14 currmove g7g5 currmovenumber 9"
+                                                +"\ninfo depth 14 currmove f5h3 currmovenumber 10"
+                                                +"\ninfo depth 14 currmove d7d6 currmovenumber 11"
+                                                +"\ninfo depth 14 currmove f5e4 currmovenumber 12"
+                                                +"\ninfo depth 14 currmove f5g4 currmovenumber 13"
+                                                +"\ninfo depth 14 currmove c8d8 currmovenumber 14"
+                                                +"\ninfo depth 14 currmove e7e5 currmovenumber 15"
+                                                +"\ninfo depth 14 currmove f5e6 currmovenumber 16"
+                                                +"\ninfo depth 14 currmove g7g6 currmovenumber 17"
+                                                +"\ninfo depth 14 currmove h7h6 currmovenumber 18"
+                                                +"\ninfo depth 14 currmove c6d8 currmovenumber 19"
+                                                +"\ninfo depth 14 currmove h7h5 currmovenumber 20"
+                                                +"\ninfo depth 14 currmove c6b8 currmovenumber 21"
+                                                +"\ninfo depth 14 currmove c6e5 currmovenumber 22"
+                                                +"\ninfo depth 14 currmove f6g8 currmovenumber 23"
+                                                +"\ninfo depth 14 currmove c6a7 currmovenumber 24"
+                                                +"\ninfo depth 14 currmove c8a8 currmovenumber 25"
+                                                +"\ninfo depth 14 currmove a6a5 currmovenumber 26"
+                                                +"\ninfo depth 14 currmove c6a5 currmovenumber 27"
+                                                +"\ninfo depth 14 currmove b7b5 currmovenumber 28"
+                                                +"\ninfo depth 14 currmove e8d8 currmovenumber 29"
+                                                +"\ninfo depth 14 currmove d7d8 currmovenumber 30"
+                                                +"\ninfo depth 14 currmove c8b8 currmovenumber 31"
+                                                +"\ninfo depth 14 currmove h8g8 currmovenumber 32"
+                                                +"\ninfo depth 14 currmove b7b6 currmovenumber 33"
+                                                +"\ninfo depth 14 currmove c6d4 currmovenumber 34"
+                                                +"\ninfo depth 14 seldepth 24 score cp -2 nodes 879075 nps 218295 time 4027 multipv 1 pv f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 g2g3 f8c5 e1c1 e8g8 c1b1 d7e8 h2h4 c5e7 e3e4 h5f4 g3f4 e7h4 e4d5 h4f2"
+                                                +"\ninfo depth 14 seldepth 24 score cp -34 nodes 879075 nps 218295 time 4027 multipv 2 pv e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8b4 f2f3 e8g8 c1b1 f8e8 h2h3 b4d6 g1e1 c6e5 d4e5 d6e5 c3d5 c7c5"
+                                                +"\ninfo depth 13 seldepth 24 score cp -48 nodes 879075 nps 218295 time 4027 multipv 3 pv f6e4 d3e4 f5e4 c3e4 d5e4 f3e5 c6e5 d4e5 d7d2 e1d2 e7e6 g1d1 f8e7 d2e2 g7g5 f4g3 c8d8"
+                                                +"\ninfo depth 13 seldepth 24 score cp -52 nodes 879075 nps 218295 time 4027 multipv 4 pv f5g6 e1c1 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 f7f6 e5f6 h5f6 d3g6 h7g6 h2h3 f8d6 d2d3 e8f7 c1b1"
+                                                +"\ninfo depth 14 currmove f6e4 currmovenumber 3"
+                                                +"\ninfo depth 14 currmove f5g6 currmovenumber 4"
+                                                +"\ninfo depth 14 currmove f6g4 currmovenumber 5"
+                                                +"\ninfo depth 14 currmove c6b4 currmovenumber 6"
+                                                +"\ninfo depth 14 currmove f6h5 currmovenumber 7"
+                                                +"\ninfo depth 14 currmove c8d8 currmovenumber 8"
+                                                +"\ninfo depth 14 currmove f5g4 currmovenumber 9"
+                                                +"\ninfo depth 14 currmove d7e6 currmovenumber 10"
+                                                +"\ninfo depth 14 currmove g7g5 currmovenumber 11"
+                                                +"\ninfo depth 14 currmove f5h3 currmovenumber 12"
+                                                +"\ninfo depth 14 currmove e7e5 currmovenumber 13"
+                                                +"\ninfo depth 14 currmove d7d6 currmovenumber 14"
+                                                +"\ninfo depth 14 currmove f5e4 currmovenumber 15"
+                                                +"\ninfo depth 14 currmove h7h5 currmovenumber 16"
+                                                +"\ninfo depth 14 currmove f5e6 currmovenumber 17"
+                                                +"\ninfo depth 14 currmove h7h6 currmovenumber 18"
+                                                +"\ninfo depth 14 currmove g7g6 currmovenumber 19"
+                                                +"\ninfo depth 14 currmove c6b8 currmovenumber 20"
+                                                +"\ninfo depth 14 currmove c8a8 currmovenumber 21"
+                                                +"\ninfo depth 14 currmove c6e5 currmovenumber 22"
+                                                +"\ninfo depth 14 currmove f6g8 currmovenumber 23"
+                                                +"\ninfo depth 14 currmove c6d8 currmovenumber 24"
+                                                +"\ninfo depth 14 currmove c6a7 currmovenumber 25"
+                                                +"\ninfo depth 14 currmove a6a5 currmovenumber 26"
+                                                +"\ninfo depth 14 currmove c6a5 currmovenumber 27"
+                                                +"\ninfo depth 14 currmove b7b5 currmovenumber 28"
+                                                +"\ninfo depth 14 currmove e8d8 currmovenumber 29"
+                                                +"\ninfo depth 14 currmove d7d8 currmovenumber 30"
+                                                +"\ninfo depth 14 currmove c8b8 currmovenumber 31"
+                                                +"\ninfo depth 14 currmove h8g8 currmovenumber 32"
+                                                +"\ninfo depth 14 currmove b7b6 currmovenumber 33"
+                                                +"\ninfo depth 14 currmove c6d4 currmovenumber 34"
+                                                +"\ninfo depth 14 seldepth 24 score cp -2 nodes 950342 nps 222042 time 4280 multipv 1 pv f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 g2g3 f8c5 e1c1 e8g8 c1b1 d7e8 h2h4 c5e7 e3e4 h5f4 g3f4 e7h4 e4d5 h4f2"
+                                                +"\ninfo depth 14 seldepth 24 score cp -34 nodes 950342 nps 222042 time 4280 multipv 2 pv e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8b4 f2f3 e8g8 c1b1 f8e8 h2h3 b4d6 g1e1 c6e5 d4e5 d6e5 c3d5 c7c5"
+                                                +"\ninfo depth 14 seldepth 24 score cp -52 nodes 950342 nps 222042 time 4280 multipv 3 pv f5g6 e1c1 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 f7f6 e5f6 h5f6 d3g6 h7g6 h2h3 f8d6 d2d3 e8f7 c1b1"
+                                                +"\ninfo depth 13 seldepth 24 score cp -48 nodes 950342 nps 222042 time 4280 multipv 4 pv f6e4 d3e4 f5e4 c3e4 d5e4 f3e5 c6e5 d4e5 d7d2 e1d2 e7e6 d2e2 f8e7 a1d1 h7h5 d1d4 c8d8 d4e4"
+                                                +"\ninfo depth 14 currmove f6e4 currmovenumber 4"
+                                                +"\ninfo depth 14 currmove f6g4 currmovenumber 5"
+                                                +"\ninfo depth 14 currmove f6h5 currmovenumber 6"
+                                                +"\ninfo depth 14 currmove c6b4 currmovenumber 7"
+                                                +"\ninfo depth 14 currmove c8d8 currmovenumber 8"
+                                                +"\ninfo depth 14 currmove f5g4 currmovenumber 9"
+                                                +"\ninfo depth 14 currmove e7e5 currmovenumber 10"
+                                                +"\ninfo depth 14 currmove f5h3 currmovenumber 11"
+                                                +"\ninfo depth 14 currmove d7d6 currmovenumber 12"
+                                                +"\ninfo depth 14 currmove f5e4 currmovenumber 13"
+                                                +"\ninfo depth 14 currmove d7e6 currmovenumber 14"
+                                                +"\ninfo depth 14 currmove g7g5 currmovenumber 15"
+                                                +"\ninfo depth 14 currmove f5e6 currmovenumber 16"
+                                                +"\ninfo depth 14 currmove c8a8 currmovenumber 17"
+                                                +"\ninfo depth 14 currmove h7h5 currmovenumber 18"
+                                                +"\ninfo depth 14 currmove h7h6 currmovenumber 19"
+                                                +"\ninfo depth 14 currmove g7g6 currmovenumber 20"
+                                                +"\ninfo depth 14 currmove c6b8 currmovenumber 21"
+                                                +"\ninfo depth 14 currmove b7b5 currmovenumber 22"
+                                                +"\ninfo depth 14 currmove c6e5 currmovenumber 23"
+                                                +"\ninfo depth 14 currmove f6g8 currmovenumber 24"
+                                                +"\ninfo depth 14 currmove c6d8 currmovenumber 25"
+                                                +"\ninfo depth 14 currmove c6a7 currmovenumber 26"
+                                                +"\ninfo depth 14 currmove a6a5 currmovenumber 27"
+                                                +"\ninfo depth 14 currmove c6a5 currmovenumber 28"
+                                                +"\ninfo depth 14 currmove e8d8 currmovenumber 29"
+                                                +"\ninfo depth 14 currmove d7d8 currmovenumber 30"
+                                                +"\ninfo depth 14 currmove c8b8 currmovenumber 31"
+                                                +"\ninfo depth 14 currmove h8g8 currmovenumber 32"
+                                                +"\ninfo depth 14 currmove b7b6 currmovenumber 33"
+                                                +"\ninfo depth 14 currmove c6d4 currmovenumber 34"
+                                                +"\ninfo depth 14 seldepth 24 score cp -2 nodes 962019 nps 222277 time 4328 multipv 1 pv f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6h5 g2g3 f8c5 e1c1 e8g8 c1b1 d7e8 h2h4 c5e7 e3e4 h5f4 g3f4 e7h4 e4d5 h4f2"
+                                                +"\ninfo depth 14 seldepth 24 score cp -34 nodes 962019 nps 222277 time 4328 multipv 2 pv e7e6 d3f5 e6f5 f3e5 d7e6 e1c1 f8b4 f2f3 e8g8 c1b1 f8e8 h2h3 b4d6 g1e1 c6e5 d4e5 d6e5 c3d5 c7c5"
+                                                +"\ninfo depth 14 seldepth 24 score cp -52 nodes 962019 nps 222277 time 4328 multipv 3 pv f5g6 e1c1 e7e6 f3e5 c6e5 d4e5 f6h5 f4g5 f7f6 e5f6 h5f6 d3g6 h7g6 h2h3 f8d6 d2d3 e8f7 c1b1"
+                                                +"\ninfo depth 14 seldepth 24 score cp -54 nodes 962019 nps 222277 time 4328 multipv 4 pv f6e4 d3e4 f5e4 c3e4 d5e4 f3e5 c6e5 d4e5 d7d2 e1d2 e7e6 d2e2 f8e7 a1d1 h7h5 d1d4 c8d8 d4e4"
+                                                +"\ninfo depth 15 currmove f5d3 currmovenumber 1"
+                                                +"\ninfo nodes 990650 time 4473"
+                                                +"\nbestmove f5d3 ponder d2d3";
 
         slach::EngineInterface interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
@@ -428,28 +573,28 @@ public:
         interface.SetNumberOfLinesToBeShown(4u);//asking stockfish to display 4 lines
         interface.ParseWholeEngineOutput(test_string);
         TS_ASSERT_EQUALS(interface.mLatestDepths.size(), 4u);
-        TS_ASSERT_EQUALS(interface.mLatestDepths[3], 11u);
-        TS_ASSERT_EQUALS(interface.mLatestDepths[2], 11u);
-        TS_ASSERT_EQUALS(interface.mLatestDepths[1], 11u);
-        TS_ASSERT_EQUALS(interface.mLatestDepths[0], 11u);
+        TS_ASSERT_EQUALS(interface.mLatestDepths[3], 14u);
+        TS_ASSERT_EQUALS(interface.mLatestDepths[2], 14u);
+        TS_ASSERT_EQUALS(interface.mLatestDepths[1], 14u);
+        TS_ASSERT_EQUALS(interface.mLatestDepths[0], 14u);
 
         TS_ASSERT_EQUALS(interface.mLatestRootMoves.size(), 4u);
         TS_ASSERT_EQUALS(interface.mLatestRootMoves[3], "Bxd3");
-        TS_ASSERT_EQUALS(interface.mLatestRootMoves[2], "Bg6");
-        TS_ASSERT_EQUALS(interface.mLatestRootMoves[1], "e6");
-        TS_ASSERT_EQUALS(interface.mLatestRootMoves[0], "h6");
+        TS_ASSERT_EQUALS(interface.mLatestRootMoves[2], "e6");
+        TS_ASSERT_EQUALS(interface.mLatestRootMoves[1], "Bg6");
+        TS_ASSERT_EQUALS(interface.mLatestRootMoves[0], "Ne4");
 
         TS_ASSERT_EQUALS(interface.mLatestScores.size(), 4u);
-        TS_ASSERT_DELTA(interface.mLatestScores[3], 0.04, 1e-3);
-        TS_ASSERT_DELTA(interface.mLatestScores[2], 0.24,1e-3);
-        TS_ASSERT_DELTA(interface.mLatestScores[1], 0.36, 1e-3);
-        TS_ASSERT_DELTA(interface.mLatestScores[0], 0.48, 1e-3);
+        TS_ASSERT_DELTA(interface.mLatestScores[3], 0.02, 1e-3);
+        TS_ASSERT_DELTA(interface.mLatestScores[2], 0.34,1e-3);
+        TS_ASSERT_DELTA(interface.mLatestScores[1], 0.52, 1e-3);
+        TS_ASSERT_DELTA(interface.mLatestScores[0], 0.54, 1e-3);
 
         TS_ASSERT_EQUALS(interface.mLatestLines.size(), 4u);
-        TS_ASSERT_EQUALS(interface.mLatestLines[3], "Bxd3 Qxd3 e6 Ne5 Nxe5 dxe5 Nh5 O-O-O Be7 Kb1 Nxf4 exf4 O-O g4 Bc5 Ne4 Bb6 ");
-        TS_ASSERT_EQUALS(interface.mLatestLines[2], "Bg6 O-O-O e6 Kb1 Be7 Bxg6 hxg6 h3 Kf8 Rge1 Bb4 Ng5 Kg8 Qd3 Bd6 ");
-        TS_ASSERT_EQUALS(interface.mLatestLines[1], "e6 Bxf5 exf5 Ne5 Qe6 O-O-O Be7 f3 O-O Kb1 Rfe8 Nxc6 Qxc6 h4 ");
-        TS_ASSERT_EQUALS(interface.mLatestLines[0], "h6 Ne5 Nxe5 dxe5 Ne4 Bxe4 dxe4 O-O-O Qxd2+ Rxd2 g5 Bg3 Bg7 Rgd1 ");
+        TS_ASSERT_EQUALS(interface.mLatestLines[3], "Bxd3 Qxd3 e6 Ne5 Nxe5 dxe5 Nh5 g3 Bc5 O-O-O O-O Kb1 Qe8 h4 Be7 e4 Nxf4 gxf4 Bxh4 exd5 Bxf2 ");
+        TS_ASSERT_EQUALS(interface.mLatestLines[2], "e6 Bxf5 exf5 Ne5 Qe6 O-O-O Bb4 f3 O-O Kb1 Rfe8 h3 Bd6 Rge1 Nxe5 dxe5 Bxe5 Nxd5 c5 ");
+        TS_ASSERT_EQUALS(interface.mLatestLines[1], "Bg6 O-O-O e6 Ne5 Nxe5 dxe5 Nh5 Bg5 f6 exf6 Nxf6 Bxg6+ hxg6 h3 Bd6 Qd3 Kf7 Kb1 ");
+        TS_ASSERT_EQUALS(interface.mLatestLines[0], "Ne4 Bxe4 Bxe4 Nxe4 dxe4 Ne5 Nxe5 dxe5 Qxd2+ Kxd2 e6 Ke2 Be7 Rad1 h5 Rd4 Rd8 Rxe4 ");
     }
 
 
