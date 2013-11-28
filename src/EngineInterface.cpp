@@ -1,4 +1,5 @@
 #include <iostream>
+#include <streambuf>
 #include <pthread.h>
 #include "EngineInterface.hpp"
 #include "Exception.hpp"
@@ -20,7 +21,7 @@ slach::EngineInterface::EngineInterface()
     mLatestScores(mNumberOfLinesToBeShown, DBL_MAX),
     mLatestLines(mNumberOfLinesToBeShown, ""),
     mLatestRootMoves (mNumberOfLinesToBeShown, ""),
-    mpStockfishPosition (new stockfish::Position()),
+    mpStockfishPosition (new ::Position()),
     mpChessBoard( new slach::ChessBoard() )
 {
     mpChessBoard->SetupChessBoard();
@@ -36,15 +37,15 @@ slach::EngineInterface::~EngineInterface()
 
 void slach::EngineInterface::InitialiseEngine()
 {
-    stockfish::UCI::init(stockfish::Options);
-    stockfish::Bitboards::init();
-    stockfish::Zobrist::init();
-    stockfish::Bitbases::init_kpk();
-    stockfish::Search::init();
-    stockfish::Eval::init();
-    stockfish::Threads.init();
-    stockfish::TT.set_size(stockfish::Options["Hash"]);
-    stockfish::Options["MultiPV"] = stockfish::UCI::Option(mNumberOfLinesToBeShown, 1, 500);
+    ::UCI::init(::Options);
+    ::Bitboards::init();
+    ::Position::init();
+    ::Bitbases::init_kpk();
+    ::Search::init();
+    ::Eval::init();
+    ::Threads.init();
+    ::TT.set_size(::Options["Hash"]);
+    ::Options["MultiPV"] = ::UCI::Option(mNumberOfLinesToBeShown, 1, 500);
 }
 
 void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)
@@ -55,22 +56,22 @@ void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)
     mLatestLines.resize(mNumberOfLinesToBeShown);
     mLatestRootMoves.resize(mNumberOfLinesToBeShown);
     InitialiseEngine();
-    stockfish::Options["MultiPV"] = stockfish::UCI::Option(mNumberOfLinesToBeShown, 1, 500);
+    ::Options["MultiPV"] = ::UCI::Option(mNumberOfLinesToBeShown, 1, 500);
 }
 
 void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, double seconds)
 {
     InitialiseEngine();
-    stockfish::Search::Signals.stop = false;
-    stockfish::Search::LimitsType limits;
+    ::Search::Signals.stop = false;
+    ::Search::LimitsType limits;
     assert(pPosition != NULL);
 
     //critically important to clear the stream.
-    stockfish::global_stream.str(std::string());
-    stockfish::global_stream.clear();
+    ::global_stream.str(std::string());
+    ::global_stream.clear();
 
-    std::vector< stockfish::Move > searchMoves;
-    mpStockfishPosition->set(pPosition->GetPositionAsFen(), false /*not chess960*/, stockfish::Threads.main_thread());
+    std::vector< ::Move > searchMoves;
+    mpStockfishPosition->set(pPosition->GetPositionAsFen(), false /*not chess960*/, ::Threads.main());
     mpChessBoard->SetFenPosition(pPosition->GetPositionAsFen()); //set the helper board with this position
     mCachedFenPositiontoBeanalysed = pPosition->GetPositionAsFen();
 
@@ -78,28 +79,28 @@ void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, 
     {
         limits.movetime = 1000*seconds;//converts milliseconds to seconds...
         limits.infinite = false;
-        stockfish::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, stockfish::Search::SetupStates);
-        stockfish::Threads.wait_for_think_finished();
+        ::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, ::Search::SetupStates);
+        ::Threads.wait_for_think_finished();
     }
     else
     {
         limits.infinite = true;
-        stockfish::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, stockfish::Search::SetupStates);
+        ::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, ::Search::SetupStates);
     }
 }
 
 void slach::EngineInterface::StopEngine()
 {
-	stockfish::Search::Signals.stop = true;
-	stockfish::Threads.main_thread()->notify_one();
-	stockfish::Threads.wait_for_think_finished();
+	::Search::Signals.stop = true;
+	::Threads.main()->notify_one();
+	::Threads.wait_for_think_finished();
 	//stockfish::Threads.exit();
 }
 
 
 std::vector<std::string> slach::EngineInterface::GetLatestEngineOutput()
 {
-    std::string raw_string = stockfish::global_stream.str();
+    std::string raw_string = ::global_stream.str();
     std::vector<std::string> pv_lines;
     pv_lines.resize(mNumberOfLinesToBeShown);
     ParseWholeEngineOutput(raw_string);
@@ -123,12 +124,15 @@ void slach::EngineInterface::SetPositionToInternalChessBoard(const std::string& 
 void slach::EngineInterface::ParseWholeEngineOutput(const std::string& rawOutput)
 {
     unsigned diverse_lines = 0;
-    size_t previous_begin = rawOutput.rfind("bestmove");
+
+    size_t previous_mid_of_useful_line = std::string::npos;
     while (diverse_lines < mNumberOfLinesToBeShown)
     {
-        size_t line_begin = rawOutput.rfind("depth", previous_begin-1);
-        std::string to_be_parsed = rawOutput.substr(line_begin, previous_begin - line_begin);
-        previous_begin = line_begin;
+        size_t mid_of_useful_line = rawOutput.rfind("score cp", previous_mid_of_useful_line);
+        size_t line_begin = rawOutput.rfind("\n", mid_of_useful_line);
+        size_t line_end = rawOutput.find("\n", mid_of_useful_line);
+        std::string to_be_parsed = rawOutput.substr(line_begin, line_end - line_begin);
+        previous_mid_of_useful_line = mid_of_useful_line;
 
         int depth = INT_MAX;
         double score = DBL_MAX;
@@ -209,13 +213,13 @@ void slach::EngineInterface::ParseALineofStockfishOutput(const std::string& stoc
         score = (- score);
     }
 
-    std::size_t start_of_move_list = stockfishLine.find("line:");
+    std::size_t start_of_move_list = stockfishLine.find(" pv");
     if (start_of_move_list == std::string::npos)//e.g., mate
     {
         move_list = "CHECKMATE";
         return;
     }
-    size_t start_of_move = stockfishLine.find_first_not_of(" ", start_of_move_list+6);
+    size_t start_of_move = stockfishLine.find_first_not_of(" ", start_of_move_list+2);
     std::string pretty_line = "";
     int i = 0;
     while (start_of_move != std::string::npos)

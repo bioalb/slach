@@ -36,7 +36,7 @@ class EngineInterface
     std::vector<std::string> mLatestLines;
     std::vector<std::string> mLatestRootMoves;
     /**pointer to a position object within the stockfish engine*/
-    stockfish::Position* mpStockfishPosition;
+    ::Position* mpStockfishPosition;
 
     /**we create a chessboard as we need squares with pieces to translate engine moves to SAN*/
     ChessBoard* mpChessBoard;
