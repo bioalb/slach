@@ -250,6 +250,22 @@ public:
      */
     void SetAsMainBoard(bool flag = true);
 
+    /**
+     * Specifies what to do when mouse enters the area of one of the arrows,
+     * i.e., change background colour
+     *
+     * @param event the mouse event
+     */
+    void OnMouseEnteringArrowPanel(wxMouseEvent& event);
+
+    /**
+     * Specifies what to do when mouse leaves the area of one of the arrows
+     * i.e., restore background colour
+     *
+     * @param event the mouse event
+     */
+    void OnMouseLeavingArrowPanel(wxMouseEvent& event);
+
 };
 
 }//namespace slach_gui
