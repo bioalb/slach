@@ -18,24 +18,6 @@ class TestEngineInterface : public CxxTest::TestSuite
 {
 public:
 
-    void TestStartAndStopAfterthreeseconds()
-    {
-        slach::ChessBoard* p_board = new slach::ChessBoard();
-        p_board->SetupChessBoard();
-        std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
-        slach::Position* p_position = new slach::Position();
-        std::vector<slach::Square* > squares = p_board->GetSquares();
-        p_position->SetFromFen(test_position, squares);
-
-        slach::EngineInterface interface;
-        std::cout<<std::endl<<"*******"<<"Starting analysis. I will analyse for 3 seconds"<<"*******"<<std::endl;
-        interface.StartAnalsyingPosition(p_position, 3.0);
-        std::cout<<std::endl<<"Done analysing for 3 seconds, engine output follows"<<std::endl;
-        std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
-        delete p_board;
-        delete p_position;
-    }
-
     void TestStartInfiniteAndStop()
     {
         slach::ChessBoard* p_board = new slach::ChessBoard();
@@ -52,20 +34,40 @@ public:
 
         std::cout<<std::endl<<"*******"<<"Starting analysis. I will start with infinite analysis"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(p_position);
+        std::time_t time_now = 0;
+        std::time_t start_time = 0;
+        std::time(&start_time);
 
-		std::time_t time_now = 0;
-		std::time_t start_time = 0;
-		std::time(&start_time);
-
-		while (std::difftime(time_now,start_time) < 5.0)
-		{
-			std::time(&time_now);
-		}
+        while (std::difftime(time_now,start_time) < 5.0)
+        {
+            std::time(&time_now);
+        }
         interface.StopEngine();
         std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
         delete p_board;
         delete p_position;
     }
+
+    void TestStartAndStopAfterthreeseconds()
+    {
+        slach::ChessBoard* p_board = new slach::ChessBoard();
+        p_board->SetupChessBoard();
+        std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
+        slach::Position* p_position = new slach::Position();
+        std::vector<slach::Square* > squares = p_board->GetSquares();
+        p_position->SetFromFen(test_position, squares);
+
+        slach::EngineInterface interface;
+        std::cout<<std::endl<<"*******"<<"Starting analysis. I will analyse for 3 seconds"<<"*******"<<std::endl;
+        interface.StartAnalsyingPosition(p_position, 3.0);
+        std::cout<<std::endl<<"Done analysing for 3 seconds, engine output follows"<<std::endl;
+        std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
+        interface.StopEngine();
+        delete p_board;
+        delete p_position;
+    }
+
+
 
     void TestStopMakeAMoveAndRestart()
     {

@@ -50,7 +50,6 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
 slach_gui::BottomPanel::~BottomPanel()
 {
     delete mpEngineInterface;
-    //delete mpPosition;
 }
 
 void slach_gui::BottomPanel::OnSize(wxSizeEvent& event)
@@ -89,34 +88,13 @@ void slach_gui::BottomPanel::StartEngine(wxCommandEvent& event)
 void slach_gui::BottomPanel::DoStopEngine()
 {
 	mEngineIsRunning = false;
-	wxCriticalSectionLocker lock(mCritSect);
 	mpEngineInterface->StopEngine();
 }
 
 void slach_gui::BottomPanel::DoStartEngine()
 {
 	mEngineIsRunning = true;
-    // we want to start a long task, but we don't want our GUI to block
-    // while it's executed, so we use a thread to do it.
-	if (CreateThread(wxTHREAD_JOINABLE) != wxTHREAD_NO_ERROR)
-	{
-		wxLogError("Could not create the worker thread!");
-		return;
-	}
-	// go!
-	if (GetThread()->Run() != wxTHREAD_NO_ERROR)
-	{
-		wxLogError("Could not run the worker thread!");
-		return;
-	}
-}
-
-wxThread::ExitCode slach_gui::BottomPanel::Entry()
-{
-    // IMPORTANT:this function gets executed in the secondary thread context!
-    wxCriticalSectionLocker lock(mCritSect);
-    mpEngineInterface->StartAnalsyingPosition(mpPosition); //infinite
-    return (wxThread::ExitCode)0;
+	mpEngineInterface->StartAnalsyingPosition(mpPosition); //infinite
 }
 
 void slach_gui::BottomPanel::OnClose(wxCloseEvent&)
@@ -125,14 +103,6 @@ void slach_gui::BottomPanel::OnClose(wxCloseEvent&)
 	{
 		DoStopEngine();
 	}
-    // important: before terminating, we _must_ wait for our joinable
-    // thread to end, if it's running; in fact it uses variables of this
-    // instance and posts events to *this event handler
-    if ( GetThread() &&   GetThread()->IsRunning())
-    {
-    	GetThread()->Wait();
-    }
-    Destroy();
 }
 
 void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)

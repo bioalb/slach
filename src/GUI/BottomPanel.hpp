@@ -13,12 +13,11 @@
 namespace slach_gui
 {
 
-class BottomPanel : public wxPanel, public wxThreadHelper
+class BottomPanel : public wxPanel
 {
 protected:
 
     // critical section protects access to all of the fields below
-    wxCriticalSection mCritSect;
     slach::EngineInterface* mpEngineInterface;
     unsigned mNumberOfEngineLinesShown;
     slach::Position* mpPosition;
@@ -29,8 +28,6 @@ protected:
 
     wxTimer mTimer;
     bool mEngineIsRunning;
-    // in wxThreadHelper
-    virtual wxThread::ExitCode Entry();
 
     void DoStartEngine();
     void DoStopEngine();

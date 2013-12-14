@@ -61,7 +61,7 @@ void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)
 
 void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, double seconds)
 {
-    InitialiseEngine();
+    ::Position::init();//this makes tests passing...
     ::Search::Signals.stop = false;
     ::Search::LimitsType limits;
     assert(pPosition != NULL);
