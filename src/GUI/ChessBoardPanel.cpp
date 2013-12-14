@@ -435,7 +435,7 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
         int origin_y = panel_size.y*0.5;
         int origin_x = panel_size.x*margin_x_dir;
 
-        dcBE.SetBrush(wxBrush(wxColour(207,239,235))); // filling,
+        dcBE.SetBrush(wxBrush(Colours::Instance()->mArrowButton)); // filling,
         dcBE.SetPen( wxNullPen );
         wxPoint point_list [] = {wxPoint(0,0),
                                  wxPoint((1.0 - 2*margin_x_dir)*panel_size.x,-0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
@@ -453,7 +453,7 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
         int origin_y = panel_size.y/2;
         int origin_x = panel_size.x*margin_x_dir;
 
-        dcBM.SetBrush(wxBrush(wxColour(207,239,235))); // filling,
+        dcBM.SetBrush(wxBrush(Colours::Instance()->mArrowButton)); // filling,
         dcBM.SetPen( wxNullPen );
         wxPoint point_list [] = {wxPoint(0,0),
                                  wxPoint((1.0 - 2*margin_x_dir)*panel_size.x,-0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
@@ -471,7 +471,7 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
         int origin_y = panel_size.y/2;
         int origin_x = panel_size.x*margin_x_dir;
 
-        dcBACK.SetBrush(wxBrush(wxColour(207,239,235))); // filling,
+        dcBACK.SetBrush(wxBrush(Colours::Instance()->mArrowButton)); // filling,
         dcBACK.SetPen( wxNullPen );
         wxPoint point_list [] = {wxPoint(0,0),
                                  wxPoint((1.0 - 2*margin_x_dir)*panel_size.x,-0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
@@ -485,7 +485,7 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
         int origin_y = panel_size.y/2;
         int origin_x = panel_size.x*margin_x_dir;
 
-        dcFOR.SetBrush(wxBrush(wxColour(207,239,235))); // filling,
+        dcFOR.SetBrush(wxBrush(Colours::Instance()->mArrowButton)); // filling,
         dcFOR.SetPen( wxNullPen );
         wxPoint point_list [] = {wxPoint(0,0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
                                  wxPoint(0,-0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
@@ -499,7 +499,7 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
         int origin_y = panel_size.y/2;
         int origin_x = panel_size.x*margin_x_dir;
 
-        dcFM.SetBrush(wxBrush(wxColour(207,239,235))); // filling,
+        dcFM.SetBrush(wxBrush(Colours::Instance()->mArrowButton)); // filling,
         dcFM.SetPen( wxNullPen );
         wxPoint point_list [] = {wxPoint(0,0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
                                  wxPoint(0,-0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
@@ -517,7 +517,7 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
         int origin_y = panel_size.y/2;
         int origin_x = panel_size.x*margin_x_dir;
 
-        dcFE.SetBrush(wxBrush(wxColour(207,239,235))); // filling,
+        dcFE.SetBrush(wxBrush(Colours::Instance()->mArrowButton)); // filling,
         dcFE.SetPen( wxNullPen );
         wxPoint point_list [] = {wxPoint(0,0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
                                  wxPoint(0,-0.5*(1.0-2.0*margin_y_dir)*panel_size.y),
@@ -534,22 +534,22 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
 void slach_gui::ChessBoardPanel::OnMouseEnteringArrowPanel(wxMouseEvent& event)
 {
     int generating_id = ((wxPanel*) event.GetEventObject())->GetId();
-    if (generating_id == ID_BACKWARD_END_BUTTON) mpBackwardArrowPanelEnd->SetBackgroundColour (wxColour(35,1,1));
-    else if (generating_id == ID_BACKWARD_MORE_BUTTON) mpBackwardArrowPanelMore->SetBackgroundColour (wxColour(35,1,1));
-    else if (generating_id == ID_BACKWARD_BUTTON) mpBackwardArrowPanel->SetBackgroundColour (wxColour(35,1,1));
-    else if (generating_id == ID_FORWARD_BUTTON) mpForwardArrowPanel->SetBackgroundColour (wxColour(35,1,1));
-    else if (generating_id == ID_FORWARD_MORE_BUTTON) mpForwardArrowPanelMore->SetBackgroundColour (wxColour(35,1,1));
-    else if ( generating_id == ID_FORWARD_END_BUTTON) mpForwardArrowPanelEnd->SetBackgroundColour (wxColour(35,1,1));
+    if (generating_id == ID_BACKWARD_END_BUTTON) mpBackwardArrowPanelEnd->SetBackgroundColour (Colours::Instance()->mArrowBackgroundMouseOn);
+    else if (generating_id == ID_BACKWARD_MORE_BUTTON) mpBackwardArrowPanelMore->SetBackgroundColour (Colours::Instance()->mArrowBackgroundMouseOn);
+    else if (generating_id == ID_BACKWARD_BUTTON) mpBackwardArrowPanel->SetBackgroundColour (Colours::Instance()->mArrowBackgroundMouseOn);
+    else if (generating_id == ID_FORWARD_BUTTON) mpForwardArrowPanel->SetBackgroundColour (Colours::Instance()->mArrowBackgroundMouseOn);
+    else if (generating_id == ID_FORWARD_MORE_BUTTON) mpForwardArrowPanelMore->SetBackgroundColour (Colours::Instance()->mArrowBackgroundMouseOn);
+    else if ( generating_id == ID_FORWARD_END_BUTTON) mpForwardArrowPanelEnd->SetBackgroundColour (Colours::Instance()->mArrowBackgroundMouseOn);
 }
 void slach_gui::ChessBoardPanel::OnMouseLeavingArrowPanel(wxMouseEvent& event)
 {
     int generating_id = ((wxPanel*) event.GetEventObject())->GetId();
-    if (generating_id == ID_BACKWARD_END_BUTTON) mpBackwardArrowPanelEnd->SetBackgroundColour (wxColour(35,87,102));
-    else if (generating_id == ID_BACKWARD_MORE_BUTTON) mpBackwardArrowPanelMore->SetBackgroundColour (wxColour(35,87,102));
-    else if (generating_id == ID_BACKWARD_BUTTON) mpBackwardArrowPanel->SetBackgroundColour (wxColour(35,87,102));
-    else if (generating_id == ID_FORWARD_BUTTON) mpForwardArrowPanel->SetBackgroundColour (wxColour(35,87,102));
-    else if (generating_id == ID_FORWARD_MORE_BUTTON) mpForwardArrowPanelMore->SetBackgroundColour (wxColour(35,87,102));
-    else if ( generating_id == ID_FORWARD_END_BUTTON) mpForwardArrowPanelEnd->SetBackgroundColour (wxColour(35,87,102));
+    if (generating_id == ID_BACKWARD_END_BUTTON) mpBackwardArrowPanelEnd->SetBackgroundColour (Colours::Instance()->mArrowBackground);
+    else if (generating_id == ID_BACKWARD_MORE_BUTTON) mpBackwardArrowPanelMore->SetBackgroundColour (Colours::Instance()->mArrowBackground);
+    else if (generating_id == ID_BACKWARD_BUTTON) mpBackwardArrowPanel->SetBackgroundColour (Colours::Instance()->mArrowBackground);
+    else if (generating_id == ID_FORWARD_BUTTON) mpForwardArrowPanel->SetBackgroundColour (Colours::Instance()->mArrowBackground);
+    else if (generating_id == ID_FORWARD_MORE_BUTTON) mpForwardArrowPanelMore->SetBackgroundColour (Colours::Instance()->mArrowBackground);
+    else if ( generating_id == ID_FORWARD_END_BUTTON) mpForwardArrowPanelEnd->SetBackgroundColour (Colours::Instance()->mArrowBackground);
 }
 
 void slach_gui::ChessBoardPanel::PaintOnSquare(wxPaintEvent& event)
@@ -703,7 +703,7 @@ void slach_gui::ChessBoardPanel::PaintOnBorder(wxPaintDC& dc, unsigned squareInd
             to_print = file;
         }
         dc.SetFont( wxFont(wxFontInfo(15).FaceName("Helvetica").Bold()) );
-        dc.SetTextForeground ( wxColour (200, 220, 220) );
+        dc.SetTextForeground ( Colours::Instance()->mBoardCoordinate );
         wxSize text_size = dc.GetTextExtent(to_print);
 
         int width = mSquarePanels[squareIndex]->GetClientSize().GetWidth();

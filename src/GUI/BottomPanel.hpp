@@ -9,6 +9,7 @@
 #include <wx/button.h>
 #include <wx/thread.h>
 #include "EngineInterface.hpp"
+#include "Colours.hpp"
 
 namespace slach_gui
 {
@@ -17,7 +18,6 @@ class BottomPanel : public wxPanel
 {
 protected:
 
-    // critical section protects access to all of the fields below
     slach::EngineInterface* mpEngineInterface;
     unsigned mNumberOfEngineLinesShown;
     slach::Position* mpPosition;

@@ -15,10 +15,10 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
 {
 
 
-    this->SetBackgroundColour(wxColour(35,87,102));
+    this->SetBackgroundColour(Colours::Instance()->mBottomPanelBackground);
     mpEngineTextBox->SetEditable(false);
     mpScoreTextBox->SetEditable(false);
-    mpScoreTextBox->SetBackgroundColour(wxColour(35,87,102));
+    mpScoreTextBox->SetBackgroundColour(Colours::Instance()->mScoreBoxBackground);
     wxFont font(12, wxROMAN, wxNORMAL, wxNORMAL);
     mpScoreTextBox->SetFont(font);
 
@@ -117,7 +117,7 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
             mpEngineTextBox->SetDefaultStyle(wxTextAttr(*wxBLACK, backgroundcolour));
 	        (*mpEngineTextBox)<<mpEngineInterface->GetLatestEngineOutput()[pv-1];
 	    }
-		mpScoreTextBox->BeginTextColour(wxColour(255, 255, 255));
+		mpScoreTextBox->BeginTextColour(Colours::Instance()->mEngineText);
 		mpScoreTextBox->ChangeValue("");
 		mpScoreTextBox->BeginAlignment(wxTEXT_ALIGNMENT_LEFT);
 		mpScoreTextBox->WriteText( wxT("Depth = "));

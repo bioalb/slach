@@ -15,7 +15,7 @@ class Colours
 public :
 
     /**
-     * The instance to be used toa ccess the class
+     * The instance to be used to access the class
      */
     static Colours* Instance();
     /**Background colour of the light squares*/
@@ -24,10 +24,22 @@ public :
     wxColour mDarkSquare;
     /**Background colour of the border squares*/
     wxColour mChessboardBorder;
+    /**Colour of the text of the chessboard coordinates*/
+    wxColour mBoardCoordinate;
     /**Background colour of the arrows*/
     wxColour mArrowBackground;
+    /**BAckground of the arrow when the mouse is on it*/
+    wxColour mArrowBackgroundMouseOn;
+    /**Colour of the arrow itself*/
+    wxColour mArrowButton;
     /**colour of the text for the palyer names*/
     wxColour mPlayerName;
+    /**colour of the font of the engine output*/
+    wxColour mEngineText;
+    /**background of the bottom panel*/
+    wxColour mBottomPanelBackground;
+    /**background of the panel with score summary and best move*/
+    wxColour mScoreBoxBackground;
 
     /**Sets the default colours*/
     void SetDefaultColours();
@@ -41,7 +53,7 @@ private :
     /**Private copy constructor, does nothing*/
     Colours(Colours const&);
 
-    /**cache for the instancxe to this class*/
+    /**cache for the instance to this class*/
     static Colours* mpInstance;
 };
 }//namespace slach_gui

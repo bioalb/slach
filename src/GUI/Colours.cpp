@@ -26,6 +26,13 @@ void slach_gui::Colours::SetDefaultColours()
    mLightSquare = wxColour(235,241,246);
    mDarkSquare = wxColour(32,107,129);
    mChessboardBorder = wxColour(35,87,102);
+   mBoardCoordinate = wxColour (200, 220, 220);
    mArrowBackground = wxColour(35,87,102);
+   mArrowButton = wxColour(207,239,235);
+   mArrowBackgroundMouseOn = wxColour(35,1,1);
    mPlayerName = wxColour(32,7,129);
+   mEngineText = wxColour(255, 255, 255);
+   mBottomPanelBackground = wxColour(35,87,102);//same as borders...
+   mScoreBoxBackground = wxColour(35,87,102);
+
 }
