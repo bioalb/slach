@@ -26,7 +26,6 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
       mGameIsLoaded(false),
       mIdOfPanelWithLastMove(INT_MAX)
 {
-
     mpChessBoardPanel->SetAsMainBoard(true);
     mpChessBoard = mpChessBoardPanel->GetChessBoard();
 
@@ -106,7 +105,7 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     mpAboveTopPlayerBox = new wxTextCtrl (mAboveTopPlayerName, ID_ABOVE_BLACK_PLAYER_BOX, wxT(""), wxDefaultPosition,
                                       wxDefaultSize, wxTE_LEFT | wxBORDER_NONE);
 
-    mTextAttributesPlayerNames = wxTextAttr(wxColour(32,7,129),
+    mTextAttributesPlayerNames = wxTextAttr(Colours::Instance()->mPlayerName,
     										wxNullColour,
     										wxFont(wxFontInfo(14).FaceName("Helvetica")),
     										wxTEXT_ALIGNMENT_CENTRE);

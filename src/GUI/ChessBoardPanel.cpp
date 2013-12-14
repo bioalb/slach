@@ -6,6 +6,7 @@
 #include <wx/filedlg.h>
 #include <wx/txtstrm.h>
 #include "SlachTypes.hpp"
+#include "Colours.hpp"
 #include "HelperGlobalFunctions.hpp"
 #include "ChessBoardPanel.hpp"
 #include "MainFrame.hpp"
@@ -133,12 +134,12 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
     mpBackwardArrowPanelMore->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintArrows, this);
     mpBackwardArrowPanelEnd->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintArrows, this);
 
-    mpBackwardArrowPanelEnd->SetBackgroundColour (wxColour(35,87,102));
-    mpBackwardArrowPanelMore->SetBackgroundColour (wxColour(35,87,102));
-    mpBackwardArrowPanel->SetBackgroundColour (wxColour(35,87,102));
-    mpForwardArrowPanel->SetBackgroundColour (wxColour(35,87,102));
-    mpForwardArrowPanelMore->SetBackgroundColour (wxColour(35,87,102));
-    mpForwardArrowPanelEnd->SetBackgroundColour (wxColour(35,87,102));
+    mpBackwardArrowPanelEnd->SetBackgroundColour (Colours::Instance()->mArrowBackground);
+    mpBackwardArrowPanelMore->SetBackgroundColour (Colours::Instance()->mArrowBackground);
+    mpBackwardArrowPanel->SetBackgroundColour (Colours::Instance()->mArrowBackground);
+    mpForwardArrowPanel->SetBackgroundColour (Colours::Instance()->mArrowBackground);
+    mpForwardArrowPanelMore->SetBackgroundColour (Colours::Instance()->mArrowBackground);
+    mpForwardArrowPanelEnd->SetBackgroundColour (Colours::Instance()->mArrowBackground);
 }
 
 slach_gui::ChessBoardPanel::~ChessBoardPanel()
@@ -671,15 +672,15 @@ void slach_gui::ChessBoardPanel::PaintBackground(wxPaintDC& dc, unsigned squareI
 {
     if ( (mpAllSquares[squareIndex]->IsDarkSquare() == true) && (mpAllSquares[squareIndex]->IsBorderSquare() == false))
     {
-        mSquarePanels[squareIndex]->SetBackgroundColour(wxColour(32,107,129));
+        mSquarePanels[squareIndex]->SetBackgroundColour(Colours::Instance()->mDarkSquare);
     }
     if ( (mpAllSquares[squareIndex]->IsLightSquare() == true) && (mpAllSquares[squareIndex]->IsBorderSquare() == false))
     {
-        mSquarePanels[squareIndex]->SetBackgroundColour(wxColour(235,241,246));
+        mSquarePanels[squareIndex]->SetBackgroundColour(Colours::Instance()->mLightSquare);
     }
     if (mpAllSquares[squareIndex]->IsBorderSquare())
     {
-        mSquarePanels[squareIndex]->SetBackgroundColour(wxColour(35,87,102));
+        mSquarePanels[squareIndex]->SetBackgroundColour(Colours::Instance()->mChessboardBorder);
         PaintOnBorder(dc, squareIndex);
     }
 }

@@ -9,6 +9,7 @@
 #include <wx/richtext/richtextctrl.h>
 #include <vector>
 #include "IDContainer.hpp"
+#include "Colours.hpp"
 #include "ChessBoardPanel.hpp"
 #include "ChessBoard.hpp"
 
@@ -18,9 +19,6 @@ namespace slach_gui
 /**
  * Major GUI class that holds the chessboard
  */
-
-
-
 
 class CentralPanel : public wxPanel
 {
@@ -86,7 +84,6 @@ private:
      * Initialized to INT_MAX
      */
     int mIdOfPanelWithLastMove;
-
 
     /**
      * HElper method that goes into the text control of the white and black player

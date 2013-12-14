@@ -8,6 +8,7 @@
 #include "BottomPanel.hpp"
 #include "RightPanel.hpp"
 #include "CentralPanel.hpp"
+#include "Colours.hpp"
 
 namespace slach_gui
 {

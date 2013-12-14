@@ -47,13 +47,14 @@ void slach_gui::MainFrame::UpdateChessPositionForEngine(slach::Position* pPositi
 
 slach_gui::MainFrame::~MainFrame()
 {
+
 }
 
-void slach_gui::MainFrame::OnExit(wxCommandEvent& event)
+void slach_gui::MainFrame::OnExit(wxCommandEvent& WXUNUSED(event))
 {
     Close( true );
 }
-void slach_gui::MainFrame::OnAbout(wxCommandEvent& event)
+void slach_gui::MainFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
     //first is content of the window, second string is title of the window.
     wxMessageBox( wxT("This is Alberto testing the widgets"),
