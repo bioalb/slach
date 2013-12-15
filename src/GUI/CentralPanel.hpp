@@ -48,20 +48,11 @@ private:
 
     slach::ChessBoard* mpChessBoard;
 
-    /**Panels fon the RHS of the board*/
-    wxPanel* mpNameOfPlayerTop;
-    wxPanel* mpNameOfPlayerBottom ;
+    /**Panels on the RHS of the board*/
     wxScrolledWindow* mpSpaceForMoveList;
-    wxPanel* mAboveBotoomPlayerName;
-    wxPanel* mBelowBotoomPlayerName;
-    wxPanel* mAboveTopPlayerName;
-    wxPanel* mBelowTopPlayerName;
 
     /**Text control for the players' names*/
-    wxTextCtrl * mpBottomPlayerBox;
-    wxTextCtrl * mpTopPlayerBox;
-    wxTextCtrl * mpAboveBottomPlayerBox;
-    wxTextCtrl * mpAboveTopPlayerBox;
+    wxTextCtrl * mpGameInfoBox;
 
     wxTextAttr mTextAttributesPlayerNames;
     wxTextAttr mTextAttributesGameResultBox;
@@ -90,7 +81,7 @@ private:
      * Delete the content and write the names according to mWhitePlayerName and mBlackPlayerName
      * The text attributes are the ones set by mTextAttributesPlayerNames
      */
-    void WritePlayerNames();
+//    void WritePlayerNames();
 
 
     /**
