@@ -119,9 +119,12 @@ slach::ChessBoardWithBorders::ChessBoardWithBorders()
     unsigned index_from_white = mSquares.size() - 1;
     for (unsigned i = 0; i < mSquaresFromBlackPerspective.size(); ++i)
     {
+        assert(index_from_white <  mSquares.size());
         mSquaresFromBlackPerspective[i] = mSquares[index_from_white];
         index_from_white--;
     }
+
+    mSquares.back()->SetAsBottomRightCorner(true);
 }
 
 slach::ChessBoardWithBorders::~ChessBoardWithBorders()

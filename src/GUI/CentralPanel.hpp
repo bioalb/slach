@@ -39,8 +39,7 @@ private:
     /** Stores the panels that show the move list*/
     std::vector<wxTextCtrl* > mMoveListPanels;
 
-    /** The space on the left of the board*/
-    wxPanel* mpLeftOfChessBoard;
+    /**The chessboard panel*/
     ChessBoardPanel* mpChessBoardPanel;
     /** The space on the right of the board*/
     wxPanel* mpRightOfChessBoard;
@@ -149,8 +148,6 @@ public:
     void OnMouseLeavingSingleMoveArea(wxMouseEvent& event);
 
     void LoadPgnFile(wxCommandEvent& event);
-
-    void FlipView (wxCommandEvent& WXUNUSED(event));
 
     void LoadFen (wxCommandEvent& WXUNUSED(event));
 

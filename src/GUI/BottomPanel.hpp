@@ -7,7 +7,6 @@
 #include <wx/textctrl.h>
 #include <wx/richtext/richtextctrl.h>
 #include <wx/button.h>
-#include <wx/thread.h>
 #include "EngineInterface.hpp"
 #include "Colours.hpp"
 

@@ -16,7 +16,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
     : wxPanel(parent,wxID_ANY, pos,size),
       mpParent(parent),
       mIamTheMainBoard(true),
-      mPngPieceDirectory("../../src/GUI/bitmaps/pieces/png/"),
+      mPngPieceDirectory("src/GUI/bitmaps/pieces/png/"),
       mpChessBoardWithBorders ( new slach::ChessBoardWithBorders() ),
       mpChessBoard(NULL),
       mpBoardGridSizer ( new wxFlexGridSizer(slach::gBoardRowSize+2,slach::gBoardColumnSize+2,0,0) ),
@@ -82,6 +82,10 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
         	mSquarePanels[i]->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::LeftMouseClick, this);
         	mSquarePanels[i]->Bind(wxEVT_MOTION, &ChessBoardPanel::LeftMouseClick, this);
         	mSquarePanels[i]->Bind(wxEVT_LEFT_UP, &ChessBoardPanel::LeftMouseRelease, this);
+        }
+        if (mpAllSquares[i]->IstheBottomRightCorner())
+        {
+            mSquarePanels[i]->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::FlipView, this);
         }
     }
     mpSpaceForActualBoard->SetSizer(mpBoardGridSizer);
@@ -151,6 +155,13 @@ void slach_gui::ChessBoardPanel::SetAsMainBoard(bool flag)
 {
     mIamTheMainBoard = flag;
 }
+
+void slach_gui::ChessBoardPanel::FlipView (wxMouseEvent& event)
+{
+    DoFlipView();
+    event.Skip();
+}
+
 void slach_gui::ChessBoardPanel::DoFlipView()
 {
     if (mPerspectiveIsFromWhite == true)
@@ -163,7 +174,11 @@ void slach_gui::ChessBoardPanel::DoFlipView()
         mpAllSquares = mpChessBoardWithBorders->GetSquares();
         mPerspectiveIsFromWhite = true;
     }
+
+    mpAllSquares.back()->SetAsBottomRightCorner(true);
+    mpAllSquares.front()->SetAsBottomRightCorner(false);
     mpBoardGridSizer->Layout();
+    this->Refresh();
 }
 
 bool slach_gui::ChessBoardPanel::IsItFromWhitePerspective() const
@@ -442,7 +457,7 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
                                  wxPoint((1.0 - 2*margin_x_dir)*panel_size.x, 0.5*(1.0-2.0*margin_y_dir)*panel_size.y)};
         dcBE.DrawPolygon(3, point_list, origin_x, origin_y);
 
-        dcBE.SetPen( wxPen( wxColor(207,239,235), 2 ) ); // 2-pixels-thick outline
+        dcBE.SetPen( wxPen( Colours::Instance()->mArrowButton, 2 ) ); // 2-pixels-thick outline
         dcBE.DrawLine(origin_x, margin_y_dir*panel_size.y,
                       origin_x, (1.0-margin_y_dir)*panel_size.y);
     }
@@ -524,7 +539,7 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
                                  wxPoint((1.0 - 2*margin_x_dir)*panel_size.x, 0)};
         dcFE.DrawPolygon(3, point_list, origin_x, origin_y);
 
-        dcFE.SetPen( wxPen( wxColor(207,239,235), 2 ) ); // 2-pixels-thick outline
+        dcFE.SetPen( wxPen( Colours::Instance()->mArrowButton, 2 ) ); // 2-pixels-thick outline
         dcFE.DrawLine((1.0 - margin_x_dir)*panel_size.x, margin_y_dir*panel_size.y,
                       (1.0 - margin_x_dir)*panel_size.x, (1.0-margin_y_dir)*panel_size.y);
     }
@@ -638,7 +653,7 @@ void slach_gui::ChessBoardPanel::ResetToInitialPosition(wxCommandEvent& event)
 //////////////////////////////
 void slach_gui::ChessBoardPanel::LoadBoardImages()
 {
-	mPieceImages.resize(16u);
+	mPieceImages.resize(13u);
 
     mPieceImages[0].LoadFile(wxString((mPngPieceDirectory+"white_king.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
     mPieceImages[1].LoadFile(wxString((mPngPieceDirectory+"black_king.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
@@ -657,7 +672,7 @@ void slach_gui::ChessBoardPanel::LoadBoardImages()
 
 void slach_gui::ChessBoardPanel::PaintPiece(wxPaintDC& dc, unsigned squareIndex)
 {
-	assert(mPieceImages.size() == 16u);
+	assert(mPieceImages.size() == 13u);
     slach::PieceType piece = mpAllSquares[squareIndex]->GetPieceOnThisSquare();
     wxImage piece_image = GetImageFromPiece(piece);
 
@@ -712,6 +727,70 @@ void slach_gui::ChessBoardPanel::PaintOnBorder(wxPaintDC& dc, unsigned squareInd
         int ycoord = (height - text_size.y)/2;
 
         dc.DrawText(to_print,xcoord,ycoord);
+    }
+
+    if ( mpAllSquares[squareIndex]->IsBorderSquare()== true &&
+         mpAllSquares[squareIndex]->IsCornerSquare()== true  &&
+         mpAllSquares[squareIndex]->IstheBottomRightCorner() == true)
+    {
+        mSquarePanels[squareIndex] -> SetBackgroundColour(Colours::Instance()->mFlipViewBoxBackground);
+
+        int panel_width = mSquarePanels[squareIndex]->GetClientSize().GetWidth();
+        int panel_height = mSquarePanels[squareIndex]->GetClientSize().GetHeight();
+
+        int vertex_upper_arrow_x = panel_width*0.95;
+        int vertex_upper_arrow_y = panel_height*0.4;
+
+        int base_upper_arrow_below_x = vertex_upper_arrow_x*0.75;
+        int base_upper_arrow_below_y = vertex_upper_arrow_y;
+
+        int base_upper_arrow_above_x = vertex_upper_arrow_x;
+        int base_upper_arrow_above_y = vertex_upper_arrow_y*0.2;
+
+        dc.SetBrush(wxBrush(Colours::Instance()->mFlipViewArrows)); // filling,
+        dc.SetPen( wxNullPen );
+        wxPoint point_list [] = {wxPoint(vertex_upper_arrow_x,vertex_upper_arrow_y),
+                                 wxPoint(base_upper_arrow_below_x,base_upper_arrow_below_y),
+                                 wxPoint(base_upper_arrow_above_x,base_upper_arrow_above_y )};
+        dc.DrawPolygon(3, point_list, 0, 0 );
+
+        int end_spline_x = (base_upper_arrow_below_x + base_upper_arrow_above_x)/2;
+        int end_spline_y = (base_upper_arrow_below_y + base_upper_arrow_above_y)/2;
+        int start_spline_x = panel_width*0.2;
+        int start_spline_y = vertex_upper_arrow_y;
+        int mid_spline_x = (start_spline_x + end_spline_x) / 2;
+        int mid_spline_y = vertex_upper_arrow_y/6;
+
+        dc.SetPen( wxPen( Colours::Instance()->mFlipViewArrows, 2 ) ); // 2-pixels-thick outline
+        dc.DrawSpline(start_spline_x, start_spline_y, mid_spline_x, mid_spline_y, end_spline_x, end_spline_y);
+
+
+        int vertex_lower_arrow_x = panel_width*0.2;
+        int vertex_lower_arrow_y = panel_height*0.6;
+
+        int base_lower_arrow_below_x = vertex_lower_arrow_x*1;
+        int base_lower_arrow_below_y = vertex_lower_arrow_y*1.5;
+
+        int base_lower_arrow_above_x = vertex_lower_arrow_x*2.2;
+        int base_lower_arrow_above_y = vertex_lower_arrow_y*1.1;
+
+        dc.SetBrush(wxBrush(Colours::Instance()->mFlipViewArrows)); // filling,
+        dc.SetPen( wxNullPen );
+        wxPoint point_list_2 [] = {wxPoint(vertex_lower_arrow_x,vertex_lower_arrow_y),
+                                 wxPoint(base_lower_arrow_below_x,base_lower_arrow_below_y),
+                                 wxPoint(base_lower_arrow_above_x,base_lower_arrow_above_y )};
+        dc.DrawPolygon(3, point_list_2, 0, 0 );
+
+
+        end_spline_x = (base_lower_arrow_below_x + base_lower_arrow_above_x)/2;
+        end_spline_y = (base_lower_arrow_below_y + base_lower_arrow_above_y)/2;
+        start_spline_x = vertex_upper_arrow_x;
+        start_spline_y = vertex_lower_arrow_y;
+        mid_spline_x = (start_spline_x + end_spline_x) / 2;
+        mid_spline_y = panel_height - vertex_lower_arrow_y/8;
+
+        dc.SetPen( wxPen( Colours::Instance()->mFlipViewArrows, 2 ) ); // 2-pixels-thick outline
+        dc.DrawSpline(start_spline_x, start_spline_y, mid_spline_x, mid_spline_y, end_spline_x, end_spline_y);
     }
 }
 

@@ -66,6 +66,9 @@ private:
      */
     unsigned mIndexFromBottomRight;
 
+    /**Utility flag that tells whether this square is the bottom right corner of the border. False by default*/
+    bool IsTheBottomRightCorner;
+
     /**flag that stores whether this suqare can be highlighted or not. False by default*/
     bool mIshighlightable;
 
@@ -327,6 +330,21 @@ public:
      * True if this square can be highlighted
      */
     bool IsHighlightable() const;
+
+    /**
+     * Sets the member variable mIsTheBottomRightCorner.
+     * Use this method to flag this square as the btoom right corner
+     *
+     * @param brsc true if you want this squarte to be the bottom right corner.
+     */
+    void SetAsBottomRightCorner(bool brc = true);
+
+    /**
+     * Returns the variable mIsTheBottomRightCorner
+     * You can use this to check if this square was flagged as bottom right corner (border)
+     */
+    bool IstheBottomRightCorner() const;
+
 };
 
 }//namespace slach

@@ -28,7 +28,7 @@ public :
     wxColour mBoardCoordinate;
     /**Background colour of the arrows*/
     wxColour mArrowBackground;
-    /**BAckground of the arrow when the mouse is on it*/
+    /**Background of the arrow when the mouse is on it*/
     wxColour mArrowBackgroundMouseOn;
     /**Colour of the arrow itself*/
     wxColour mArrowButton;
@@ -40,6 +40,11 @@ public :
     wxColour mBottomPanelBackground;
     /**background of the panel with score summary and best move*/
     wxColour mScoreBoxBackground;
+
+    /**background of the panel with the flip view arrows*/
+    wxColour mFlipViewBoxBackground;
+    /**colour of the arrows in the panel with the flip view */
+    wxColour mFlipViewArrows;
 
     /**Sets the default colours*/
     void SetDefaultColours();

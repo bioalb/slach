@@ -191,6 +191,13 @@ public:
      */
     void LeftMouseClick(wxMouseEvent& event);
 
+    /**
+     * This method captures the click on the flip view buttoon
+     *
+     * @param event the mouse click event
+     */
+    void FlipView (wxMouseEvent& event);
+
 
     void ResetToInitialPosition(wxCommandEvent& event);
 

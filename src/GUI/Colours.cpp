@@ -35,4 +35,8 @@ void slach_gui::Colours::SetDefaultColours()
    mBottomPanelBackground = wxColour(35,87,102);//same as borders...
    mScoreBoxBackground = wxColour(35,87,102);
 
+   mFlipViewBoxBackground = wxColour (200, 220, 220) ;
+   mFlipViewArrows = wxColour(35,87,102);
+
+
 }

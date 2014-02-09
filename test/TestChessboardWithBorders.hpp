@@ -33,6 +33,7 @@ public:
             unsigned index = border_indices_no_corners[i];
             TS_ASSERT_EQUALS(squares[index]->IsBorderSquare(), true);
             TS_ASSERT_EQUALS(squares[index]->IsCornerSquare(), false);
+            TS_ASSERT_EQUALS(squares[index]->IstheBottomRightCorner(), false);
         }
         //check corners
         for (unsigned  i = 0; i < corner_indices.size(); ++i)
@@ -41,7 +42,7 @@ public:
             TS_ASSERT_EQUALS(squares[index]->IsBorderSquare(), true);
             TS_ASSERT_EQUALS(squares[index]->IsCornerSquare(), true);
         }
-
+        TS_ASSERT_EQUALS(squares[99]->IstheBottomRightCorner(), true);
     }
 
     void testBoardWithBorders(void)
@@ -359,7 +360,7 @@ public:
         TS_ASSERT_EQUALS(squares[99]->GetFile(), '0');
         TS_ASSERT_EQUALS(squares[99]->GetRank(), '0');
         TS_ASSERT_EQUALS(squares[99]->IsCoordinatePrintable(), false);
-
+        TS_ASSERT_EQUALS(squares[99]->IstheBottomRightCorner(), true);
 
         //check indices setting
         for (unsigned i = 0; i < squares.size(); ++i)
@@ -690,6 +691,7 @@ public:
         TS_ASSERT_EQUALS(squares[99]->GetFile(), '0');
         TS_ASSERT_EQUALS(squares[99]->GetRank(), '0');
         TS_ASSERT_EQUALS(squares[99]->IsCoordinatePrintable(), false);
+        TS_ASSERT_EQUALS(squares[99]->IstheBottomRightCorner(), false);
     }
 };
 #endif

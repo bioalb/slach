@@ -54,7 +54,6 @@ void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)
     mLatestScores.resize(mNumberOfLinesToBeShown);
     mLatestLines.resize(mNumberOfLinesToBeShown);
     mLatestRootMoves.resize(mNumberOfLinesToBeShown);
-    InitialiseEngine();
     ::Options["MultiPV"] = ::UCI::Option(mNumberOfLinesToBeShown, 1, 500);
 }
 
@@ -74,17 +73,24 @@ void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, 
     mpChessBoard->SetFenPosition(pPosition->GetPositionAsFen()); //set the helper board with this position
     mCachedFenPositiontoBeanalysed = pPosition->GetPositionAsFen();
 
-    if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
+    try
     {
-        limits.movetime = 1000*seconds;//converts milliseconds to seconds...
-        limits.infinite = false;
-        ::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, ::Search::SetupStates);
-        ::Threads.wait_for_think_finished();
+        if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
+        {
+            limits.movetime = 1000*seconds;//converts milliseconds to seconds...
+            limits.infinite = false;
+            ::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, ::Search::SetupStates);
+            ::Threads.wait_for_think_finished();
+        }
+        else
+        {
+            limits.infinite = true;
+            ::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, ::Search::SetupStates);
+        }
     }
-    else
+    catch (int e)
     {
-        limits.infinite = true;
-        ::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, ::Search::SetupStates);
+        std::cout<<"Exception!!!"<<std::endl;
     }
 }
 

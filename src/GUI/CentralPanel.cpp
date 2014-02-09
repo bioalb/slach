@@ -17,7 +17,6 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
       mpMoveListSizer ( new wxFlexGridSizer(3) ), //3 columns for move list sizer
       mpPrincipalSizer (new wxBoxSizer(wxHORIZONTAL) ),
       mpRightSideSizer ( new wxBoxSizer(wxVERTICAL) ),
-      mpLeftOfChessBoard ( new wxPanel(this, ID_LEFT_OF_BOARD) ),
       mpChessBoardPanel( new ChessBoardPanel(this, ID_ACTUAL_BOARD) ),
       mpRightOfChessBoard( new wxPanel(this, ID_RIGHT_OF_BOARD) ),
       mpParent(parent),
@@ -30,9 +29,8 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     mpChessBoard = mpChessBoardPanel->GetChessBoard();
 
     //Arrange the panels
-    mpPrincipalSizer->Add(mpLeftOfChessBoard, 1, wxEXPAND | wxALL);
-    mpPrincipalSizer->Add(mpChessBoardPanel, 6, wxEXPAND | wxALL);
-    mpPrincipalSizer->Add(mpRightOfChessBoard, 2, wxEXPAND | wxALL);
+    mpPrincipalSizer->Add(mpChessBoardPanel, 4, wxEXPAND | wxALL);
+    mpPrincipalSizer->Add(mpRightOfChessBoard, 1, wxEXPAND | wxALL);
     this->SetSizer(mpPrincipalSizer, false);
 
     //divide the section on the RHS of the board
@@ -51,16 +49,13 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     mpSpaceForMoveList->SetSizer(mpMoveListSizer);
 
     //Bind the button and paint  events for the left side of the board
-    mpLeftOfChessBoard->Bind(wxEVT_PAINT, &CentralPanel::PaintOnSidesOfBoard, this);//with this-> instead of mpLeftOfChessBoard it does not work
+    //mpLeftOfChessBoard->Bind(wxEVT_PAINT, &CentralPanel::PaintOnSidesOfBoard, this);//with this-> instead of mpLeftOfChessBoard it does not work
     mpRightOfChessBoard->Bind(wxEVT_SIZE, &CentralPanel::OnSize, this);
 
-    wxButton* pgn_button  = new wxButton(mpLeftOfChessBoard, 1, wxT("Pgn..."),wxDefaultPosition, wxDefaultSize);
+    wxButton* pgn_button  = new wxButton(this, 1, wxT("Pgn..."),wxDefaultPosition, wxDefaultSize);
     pgn_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &CentralPanel::LoadPgnFile, this);
 
-    wxButton* flip_view_button  = new wxButton(mpLeftOfChessBoard, 2, wxT("flip..."),wxPoint(0,55), wxDefaultSize);
-    flip_view_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &CentralPanel::FlipView, this);
-
-    wxButton* fen_button  = new wxButton(mpLeftOfChessBoard, 3, wxT("Fen..."),wxPoint(0,95), wxDefaultSize);
+    wxButton* fen_button  = new wxButton(this, 3, wxT("Fen..."),wxPoint(0,95), wxDefaultSize);
     fen_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &CentralPanel::LoadFen, this);
 
     this->Bind(wxEVT_CHAR_HOOK, &CentralPanel::ArrowKeyMovement, this);//char hook needed for it to work
@@ -93,12 +88,6 @@ void slach_gui::CentralPanel::LoadFen (wxCommandEvent& WXUNUSED(event))
         fen_dialogue->Destroy();
     }
 
-}
-
-void slach_gui::CentralPanel::FlipView (wxCommandEvent& WXUNUSED(event))
-{
-    mpChessBoardPanel->DoFlipView();
-    mpChessBoardPanel->Refresh();
 }
 
 void slach_gui::CentralPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
@@ -377,8 +366,8 @@ std::vector<wxTextCtrl* > slach_gui::CentralPanel::GetMoveListPanels()
 
 void slach_gui::CentralPanel::PaintOnSidesOfBoard(wxPaintEvent& WXUNUSED(event))
 {
-    wxPaintDC dc(mpLeftOfChessBoard);
-    DoPaintVerticalGradient(dc, mpLeftOfChessBoard);
+//    wxPaintDC dc(mpLeftOfChessBoard);
+//    DoPaintVerticalGradient(dc, mpLeftOfChessBoard);
 
     wxPaintDC dc1(mpChessBoardPanel);
     DoPaintVerticalGradient(dc1,mpChessBoardPanel);

@@ -15,6 +15,7 @@ slach::Square::Square()
     mIndexFromA1(UINT_MAX),
     mIndexFromTopLeft(UINT_MAX),
     mIndexFromBottomRight(UINT_MAX),
+    IsTheBottomRightCorner(false),
     mIshighlightable(false)
 {
 
@@ -96,6 +97,17 @@ bool slach::Square::IsCoordinatePrintable() const
 {
     return mIsCoordinatePrintable;
 }
+
+void slach::Square::SetAsBottomRightCorner(bool brc)
+{
+    IsTheBottomRightCorner = brc;
+}
+
+bool slach::Square::IstheBottomRightCorner() const
+{
+    return IsTheBottomRightCorner;
+}
+
 
 char slach::Square::GetFile() const
 {
