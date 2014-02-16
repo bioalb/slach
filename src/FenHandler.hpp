@@ -61,6 +61,7 @@ class FenHandler
     /**
      * Helper method that checks whether the string is a valid FEN string or not.
      * Returns true of the string is a valid FEN string, false otherwise (for whatever reason).
+     * This functions ignores spaces in between parts of the string...
      *
      * @param rFenString the string to be analysed
      */

@@ -17,258 +17,119 @@ slach::FenHandler::~FenHandler()
 
 bool slach::FenHandler::IsFenValid(const std::string &rFenString) const
 {
-    bool ret = true;
-    unsigned slash_counter = 0u;
-    unsigned counter_between_slashes = 0u;
-    unsigned end_of_piece_position = UINT_MAX;
-
-    for (unsigned i = 0; i < rFenString.length(); ++i)
+    std::vector<std::size_t> row_delimiter_positions = {0};
+    size_t prev_slash = 0;
+    size_t next_slash = 0;
+    while (next_slash != std::string::npos)
     {
-        if (rFenString[i] == '/')
+        next_slash = rFenString.find('/', prev_slash+1);
+        if (next_slash != std::string::npos)
         {
-            if (counter_between_slashes != 8u)
-            {
-                ret = false;
-                break;
-            }
-            counter_between_slashes = 0u;
-            slash_counter++;
-            if (slash_counter > 7u)
-            {
-                ret = false;
-                break;
-            }
-            continue;//this one is a slash, no need to do anything, go to next loop.
+            row_delimiter_positions.push_back(next_slash);
+            prev_slash = next_slash;
         }
+    }
 
-        //look for the last space after the position
-        if ( (slash_counter == 7u) && (rFenString[i] == ' ') )
+    //wrong number of slashes, out of here...
+    if (row_delimiter_positions.size() != 8) return false;
+    //add the position of the space after the last slash...
+    row_delimiter_positions.push_back(rFenString.find(' ', prev_slash));
+
+    unsigned mult = 1;
+    for (unsigned i = 0; i < row_delimiter_positions.size()-1; ++i)
+    {
+        if (i==0) mult =0; else mult =1 ;
+        std::string row = rFenString.substr(row_delimiter_positions[i] + 1*mult, row_delimiter_positions[i+1] - row_delimiter_positions[i] - 1*mult);
+        unsigned counter_between_slashes = 0;
+        for (unsigned j = 0; j < row.length(); ++j)
         {
-            assert(counter_between_slashes==8u);
-            end_of_piece_position = i;
-            break;
-        }
-        if ( isdigit (rFenString[i]))//if it is a number
-        {
-            int empty_squares = atoi (&rFenString[i]);//an integer now
-            if ((counter_between_slashes + empty_squares) > 8)
+            if ( isdigit (row[j]))//if it is a number
             {
-                ret = false;
-                break;
+                counter_between_slashes += atoi (&row[j]);
             }
-            for (unsigned n = 0; n < (unsigned) empty_squares; ++n)
+            else if (isalpha (row[j]))
             {
                 counter_between_slashes++;
+                PieceType piece_to_be_assigned;
+                //check the code of the piece (returns 1 if the letter is invalid)
+                int valid_piece = AssignPieceFromLetter(piece_to_be_assigned, row[j]);
+                if (valid_piece != 0) return false;
+            }
+            //if (isspace(row[j])) return false;//uncomment this to forbid spaces in between letters and numbers.
+        }
+        if (counter_between_slashes != 8) return false;
+    }
+
+    size_t start_of_to_move = rFenString.find_first_not_of(' ', row_delimiter_positions.back()+1);
+    size_t end_of_to_move = rFenString.find(' ', start_of_to_move);
+    std::string to_move = rFenString.substr(start_of_to_move, end_of_to_move - start_of_to_move);
+    if (to_move.find_first_of("wb") == std::string::npos) return false;
+    if (to_move.length() > 1) return false;
+
+    size_t start_of_castling_rights = rFenString.find_first_not_of(' ', end_of_to_move+1);
+    size_t end_of_castling_rights = rFenString.find(' ', start_of_castling_rights);
+    std::string castling_rights = rFenString.substr(start_of_castling_rights, end_of_castling_rights - start_of_castling_rights);
+    if (castling_rights.length() > 4) return false;
+
+    bool no_enpassant = false;
+    if (castling_rights != "-")
+    {
+        if (castling_rights != "--")
+        {
+            for (unsigned i = 0; i < castling_rights.length(); ++i)
+            {
+
+                if (castling_rights[i] != 'K' && castling_rights[i] != 'k'  && castling_rights[i] != 'Q' && castling_rights[i] != 'q')
+                {
+                    return false;
+                }
             }
         }
-        else if (isalpha (rFenString[i]))
+        else
         {
-            counter_between_slashes++;
-            if (counter_between_slashes > 8u)
-            {
-                ret = false;
-                break;
-            }
-            PieceType piece_to_be_assigned;
-            //check the code of the piece (returns 1 if the letter is invalid)
-            int valid_piece = AssignPieceFromLetter(piece_to_be_assigned, rFenString[i]);
-            if (valid_piece != 0)
-            {
-                ret = false;
-                break;
-            }
+            no_enpassant = true;
         }
     }
 
-    //if there were too many slashes or too few
-    if ( (slash_counter != 7u))
+    size_t start_of_enpassant = rFenString.find_first_not_of(' ', end_of_castling_rights+1);
+    size_t end_of_enpassant = rFenString.find(' ', start_of_enpassant);
+    std::string enpassant_string = rFenString.substr(start_of_enpassant, end_of_enpassant - start_of_enpassant);
+    if (enpassant_string.length()>2) return false;
+    if (no_enpassant == false)
     {
-        ret = false;
+            if (enpassant_string.find('-') == std::string::npos)
+            {
+                if (  enpassant_string.length() != 2 )
+                {
+                    return false;
+                }
+                else
+                {
+                    if (enpassant_string.find_first_of("abcdefgh") == std::string::npos) return false;
+                    if (enpassant_string.find_first_of("36", 1) == std::string::npos) return false;
+                }
+            }
+    }
+    else //this is the case of "--" for castling rights and enpassant
+    {
+        end_of_enpassant = end_of_castling_rights;
+    }
+    size_t start_of_half_move_counter = rFenString.find_first_not_of(' ', end_of_enpassant+1);
+    size_t end_of_half_mnove_counter = rFenString.find(' ', start_of_half_move_counter);
+    std::string half_move_counter = rFenString.substr(start_of_half_move_counter, end_of_half_mnove_counter - start_of_half_move_counter);
+    for (unsigned i=0; i < half_move_counter.length(); ++i)
+    {
+        if (!(isdigit (half_move_counter[i]))) return false;
+    }
+    size_t start_of_full_move_counter = rFenString.find_first_not_of(' ', end_of_half_mnove_counter+1);
+    size_t end_of_full_mnove_counter = rFenString.find(' ', start_of_full_move_counter);
+    std::string full_move_counter = rFenString.substr(start_of_full_move_counter, end_of_full_mnove_counter - start_of_full_move_counter);
+    for (unsigned i=0; i < full_move_counter.length(); ++i)
+    {
+        if (!(isdigit (full_move_counter[i]))) return false;
     }
 
-    //take care of the nasty case of an empty string.
-    if (rFenString.length() == 0u)
-    {
-        ret = false;
-    }
-    if (ret ==  true) //if the string is still valid, do the last bit
-    {
-        bool colour_assigned = false;
-        bool castling_rights_assigned = false;
-        bool castling_rights_started = false;
-        unsigned castling_rights_counter = 0u;
-        bool enpassant_first_checked = false;
-        bool enpassant_second_checked = false;
-        bool enpassant_started = false;
-        bool enpassant_checked = false;
-        unsigned enpassant_counter = 0u;
-        bool half_move_checked = false;
-        bool half_move_started = false;
-        bool first_half_move_checked = false;
-
-        assert(end_of_piece_position < rFenString.length());
-        for (unsigned i = end_of_piece_position; i < rFenString.length(); ++i)
-        {
-            if (colour_assigned ==false)
-            {
-                if (rFenString[i] == ' ')//ignore spaces
-                {
-                    continue;
-                }
-
-                if ( rFenString[i] == 'b' || rFenString[i] == 'w' )
-                {
-                    colour_assigned = true;
-                    continue;
-                }
-                else
-                {
-                    ret = false;
-                    break;
-                }
-            }
-            if ((colour_assigned == true) && (castling_rights_assigned == false))
-            {
-                if (rFenString[i] == ' ' && castling_rights_started == false)
-                {
-                    continue;//ignore spaces before we start
-                }
-                if ( rFenString[i] == '-'  || (rFenString[i] == ' ' && castling_rights_started == true) )
-                {
-                    if (castling_rights_counter>4)
-                    {
-                        ret = false;
-                        break;
-                    }
-                    else
-                    {
-                        castling_rights_assigned = true;
-                        continue;
-                    }
-                }
-                else if( rFenString[i] == 'K' || rFenString[i] == 'k'  || rFenString[i] == 'Q' || rFenString[i] == 'q')
-                {
-                    castling_rights_started = true;
-                    castling_rights_counter++;
-                    continue;
-                }
-                else
-                {
-                    ret = false;
-                    break;
-                }
-            }
-            if (colour_assigned == true && castling_rights_assigned == true && enpassant_checked == false)
-            {
-                if (rFenString[i] == ' ' && enpassant_started == false)
-                {
-                    continue;//ignore spaces before we start
-                }
-                if ( rFenString[i] == '-'  || (rFenString[i] == ' ' && enpassant_started == true) )
-                {
-                    if (enpassant_counter != 2) //two options here, either it was just a - or something is wrong
-                    {
-                        if (rFenString[i] == '-')
-                        {
-                            enpassant_checked = true;
-                            continue;
-                        }
-                        else
-                        {
-                            ret = false;
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        enpassant_checked = true;
-                        continue;
-                    }
-                }
-                else if( enpassant_first_checked == false )
-                {
-                    if ( rFenString[i] == 'a' || rFenString[i] == 'b'  || rFenString[i] == 'c' || rFenString[i] == 'd' ||
-                         rFenString[i] == 'e' || rFenString[i] == 'f'  || rFenString[i] == 'g' || rFenString[i] == 'h')
-                    {
-                        enpassant_started = true;
-                        enpassant_first_checked = true;
-                        enpassant_counter++;
-                        continue;
-                    }
-                    else
-                    {
-                        ret = false;
-                        break;
-                    }
-                }
-                else if( enpassant_second_checked == false )
-                {
-                    if ( rFenString[i] == '6' || rFenString[i] == '2'  || rFenString[i] == '3' || rFenString[i] == '4' ||
-                         rFenString[i] == '5' || rFenString[i] == '6'  || rFenString[i] == '7' || rFenString[i] == '8')
-                    {
-                        enpassant_started = true;
-                        enpassant_second_checked = true;
-                        enpassant_counter++;
-                        continue;
-                    }
-                    else
-                    {
-                        ret = false;
-                        break;
-                    }
-                }
-                else
-                {
-                    ret = false;
-                    break;
-                }
-            }
-
-
-            if (colour_assigned == true && castling_rights_assigned == true && enpassant_checked == true && half_move_checked == false)
-            {
-                if (rFenString[i] == ' ' && half_move_started == true)
-                {
-                    continue;//ignore spaces before we start
-                }
-                if ( !isdigit (rFenString[i]) && rFenString[i] != ' ')//if it is not a number or a space
-                {
-                    ret = false;
-                    break;
-                }
-                else if ( ( isdigit (rFenString[i]) && first_half_move_checked == false ) || rFenString[i] == ' ')
-                {
-                    first_half_move_checked = true;
-                    continue;
-                }
-                else if ( isdigit (rFenString[i]) && first_half_move_checked == true)
-                {
-                    if (rFenString[i-1] == ' ')
-                    {
-                        half_move_checked = true;
-                        break;//finished reading, all good
-                    }
-                    else
-                    {
-                        ret = false;
-                        break;
-                    }
-                }
-                else
-                {
-                    ret = false;
-                    break;
-                }
-            }
-        }//end of for loop
-
-        //case where there is absolutely no half or full move numbers
-        if (half_move_checked==false)
-        {
-            ret = false;
-        }
-    }//end of if statement
-    return ret;
+    return true;
 }
 
 
