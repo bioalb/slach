@@ -86,6 +86,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
         if (mpAllSquares[i]->IstheBottomRightCorner())
         {
             mSquarePanels[i]->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::FlipView, this);
+            mSquarePanels[i] -> SetBackgroundColour(Colours::Instance()->mFlipViewBoxBackground);
         }
     }
     mpSpaceForActualBoard->SetSizer(mpBoardGridSizer);
@@ -695,7 +696,14 @@ void slach_gui::ChessBoardPanel::PaintBackground(wxPaintDC& dc, unsigned squareI
     }
     if (mpAllSquares[squareIndex]->IsBorderSquare())
     {
-        mSquarePanels[squareIndex]->SetBackgroundColour(Colours::Instance()->mChessboardBorder);
+        if (mpAllSquares[squareIndex]->IstheBottomRightCorner())
+        {
+            mSquarePanels[squareIndex] -> SetBackgroundColour(Colours::Instance()->mFlipViewBoxBackground);
+        }
+        else
+        {
+            mSquarePanels[squareIndex]->SetBackgroundColour(Colours::Instance()->mChessboardBorder);
+        }
         PaintOnBorder(dc, squareIndex);
     }
 }
@@ -733,8 +741,6 @@ void slach_gui::ChessBoardPanel::PaintOnBorder(wxPaintDC& dc, unsigned squareInd
          mpAllSquares[squareIndex]->IsCornerSquare()== true  &&
          mpAllSquares[squareIndex]->IstheBottomRightCorner() == true)
     {
-        mSquarePanels[squareIndex] -> SetBackgroundColour(Colours::Instance()->mFlipViewBoxBackground);
-
         int panel_width = mSquarePanels[squareIndex]->GetClientSize().GetWidth();
         int panel_height = mSquarePanels[squareIndex]->GetClientSize().GetHeight();
 
