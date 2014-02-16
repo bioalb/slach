@@ -28,8 +28,7 @@ protected:
     wxTimer mTimer;
     bool mEngineIsRunning;
 
-    void DoStartEngine();
-    void DoStopEngine();
+
 
 public:
     BottomPanel(wxFrame* parent, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
@@ -50,6 +49,10 @@ public:
     void StopEngine(wxCommandEvent& event);
     void SetPositionToAnalyse(slach::Position* pPosition);
     void UpdateEngineOutput(wxTimerEvent& evt);
+
+    void DoStartEngine();
+    //public as main frame will call this
+    void DoStopEngine();
     wxDECLARE_EVENT_TABLE();
 };
 

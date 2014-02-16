@@ -99,6 +99,7 @@ void slach::EngineInterface::StopEngine()
 	::Search::Signals.stop = true;
 	::Threads.main()->notify_one();
 	::Threads.wait_for_think_finished();
+    ::Threads.exit();
 }
 
 

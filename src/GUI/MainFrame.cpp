@@ -52,6 +52,7 @@ slach_gui::MainFrame::~MainFrame()
 
 void slach_gui::MainFrame::OnExit(wxCommandEvent& WXUNUSED(event))
 {
+    mpBottomPanel->DoStopEngine();
     Close( true );
 }
 void slach_gui::MainFrame::OnAbout(wxCommandEvent& WXUNUSED(event))

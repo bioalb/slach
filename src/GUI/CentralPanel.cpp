@@ -13,7 +13,6 @@
 
 slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size),
-      mpSizerForArrows ( new wxBoxSizer(wxHORIZONTAL) ),
       mpMoveListSizer ( new wxFlexGridSizer(3) ), //3 columns for move list sizer
       mpPrincipalSizer (new wxBoxSizer(wxHORIZONTAL) ),
       mpRightSideSizer ( new wxBoxSizer(wxVERTICAL) ),
@@ -36,11 +35,12 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     //divide the section on the RHS of the board
     mpGameInfoBox = new wxTextCtrl(mpRightOfChessBoard, ID_OF_GAME_INFO_BOX, wxT(""), wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxTE_MULTILINE);
     mpSpaceForMoveList = new wxScrolledWindow(mpRightOfChessBoard, ID_OF_MOVE_LIST_SPACE);//, wxDefaultPosition, wxDefaultSize , wxVSCROLL);
-
+    mpButtonsBelowMoveList =  new wxPanel(mpRightOfChessBoard, ID_RIGHT_OF_BOARD_BUTTONS);
 	mpSpaceForMoveList->SetBackgroundColour(*wxWHITE);
 
     mpRightSideSizer->Add(mpGameInfoBox, 1, wxEXPAND);
     mpRightSideSizer->Add(mpSpaceForMoveList, 7, wxALL|wxGROW);
+    mpRightSideSizer->Add(mpButtonsBelowMoveList,1,wxEXPAND);
     mpRightOfChessBoard->SetSizer(mpRightSideSizer, true);
 
     mpMoveListSizer->AddGrowableCol(0,1);
@@ -52,11 +52,15 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     //mpLeftOfChessBoard->Bind(wxEVT_PAINT, &CentralPanel::PaintOnSidesOfBoard, this);//with this-> instead of mpLeftOfChessBoard it does not work
     mpRightOfChessBoard->Bind(wxEVT_SIZE, &CentralPanel::OnSize, this);
 
-    wxButton* pgn_button  = new wxButton(this, 1, wxT("Pgn..."),wxDefaultPosition, wxDefaultSize);
+    wxButton* pgn_button  = new wxButton(mpButtonsBelowMoveList, 1, wxT("Pgn..."),wxDefaultPosition, wxDefaultSize);
     pgn_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &CentralPanel::LoadPgnFile, this);
-
-    wxButton* fen_button  = new wxButton(this, 3, wxT("Fen..."),wxPoint(0,95), wxDefaultSize);
+    wxButton* fen_button  = new wxButton(mpButtonsBelowMoveList, 3, wxT("Fen..."),wxDefaultPosition, wxDefaultSize);
     fen_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &CentralPanel::LoadFen, this);
+    wxBoxSizer* sizer_for_buttons = new wxBoxSizer(wxHORIZONTAL);
+    sizer_for_buttons->Add(pgn_button, 1, wxEXPAND);
+    sizer_for_buttons->Add(fen_button, 1, wxEXPAND);
+    mpButtonsBelowMoveList->SetSizer(sizer_for_buttons);
+
 
     this->Bind(wxEVT_CHAR_HOOK, &CentralPanel::ArrowKeyMovement, this);//char hook needed for it to work
 

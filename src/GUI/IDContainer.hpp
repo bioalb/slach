@@ -19,6 +19,6 @@ static const int OFFSET_OF_MOVE_LIST_ID = 1100;
 static const int OFFSET_OF_MOVE_NUMBER_ID = 1300;
 static const int ID_OF_GAME_RESULT = 1600;
 static const int MAX_NUMBER_OF_VISIBLE_MOVES = 20;//in the movelist window, this is the max number visible (no-scroll)
-
+static const int  ID_RIGHT_OF_BOARD_BUTTONS = 65;
 
 #endif

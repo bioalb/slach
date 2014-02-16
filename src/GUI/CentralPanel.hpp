@@ -25,11 +25,6 @@ class CentralPanel : public wxPanel
 
 private:
 
-    /** Stores pointers of the images of the arrows */
-    std::vector<wxImage> mArrowImages;
-
-    /** cache for the sizer of the arrows buttons*/
-    wxBoxSizer* mpSizerForArrows;
     /**cahce for the sizer of the space containing the move list*/
     wxFlexGridSizer* mpMoveListSizer;
     /**The main sizer that decides where the board is*/
@@ -49,6 +44,7 @@ private:
 
     /**Panels on the RHS of the board*/
     wxScrolledWindow* mpSpaceForMoveList;
+    wxPanel* mpButtonsBelowMoveList;
 
     /**Text control for the players' names*/
     wxTextCtrl * mpGameInfoBox;
