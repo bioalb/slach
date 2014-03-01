@@ -73,25 +73,19 @@ void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, 
     mpChessBoard->SetFenPosition(pPosition->GetPositionAsFen()); //set the helper board with this position
     mCachedFenPositiontoBeanalysed = pPosition->GetPositionAsFen();
 
-    try
+    if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
     {
-        if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
-        {
-            limits.movetime = 1000*seconds;//converts milliseconds to seconds...
-            limits.infinite = false;
-            ::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, ::Search::SetupStates);
-            ::Threads.wait_for_think_finished();
-        }
-        else
-        {
-            limits.infinite = true;
-            ::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, ::Search::SetupStates);
-        }
+        limits.movetime = 1000*seconds;//converts milliseconds to seconds...
+        limits.infinite = false;
+        ::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, ::Search::SetupStates);
+        ::Threads.wait_for_think_finished();
     }
-    catch (int e)
+    else
     {
-        std::cout<<"Exception!!!"<<std::endl;
+        limits.infinite = true;
+        ::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, ::Search::SetupStates);
     }
+
 }
 
 void slach::EngineInterface::StopEngine()
@@ -99,7 +93,7 @@ void slach::EngineInterface::StopEngine()
 	::Search::Signals.stop = true;
 	::Threads.main()->notify_one();
 	::Threads.wait_for_think_finished();
-    ::Threads.exit();
+    //::Threads.exit();
 }
 
 
