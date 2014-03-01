@@ -8,40 +8,24 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
       mpPosition ( new slach::Position() ),
       mpStartEngineButton ( new wxButton(this, 1, wxT("Start Engine"),wxDefaultPosition, wxDefaultSize) ),
       mpStopEngineButton ( new wxButton(this, 2, wxT("Stop Engine"),wxDefaultPosition, wxDefaultSize) ),
-      mpEngineTextBox ( new wxTextCtrl(this, wxID_ANY, wxT("Engine output"), wxDefaultPosition, wxSize(150,60), wxTE_MULTILINE | wxBORDER_SIMPLE | wxHSCROLL) ),
-      mpScoreTextBox ( new wxRichTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxBORDER_NONE) ),
+      mpEngineTextBox ( new wxRichTextCtrl(this, wxID_ANY, wxT("Engine output"), wxDefaultPosition, wxSize(150,60), wxTE_MULTILINE | wxBORDER_SIMPLE | wxHSCROLL) ),
       mTimer(this, 1),
       mEngineIsRunning(false)
 {
-
-
     this->SetBackgroundColour(Colours::Instance()->mBottomPanelBackground);
     mpEngineTextBox->SetEditable(false);
-    mpScoreTextBox->SetEditable(false);
-    mpScoreTextBox->SetBackgroundColour(Colours::Instance()->mScoreBoxBackground);
     wxFont font(12, wxROMAN, wxNORMAL, wxNORMAL);
-    mpScoreTextBox->SetFont(font);
-
-    wxBoxSizer *button_sizer = new wxBoxSizer( wxHORIZONTAL );
-    button_sizer->Add(mpStartEngineButton,
-        wxSizerFlags(0).Align(wxALIGN_LEFT).Border(wxALL, 10));
-
-    button_sizer->Add(mpStopEngineButton,
-        wxSizerFlags(0).Align(wxALIGN_LEFT).Border(wxALL, 10));
-
-    wxBoxSizer* right_side_sizer = new wxBoxSizer( wxVERTICAL );
-    right_side_sizer->Add(mpEngineTextBox,
-    wxSizerFlags(7).Align(wxALIGN_CENTER).Expand().Border(wxALL, 10));
-    right_side_sizer->Add(button_sizer, wxSizerFlags(1).Left() );
-
-    wxBoxSizer *topsizer = new wxBoxSizer( wxHORIZONTAL );
-    topsizer->Add(right_side_sizer,
-    wxSizerFlags(6).Align(wxALIGN_CENTER).Expand().Border(wxALL, 10));
-    topsizer->Add(mpScoreTextBox, 
-    wxSizerFlags(1).Align(wxALIGN_CENTER).Expand());
 
 
-    this->SetSizer(topsizer, false);
+    wxBoxSizer *right_side_sizer = new wxBoxSizer( wxVERTICAL );
+    right_side_sizer->Add(mpStartEngineButton,1, wxEXPAND);
+    right_side_sizer->Add(mpStopEngineButton,1, wxEXPAND);
+
+    wxBoxSizer* main_sizer = new wxBoxSizer( wxHORIZONTAL );
+    main_sizer->Add(mpEngineTextBox, 6, wxEXPAND);
+    main_sizer->Add(right_side_sizer, 1, wxEXPAND );
+
+    this->SetSizer(main_sizer, false);
     mTimer.Start(1500);//every 1500 ms
     mNumberOfEngineLinesShown = 3;
     mpEngineInterface->SetNumberOfLinesToBeShown(mNumberOfEngineLinesShown);
@@ -113,28 +97,29 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
 	{
 	    mpEngineTextBox->Clear();//clear the box
 		//wxStreamToTextRedirector redirect(mpEngineTextBox); //not working
+        mpEngineTextBox->BeginTextColour(Colours::Instance()->mEngineText);
+        mpEngineTextBox->ChangeValue("");
+        mpEngineTextBox->BeginAlignment(wxTEXT_ALIGNMENT_LEFT);
+        mpEngineTextBox->WriteText( wxT("Depth = "));
+        mpEngineTextBox->WriteText( wxString::Format(wxT("%d"), mpEngineInterface->GetLatestBestScoreAndDepth().second) );
+
+        mpEngineTextBox->BeginBold();
+        mpEngineTextBox->BeginFontSize(18);
+        mpEngineTextBox->WriteText( wxT("   Score "));
+        mpEngineTextBox->WriteText( wxString::Format(wxT("%.2f"), mpEngineInterface->GetLatestBestScoreAndDepth().first) );
+        mpEngineTextBox->EndFontSize();
+        mpEngineTextBox->EndAlignment();
+        mpEngineTextBox->EndBold();
+        mpEngineTextBox->EndTextColour();
+        mpEngineTextBox->LineBreak();
 	    for (unsigned pv = mNumberOfEngineLinesShown; pv > 0 ; pv--)
 	    {
             wxColour backgroundcolour(255 - 20*pv, 255 -  20*pv, 255 - 20*pv);
             mpEngineTextBox->SetDefaultStyle(wxTextAttr(*wxBLACK, backgroundcolour));
-	        (*mpEngineTextBox)<<mpEngineInterface->GetLatestEngineOutput()[pv-1];
+	        //(*mpEngineTextBox)<<mpEngineInterface->GetLatestEngineOutput()[pv-1];
+            mpEngineTextBox->WriteText( mpEngineInterface->GetLatestEngineOutput()[pv-1] );
 	    }
-		mpScoreTextBox->BeginTextColour(Colours::Instance()->mEngineText);
-		mpScoreTextBox->ChangeValue("");
-		mpScoreTextBox->BeginAlignment(wxTEXT_ALIGNMENT_LEFT);
-		mpScoreTextBox->WriteText( wxT("Depth = "));
-		mpScoreTextBox->WriteText( wxString::Format(wxT("%d"), mpEngineInterface->GetLatestBestScoreAndDepth().second) );
-        mpScoreTextBox->LineBreak();
 
-		mpScoreTextBox->BeginBold();
-		mpScoreTextBox->WriteText( wxT("Score "));
-        mpScoreTextBox->LineBreak();
-		mpScoreTextBox->BeginFontSize(18);
-		mpScoreTextBox->WriteText( wxString::Format(wxT("%.2f"), mpEngineInterface->GetLatestBestScoreAndDepth().first) );
-		mpScoreTextBox->EndFontSize();
-		mpScoreTextBox->EndAlignment();
-        mpScoreTextBox->EndBold();
-		mpScoreTextBox->EndTextColour();
 	}
 	evt.Skip();
 }

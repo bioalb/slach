@@ -118,17 +118,6 @@ public:
      */
     ~CentralPanel();
 
-
-    /**
-     * Paints background gradient and various things near the board.
-     * It takes care of:
-     *   - gradient backgrounds
-     *   - arrows
-     *
-     * @param event the paint event
-     */
-    void PaintOnSidesOfBoard(wxPaintEvent& event);
-
     /**
      * Handles the event of pressing keys on teh keyboard
      * - arrow up and arrow right: one move forward

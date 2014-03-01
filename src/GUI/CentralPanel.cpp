@@ -48,8 +48,7 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     mpMoveListSizer->AddGrowableCol(2,3);
     mpSpaceForMoveList->SetSizer(mpMoveListSizer);
 
-    //Bind the button and paint  events for the left side of the board
-    //mpLeftOfChessBoard->Bind(wxEVT_PAINT, &CentralPanel::PaintOnSidesOfBoard, this);//with this-> instead of mpLeftOfChessBoard it does not work
+    //Bind the size event
     mpRightOfChessBoard->Bind(wxEVT_SIZE, &CentralPanel::OnSize, this);
 
     wxButton* pgn_button  = new wxButton(mpButtonsBelowMoveList, 1, wxT("Pgn..."),wxDefaultPosition, wxDefaultSize);
@@ -366,18 +365,6 @@ void slach_gui::CentralPanel::HighlightBeforeFirstMove()
 std::vector<wxTextCtrl* > slach_gui::CentralPanel::GetMoveListPanels()
 {
     return  mMoveListPanels;
-}
-
-void slach_gui::CentralPanel::PaintOnSidesOfBoard(wxPaintEvent& WXUNUSED(event))
-{
-//    wxPaintDC dc(mpLeftOfChessBoard);
-//    DoPaintVerticalGradient(dc, mpLeftOfChessBoard);
-
-    wxPaintDC dc1(mpChessBoardPanel);
-    DoPaintVerticalGradient(dc1,mpChessBoardPanel);
-
-    wxPaintDC dc2(mpRightOfChessBoard);
-    DoPaintVerticalGradient(dc2, mpRightOfChessBoard);
 }
 
 void slach_gui::CentralPanel::DoPaintImageOnPanel(wxPaintDC& dc, wxPanel* pPanel, wxImage& Image)

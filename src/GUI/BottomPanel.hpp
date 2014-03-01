@@ -22,8 +22,7 @@ protected:
     slach::Position* mpPosition;
     wxButton* mpStartEngineButton;
     wxButton* mpStopEngineButton;
-    wxTextCtrl* mpEngineTextBox;
-    wxRichTextCtrl* mpScoreTextBox;
+    wxRichTextCtrl* mpEngineTextBox;
 
     wxTimer mTimer;
     bool mEngineIsRunning;
