@@ -41,6 +41,8 @@ private:
     wxRichTextCtrl* mpSpaceForMoveList;
     /**Each element is a range of a move in the move list*/
     std::vector<wxRichTextRange> mMoveListRanges;
+    /**Stores the index of the currently highlighted move. UINT_MAX if no move is highlighted*/
+    unsigned mIndexOofHighlightedMove;
 
     wxPanel* mpButtonsBelowMoveList;
 
@@ -128,9 +130,6 @@ public:
      */
     void ArrowKeyMovement(wxKeyEvent& event);
 
-    void OnMouseEnteringSingleMoveArea(wxMouseEvent& event);
-    void OnMouseLeavingSingleMoveArea(wxMouseEvent& event);
-
     void LoadPgnFile(wxCommandEvent& event);
 
     void LoadFen (wxCommandEvent& WXUNUSED(event));
@@ -151,10 +150,10 @@ public:
     void OnSize(wxSizeEvent& event);
 
     /**
-     * Highlights the move in the move list with the specified ID.
+     * Highlights the move in the move list with the specified index.
      * All the other moves are set with white background
      */
-    void HighlightMoveListPanelWithThisID(int ID);
+    void HighlightMoveWithThisIndex(int ID);
 
     int GetCurrentlyHighlightedMove();
 

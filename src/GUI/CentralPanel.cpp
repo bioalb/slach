@@ -19,6 +19,7 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
       mpRightOfChessBoard( new wxPanel(this, ID_RIGHT_OF_BOARD) ),
       mpSpaceForMoveList ( new wxRichTextCtrl(mpRightOfChessBoard, ID_OF_MOVE_LIST_SPACE) ),
       mMoveListRanges ({}),
+      mIndexOofHighlightedMove(UINT_MAX),
       mpParent(parent),
       mWhitePlayerName(wxT("white player")),
       mBlackPlayerName(wxT("black player")),
@@ -47,8 +48,6 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     mpRightOfChessBoard->Bind(wxEVT_SIZE, &CentralPanel::OnSize, this);
     //bind teh functionalities in the move list area
     mpSpaceForMoveList->Bind(wxEVT_RICHTEXT_LEFT_CLICK, &CentralPanel::OnClickOnMoveList, this);
-    mpSpaceForMoveList->Bind(wxEVT_ENTER_WINDOW, &CentralPanel::OnMouseEnteringSingleMoveArea, this);
-    mpSpaceForMoveList->Bind(wxEVT_LEAVE_WINDOW, &CentralPanel::OnMouseLeavingSingleMoveArea, this);
 
     wxButton* pgn_button  = new wxButton(mpButtonsBelowMoveList, 1, wxT("Pgn..."),wxDefaultPosition, wxDefaultSize);
     pgn_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &CentralPanel::LoadPgnFile, this);
@@ -208,6 +207,7 @@ void slach_gui::CentralPanel::OnClickOnMoveList(wxRichTextEvent& event)
             std::vector<std::string> fen_list = mpChessBoard->GetGame()->GetFenList();
             assert( i <= fen_list.size() );
             fen_to_set = fen_list[i+1];
+            mIndexOofHighlightedMove = i;//stores index of highlighted move
             mpSpaceForMoveList->SetStyle(mMoveListRanges[i], mTextAttributesMoveListHighlighted);
             break;
         }
@@ -215,7 +215,7 @@ void slach_gui::CentralPanel::OnClickOnMoveList(wxRichTextEvent& event)
     mpChessBoardPanel->DrawAndSetFenPositionOnBoard(fen_to_set);
 }
 
-void slach_gui::CentralPanel::HighlightMoveListPanelWithThisID(int ID)
+void slach_gui::CentralPanel::HighlightMoveWithThisIndex(int ID)
 {
 //    for (unsigned i =0; i < mMoveListPanels.size(); ++i)
 //    {
@@ -231,23 +231,7 @@ void slach_gui::CentralPanel::HighlightMoveListPanelWithThisID(int ID)
 //    }
 
 }
-void slach_gui::CentralPanel::OnMouseEnteringSingleMoveArea(wxMouseEvent& event)
-{
-//    int generating_index = ((wxTextCtrl*) event.GetEventObject())->GetId() - OFFSET_OF_MOVE_LIST_ID;
-//    if (mMoveListPanels[generating_index]->GetBackgroundColour() != *wxYELLOW)
-//    {
-//        mMoveListPanels[generating_index]->SetBackgroundColour(*wxLIGHT_GREY);
-//    }
-}
 
-void slach_gui::CentralPanel::OnMouseLeavingSingleMoveArea(wxMouseEvent& event)
-{
-//    int generating_index = ((wxTextCtrl*) event.GetEventObject())->GetId() - OFFSET_OF_MOVE_LIST_ID;
-//    if (mMoveListPanels[generating_index]->GetBackgroundColour() != *wxYELLOW)
-//    {
-//        mMoveListPanels[generating_index]->SetBackgroundColour(*wxWHITE);
-//    }
-}
 
 int slach_gui::CentralPanel::GetCurrentlyHighlightedMove()
 {
@@ -260,6 +244,7 @@ int slach_gui::CentralPanel::GetCurrentlyHighlightedMove()
 //        }
 //    }
 //    return index_of_currently_highlighted_move;
+
 }
 
 void slach_gui::CentralPanel::HighlightNextMove()
@@ -275,13 +260,19 @@ void slach_gui::CentralPanel::HighlightNextMove()
 //    {
 //        if (mMoveListPanels[highlighted_move]->GetId() >= mIdOfPanelWithLastMove)
 //        {
-//            HighlightMoveListPanelWithThisID(mIdOfPanelWithLastMove);
+//            HighlightMoveWithThisIndex(mIdOfPanelWithLastMove);
 //        }
 //        else
 //        {
-//            HighlightMoveListPanelWithThisID(highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 1);
+//            HighlightMoveWithThisIndex(highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 1);
 //        }
 //    }
+    unsigned range_to_be_highlighted = 0;;
+    if (mIndexOofHighlightedMove != UINT_MAX)
+    {
+        range_to_be_highlighted = std::min(mIndexOofHighlightedMove, mMoveListRanges.size()-1);
+    }
+    mpSpaceForMoveList->SetStyle(mMoveListRanges[range_to_be_highlighted], mTextAttributesMoveListHighlighted);
 }
 
 void slach_gui::CentralPanel::HighlightSeveralMovesAhead()
@@ -298,18 +289,18 @@ void slach_gui::CentralPanel::HighlightSeveralMovesAhead()
 //        //prevent de-highlighting of last move
 //        if ( mMoveListPanels[index_of_currently_highlighted_move]->GetId() >= (mIdOfPanelWithLastMove - 8))
 //        {
-//            HighlightMoveListPanelWithThisID(mIdOfPanelWithLastMove);
+//            HighlightMoveWithThisIndex(mIdOfPanelWithLastMove);
 //        }
 //        else
 //        {
-//            HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 7);
+//            HighlightMoveWithThisIndex(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 7);
 //        }
 //    }
 }
 
 void slach_gui::CentralPanel::HighlightLastMove()
 {
-	HighlightMoveListPanelWithThisID(mIdOfPanelWithLastMove);
+	HighlightMoveWithThisIndex(mIdOfPanelWithLastMove);
 }
 
 void slach_gui::CentralPanel::HighlightPreviousMove()
@@ -320,7 +311,7 @@ void slach_gui::CentralPanel::HighlightPreviousMove()
     {
         index_of_currently_highlighted_move--;
     }
-    HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID - 1);
+    HighlightMoveWithThisIndex(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID - 1);
 }
 
 void slach_gui::CentralPanel::HighlightSeveralMovesBack()
@@ -331,12 +322,12 @@ void slach_gui::CentralPanel::HighlightSeveralMovesBack()
     {
         index_of_currently_highlighted_move--;
     }
-    HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID - 7);
+    HighlightMoveWithThisIndex(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID - 7);
 }
 
 void slach_gui::CentralPanel::HighlightBeforeFirstMove()
 {
-    HighlightMoveListPanelWithThisID(-1);//do not colour anything
+    HighlightMoveWithThisIndex(-1);//do not colour anything
 }
 
 
