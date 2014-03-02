@@ -25,14 +25,9 @@ class CentralPanel : public wxPanel
 
 private:
 
-    /**cahce for the sizer of the space containing the move list*/
-    wxFlexGridSizer* mpMoveListSizer;
     /**The main sizer that decides where the board is*/
     wxBoxSizer* mpPrincipalSizer;
     wxBoxSizer* mpRightSideSizer;
-
-    /** Stores the panels that show the move list*/
-    std::vector<wxTextCtrl* > mMoveListPanels;
 
     /**The chessboard panel*/
     ChessBoardPanel* mpChessBoardPanel;
@@ -43,14 +38,18 @@ private:
     slach::ChessBoard* mpChessBoard;
 
     /**Panels on the RHS of the board*/
-    wxScrolledWindow* mpSpaceForMoveList;
+    wxRichTextCtrl* mpSpaceForMoveList;
+    /**Each element is a range of a move in the move list*/
+    std::vector<wxRichTextRange> mMoveListRanges;
+
     wxPanel* mpButtonsBelowMoveList;
 
     /**Text control for the players' names*/
     wxTextCtrl * mpGameInfoBox;
 
     wxTextAttr mTextAttributesPlayerNames;
-    wxTextAttr mTextAttributesGameResultBox;
+    wxTextAttr mTextAttributesMoveList;
+    wxTextAttr mTextAttributesMoveListHighlighted;
 
     /** stores the parent frame*/
     wxFrame* mpParent;
@@ -142,7 +141,7 @@ public:
      *
      * @param event the generating event
      */
-    void OnClickOnMoveList(wxMouseEvent& event);
+    void OnClickOnMoveList(wxRichTextEvent& event);
 
     /**
      * Resizing method. It figures out the new size and resize everything accordingly.
@@ -165,11 +164,6 @@ public:
     void HighlightPreviousMove();
     void HighlightSeveralMovesBack();
     void HighlightBeforeFirstMove();
-    /**
-     * access method to the variable mMoveListPanels;
-     * Used by chessboard child.
-     */
-    std::vector<wxTextCtrl* > GetMoveListPanels();
 
 };
 

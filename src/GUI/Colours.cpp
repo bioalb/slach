@@ -31,6 +31,7 @@ void slach_gui::Colours::SetDefaultColours()
    mArrowButton = wxColour(207,239,235);
    mArrowBackgroundMouseOn = wxColour(35,1,1);
    mPlayerName = wxColour(32,7,129);
+   mHighlightedMove = wxColour(204,229,255);
    mEngineText = wxColour(0, 0, 0);
    mBottomPanelBackground = wxColour(35,87,102);//same as borders...
    mScoreBoxBackground = wxColour(35,87,102);

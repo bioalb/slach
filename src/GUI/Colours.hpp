@@ -34,6 +34,8 @@ public :
     wxColour mArrowButton;
     /**colour of the text for the palyer names*/
     wxColour mPlayerName;
+    /**colour of the highlighted move*/
+    wxColour mHighlightedMove;
     /**colour of the font of the engine output*/
     wxColour mEngineText;
     /**background of the bottom panel*/

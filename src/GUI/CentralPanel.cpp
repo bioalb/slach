@@ -13,11 +13,12 @@
 
 slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,wxID_ANY, pos,size),
-      mpMoveListSizer ( new wxFlexGridSizer(3) ), //3 columns for move list sizer
       mpPrincipalSizer (new wxBoxSizer(wxHORIZONTAL) ),
       mpRightSideSizer ( new wxBoxSizer(wxVERTICAL) ),
       mpChessBoardPanel( new ChessBoardPanel(this, ID_ACTUAL_BOARD) ),
       mpRightOfChessBoard( new wxPanel(this, ID_RIGHT_OF_BOARD) ),
+      mpSpaceForMoveList ( new wxRichTextCtrl(mpRightOfChessBoard, ID_OF_MOVE_LIST_SPACE) ),
+      mMoveListRanges ({}),
       mpParent(parent),
       mWhitePlayerName(wxT("white player")),
       mBlackPlayerName(wxT("black player")),
@@ -34,7 +35,6 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
 
     //divide the section on the RHS of the board
     mpGameInfoBox = new wxTextCtrl(mpRightOfChessBoard, ID_OF_GAME_INFO_BOX, wxT(""), wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxTE_MULTILINE);
-    mpSpaceForMoveList = new wxScrolledWindow(mpRightOfChessBoard, ID_OF_MOVE_LIST_SPACE);//, wxDefaultPosition, wxDefaultSize , wxVSCROLL);
     mpButtonsBelowMoveList =  new wxPanel(mpRightOfChessBoard, ID_RIGHT_OF_BOARD_BUTTONS);
 	mpSpaceForMoveList->SetBackgroundColour(*wxWHITE);
 
@@ -43,13 +43,12 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     mpRightSideSizer->Add(mpButtonsBelowMoveList,1,wxEXPAND);
     mpRightOfChessBoard->SetSizer(mpRightSideSizer, true);
 
-    mpMoveListSizer->AddGrowableCol(0,1);
-    mpMoveListSizer->AddGrowableCol(1,3);
-    mpMoveListSizer->AddGrowableCol(2,3);
-    mpSpaceForMoveList->SetSizer(mpMoveListSizer);
-
     //Bind the size event
     mpRightOfChessBoard->Bind(wxEVT_SIZE, &CentralPanel::OnSize, this);
+    //bind teh functionalities in the move list area
+    mpSpaceForMoveList->Bind(wxEVT_RICHTEXT_LEFT_CLICK, &CentralPanel::OnClickOnMoveList, this);
+    mpSpaceForMoveList->Bind(wxEVT_ENTER_WINDOW, &CentralPanel::OnMouseEnteringSingleMoveArea, this);
+    mpSpaceForMoveList->Bind(wxEVT_LEAVE_WINDOW, &CentralPanel::OnMouseLeavingSingleMoveArea, this);
 
     wxButton* pgn_button  = new wxButton(mpButtonsBelowMoveList, 1, wxT("Pgn..."),wxDefaultPosition, wxDefaultSize);
     pgn_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &CentralPanel::LoadPgnFile, this);
@@ -67,9 +66,16 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     										wxNullColour,
     										wxFont(wxFontInfo(14).FaceName("Helvetica")),
     										wxTEXT_ALIGNMENT_CENTRE);
-    mTextAttributesPlayerNames.SetFlags(wxTEXT_ATTR_TEXT_COLOUR);
-    mTextAttributesPlayerNames.SetFlags(wxTEXT_ATTR_FONT);
-    mTextAttributesPlayerNames.SetFlags(wxTEXT_ATTR_ALIGNMENT);
+    mTextAttributesMoveList = wxTextAttr(Colours::Instance()->mPlayerName,
+                                         wxNullColour,
+                                         wxFont(wxFontInfo(14).FaceName("Helvetica")));
+    mTextAttributesMoveListHighlighted = wxTextAttr(Colours::Instance()->mPlayerName,
+                                          Colours::Instance()->mHighlightedMove,
+                                          wxFont(wxFontInfo(14).FaceName("Helvetica")));
+
+    mpSpaceForMoveList->SetEditable(false);
+    mpSpaceForMoveList->SetDefaultStyle(mTextAttributesMoveList);
+    mpSpaceForMoveList->SetTextCursor(*wxSTANDARD_CURSOR);
 }
 
 slach_gui::CentralPanel::~CentralPanel()
@@ -115,6 +121,8 @@ void slach_gui::CentralPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
 
         if (valid == slach::VALID_PGN)
         {
+            mMoveListRanges.clear();
+            mpSpaceForMoveList->Clear();
             wxString name_of_white_player_wx(name_of_white_player);
             wxString name_of_black_player_wx(name_of_black_player);
             mWhitePlayerName = name_of_white_player_wx;
@@ -126,69 +134,34 @@ void slach_gui::CentralPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
 
             std::vector<slach::Move> move_list = mpChessBoard->GetGame()->GetMoveList();
             std::vector<std::string > move_list_san = mpChessBoard->GetGame()->GetMoveListAlgebraicFormat();
-            wxSize window_size = mpSpaceForMoveList->GetSize();
-            int size_of_one_move  = window_size.y/MAX_NUMBER_OF_VISIBLE_MOVES;
-            int virtual_size_y = size_of_one_move * (static_cast<int> ( move_list.size()/2 + 2));//plus two for safety
 
-            mpSpaceForMoveList->SetVirtualSize(window_size.x, virtual_size_y);
-            unsigned number_of_panels_to_add = move_list.size() + static_cast<unsigned> (std::div(move_list.size(),2).quot + std::div(move_list.size(),2).rem);
-            for (unsigned i = 0; i < mMoveListPanels.size(); ++i)
-            {
-                mMoveListPanels[i]->Destroy();
-            }
-            mMoveListPanels.clear();
             unsigned move_index = 0;
-            for (unsigned i = 0; i < number_of_panels_to_add; ++i)
+            unsigned  i = 0;
+            while (move_index < move_list_san.size())
             {
-                mMoveListPanels.push_back( new wxTextCtrl( mpSpaceForMoveList, /*ID*/ OFFSET_OF_MOVE_LIST_ID + (int) i,
-                                               wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_CENTRE | wxBORDER_NONE) );
-                mMoveListPanels[i]->SetMinSize(wxSize(0,size_of_one_move));
-                mpMoveListSizer->Add(mMoveListPanels[i], 0, wxEXPAND | wxALL);
-                mMoveListPanels[i]->SetBackgroundColour(*wxWHITE);
                 if (i%3 == 0)
                 {
                     int move_number  = (int) i/3 + 1;
                     wxString move_number_string = wxString::Format(wxT("%i"),move_number);
-                    mMoveListPanels[i]->WriteText(move_number_string);
+                    mpSpaceForMoveList->AppendText(move_number_string);
+                    mpSpaceForMoveList->AppendText(wxT(". "));
                 }
                 else
                 {
-                    if (move_index < move_list.size())
-                    {
-                        wxString san_move(move_list_san[move_index]);
-                        mMoveListPanels[i]->WriteText(san_move);
-                        //Bind to the event both the text box and the panel, so the user can click anywhere
-                        mMoveListPanels[i]->Bind(wxEVT_LEFT_DOWN, &CentralPanel::OnClickOnMoveList, this);
-                        mMoveListPanels[i]->Bind(wxEVT_ENTER_WINDOW, &CentralPanel::OnMouseEnteringSingleMoveArea, this);
-                        mMoveListPanels[i]->Bind(wxEVT_LEAVE_WINDOW, &CentralPanel::OnMouseLeavingSingleMoveArea, this);
-                        move_index++;
-                        //store the index of the panel with the move. At the end of the loop, this wil be the last...
-                        mIdOfPanelWithLastMove = mMoveListPanels[i]->GetId();
-                    }
+                    wxString san_move(move_list_san[move_index]);
+                    long before = mpSpaceForMoveList->GetInsertionPoint();
+                    mpSpaceForMoveList->AppendText(san_move);
+                    mMoveListRanges.push_back(wxRichTextRange (before, mpSpaceForMoveList->GetInsertionPoint()));
+                    mpSpaceForMoveList->AppendText(wxT(" "));
+
+                    move_index++;
                 }
+                i++;
             }
             //push back the result
-            //if the last move was black's...shift by one panel
-            if (std::div(number_of_panels_to_add,3).rem == 0)
-            {
-                mMoveListPanels.push_back( new wxTextCtrl( mpSpaceForMoveList, /*ID*/ ID_OF_GAME_RESULT,
-                                               wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_CENTRE | wxBORDER_NONE) );
-                mMoveListPanels.back()->SetMinSize(wxSize(0,size_of_one_move));
-                mpMoveListSizer->Add(mMoveListPanels.back(), 0, wxEXPAND | wxALL);
-            }
-
-            mMoveListPanels.push_back( new wxTextCtrl( mpSpaceForMoveList, /*ID*/ ID_OF_GAME_RESULT+1,
-                                           wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_CENTRE | wxBORDER_NONE) );
-            mMoveListPanels.back()->SetBackgroundColour(*wxLIGHT_GREY);
-            mMoveListPanels.back()->SetMinSize(wxSize(0,size_of_one_move));
-            mpMoveListSizer->Add(mMoveListPanels.back(), 0, wxEXPAND | wxALL);
             wxString result(mpChessBoard->GetGame()->GetGameResult() );
-            mMoveListPanels.back()->WriteText(result);
+            mpSpaceForMoveList->AppendText(result);
 
-            mpSpaceForMoveList->Layout();
-            //mpSpaceForMoveList->SetScrollbar(wxVERTICAL, 0, 8*window_size.y,500*(virtual_size_y+window_size.y) ); not needed
-            mpSpaceForMoveList->SetScrollRate(0, 5);
-            mpMoveListSizer->Layout();//force to layout, otherwise it is only done on resize...
             mGameIsLoaded = true;
         }
         mpChessBoard->ResetToMoveNumber(1,slach::WHITE);//otherwise, on an immediate resize, it will skip to the last move
@@ -220,113 +193,119 @@ void slach_gui::CentralPanel::ArrowKeyMovement(wxKeyEvent& event)
 
     event.Skip();
 }
-void slach_gui::CentralPanel::OnClickOnMoveList(wxMouseEvent& event)
+void slach_gui::CentralPanel::OnClickOnMoveList(wxRichTextEvent& event)
 {
-    int index_in_vector = ((wxTextCtrl*) event.GetEventObject())->GetId() - OFFSET_OF_MOVE_LIST_ID;
-    unsigned move_index = index_in_vector - std::div(index_in_vector,3).quot - 1;
+    long click_position = event.GetPosition();
     std::string fen_to_set;
-    if (move_index >= (mpChessBoard->GetGame()->GetFenList().size() - 1))
+    for (unsigned i = 0; i < mMoveListRanges.size(); ++i)
     {
-        fen_to_set = mpChessBoard->GetGame()->GetFenList()[move_index];
+        if (mMoveListRanges[i].Contains(click_position))
+        {
+            for (unsigned j = 0; j < mMoveListRanges.size(); ++j)
+            {
+                mpSpaceForMoveList->SetStyleEx(mMoveListRanges[j], mTextAttributesMoveList, wxRICHTEXT_SETSTYLE_RESET);
+            }
+            std::vector<std::string> fen_list = mpChessBoard->GetGame()->GetFenList();
+            assert( i <= fen_list.size() );
+            fen_to_set = fen_list[i+1];
+            mpSpaceForMoveList->SetStyle(mMoveListRanges[i], mTextAttributesMoveListHighlighted);
+            break;
+        }
     }
-    else
-    {
-        fen_to_set = mpChessBoard->GetGame()->GetFenList()[move_index+1];
-    }
+    mpSpaceForMoveList->HideNativeCaret();
     mpChessBoardPanel->DrawAndSetFenPositionOnBoard(fen_to_set);
-    HighlightMoveListPanelWithThisID(((wxTextCtrl*) event.GetEventObject())->GetId());
 }
 
 void slach_gui::CentralPanel::HighlightMoveListPanelWithThisID(int ID)
 {
-    for (unsigned i =0; i < mMoveListPanels.size(); ++i)
-    {
-        mMoveListPanels[i]->SetBackgroundColour(wxT("white"));
-        if ( (int) i == ( ID -  OFFSET_OF_MOVE_LIST_ID) )
-        {
-            mMoveListPanels[i]->SetBackgroundColour(*wxYELLOW);
-        }
-    }
-    if (mGameIsLoaded == true)
-    {
-        mMoveListPanels.back()->SetBackgroundColour(*wxLIGHT_GREY);
-    }
+//    for (unsigned i =0; i < mMoveListPanels.size(); ++i)
+//    {
+//        mMoveListPanels[i]->SetBackgroundColour(wxT("white"));
+//        if ( (int) i == ( ID -  OFFSET_OF_MOVE_LIST_ID) )
+//        {
+//            mMoveListPanels[i]->SetBackgroundColour(*wxYELLOW);
+//        }
+//    }
+//    if (mGameIsLoaded == true)
+//    {
+//        mMoveListPanels.back()->SetBackgroundColour(*wxLIGHT_GREY);
+//    }
 
 }
 void slach_gui::CentralPanel::OnMouseEnteringSingleMoveArea(wxMouseEvent& event)
 {
-    int generating_index = ((wxTextCtrl*) event.GetEventObject())->GetId() - OFFSET_OF_MOVE_LIST_ID;
-    if (mMoveListPanels[generating_index]->GetBackgroundColour() != *wxYELLOW)
-    {
-        mMoveListPanels[generating_index]->SetBackgroundColour(*wxLIGHT_GREY);
-    }
+//    int generating_index = ((wxTextCtrl*) event.GetEventObject())->GetId() - OFFSET_OF_MOVE_LIST_ID;
+//    if (mMoveListPanels[generating_index]->GetBackgroundColour() != *wxYELLOW)
+//    {
+//        mMoveListPanels[generating_index]->SetBackgroundColour(*wxLIGHT_GREY);
+//    }
 }
 
 void slach_gui::CentralPanel::OnMouseLeavingSingleMoveArea(wxMouseEvent& event)
 {
-    int generating_index = ((wxTextCtrl*) event.GetEventObject())->GetId() - OFFSET_OF_MOVE_LIST_ID;
-    if (mMoveListPanels[generating_index]->GetBackgroundColour() != *wxYELLOW)
-    {
-        mMoveListPanels[generating_index]->SetBackgroundColour(*wxWHITE);
-    }
+//    int generating_index = ((wxTextCtrl*) event.GetEventObject())->GetId() - OFFSET_OF_MOVE_LIST_ID;
+//    if (mMoveListPanels[generating_index]->GetBackgroundColour() != *wxYELLOW)
+//    {
+//        mMoveListPanels[generating_index]->SetBackgroundColour(*wxWHITE);
+//    }
 }
 
 int slach_gui::CentralPanel::GetCurrentlyHighlightedMove()
 {
-    int index_of_currently_highlighted_move = 0;
-    for (unsigned i = 0; i  < mMoveListPanels.size(); ++i )
-    {
-        if (mMoveListPanels[i]->GetBackgroundColour() == (*wxYELLOW))
-        {
-            return (int) i;
-        }
-    }
-    return index_of_currently_highlighted_move;
+//    int index_of_currently_highlighted_move = 0;
+//    for (unsigned i = 0; i  < mMoveListPanels.size(); ++i )
+//    {
+//        if (mMoveListPanels[i]->GetBackgroundColour() == (*wxYELLOW))
+//        {
+//            return (int) i;
+//        }
+//    }
+//    return index_of_currently_highlighted_move;
 }
 
 void slach_gui::CentralPanel::HighlightNextMove()
 {
-    int highlighted_move = GetCurrentlyHighlightedMove();
-    //skip the move numbers...
-    if ( (std::div(highlighted_move,3).rem == 2))
-    {
-        highlighted_move++;
-    }
-    //prevent de-highlighting of last move
-    if ((unsigned) highlighted_move < mMoveListPanels.size())
-    {
-        if (mMoveListPanels[highlighted_move]->GetId() >= mIdOfPanelWithLastMove)
-        {
-            HighlightMoveListPanelWithThisID(mIdOfPanelWithLastMove);
-        }
-        else
-        {
-            HighlightMoveListPanelWithThisID(highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 1);
-        }
-    }
+//    int highlighted_move = GetCurrentlyHighlightedMove();
+//    //skip the move numbers...
+//    if ( (std::div(highlighted_move,3).rem == 2))
+//    {
+//        highlighted_move++;
+//    }
+//    //prevent de-highlighting of last move
+//    if ((unsigned) highlighted_move < mMoveListPanels.size())
+//    {
+//        if (mMoveListPanels[highlighted_move]->GetId() >= mIdOfPanelWithLastMove)
+//        {
+//            HighlightMoveListPanelWithThisID(mIdOfPanelWithLastMove);
+//        }
+//        else
+//        {
+//            HighlightMoveListPanelWithThisID(highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 1);
+//        }
+//    }
 }
 
 void slach_gui::CentralPanel::HighlightSeveralMovesAhead()
 {
-    int index_of_currently_highlighted_move = GetCurrentlyHighlightedMove();
-    //skip the move numbers...
-    if (std::div(index_of_currently_highlighted_move,3).rem == 2)
-    {
-        index_of_currently_highlighted_move++;
-    }
-
-    if ((unsigned) index_of_currently_highlighted_move < mMoveListPanels.size())
-    {
-        //prevent de-highlighting of last move
-        if ( mMoveListPanels[index_of_currently_highlighted_move]->GetId() >= (mIdOfPanelWithLastMove - 8))
-        {
-            HighlightMoveListPanelWithThisID(mIdOfPanelWithLastMove);
-        }
-        else
-        {
-            HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 7);
-        }
-    }
+//    int index_of_currently_highlighted_move = GetCurrentlyHighlightedMove();
+//    //skip the move numbers...
+//    if (std::div(index_of_currently_highlighted_move,3).rem == 2)
+//    {
+//        index_of_currently_highlighted_move++;
+//    }
+//
+//    if ((unsigned) index_of_currently_highlighted_move < mMoveListPanels.size())
+//    {
+//        //prevent de-highlighting of last move
+//        if ( mMoveListPanels[index_of_currently_highlighted_move]->GetId() >= (mIdOfPanelWithLastMove - 8))
+//        {
+//            HighlightMoveListPanelWithThisID(mIdOfPanelWithLastMove);
+//        }
+//        else
+//        {
+//            HighlightMoveListPanelWithThisID(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 7);
+//        }
+//    }
 }
 
 void slach_gui::CentralPanel::HighlightLastMove()
@@ -361,11 +340,6 @@ void slach_gui::CentralPanel::HighlightBeforeFirstMove()
     HighlightMoveListPanelWithThisID(-1);//do not colour anything
 }
 
-
-std::vector<wxTextCtrl* > slach_gui::CentralPanel::GetMoveListPanels()
-{
-    return  mMoveListPanels;
-}
 
 void slach_gui::CentralPanel::DoPaintImageOnPanel(wxPaintDC& dc, wxPanel* pPanel, wxImage& Image)
 {
