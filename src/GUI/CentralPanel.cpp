@@ -212,7 +212,6 @@ void slach_gui::CentralPanel::OnClickOnMoveList(wxRichTextEvent& event)
             break;
         }
     }
-    mpSpaceForMoveList->HideNativeCaret();
     mpChessBoardPanel->DrawAndSetFenPositionOnBoard(fen_to_set);
 }
 
