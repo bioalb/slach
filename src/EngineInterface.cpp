@@ -185,17 +185,30 @@ void slach::EngineInterface::ParseWholeEngineOutput(const std::string& rawOutput
 std::pair<double, int>  slach::EngineInterface::GetLatestBestScoreAndDepth() const
 {
     std::pair<double, int> ret;
-    double max = 0;
+    double max = -DBL_MAX;
+    double min = DBL_MAX;
     int max_depth = 0;
     for (unsigned sc = 0; sc < mLatestScores.size(); ++sc)
     {
-        if (fabs(mLatestScores[sc]) > max)
+        if (mpChessBoard->WhosTurnIsIt() == WHITE )
         {
-            max = mLatestScores[sc];
-            max_depth = mLatestDepths[sc];
+            if (mLatestScores[sc] > max)
+            {
+                max = mLatestScores[sc];
+                max_depth = mLatestDepths[sc];
+            }
+        }
+        else //black to move
+        {
+            if (mLatestScores[sc] < min)
+            {
+                min = mLatestScores[sc];
+                max_depth = mLatestDepths[sc];
+            }
         }
     }
     ret.first = max;
+    if (mpChessBoard->WhosTurnIsIt() == BLACK) ret.first = min;
     ret.second = max_depth;
     return ret;
 }

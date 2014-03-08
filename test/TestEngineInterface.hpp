@@ -569,7 +569,7 @@ public:
                                                 +"\nbestmove f5d3 ponder d2d3";
 
         slach::EngineInterface interface;
-        std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
+        std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8"; //test_position_3
         interface.SetPositionToInternalChessBoard(test_position);
 
         interface.SetNumberOfLinesToBeShown(4u);//asking stockfish to display 4 lines
@@ -597,9 +597,231 @@ public:
         TS_ASSERT_EQUALS(interface.mLatestLines[2], "e6 Bxf5 exf5 Ne5 Qe6 O-O-O Bb4 f3 O-O Kb1 Rfe8 h3 Bd6 Rge1 Nxe5 dxe5 Bxe5 Nxd5 c5 ");
         TS_ASSERT_EQUALS(interface.mLatestLines[1], "Bg6 O-O-O e6 Ne5 Nxe5 dxe5 Nh5 Bg5 f6 exf6 Nxf6 Bxg6+ hxg6 h3 Bd6 Qd3 Kf7 Kb1 ");
         TS_ASSERT_EQUALS(interface.mLatestLines[0], "Ne4 Bxe4 Bxe4 Nxe4 dxe4 Ne5 Nxe5 dxe5 Qxd2+ Kxd2 e6 Ke2 Be7 Rad1 h5 Rd4 Rd8 Rxe4 ");
+
+        TS_ASSERT_EQUALS(interface.GetLatestBestScoreAndDepth().second, 14);
+        TS_ASSERT_DELTA(interface.GetLatestBestScoreAndDepth().first, 0.02, 0.01);
     }
 
+    void TestParseEngineOutputMultipleLinesWhiteToMove()
+    {
 
+        std::string test_string = std::string("info depth 1 seldepth 2 score cp 24 nodes 494 nps 123500 time 4 multipv 2 pv h2h3")
+                                            +"\ninfo depth 1 seldepth 2 score cp 12 nodes 494 nps 123500 time 4 multipv 3 pv a2a3"
+                                            +"\ninfo depth 1 seldepth 2 score cp 12 nodes 494 nps 123500 time 4 multipv 4 pv d3f5 d7f5"
+                                            +"\ninfo depth 2 seldepth 3 score cp 76 nodes 1682 nps 186888 time 9 multipv 1 pv e1c1 f6e4 c3e4 d5e4"
+                                            +"\ninfo depth 2 seldepth 3 score cp 14 nodes 1682 nps 186888 time 9 multipv 2 pv h2h3 f6e4 c3e4 d5e4"
+                                            +"\ninfo depth 2 seldepth 3 score cp 12 nodes 1682 nps 186888 time 9 multipv 3 pv d3f5 d7f5"
+                                            +"\ninfo depth 2 seldepth 3 score cp 4 nodes 1682 nps 186888 time 9 multipv 4 pv h2h4 f6e4 c3e4 d5e4"
+                                            +"\ninfo depth 3 seldepth 4 score cp 64 nodes 3187 nps 199187 time 16 multipv 1 pv e1c1 f5d3 d2d3 e7e6"
+                                            +"\ninfo depth 3 seldepth 4 score cp 42 nodes 3187 nps 199187 time 16 multipv 2 pv d3f5 d7f5 e1c1 e7e6"
+                                            +"\ninfo depth 3 seldepth 4 score cp 14 nodes 3187 nps 199187 time 16 multipv 3 pv h2h3 f6e4 c3e4 d5e4"
+                                            +"\ninfo depth 3 seldepth 4 score cp 4 nodes 3187 nps 199187 time 16 multipv 4 pv h2h4 f6e4 c3e4 d5e4"
+                                            +"\ninfo depth 4 seldepth 5 score cp 84 nodes 6714 nps 216580 time 31 multipv 1 pv d3f5 d7f5 e1c1 e7e6 c1b1"
+                                            +"\ninfo depth 4 seldepth 5 score cp 68 nodes 6714 nps 216580 time 31 multipv 2 pv e1c1 f6e4 d2e1 c6b4 d3e4 d5e4"
+                                            +"\ninfo depth 4 seldepth 5 score cp 4 nodes 6714 nps 216580 time 31 multipv 3 pv h2h3 f5d3 c2d3 e7e6"
+                                            +"\ninfo depth 4 seldepth 5 score cp -2 nodes 6714 nps 216580 time 31 multipv 4 pv a2a3 f5d3 d2d3 e7e6"
+                                            +"\ninfo depth 5 seldepth 6 score cp 74 nodes 9816 nps 245400 time 40 multipv 1 pv d3f5 d7f5 e1c1 e7e6 c1b1 f8e7"
+                                            +"\ninfo depth 5 seldepth 6 score cp 62 nodes 9816 nps 245400 time 40 multipv 2 pv e1c1 f5d3 d2d3 c6b4 d3e2 e7e6"
+                                            +"\ninfo depth 5 seldepth 6 score cp 18 nodes 9816 nps 245400 time 40 multipv 3 pv a2a3 f6e4 c3e4 d5e4 g2g4"
+                                            +"\ninfo depth 5 seldepth 6 score cp 16 nodes 9816 nps 245400 time 40 multipv 4 pv h2h3 f6e4 d3e4 d5e4 f3e5 c6e5 f4e5"
+                                            +"\ninfo depth 6 seldepth 7 score cp 82 nodes 14280 nps 259636 time 55 multipv 1 pv e1c1 f5d3 d2d3 e7e6 c1b1 f8d6 c3e2"
+                                            +"\ninfo depth 6 seldepth 7 score cp 64 nodes 14280 nps 259636 time 55 multipv 2 pv d3f5 d7f5 e1c1 e7e6 c1b1 f8d6 c3e2"
+                                            +"\ninfo depth 6 seldepth 7 score cp 22 nodes 14280 nps 259636 time 55 multipv 3 pv a2a3 f6e4 c3e4 d5e4 g2g4 e4d3 g4f5"
+                                            +"\ninfo depth 6 seldepth 7 score cp 22 nodes 14280 nps 259636 time 55 multipv 4 pv h2h3 f5d3 c2d3 e7e6 e1e2 f8e7"
+                                            +"\ninfo depth 7 seldepth 12 score cp 64 nodes 31831 nps 256701 time 124 multipv 1 pv e1c1 f5d3 d2d3 e7e6 c1b1 f8d6 f3e5 d6e5 d4e5 f6g4"
+                                            +"\ninfo depth 7 seldepth 12 score cp 54 nodes 31831 nps 256701 time 124 multipv 2 pv d3f5 d7f5 e1c1 e7e6 c1b1 f8d6 g2g4 f5g6 g4g5 f6e4 c3e4 g6e4"
+                                            +"\ninfo depth 7 seldepth 12 score cp 48 nodes 31831 nps 256701 time 124 multipv 3 pv h2h3 f5d3 d2d3 c6b4 d3d2 e7e6 e1c1 f8e7"
+                                            +"\ninfo depth 7 seldepth 12 score cp 18 nodes 31831 nps 256701 time 124 multipv 4 pv a2a3 f5d3 d2d3 e7e6 e1c1 f8e7 f3e5 c6e5 f4e5"
+                                            +"\ninfo depth 8 seldepth 15 score cp 82 nodes 60267 nps 265493 time 227 multipv 1 pv e1c1 f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6g4 d3e2 f7f5 c1b1"
+                                            +"\ninfo depth 8 seldepth 15 score cp 76 nodes 60267 nps 265493 time 227 multipv 2 pv f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 d2d7 f5d7 e1e2 d7g4 f2f3 e4f3 g2f3"
+                                            +"\ninfo depth 8 seldepth 15 score cp 50 nodes 60267 nps 265493 time 227 multipv 3 pv h2h3 e7e6 e1c1 f5d3 d2d3 f8d6 f3e5 c6b4 d3e2 d6e5 f4e5"
+                                            +"\ninfo depth 8 seldepth 15 score cp 28 nodes 60267 nps 265493 time 227 multipv 4 pv d3f5 d7f5 e1c1 e7e6 c1b1 f8d6 g2g4 f6g4 h2h3 g4f6 g1g7 d6f4 e3f4 f5h3"
+                                            +"\ninfo depth 9 seldepth 16 score cp 72 nodes 114572 nps 280127 time 409 multipv 1 pv f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 d2d7 f5d7 e1c1 d7g4 d1d4 c7c5 d4e4"
+                                            +"\ninfo depth 9 seldepth 16 score cp 52 nodes 114572 nps 280127 time 409 multipv 2 pv h2h3 e7e6 d3f5 e6f5 e1c1 f6e4 c3e4 f5e4 f3e5 c6e5 f4e5"
+                                            +"\ninfo depth 9 seldepth 16 score cp 46 nodes 114572 nps 280127 time 409 multipv 3 pv d3f5 d7f5 f3e5 g7g5 e5c6 g5f4 c6e5 f4e3 f2e3 e7e6 g2g4"
+                                            +"\ninfo depth 9 seldepth 16 score cp 40 nodes 114572 nps 280127 time 409 multipv 4 pv e1c1 f5d3 d2d3 e7e6 g2g4 f8b4 g4g5 b4c3 g5f6 c6b4 d3e2 b4a2 c1b1"
+                                            +"\ninfo depth 10 seldepth 19 score cp 92 nodes 183916 nps 279507 time 658 multipv 1 pv f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 d2d7 f5d7 e1c1 d7c6 d1d4 e7e6 c3e4 f8e7 h2h3"
+                                            +"\ninfo depth 10 seldepth 19 score cp 62 nodes 183916 nps 279507 time 658 multipv 2 pv e1c1 f5d3 d2d3 e7e6 g2g4 f8d6 f3e5 c6b4 d3e2 d7e7 a2a3 d6e5 f4e5"
+                                            +"\ninfo depth 10 seldepth 19 score cp 58 nodes 183916 nps 279507 time 658 multipv 3 pv d3f5 d7f5 h2h3 f6e4 c3e4 d5e4 g2g4 f5d7 f3e5 c6e5 f4e5 e7e6"
+                                            +"\ninfo depth 10 seldepth 19 score cp 40 nodes 183916 nps 279507 time 658 multipv 4 pv h2h3 f5d3 c2d3 e7e6 g2g4 f8e7 f3e5 c6e5 d4e5 f6g8 e1e2"
+                                            +"\ninfo depth 11 seldepth 19 score cp 92 nodes 334621 nps 256414 time 1305 multipv 1 pv f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 d2d7 f5d7 e1c1 e7e6 c3e4 d7c6 d1d4 f8e7 g1d1 c6d5 c2c4 d5e4 d4e4"
+                                            +"\ninfo depth 11 seldepth 19 score cp 52 nodes 334621 nps 256414 time 1305 multipv 2 pv e1c1 f5d3 d2d3 e7e6 g2g4 c6b4 d3f1 c7c5 f3e5 d7d8 a2a3 c5d4 e3d4 b4c6 c1b1 f8d6"
+                                            +"\ninfo depth 11 seldepth 19 score cp 52 nodes 334621 nps 256414 time 1305 multipv 3 pv d3f5 d7f5 f3e5 g7g5 e5c6 g5f4 c6e5 f8h6 e1c1 f5g5 d1e1 c7c5 c1b1 e8g8 e5f3 f4e3 e1e3"
+                                            +"\ninfo depth 11 seldepth 19 score cp 34 nodes 334621 nps 256414 time 1305 multipv 4 pv h2h3 f5d3 d2d3 e7e6 f3e5 c6e5 f4e5 f8e7 g2g4 h7h6 e1c1 c7c5 e5f6 e7f6"
+                                            +"\ninfo depth 12 seldepth 23 score cp 78 nodes 626320 nps 258063 time 2427 multipv 1 pv f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 d2d7 f5d7 e1c1 d7g4 d1d2 g4f5 h2h3 h7h5 g1d1 c7c5 d2d5 f5e6"
+                                            +"\ninfo depth 12 seldepth 23 score cp 68 nodes 626320 nps 258063 time 2427 multipv 2 pv e1c1 f5d3 d2d3 f6h5 g2g3 e7e6 f3e5 h5f4 g3f4 c6e5 f4e5 c7c5 c1b1 c5c4"
+                                            +"\ninfo depth 12 seldepth 23 score cp 56 nodes 626320 nps 258063 time 2427 multipv 3 pv h2h3 f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6e4 c3e4 d5e4 d3e4 c8d8 e4b7 d7d2 e1f1 d2c2 g2g4"
+                                            +"\ninfo depth 12 seldepth 23 score cp 52 nodes 626320 nps 258063 time 2427 multipv 4 pv d3f5 d7f5 f3e5 g7g5 e5c6 g5f4 c6e5 f8h6 e1c1 f5g5 d1e1 c7c5 c1b1 e8g8 e5f3 f4e3 e1e3"
+                                            +"\ninfo depth 13 currmove g2g4 currmovenumber 5"
+                                            +"\ninfo depth 13 currmove f3g5 currmovenumber 6"
+                                            +"\ninfo depth 13 currmove f4e5 currmovenumber 7"
+                                            +"\ninfo depth 13 currmove f3h4 currmovenumber 8"
+                                            +"\ninfo depth 13 currmove f4g3 currmovenumber 9"
+                                            +"\ninfo depth 13 currmove a1d1 currmovenumber 10"
+                                            +"\ninfo depth 13 currmove d2e2 currmovenumber 11"
+                                            +"\ninfo depth 13 currmove d3c4 currmovenumber 12"
+                                            +"\ninfo depth 13 currmove e3e4 currmovenumber 13"
+                                            +"\ninfo depth 13 currmove d3b5 currmovenumber 14"
+                                            +"\ninfo depth 13 currmove d3e4 currmovenumber 15"
+                                            +"\ninfo depth 13 currmove d3e2 currmovenumber 16"
+                                            +"\ninfo depth 13 currmove a2a3 currmovenumber 17"
+                                            +"\ninfo depth 13 currmove d3f1 currmovenumber 18"
+                                            +"\ninfo depth 13 currmove f4d6 currmovenumber 19"
+                                            +"\ninfo depth 13 currmove f4g5 currmovenumber 20"
+                                            +"\ninfo depth 13 currmove d2c1 currmovenumber 21"
+                                            +"\ninfo depth 13 currmove a1c1 currmovenumber 22"
+                                            +"\ninfo depth 13 currmove c3a4 currmovenumber 23"
+                                            +"\ninfo depth 13 currmove d2d1 currmovenumber 24"
+                                            +"\ninfo depth 13 currmove c3e4 currmovenumber 25"
+                                            +"\ninfo depth 13 currmove e1f1 currmovenumber 26"
+                                            +"\ninfo depth 13 currmove c3b5 currmovenumber 27"
+                                            +"\ninfo depth 13 currmove g1h1 currmovenumber 28"
+                                            +"\ninfo depth 13 currmove e1d1 currmovenumber 29"
+                                            +"\ninfo depth 13 currmove c3d1 currmovenumber 30"
+                                            +"\ninfo depth 13 currmove a1b1 currmovenumber 31"
+                                            +"\ninfo depth 13 currmove e1e2 currmovenumber 32"
+                                            +"\ninfo depth 13 currmove b2b3 currmovenumber 33"
+                                            +"\ninfo depth 13 currmove b2b4 currmovenumber 34"
+                                            +"\ninfo depth 13 currmove f4h6 currmovenumber 35"
+                                            +"\ninfo depth 13 currmove g1f1 currmovenumber 36"
+                                            +"\ninfo depth 13 currmove c3b1 currmovenumber 37"
+                                            +"\ninfo depth 13 currmove g2g3 currmovenumber 38"
+                                            +"\ninfo depth 13 currmove a2a4 currmovenumber 39"
+                                            +"\ninfo depth 13 currmove c3e2 currmovenumber 40"
+                                            +"\ninfo depth 13 currmove h2h4 currmovenumber 41"
+                                            +"\ninfo depth 13 currmove c3d5 currmovenumber 42"
+                                            +"\ninfo depth 13 currmove f4c7 currmovenumber 43"
+                                            +"\ninfo depth 13 currmove d3a6 currmovenumber 44"
+                                            +"\ninfo depth 13 seldepth 23 score cp 88 nodes 785618 nps 257326 time 3053 multipv 1 pv f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 d2d7 f5d7 e1c1 e7e6 c3e4 d7c6 d1d4 f8e7 g1d1 c6d5 h2h3 e8g8 f2f3 f8e8 b2b3 c7c5 d4d5 e6d5 d1d5"
+                                            +"\ninfo depth 13 seldepth 23 score cp 66 nodes 785618 nps 257326 time 3053 multipv 2 pv e1c1 f5d3 d2d3 f6h5 f4e5 f7f6 e5g3 e7e6 g3h4 c6b4 d3d2 c7c5 c1b1 f8d6 g2g4 c5d4 f3d4"
+                                            +"\ninfo depth 13 seldepth 23 score cp 62 nodes 785618 nps 257326 time 3053 multipv 3 pv h2h3 f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6e4 c3e4 d5e4 d3e4 c8d8 e4b7 h7h6 b7a6"
+                                            +"\ninfo depth 13 seldepth 23 score cp 44 upperbound nodes 785618 nps 257326 time 3053 multipv 4 pv d3f5 d7f5 f3e5 c6e5 d4e5 f6e4 c3e4 f5e4 f2f3 e4c4 e1f2 e7e6 d2d3 c4d3 c2d3 f8e7"
+                                            +"\ninfo depth 13 currmove d3f5 currmovenumber 4"
+                                            +"\ninfo depth 13 currmove g2g4 currmovenumber 5"
+                                            +"\ninfo depth 13 currmove f3h4 currmovenumber 6"
+                                            +"\ninfo depth 13 currmove f3g5 currmovenumber 7"
+                                            +"\ninfo depth 13 currmove f4e5 currmovenumber 8"
+                                            +"\ninfo depth 13 currmove a1d1 currmovenumber 9"
+                                            +"\ninfo depth 13 currmove f4g3 currmovenumber 10"
+                                            +"\ninfo depth 13 currmove d2e2 currmovenumber 11"
+                                            +"\ninfo depth 13 currmove d3c4 currmovenumber 12"
+                                            +"\ninfo depth 13 currmove d3e4 currmovenumber 13"
+                                            +"\ninfo depth 13 currmove d3e2 currmovenumber 14"
+                                            +"\ninfo depth 13 currmove e3e4 currmovenumber 15"
+                                            +"\ninfo depth 13 currmove d3f1 currmovenumber 16"
+                                            +"\ninfo depth 13 currmove d3b5 currmovenumber 17"
+                                            +"\ninfo depth 13 currmove f4d6 currmovenumber 18"
+                                            +"\ninfo depth 13 currmove a2a3 currmovenumber 19"
+                                            +"\ninfo depth 13 currmove a1c1 currmovenumber 20"
+                                            +"\ninfo depth 13 currmove f4g5 currmovenumber 21"
+                                            +"\ninfo depth 13 currmove c3a4 currmovenumber 22"
+                                            +"\ninfo depth 13 currmove d2d1 currmovenumber 23"
+                                            +"\ninfo depth 13 currmove c3e4 currmovenumber 24"
+                                            +"\ninfo depth 13 currmove e1f1 currmovenumber 25"
+                                            +"\ninfo depth 13 currmove c3b5 currmovenumber 26"
+                                            +"\ninfo depth 13 currmove d2c1 currmovenumber 27"
+                                            +"\ninfo depth 13 currmove e1d1 currmovenumber 28"
+                                            +"\ninfo depth 13 currmove c3d1 currmovenumber 29"
+                                            +"\ninfo depth 13 currmove e1e2 currmovenumber 30"
+                                            +"\ninfo depth 13 currmove b2b3 currmovenumber 31"
+                                            +"\ninfo depth 13 currmove g1h1 currmovenumber 32"
+                                            +"\ninfo depth 13 currmove a1b1 currmovenumber 33"
+                                            +"\ninfo depth 13 currmove b2b4 currmovenumber 34"
+                                            +"\ninfo depth 13 currmove f4h6 currmovenumber 35"
+                                            +"\ninfo depth 13 currmove g1f1 currmovenumber 36"
+                                            +"\ninfo depth 13 currmove c3b1 currmovenumber 37"
+                                            +"\ninfo depth 13 currmove g2g3 currmovenumber 38"
+                                            +"\ninfo depth 13 currmove a2a4 currmovenumber 39"
+                                            +"\ninfo depth 13 currmove c3e2 currmovenumber 40"
+                                            +"\ninfo depth 13 currmove h2h4 currmovenumber 41"
+                                            +"\ninfo depth 13 currmove c3d5 currmovenumber 42"
+                                            +"\ninfo depth 13 currmove f4c7 currmovenumber 43"
+                                            +"\ninfo depth 13 currmove d3a6 currmovenumber 44"
+                                            +"\ninfo depth 13 seldepth 23 score cp 88 nodes 859452 nps 253900 time 3385 multipv 1 pv f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 d2d7 f5d7 e1c1 e7e6 c3e4 d7c6 d1d4 f8e7 g1d1 c6d5 h2h3 e8g8 f2f3 f8e8 b2b3 c7c5 d4d5 e6d5 d1d5"
+                                            +"\ninfo depth 13 seldepth 23 score cp 66 nodes 859452 nps 253900 time 3385 multipv 2 pv e1c1 f5d3 d2d3 f6h5 f4e5 f7f6 e5g3 e7e6 g3h4 c6b4 d3d2 c7c5 c1b1 f8d6 g2g4 c5d4 f3d4"
+                                            +"\ninfo depth 13 seldepth 23 score cp 62 nodes 859452 nps 253900 time 3385 multipv 3 pv h2h3 f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6e4 c3e4 d5e4 d3e4 c8d8 e4b7 h7h6 b7a6"
+                                            +"\ninfo depth 13 seldepth 23 score cp 36 upperbound nodes 859452 nps 253900 time 3385 multipv 4 pv d3f5 d7f5 f3e5 c6e5 d4e5 f6e4 c3e4 f5e4 f2f3 e4c4 e1f2 e7e6 d2d3 c4d3 c2d3 f8e7"
+                                            +"\ninfo depth 13 currmove d3f5 currmovenumber 4"
+                                            +"\ninfo depth 13 currmove f3g5 currmovenumber 5"
+                                            +"\ninfo depth 13 currmove g2g4 currmovenumber 6"
+                                            +"\ninfo depth 13 currmove f3h4 currmovenumber 7"
+                                            +"\ninfo depth 13 currmove f4e5 currmovenumber 8"
+                                            +"\ninfo depth 13 currmove d3c4 currmovenumber 9"
+                                            +"\ninfo depth 13 currmove d3e4 currmovenumber 10"
+                                            +"\ninfo depth 13 currmove d3e2 currmovenumber 11"
+                                            +"\ninfo depth 13 currmove d3b5 currmovenumber 12"
+                                            +"\ninfo depth 13 currmove d3f1 currmovenumber 13"
+                                            +"\ninfo depth 13 currmove e3e4 currmovenumber 14"
+                                            +"\ninfo depth 13 currmove d2e2 currmovenumber 15"
+                                            +"\ninfo depth 13 currmove f4g3 currmovenumber 16"
+                                            +"\ninfo depth 13 currmove d2d1 currmovenumber 17"
+                                            +"\ninfo depth 13 currmove e1e2 currmovenumber 18"
+                                            +"\ninfo depth 13 currmove c3e4 currmovenumber 19"
+                                            +"\ninfo depth 13 currmove c3b5 currmovenumber 20"
+                                            +"\ninfo depth 13 currmove a1d1 currmovenumber 21"
+                                            +"\ninfo depth 13 currmove f4d6 currmovenumber 22"
+                                            +"\ninfo depth 13 currmove f4g5 currmovenumber 23"
+                                            +"\ninfo depth 13 currmove a2a3 currmovenumber 24"
+                                            +"\ninfo depth 13 currmove h2h4 currmovenumber 25"
+                                            +"\ninfo depth 13 currmove e1f1 currmovenumber 26"
+                                            +"\ninfo depth 13 currmove g1f1 currmovenumber 27"
+                                            +"\ninfo depth 13 currmove f4h6 currmovenumber 28"
+                                            +"\ninfo depth 13 currmove d2c1 currmovenumber 29"
+                                            +"\ninfo depth 13 currmove b2b3 currmovenumber 30"
+                                            +"\ninfo depth 13 currmove c3a4 currmovenumber 31"
+                                            +"\ninfo depth 13 currmove e1d1 currmovenumber 32"
+                                            +"\ninfo depth 13 currmove c3b1 currmovenumber 33"
+                                            +"\ninfo depth 13 currmove c3d1 currmovenumber 34"
+                                            +"\ninfo depth 13 currmove a1b1 currmovenumber 35"
+                                            +"\ninfo depth 13 currmove c3e2 currmovenumber 36"
+                                            +"\ninfo depth 13 currmove a1c1 currmovenumber 37"
+                                            +"\ninfo depth 13 currmove g1h1 currmovenumber 38"
+                                            +"\ninfo depth 13 currmove g2g3 currmovenumber 39"
+                                            +"\ninfo depth 13 currmove b2b4 currmovenumber 40"
+                                            +"\ninfo depth 13 currmove a2a4 currmovenumber 41"
+                                            +"\ninfo depth 13 currmove c3d5 currmovenumber 42"
+                                            +"\ninfo depth 13 currmove f4c7 currmovenumber 43"
+                                            +"\ninfo depth 13 currmove d3a6 currmovenumber 44"
+                                            +"\ninfo depth 13 seldepth 23 score cp 88 nodes 1046616 nps 244080 time 4288 multipv 1 pv f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 d2d7 f5d7 e1c1 e7e6 c3e4 d7c6 d1d4 f8e7 g1d1 c6d5 h2h3 e8g8 f2f3 f8e8 b2b3 c7c5 d4d5 e6d5 d1d5"
+                                            +"\ninfo depth 13 seldepth 23 score cp 66 nodes 1046616 nps 244080 time 4288 multipv 2 pv e1c1 f5d3 d2d3 f6h5 f4e5 f7f6 e5g3 e7e6 g3h4 c6b4 d3d2 c7c5 c1b1 f8d6 g2g4 c5d4 f3d4"
+                                            +"\ninfo depth 13 seldepth 23 score cp 62 nodes 1046616 nps 244080 time 4288 multipv 3 pv h2h3 f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6e4 c3e4 d5e4 d3e4 c8d8 e4b7 h7h6 b7a6"
+                                            +"\ninfo depth 13 seldepth 23 score cp 50 nodes 1046616 nps 244080 time 4288 multipv 4 pv a2a3 f5d3 d2d3 e7e6 g2g4 f8d6 f3e5 d6e5 f4e5 c6e5 d4e5 f6g8 e1c1 g8e7"
+                                            +"\ninfo depth 14 currmove f3e5 currmovenumber 1v"
+                                            +"\ninfo nodes 1098339 time 4509"
+                                            +"\nbestmove f3e5 ponder c6e5";
+        slach::EngineInterface interface;
+        std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 w Qk - 3 8";//test_position_3 but white to move
+        interface.SetPositionToInternalChessBoard(test_position);
+
+        interface.SetNumberOfLinesToBeShown(4u);//asking stockfish to display 4 lines
+        interface.ParseWholeEngineOutput(test_string);
+        TS_ASSERT_EQUALS(interface.mLatestDepths.size(), 4u);
+        TS_ASSERT_EQUALS(interface.mLatestDepths[3], 13u);
+        TS_ASSERT_EQUALS(interface.mLatestDepths[2], 13u);
+        TS_ASSERT_EQUALS(interface.mLatestDepths[1], 13u);
+        TS_ASSERT_EQUALS(interface.mLatestDepths[0], 13u);
+
+        TS_ASSERT_EQUALS(interface.mLatestRootMoves.size(), 4u);
+        TS_ASSERT_EQUALS(interface.mLatestRootMoves[3], "Ne5");
+        TS_ASSERT_EQUALS(interface.mLatestRootMoves[2], "O-O-O");
+        TS_ASSERT_EQUALS(interface.mLatestRootMoves[1], "h3");
+        TS_ASSERT_EQUALS(interface.mLatestRootMoves[0], "a3");
+
+        TS_ASSERT_EQUALS(interface.mLatestScores.size(), 4u);
+        TS_ASSERT_DELTA(interface.mLatestScores[3], 0.88, 1e-3);
+        TS_ASSERT_DELTA(interface.mLatestScores[2], 0.66,1e-3);
+        TS_ASSERT_DELTA(interface.mLatestScores[1], 0.62, 1e-3);
+        TS_ASSERT_DELTA(interface.mLatestScores[0], 0.50, 1e-3);
+
+        TS_ASSERT_EQUALS(interface.mLatestLines.size(), 4u);
+        TS_ASSERT_EQUALS(interface.mLatestLines[3], "Ne5 Nxe5 dxe5 Ne4 Bxe4 dxe4 Qxd7+ Bxd7 O-O-O e6 Nxe4 Bc6 Rd4 Be7 Rgd1 Bd5 h3 O-O f3 Rfe8 b3 c5 Rxd5 exd5 Rxd5 ");
+        TS_ASSERT_EQUALS(interface.mLatestLines[2], "O-O-O Bxd3 Qxd3 Nh5 Be5 f6 Bg3 e6 Bh4 Nb4 Qd2 c5 Kb1 Bd6 g4 cxd4 Nxd4 ");
+        TS_ASSERT_EQUALS(interface.mLatestLines[1], "h3 Bxd3 Qxd3 e6 Ne5 Nxe5 dxe5 Ne4 Nxe4 dxe4 Qxe4 Rd8 Qxb7 h6 Qxa6 ");
+        TS_ASSERT_EQUALS(interface.mLatestLines[0], "a3 Bxd3 Qxd3 e6 g4 Bd6 Ne5 Bxe5 Bxe5 Nxe5 dxe5 Ng8 O-O-O Ne7 ");
+
+        TS_ASSERT_EQUALS(interface.GetLatestBestScoreAndDepth().second, 13);
+        TS_ASSERT_DELTA(interface.GetLatestBestScoreAndDepth().first, 0.88, 0.01);
+    }
 };
 #endif
 
