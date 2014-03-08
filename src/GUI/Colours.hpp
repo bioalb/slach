@@ -36,6 +36,8 @@ public :
     wxColour mPlayerName;
     /**colour of the highlighted move*/
     wxColour mHighlightedMove;
+    /**colour of the text in the movelist*/
+    wxColour mMoveListTextColour;
     /**colour of the font of the engine output*/
     wxColour mEngineText;
     /**background of the bottom panel*/

@@ -51,6 +51,7 @@ private:
 
     wxTextAttr mTextAttributesPlayerNames;
     wxTextAttr mTextAttributesMoveList;
+    wxTextAttr mTextAttributeMoveNumber;
     wxTextAttr mTextAttributesMoveListHighlighted;
 
     /** stores the parent frame*/

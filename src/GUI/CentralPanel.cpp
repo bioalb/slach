@@ -65,15 +65,21 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     										wxNullColour,
     										wxFont(wxFontInfo(14).FaceName("Helvetica")),
     										wxTEXT_ALIGNMENT_CENTRE);
-    mTextAttributesMoveList = wxTextAttr(Colours::Instance()->mPlayerName,
+
+    mTextAttributesMoveList = wxTextAttr(Colours::Instance()->mMoveListTextColour,
+                                         wxNullColour,
+                                         wxFont(wxFontInfo(14).FaceName("Helvetica").Bold()));
+
+    mTextAttributesMoveListHighlighted = wxTextAttr(Colours::Instance()->mMoveListTextColour,
+                                          Colours::Instance()->mHighlightedMove,
+                                          wxFont(wxFontInfo(14).FaceName("Helvetica").Bold()));
+
+    mTextAttributeMoveNumber = wxTextAttr(Colours::Instance()->mMoveListTextColour,
                                          wxNullColour,
                                          wxFont(wxFontInfo(14).FaceName("Helvetica")));
-    mTextAttributesMoveListHighlighted = wxTextAttr(Colours::Instance()->mPlayerName,
-                                          Colours::Instance()->mHighlightedMove,
-                                          wxFont(wxFontInfo(14).FaceName("Helvetica")));
 
     mpSpaceForMoveList->SetEditable(false);
-    mpSpaceForMoveList->SetDefaultStyle(mTextAttributesMoveList);
+    mpSpaceForMoveList->SetDefaultStyle(mTextAttributeMoveNumber);
     mpSpaceForMoveList->SetTextCursor(*wxSTANDARD_CURSOR);
 }
 
@@ -153,7 +159,6 @@ void slach_gui::CentralPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
                     mpSpaceForMoveList->AppendText(san_move);
                     mMoveListRanges.push_back(wxRichTextRange (before, mpSpaceForMoveList->GetInsertionPoint()));
                     mpSpaceForMoveList->AppendText(wxT(" "));
-
                     move_index++;
                 }
                 i++;
@@ -163,7 +168,15 @@ void slach_gui::CentralPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
             mpSpaceForMoveList->AppendText(result);
 
             mGameIsLoaded = true;
+
+            //colour move list appropriately
+            for (unsigned i = 0; i < mMoveListRanges.size(); ++i)
+            {
+                mpSpaceForMoveList->SetStyleEx(mMoveListRanges[i], mTextAttributesMoveList,wxRICHTEXT_SETSTYLE_RESET);
+                mpSpaceForMoveList->SetStyle(mMoveListRanges[i], mTextAttributesMoveList);
+            }
         }
+
         mpChessBoard->ResetToMoveNumber(1,slach::WHITE);//otherwise, on an immediate resize, it will skip to the last move
         mpChessBoardPanel->DoGoBackToBeginning();//make sure all goes to beginning when loading a game
     }
@@ -223,14 +236,22 @@ void slach_gui::CentralPanel::HighlightMoveListRange(int ID)
         {
             to_be_highlighted = (unsigned) ID;
         }
-        mpSpaceForMoveList->SetStyleEx(mMoveListRanges[mIndexOfHighlightedMove], mTextAttributesMoveList,wxRICHTEXT_SETSTYLE_RESET);
+        //delete highlitghting of current move
+        if (mIndexOfHighlightedMove >=0 && mIndexOfHighlightedMove < (int) mMoveListRanges.size())
+        {
+            mpSpaceForMoveList->SetStyleEx(mMoveListRanges[mIndexOfHighlightedMove], mTextAttributesMoveList,wxRICHTEXT_SETSTYLE_RESET);
+        }
+        //highlight new move
         mpSpaceForMoveList->SetStyle(mMoveListRanges[to_be_highlighted], mTextAttributesMoveListHighlighted);
         mIndexOfHighlightedMove = (int) to_be_highlighted;
     }
     else
     {
-        mpSpaceForMoveList->SetStyleEx(mMoveListRanges[mIndexOfHighlightedMove], mTextAttributesMoveList,wxRICHTEXT_SETSTYLE_RESET);
-        mpSpaceForMoveList->SetStyle(mMoveListRanges[mIndexOfHighlightedMove], mTextAttributesMoveList);
+        if (mIndexOfHighlightedMove >=0 && mIndexOfHighlightedMove < (int) mMoveListRanges.size())
+        {
+            mpSpaceForMoveList->SetStyleEx(mMoveListRanges[mIndexOfHighlightedMove], mTextAttributesMoveList,wxRICHTEXT_SETSTYLE_RESET);
+            mpSpaceForMoveList->SetStyle(mMoveListRanges[mIndexOfHighlightedMove], mTextAttributesMoveList);
+        }
         mIndexOfHighlightedMove = -1;
     }
 }
