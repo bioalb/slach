@@ -19,7 +19,7 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
       mpRightOfChessBoard( new wxPanel(this, ID_RIGHT_OF_BOARD) ),
       mpSpaceForMoveList ( new wxRichTextCtrl(mpRightOfChessBoard, ID_OF_MOVE_LIST_SPACE) ),
       mMoveListRanges ({}),
-      mIndexOofHighlightedMove(UINT_MAX),
+      mIndexOfHighlightedMove(-1),
       mpParent(parent),
       mWhitePlayerName(wxT("white player")),
       mBlackPlayerName(wxT("black player")),
@@ -122,6 +122,7 @@ void slach_gui::CentralPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
         {
             mMoveListRanges.clear();
             mpSpaceForMoveList->Clear();
+            mIndexOfHighlightedMove = -1;
             wxString name_of_white_player_wx(name_of_white_player);
             wxString name_of_black_player_wx(name_of_black_player);
             mWhitePlayerName = name_of_white_player_wx;
@@ -172,9 +173,6 @@ void slach_gui::CentralPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
 void slach_gui::CentralPanel::OnSize(wxSizeEvent& event)
 {
     Refresh();
-    //wxSize box_size = mpTopPlayerBox->GetClientSize();
-    //mTextAttributesPlayerNames.SetFontPixelSize((int) box_size.y - (int)box_size.y/10);
-
     //skip the event. Needed as per wxWdigets documentation
     event.Skip();
 }
@@ -200,134 +198,75 @@ void slach_gui::CentralPanel::OnClickOnMoveList(wxRichTextEvent& event)
     {
         if (mMoveListRanges[i].Contains(click_position))
         {
-            for (unsigned j = 0; j < mMoveListRanges.size(); ++j)
-            {
-                mpSpaceForMoveList->SetStyleEx(mMoveListRanges[j], mTextAttributesMoveList, wxRICHTEXT_SETSTYLE_RESET);
-            }
             std::vector<std::string> fen_list = mpChessBoard->GetGame()->GetFenList();
             assert( i <= fen_list.size() );
             fen_to_set = fen_list[i+1];
-            mIndexOofHighlightedMove = i;//stores index of highlighted move
-            mpSpaceForMoveList->SetStyle(mMoveListRanges[i], mTextAttributesMoveListHighlighted);
+            //do the highlighting
+            HighlightMoveListRange((int) i);
+            mIndexOfHighlightedMove = i;//stores index of highlighted move
             break;
         }
     }
     mpChessBoardPanel->DrawAndSetFenPositionOnBoard(fen_to_set);
 }
 
-void slach_gui::CentralPanel::HighlightMoveWithThisIndex(int ID)
+void slach_gui::CentralPanel::HighlightMoveListRange(int ID)
 {
-//    for (unsigned i =0; i < mMoveListPanels.size(); ++i)
-//    {
-//        mMoveListPanels[i]->SetBackgroundColour(wxT("white"));
-//        if ( (int) i == ( ID -  OFFSET_OF_MOVE_LIST_ID) )
-//        {
-//            mMoveListPanels[i]->SetBackgroundColour(*wxYELLOW);
-//        }
-//    }
-//    if (mGameIsLoaded == true)
-//    {
-//        mMoveListPanels.back()->SetBackgroundColour(*wxLIGHT_GREY);
-//    }
-
-}
-
-
-int slach_gui::CentralPanel::GetCurrentlyHighlightedMove()
-{
-//    int index_of_currently_highlighted_move = 0;
-//    for (unsigned i = 0; i  < mMoveListPanels.size(); ++i )
-//    {
-//        if (mMoveListPanels[i]->GetBackgroundColour() == (*wxYELLOW))
-//        {
-//            return (int) i;
-//        }
-//    }
-//    return index_of_currently_highlighted_move;
-
+    if (ID >= 0 )
+    {
+        unsigned to_be_highlighted = UINT_MAX;
+        if (ID >= (int) mMoveListRanges.size() )
+        {
+            to_be_highlighted = mMoveListRanges.size() - 1;
+        }
+        else
+        {
+            to_be_highlighted = (unsigned) ID;
+        }
+        mpSpaceForMoveList->SetStyleEx(mMoveListRanges[mIndexOfHighlightedMove], mTextAttributesMoveList,wxRICHTEXT_SETSTYLE_RESET);
+        mpSpaceForMoveList->SetStyle(mMoveListRanges[to_be_highlighted], mTextAttributesMoveListHighlighted);
+        mIndexOfHighlightedMove = (int) to_be_highlighted;
+    }
+    else
+    {
+        mpSpaceForMoveList->SetStyleEx(mMoveListRanges[mIndexOfHighlightedMove], mTextAttributesMoveList,wxRICHTEXT_SETSTYLE_RESET);
+        mpSpaceForMoveList->SetStyle(mMoveListRanges[mIndexOfHighlightedMove], mTextAttributesMoveList);
+        mIndexOfHighlightedMove = -1;
+    }
 }
 
 void slach_gui::CentralPanel::HighlightNextMove()
 {
-//    int highlighted_move = GetCurrentlyHighlightedMove();
-//    //skip the move numbers...
-//    if ( (std::div(highlighted_move,3).rem == 2))
-//    {
-//        highlighted_move++;
-//    }
-//    //prevent de-highlighting of last move
-//    if ((unsigned) highlighted_move < mMoveListPanels.size())
-//    {
-//        if (mMoveListPanels[highlighted_move]->GetId() >= mIdOfPanelWithLastMove)
-//        {
-//            HighlightMoveWithThisIndex(mIdOfPanelWithLastMove);
-//        }
-//        else
-//        {
-//            HighlightMoveWithThisIndex(highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 1);
-//        }
-//    }
-    unsigned range_to_be_highlighted = 0;;
-    if (mIndexOofHighlightedMove != UINT_MAX)
-    {
-        range_to_be_highlighted = std::min(mIndexOofHighlightedMove, mMoveListRanges.size()-1);
-    }
-    mpSpaceForMoveList->SetStyle(mMoveListRanges[range_to_be_highlighted], mTextAttributesMoveListHighlighted);
+    int next_move = mIndexOfHighlightedMove + 1;
+    HighlightMoveListRange (next_move);
 }
 
 void slach_gui::CentralPanel::HighlightSeveralMovesAhead()
 {
-//    int index_of_currently_highlighted_move = GetCurrentlyHighlightedMove();
-//    //skip the move numbers...
-//    if (std::div(index_of_currently_highlighted_move,3).rem == 2)
-//    {
-//        index_of_currently_highlighted_move++;
-//    }
-//
-//    if ((unsigned) index_of_currently_highlighted_move < mMoveListPanels.size())
-//    {
-//        //prevent de-highlighting of last move
-//        if ( mMoveListPanels[index_of_currently_highlighted_move]->GetId() >= (mIdOfPanelWithLastMove - 8))
-//        {
-//            HighlightMoveWithThisIndex(mIdOfPanelWithLastMove);
-//        }
-//        else
-//        {
-//            HighlightMoveWithThisIndex(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID + 7);
-//        }
-//    }
+    int next_move = mIndexOfHighlightedMove + 5;
+    HighlightMoveListRange (next_move);
 }
 
 void slach_gui::CentralPanel::HighlightLastMove()
 {
-	HighlightMoveWithThisIndex(mIdOfPanelWithLastMove);
+    HighlightMoveListRange (mMoveListRanges.size() - 1);
 }
 
 void slach_gui::CentralPanel::HighlightPreviousMove()
 {
-    int index_of_currently_highlighted_move = GetCurrentlyHighlightedMove();
-    //skip the move numbers...
-    if (std::div(index_of_currently_highlighted_move,3).rem == 1)
-    {
-        index_of_currently_highlighted_move--;
-    }
-    HighlightMoveWithThisIndex(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID - 1);
+    int prev_move = mIndexOfHighlightedMove - 1;
+    HighlightMoveListRange (prev_move);
 }
 
 void slach_gui::CentralPanel::HighlightSeveralMovesBack()
 {
-    int index_of_currently_highlighted_move = GetCurrentlyHighlightedMove();
-    //skip the move numbers...
-    if (std::div(index_of_currently_highlighted_move,3).rem == 1)
-    {
-        index_of_currently_highlighted_move--;
-    }
-    HighlightMoveWithThisIndex(index_of_currently_highlighted_move +   OFFSET_OF_MOVE_LIST_ID - 7);
+    int prev_move = mIndexOfHighlightedMove - 5;
+    HighlightMoveListRange (prev_move);
 }
 
 void slach_gui::CentralPanel::HighlightBeforeFirstMove()
 {
-    HighlightMoveWithThisIndex(-1);//do not colour anything
+    HighlightMoveListRange(-1);//do not colour anything
 }
 
 

@@ -41,8 +41,8 @@ private:
     wxRichTextCtrl* mpSpaceForMoveList;
     /**Each element is a range of a move in the move list*/
     std::vector<wxRichTextRange> mMoveListRanges;
-    /**Stores the index of the currently highlighted move. UINT_MAX if no move is highlighted*/
-    unsigned mIndexOofHighlightedMove;
+    /**Stores the index of the currently highlighted move. -1 if no move is highlighted*/
+    int mIndexOfHighlightedMove;
 
     wxPanel* mpButtonsBelowMoveList;
 
@@ -151,11 +151,10 @@ public:
 
     /**
      * Highlights the move in the move list with the specified index.
-     * All the other moves are set with white background
+     *
+     * @param The index referred to the move list ranges stored in mMoveListRanges, i.e.,in the front-end.
      */
-    void HighlightMoveWithThisIndex(int ID);
-
-    int GetCurrentlyHighlightedMove();
+    void HighlightMoveListRange(int ID);
 
     void HighlightNextMove();
     void HighlightSeveralMovesAhead();
