@@ -39,7 +39,7 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     mpButtonsBelowMoveList =  new wxPanel(mpRightOfChessBoard, ID_RIGHT_OF_BOARD_BUTTONS);
 	mpSpaceForMoveList->SetBackgroundColour(*wxWHITE);
 
-    mpRightSideSizer->Add(mpGameInfoBox, 1, wxEXPAND);
+    mpRightSideSizer->Add(mpGameInfoBox, 2, wxEXPAND);
     mpRightSideSizer->Add(mpSpaceForMoveList, 7, wxALL|wxGROW);
     mpRightSideSizer->Add(mpButtonsBelowMoveList,1,wxEXPAND);
     mpRightOfChessBoard->SetSizer(mpRightSideSizer, true);

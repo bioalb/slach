@@ -546,6 +546,37 @@ public:
         TS_ASSERT_EQUALS(my_game.GetNameOfWhitePlayer(), "");
         TS_ASSERT_EQUALS(my_game.GetNameOfBlackPlayer(), "");
 
+        //test default values for OTR
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData.size(), 27);
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mLabels.size(), 27);
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[0], ""); //"WhiteTitle"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[1], "");//"BlackTitle"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[2], "");//"WhiteElo"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[3], "");//"BlackElo"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[4], "");//"WhiteUSCF"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[5], "");//"BlackUSCF"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[6], "");//"WhiteType"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[7], "");//"BlackType"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[8], "");//"EventDate"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[9], "");//"EventSponsor"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[10], "");//"Section"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[11], "");//"Stage"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[12], "");//"Board"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[13], "");//"Opening"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[14], "");//"Variation"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[15], "");//"SubVariation"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[16], "");//"ECO"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[17], "");//"NIC" //from //"New in Chess database opening//"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[18], "");//"Time" //time of the day
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[19], "");//"UTCTime" //time in Universal time control
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[20], "");//"UTCDate"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[21], "");//"TimeControl"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[22], "");//"FEN"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[23], "");//"Termination"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[24], "");//"Annotator"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[25], "");//"Mode"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[26], "");//"PlyCount"
+
         slach::PgnValidity valid = my_game.LoadFromPgnString(game_string, squares);
 
         TS_ASSERT_EQUALS(valid, slach::VALID_PGN);
@@ -554,6 +585,37 @@ public:
         TS_ASSERT_EQUALS(my_game.GetNameOfWhitePlayer(), "Caruana, Fabiano");
         TS_ASSERT_EQUALS(my_game.GetNameOfBlackPlayer(), "Radjabov, Teimour");
         TS_ASSERT_EQUALS(my_game.GetGameResult(), "1-0");
+
+        //test against the correct values in the file
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData.size(), 27);
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mLabels.size(), 27);
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[0], ""); //"WhiteTitle"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[1], "");//"BlackTitle"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[2], "2779");//"WhiteElo"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[3], "2723");//"BlackElo"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[4], "");//"WhiteUSCF"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[5], "");//"BlackUSCF"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[6], "");//"WhiteType"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[7], "");//"BlackType"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[8], "2013.10.07");//"EventDate"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[9], "");//"EventSponsor"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[10], "");//"Section"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[11], "");//"Stage"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[12], "");//"Board"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[13], "");//"Opening"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[14], "");//"Variation"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[15], "");//"SubVariation"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[16], "B30");//"ECO"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[17], "");//"NIC" //from //"New in Chess database opening//"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[18], "");//"Time" //time of the day
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[19], "");//"UTCTime" //time in Universal time control
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[20], "");//"UTCDate"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[21], "");//"TimeControl"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[22], "");//"FEN"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[23], "");//"Termination"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[24], "");//"Annotator"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[25], "");//"Mode"
+        TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[26], "59");//"PlyCount
     }
 
     void TestReadFromPgnInvalid()

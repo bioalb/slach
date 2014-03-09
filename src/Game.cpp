@@ -8,6 +8,7 @@ slach::Game::Game()
     mMoveListMainLineAlgFormat {},
     mListOfFenPositionsMainLine {},
     mSTR(),
+    mOTR(),
     mGameResult("*")
 {
 }
@@ -147,6 +148,14 @@ slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString
             }
         }
 
+        for (unsigned i = 0; i < mOTR.mLabels.size(); ++i)
+        {
+            if (label == mOTR.mLabels[i])
+            {
+                mOTR.mData[i] = data;
+            }
+        }
+
         old_closed_bracket = closed_bracket;
     }
     while ( (closed_bracket != last_tag) &&  (closed_bracket != std::string::npos) );
@@ -220,6 +229,11 @@ std::vector<std::string> slach::Game::GetFenList() const
 slach::SevenTagRoster slach::Game::GetSevenTagRoster() const
 {
     return mSTR;
+}
+
+slach::OtherTagsRoster slach::Game::GetOtherTagsRoster() const
+{
+    return mOTR;
 }
 
 std::string slach::Game::GetNameOfWhitePlayer() const

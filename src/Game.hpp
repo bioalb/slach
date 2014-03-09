@@ -12,7 +12,13 @@ namespace slach
 {
 
 
-
+/**
+ * The compulsory information according to the pgn specification
+ *
+ * available on wikipedia or, for example at
+ *
+ * http://www6.chessclub.com/help/PGN-spec
+ */
 struct SevenTagRoster
 {
     GameResult mResult;
@@ -21,8 +27,51 @@ struct SevenTagRoster
     std::vector<std::string> mData;
 
     SevenTagRoster()
-       : mLabels{"Event","Site","Date","Round","White", "Black", "Result"},
-         mData{"","","","","", "", ""}
+        : mLabels{"Event","Site","Date","Round","White", "Black", "Result"},
+          mData{"","","","","", "", ""}
+    {}
+};
+
+/**
+ * The supplementary information according to the pgn specification.
+ * These are non-compulsory and I have selected the most significant ones here
+ *
+ * http://www6.chessclub.com/help/PGN-spec
+ */
+struct OtherTagsRoster
+{
+    std::vector<std::string> mLabels;
+    std::vector<std::string> mData;
+
+    OtherTagsRoster()
+        : mLabels{"WhiteTitle",
+                  "BlackTitle",
+                  "WhiteElo",
+                  "BlackElo",
+                  "WhiteUSCF",
+                  "BlackUSCF",
+                  "WhiteType",
+                  "BlackType",
+                  "EventDate",
+                  "EventSponsor",
+                  "Section",
+                  "Stage",
+                  "Board",
+                  "Opening",
+                  "Variation",
+                  "SubVariation",
+                  "ECO",
+                  "NIC", //from "New in Chess database opening"
+                  "Time", //time of the day
+                  "UTCTime", //time in Universal time control
+                  "UTCDate",
+                  "TimeControl",
+                  "FEN",
+                  "Termination",
+                  "Annotator",
+                  "Mode",
+                  "PlyCount"},
+          mData{"","","","","","","","","","","","","","","","","","","","","","","","","","",""}
     {}
 };
 
@@ -59,9 +108,14 @@ private:
      */
     SevenTagRoster mSTR;
 
+    /**
+     * Structure to store the roster of other optional tags
+     */
+    OtherTagsRoster mOTR;
+
     std::vector<Square* > mSquares;
 
-    /**stores the reuslt of the game. Initialize to **/
+    /**stores the result of the game. Initialized to "*" */
     std::string mGameResult;
 
     /**
@@ -70,7 +124,7 @@ private:
     void ClearAllLists();
 
     /**
-     * Helper method that returns true if the string passed in cprresponds to one of
+     * Helper method that returns true if the string passed in corresponds to one of
      * the possible game results (1-0,0-1,1/2-1/2,*)
      * In such case, it also changes the variable mGameResult accordingly.
      *
@@ -121,7 +175,7 @@ public:
      * If the fen list has one element only, it returns that one, no matter what you pass in.
      * If you pass in a move number that hasn't been played yet, it returns the last fen of the colour to move that is in the list.
      *
-     * In all other cases, it returns the fen string correspnding to the move number you pass in and
+     * In all other cases, it returns the fen string corresponding to the move number you pass in and
      * the colour to move.
      *
      * @param moveNumber the move number corresponding to the position. It returns the last position if moveNumber
@@ -136,6 +190,11 @@ public:
      * Access method to the variable mSTR
      */
     slach::SevenTagRoster GetSevenTagRoster() const;
+
+    /**
+     * Access method to the variable mOTR
+     */
+    slach::OtherTagsRoster GetOtherTagsRoster() const;
 
     /**
      * Access the list of fens
