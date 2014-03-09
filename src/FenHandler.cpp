@@ -604,7 +604,7 @@ slach::FenPositionFeatures slach::FenHandler::GetPositionFeaturesFromFen (const 
         dummy_squares[i] = new Square();
     }
 
-    int result = SetPositionFromFen(rInputfen, dummy_squares, pos_feat);
+    SetPositionFromFen(rInputfen, dummy_squares, pos_feat);
 
     for (unsigned i = 0; i < dummy_squares.size(); ++i)
     {

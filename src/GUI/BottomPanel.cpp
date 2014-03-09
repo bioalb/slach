@@ -98,32 +98,36 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
 	{
 	    mpEngineTextBox->Clear();//clear the box
 		//wxStreamToTextRedirector redirect(mpEngineTextBox); //not working
-        mpEngineTextBox->BeginTextColour(Colours::Instance()->mEngineText);
-        mpEngineTextBox->ChangeValue("");
-        mpEngineTextBox->BeginAlignment(wxTEXT_ALIGNMENT_LEFT);
-        mpEngineTextBox->WriteText( wxT("Depth = "));
-        mpEngineTextBox->WriteText( wxString::Format(wxT("%d"), mpEngineInterface->GetLatestBestScoreAndDepth().second) );
-
+        mpEngineTextBox->BeginTextColour(Colours::Instance()->mBottomPanelBackground);
         mpEngineTextBox->BeginBold();
         mpEngineTextBox->BeginFontSize(18);
-        mpEngineTextBox->WriteText( wxT("   Score "));
-        double score = mpEngineInterface->GetLatestBestScoreAndDepth().first;
-        if (score < DBL_MAX)
-        {
-            mpEngineTextBox->WriteText( wxString::Format(wxT("%.2f"), score) );
-        }
+        mpEngineTextBox->ChangeValue("");
+        mpEngineTextBox->BeginAlignment(wxTEXT_ALIGNMENT_LEFT);
+        int depth = 0;
+        double score = 0;
+        std::string best_move = "";
+        mpEngineInterface->GetLatestBestScoreAndDepth(score,depth,best_move);
+        mpEngineTextBox->WriteText( wxT("Best Move: "));
+        mpEngineTextBox->WriteText( best_move );
+        mpEngineTextBox->WriteText( wxT("   Best Score: "));
+        if (score < DBL_MAX) mpEngineTextBox->WriteText( wxString::Format(wxT("%.2f"), score) );
+        mpEngineTextBox->WriteText( wxT("   Depth: "));
+        if (depth < INT_MAX) mpEngineTextBox->WriteText( wxString::Format(wxT("%d"), depth) );
+
+        mpEngineTextBox->LineBreak();
         mpEngineTextBox->EndFontSize();
-        mpEngineTextBox->EndAlignment();
         mpEngineTextBox->EndBold();
         mpEngineTextBox->EndTextColour();
-        mpEngineTextBox->LineBreak();
+        mpEngineTextBox->BeginTextColour(Colours::Instance()->mEngineText);
+        mpEngineTextBox->BeginFontSize(13);
 	    for (unsigned pv = mNumberOfEngineLinesShown; pv > 0 ; pv--)
 	    {
-            wxColour backgroundcolour(255 - 20*pv, 255 -  20*pv, 255 - 20*pv);
-            mpEngineTextBox->SetDefaultStyle(wxTextAttr(*wxBLACK, backgroundcolour));
-	        //(*mpEngineTextBox)<<mpEngineInterface->GetLatestEngineOutput()[pv-1];
             mpEngineTextBox->WriteText( mpEngineInterface->GetLatestEngineOutput()[pv-1] );
 	    }
+        mpEngineTextBox->EndAlignment();
+        mpEngineTextBox->EndFontSize();
+        mpEngineTextBox->EndTextColour();
+
 
 	}
 	evt.Skip();

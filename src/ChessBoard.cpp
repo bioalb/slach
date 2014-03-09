@@ -73,7 +73,7 @@ void slach::ChessBoard::ResetToNextMove()
 		req_index = (move_number+1)*2-2;
 	}
 
-	if (req_index >= (mpGame->GetFenList().size())) req_index = mpGame->GetFenList().size() - 1;
+	if (req_index >= (int) (mpGame->GetFenList().size())) req_index = mpGame->GetFenList().size() - 1;
 
 	std::string next_fen = mpGame->GetFenList()[req_index];
     mpPosition->SetFromFen(next_fen, mSquares);

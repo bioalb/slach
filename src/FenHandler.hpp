@@ -112,7 +112,7 @@ class FenHandler
     std::string GetFenFromPosition(const std::vector<Square* > &rSquares, const FenPositionFeatures& positionFeatures) const;
 
     /**
-     * Given a fen string, returns the position features
+     * Given a fen string, returns the position features. Used for testing
      *
      * @return the position features
      */

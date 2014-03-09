@@ -94,10 +94,14 @@ class EngineInterface
 
 
     /**
-     * Returns the best score and its corresponding depth in a pair.
-     * This variable is assigned meaningful values upon calling GetLatestEngineOutput()
+     * access to best move, score and depth
+     * These variables is assigned meaningful values upon calling GetLatestEngineOutput()
+     *
+     * @param bestScore (output) will contain the best score
+     * @param depth (output) will contain the depth corresponding to the best score
+     * @param bestMove (output) will contain the best move
      */
-    std::pair<double, int> GetLatestBestScoreAndDepth() const;
+    void GetLatestBestScoreAndDepth(double& bestScore, int& depth, std::string& bestMove) const;
 
     /**
      * Sets the number of line to be shown. It sets the member variable here

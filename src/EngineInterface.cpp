@@ -182,12 +182,14 @@ void slach::EngineInterface::ParseWholeEngineOutput(const std::string& rawOutput
 
     }
 }
-std::pair<double, int>  slach::EngineInterface::GetLatestBestScoreAndDepth() const
+void slach::EngineInterface::GetLatestBestScoreAndDepth(double& bestScore, int& depth, std::string& bestMove)  const
 {
-    std::pair<double, int> ret;
     double max = -DBL_MAX;
     double min = DBL_MAX;
     int max_depth = 0;
+    std::string best_root_move = "";
+    assert(mLatestRootMoves.size() == mLatestDepths.size());
+    assert(mLatestRootMoves.size() == mLatestRootMoves.size());
     for (unsigned sc = 0; sc < mLatestScores.size(); ++sc)
     {
         if (mpChessBoard->WhosTurnIsIt() == WHITE )
@@ -196,6 +198,7 @@ std::pair<double, int>  slach::EngineInterface::GetLatestBestScoreAndDepth() con
             {
                 max = mLatestScores[sc];
                 max_depth = mLatestDepths[sc];
+                best_root_move = mLatestRootMoves[sc];
             }
         }
         else //black to move
@@ -204,13 +207,14 @@ std::pair<double, int>  slach::EngineInterface::GetLatestBestScoreAndDepth() con
             {
                 min = mLatestScores[sc];
                 max_depth = mLatestDepths[sc];
+                best_root_move = mLatestRootMoves[sc];
             }
         }
     }
-    ret.first = max;
-    if (mpChessBoard->WhosTurnIsIt() == BLACK) ret.first = min;
-    ret.second = max_depth;
-    return ret;
+    bestScore = max;
+    if (mpChessBoard->WhosTurnIsIt() == BLACK) bestScore = min;
+    depth = max_depth;
+    bestMove = best_root_move;
 }
 
 void slach::EngineInterface::ParseALineofStockfishOutput(const std::string& stockfishLine, int & depth, double & score, std::string &  move_list, std::string& rootMove)

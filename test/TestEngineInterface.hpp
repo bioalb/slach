@@ -28,9 +28,6 @@ public:
         p_position->SetFromFen(test_position, squares);
 
         slach::EngineInterface interface;
-        //coverage
-        TS_ASSERT_EQUALS(interface.GetLatestBestScoreAndDepth().second, INT_MAX);
-        TS_ASSERT_EQUALS(interface.GetLatestBestScoreAndDepth().first, DBL_MAX);
 
         std::cout<<std::endl<<"*******"<<"Starting analysis. I will start with infinite analysis"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(p_position);
@@ -107,9 +104,7 @@ public:
         p_position->SetFromFen(test_position, squares);
 
         slach::EngineInterface interface;
-        //coverage
-        TS_ASSERT_EQUALS(interface.GetLatestBestScoreAndDepth().second, INT_MAX);
-        TS_ASSERT_EQUALS(interface.GetLatestBestScoreAndDepth().first, DBL_MAX);
+
         interface.SetNumberOfLinesToBeShown(4);
         std::cout<<std::endl<<"*******"<<"Starting analysis, multiple output"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(p_position);
@@ -598,8 +593,13 @@ public:
         TS_ASSERT_EQUALS(interface.mLatestLines[1], "Bg6 O-O-O e6 Ne5 Nxe5 dxe5 Nh5 Bg5 f6 exf6 Nxf6 Bxg6+ hxg6 h3 Bd6 Qd3 Kf7 Kb1 ");
         TS_ASSERT_EQUALS(interface.mLatestLines[0], "Ne4 Bxe4 Bxe4 Nxe4 dxe4 Ne5 Nxe5 dxe5 Qxd2+ Kxd2 e6 Ke2 Be7 Rad1 h5 Rd4 Rd8 Rxe4 ");
 
-        TS_ASSERT_EQUALS(interface.GetLatestBestScoreAndDepth().second, 14);
-        TS_ASSERT_DELTA(interface.GetLatestBestScoreAndDepth().first, 0.02, 0.01);
+        int depth;
+        double score;
+        std::string best_move;
+        interface.GetLatestBestScoreAndDepth(score,depth, best_move);
+        TS_ASSERT_EQUALS(depth, 14);
+        TS_ASSERT_DELTA(score, 0.02, 0.01);
+        TS_ASSERT_EQUALS(best_move, "Bxd3");
     }
 
     void TestParseEngineOutputMultipleLinesWhiteToMove()
@@ -819,8 +819,13 @@ public:
         TS_ASSERT_EQUALS(interface.mLatestLines[1], "h3 Bxd3 Qxd3 e6 Ne5 Nxe5 dxe5 Ne4 Nxe4 dxe4 Qxe4 Rd8 Qxb7 h6 Qxa6 ");
         TS_ASSERT_EQUALS(interface.mLatestLines[0], "a3 Bxd3 Qxd3 e6 g4 Bd6 Ne5 Bxe5 Bxe5 Nxe5 dxe5 Ng8 O-O-O Ne7 ");
 
-        TS_ASSERT_EQUALS(interface.GetLatestBestScoreAndDepth().second, 13);
-        TS_ASSERT_DELTA(interface.GetLatestBestScoreAndDepth().first, 0.88, 0.01);
+        int depth;
+        double score;
+        std::string best_move;
+        interface.GetLatestBestScoreAndDepth(score,depth, best_move);
+        TS_ASSERT_EQUALS(depth, 13);
+        TS_ASSERT_DELTA(score, 0.88, 0.01);
+        TS_ASSERT_EQUALS(best_move, "Ne5");
     }
 };
 #endif
