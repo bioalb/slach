@@ -1,4 +1,5 @@
 #include <ctime>
+#include <cfloat>
 #include "BottomPanel.hpp"
 
 slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const wxSize& size)
@@ -106,7 +107,11 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
         mpEngineTextBox->BeginBold();
         mpEngineTextBox->BeginFontSize(18);
         mpEngineTextBox->WriteText( wxT("   Score "));
-        mpEngineTextBox->WriteText( wxString::Format(wxT("%.2f"), mpEngineInterface->GetLatestBestScoreAndDepth().first) );
+        double score = mpEngineInterface->GetLatestBestScoreAndDepth().first;
+        if (score < DBL_MAX)
+        {
+            mpEngineTextBox->WriteText( wxString::Format(wxT("%.2f"), score) );
+        }
         mpEngineTextBox->EndFontSize();
         mpEngineTextBox->EndAlignment();
         mpEngineTextBox->EndBold();

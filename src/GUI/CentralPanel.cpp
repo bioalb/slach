@@ -17,7 +17,7 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
       mpRightSideSizer ( new wxBoxSizer(wxVERTICAL) ),
       mpChessBoardPanel( new ChessBoardPanel(this, ID_ACTUAL_BOARD) ),
       mpRightOfChessBoard( new wxPanel(this, ID_RIGHT_OF_BOARD) ),
-      mpSpaceForMoveList ( new wxRichTextCtrl(mpRightOfChessBoard, ID_OF_MOVE_LIST_SPACE) ),
+      mpSpaceForMoveList ( new wxRichTextCtrl(mpRightOfChessBoard, ID_OF_MOVE_LIST_SPACE,wxT(""), wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxTE_MULTILINE) ),
       mMoveListRanges ({}),
       mIndexOfHighlightedMove(-1),
       mpParent(parent),
@@ -78,6 +78,8 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
                                          wxNullColour,
                                          wxFont(wxFontInfo(14).FaceName("Helvetica")));
 
+    mpGameInfoBox->SetDefaultStyle(mTextAttributesPlayerNames);
+
     mpSpaceForMoveList->SetEditable(false);
     mpSpaceForMoveList->SetDefaultStyle(mTextAttributeMoveNumber);
     mpSpaceForMoveList->SetTextCursor(*wxSTANDARD_CURSOR);
@@ -128,6 +130,7 @@ void slach_gui::CentralPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
         {
             mMoveListRanges.clear();
             mpSpaceForMoveList->Clear();
+            mpGameInfoBox->Clear();
             mIndexOfHighlightedMove = -1;
             wxString name_of_white_player_wx(name_of_white_player);
             wxString name_of_black_player_wx(name_of_black_player);
