@@ -140,6 +140,7 @@ slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString
         unsigned first_inverted_commas = whole_tag.find('"');
         unsigned last_inverted_commas = whole_tag.rfind('"');
         std::string data = whole_tag.substr(first_inverted_commas+1, last_inverted_commas - first_inverted_commas - 1);
+        //see if it is one the seven tags
         for (unsigned i = 0; i < mSTR.mLabels.size(); ++i)
         {
             if (label == mSTR.mLabels[i])
@@ -147,7 +148,7 @@ slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString
                 mSTR.mData[i] = data;
             }
         }
-
+        //see if it is one of the additional tags
         for (unsigned i = 0; i < mOTR.mLabels.size(); ++i)
         {
             if (label == mOTR.mLabels[i])
