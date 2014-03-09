@@ -125,7 +125,10 @@ void slach_gui::CentralPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
         slach::PgnValidity valid = mpChessBoard->LoadGameFromPgn(game_string.ToStdString());
         std::string name_of_white_player = mpChessBoard->GetGame()->GetNameOfWhitePlayer();
         std::string name_of_black_player = mpChessBoard->GetGame()->GetNameOfBlackPlayer();
-
+        std::string white_elo = mpChessBoard->GetGame()->GetEloOfWhitePlayer();
+        std::string black_elo = mpChessBoard->GetGame()->GetEloOfBlackPlayer();
+        if (white_elo != "") name_of_white_player += " (" + white_elo + ")";
+        if (black_elo != "") name_of_black_player += " (" + black_elo + ")";
         if (valid == slach::VALID_PGN)
         {
             mMoveListRanges.clear();

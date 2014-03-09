@@ -576,6 +576,8 @@ public:
         TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[24], "");//"Annotator"
         TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[25], "");//"Mode"
         TS_ASSERT_EQUALS(my_game.GetOtherTagsRoster().mData[26], "");//"PlyCount"
+        TS_ASSERT_EQUALS(my_game.GetEloOfWhitePlayer(), "");
+        TS_ASSERT_EQUALS(my_game.GetEloOfBlackPlayer(), "");
 
         slach::PgnValidity valid = my_game.LoadFromPgnString(game_string, squares);
 
@@ -584,6 +586,8 @@ public:
         TS_ASSERT_EQUALS(my_game.GetMoveListAlgebraicFormat().size(), 59u);
         TS_ASSERT_EQUALS(my_game.GetNameOfWhitePlayer(), "Caruana, Fabiano");
         TS_ASSERT_EQUALS(my_game.GetNameOfBlackPlayer(), "Radjabov, Teimour");
+        TS_ASSERT_EQUALS(my_game.GetEloOfWhitePlayer(), "2779");
+        TS_ASSERT_EQUALS(my_game.GetEloOfBlackPlayer(), "2723");
         TS_ASSERT_EQUALS(my_game.GetGameResult(), "1-0");
 
         //test against the correct values in the file

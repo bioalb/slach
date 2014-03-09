@@ -263,3 +263,29 @@ std::string slach::Game::GetNameOfBlackPlayer() const
     return empty_string;
 }
 
+std::string slach::Game::GetEloOfWhitePlayer() const
+{
+    std::string empty_string = "";
+    for (unsigned i = 0; i < mSTR.mLabels.size(); ++i)
+    {
+        if (mOTR.mLabels[i] == "WhiteElo")
+        {
+            return mOTR.mData[i];
+        }
+    }
+    return empty_string;
+}
+
+std::string slach::Game::GetEloOfBlackPlayer() const
+{
+    std::string empty_string = "";
+    for (unsigned i = 0; i < mOTR.mLabels.size(); ++i)
+    {
+        if (mOTR.mLabels[i] == "BlackElo")
+        {
+            return mOTR.mData[i];
+        }
+    }
+    return empty_string;
+}
+

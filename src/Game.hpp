@@ -216,6 +216,21 @@ public:
     std::string GetNameOfBlackPlayer() const;
 
     /**
+     * Convenience method. Queries the other tags roster to find the ELO of the white player
+     *
+     * @return the ELO of the white player, empty iof not provided
+     */
+    std::string GetEloOfWhitePlayer() const;
+
+    /**
+     * Convenience method. Queries the other tags roster to find the ELO of the black player
+     *
+     * @return the ELO of the black player, empty if not provided
+     */
+    std::string GetEloOfBlackPlayer() const;
+
+
+    /**
      * Accesses the variable mGameResult thats tores the result of the game
      *  - * if in progress
      *  - 1-0 if white wins
