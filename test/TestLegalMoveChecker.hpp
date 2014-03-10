@@ -766,6 +766,11 @@ public:
         TS_ASSERT_EQUALS(true, generator.IsMoveLegalInPosition(squares, a1_c1, turn,castling_rights,enpassant_index,gives_check, ambiguity_square ));
         TS_ASSERT_EQUALS(gives_check, false);//not giving check here
         TS_ASSERT_EQUALS(ambiguity_square, 7u);//rook on h1 could also go to c1, h1 is the index of ambiguity
+
+        for (unsigned i = 0; i < squares.size(); ++i)
+        {
+            delete squares[i];
+        }
     }
     void testIllegalCastlingWhite(void)
     {
