@@ -4,7 +4,6 @@
 #include <limits>
 #include "position.h"//within stockfish
 #include "Game.hpp"
-#include "Position.hpp"
 #include "ChessBoard.hpp"
 
 class TestEngineInterface;//forward declaration, for testing and accessing protected methods from the test class

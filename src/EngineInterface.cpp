@@ -1,9 +1,8 @@
-#include <iostream>
+#include <limits>
+#include <sstream>
 #include <streambuf>
 #include <pthread.h>
 #include "EngineInterface.hpp"
-#include "Exception.hpp"
-#include "platform.h"
 #include "bitboard.h"
 #include "evaluate.h"
 #include "position.h"
@@ -17,8 +16,8 @@
 slach::EngineInterface::EngineInterface()
   : mNumberOfLinesToBeShown(1u),
     mCachedFenPositiontoBeanalysed(""),
-    mLatestDepths(mNumberOfLinesToBeShown, INT_MAX),
-    mLatestScores(mNumberOfLinesToBeShown, DBL_MAX),
+    mLatestDepths(mNumberOfLinesToBeShown, std::numeric_limits<int>::max()),
+    mLatestScores(mNumberOfLinesToBeShown, std::numeric_limits<double>::max()),
     mLatestLines(mNumberOfLinesToBeShown, ""),
     mLatestRootMoves (mNumberOfLinesToBeShown, ""),
     mpStockfishPosition (new ::Position()),
@@ -43,7 +42,7 @@ void slach::EngineInterface::InitialiseEngine()
     ::Search::init();
     ::Eval::init();
     ::Threads.init();
-    ::TT.set_size(::Options["Hash"]);
+    //::TT.set_size().set_size(::Options["Hash"]);
     ::Options["MultiPV"] = ::UCI::Option(mNumberOfLinesToBeShown, 1, 500);
 }
 
@@ -77,13 +76,13 @@ void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, 
     {
         limits.movetime = 1000*seconds;//converts milliseconds to seconds...
         limits.infinite = false;
-        ::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, ::Search::SetupStates);
+        ::Threads.start_thinking(*mpStockfishPosition, limits, ::Search::SetupStates);
         ::Threads.wait_for_think_finished();
     }
     else
     {
         limits.infinite = true;
-        ::Threads.start_thinking(*mpStockfishPosition, limits, searchMoves, ::Search::SetupStates);
+        ::Threads.start_thinking(*mpStockfishPosition, limits, ::Search::SetupStates);
     }
 
 }
@@ -139,8 +138,8 @@ void slach::EngineInterface::ParseWholeEngineOutput(const std::string& rawOutput
         std::string to_be_parsed = rawOutput.substr(line_begin, line_end - line_begin);
         previous_mid_of_useful_line = mid_of_useful_line - 1;
 
-        int depth = INT_MAX;
-        double score = DBL_MAX;
+        int depth = std::numeric_limits<int>::max();
+        double score = std::numeric_limits<double>::max();
         std::string move_list("");
         std::string root_move("");
 
@@ -184,8 +183,8 @@ void slach::EngineInterface::ParseWholeEngineOutput(const std::string& rawOutput
 }
 void slach::EngineInterface::GetLatestBestScoreAndDepth(double& bestScore, int& depth, std::string& bestMove)  const
 {
-    double max = -DBL_MAX;
-    double min = DBL_MAX;
+    double max = -std::numeric_limits<double>::max();
+    double min = std::numeric_limits<double>::max();
     int max_depth = 0;
     std::string best_root_move = "";
     assert(mLatestRootMoves.size() == mLatestDepths.size());

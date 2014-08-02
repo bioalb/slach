@@ -1,4 +1,0 @@
-1 - Removed supplied Makefile
-2 - misch.h Define of sync_out modified from std::cout modified to a global stringstream (line 68)
-3 - misc.cpp  define the global stringstream on top of the file (line 29)
-4 - bitboard.cpp commented out line 133 (isolated sync_cout, used by stockfish for debugging only).
