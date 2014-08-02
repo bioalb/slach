@@ -42,7 +42,7 @@ void slach::EngineInterface::InitialiseEngine()
     ::Search::init();
     ::Eval::init();
     ::Threads.init();
-    //::TT.set_size().set_size(::Options["Hash"]);
+    //::TT.set_size(::Options["Hash"]);
     ::Options["MultiPV"] = ::UCI::Option(mNumberOfLinesToBeShown, 1, 500);
 }
 
@@ -59,6 +59,7 @@ void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)
 void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, double seconds)
 {
     ::Position::init();//this makes tests passing...
+    ::Search::StateStackPtr SetupStates = ::Search::StateStackPtr(new std::stack<StateInfo>());
     ::Search::Signals.stop = false;
     ::Search::LimitsType limits;
     assert(pPosition != NULL);
@@ -83,6 +84,7 @@ void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, 
     {
         limits.infinite = true;
         ::Threads.start_thinking(*mpStockfishPosition, limits, ::Search::SetupStates);
+        //assert(0);
     }
 
 }

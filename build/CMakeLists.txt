@@ -10,7 +10,7 @@ endif()
 
 # if gtk3 is present all the include and libraries will be in different directories...
 set (GTK_VER gtk2)
-if (EXISTS "/usr/local/lib/wx/include/gtk3-unicode-2.9/")
+if (EXISTS "/usr/lib/i-386-linux-gnu/wx/include/gtk3-unicode-3.0/")
     set (GTK_VER gtk3)
 endif()
 #to build the stockfish library

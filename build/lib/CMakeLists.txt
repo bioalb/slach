@@ -1,7 +1,8 @@
 #Compiling stockfish as a library
 
 ADD_DEFINITIONS(-I${stockfishdir} 
-                -O0 -pedantic -Wno-long-long -Wextra -Wshadow -std=c++11 -g3 -Wall)
+                -Wall -Wcast-qual -fno-exceptions -fno-rtti -std=c++11 -pedantic -Wno-long-long -Wextra -Wshadow -DNDEBUG -O3 -DNO_PREFETCH -flto
+                -Wl,--no-as-needed -lpthread )
 
 add_library(stockfish  ${stockfishdir}/benchmark.cpp 
                        ${stockfishdir}/bitbase.cpp 
