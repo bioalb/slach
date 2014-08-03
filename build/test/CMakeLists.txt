@@ -1,10 +1,9 @@
 
-ADD_DEFINITIONS(-O0 -std=c++0x -g3 -Wall -Wextra -pedantic -fmessage-length=0 -finstrument-functions -fprofile-arcs -ftest-coverage -g -pg)
+ADD_DEFINITIONS(-O0 -pthread -std=c++11 -g3 -Wall -Wextra -Wl,--no-as-needed -pedantic -fmessage-length=0 -finstrument-functions -fprofile-arcs -ftest-coverage -g -pg)
 
 include_directories(. ${srcdir}
                     ${CMAKE_SOURCE_DIR}/test/cxxtest
-                    ${testfiledir}
-                    ${stockfishdir})
+                    ${testfiledir})
 
 SET (source_files ${srcdir}/Exception.cpp
                   ${srcdir}/HelperGlobalFunctions.cpp
@@ -18,7 +17,7 @@ SET (source_files ${srcdir}/Exception.cpp
                   ${srcdir}/EngineInterface.cpp
                   ${srcdir}/LegalMoveChecker.cpp)
                  
-SET (single_test_to_run ${testfiledir}/TestGame.hpp)
+SET (single_test_to_run ${testfiledir}/TestEngineInterface.hpp)
           
 SET (all_test_files ${testfiledir}/TestChessboardWithBorders.hpp 
                     ${testfiledir}/TestChessBoard.hpp
@@ -50,6 +49,6 @@ add_custom_command(OUTPUT ${testfiledir}/single_test_runner.cpp
                    COMMENT "running cxxtestgen now for single file..."
                    VERBATIM)              
 
-set(CMAKE_EXE_LINKER_FLAGS "-pthread -pg")
-TARGET_LINK_LIBRARIES(ALL_TESTS -lm  -lstockfish -lgcov)
-TARGET_LINK_LIBRARIES(SINGLE_TEST -lm  -lstockfish -lgcov)
+set(CMAKE_EXE_LINKER_FLAGS "-pg")
+TARGET_LINK_LIBRARIES(ALL_TESTS -lm  -lgcov)
+TARGET_LINK_LIBRARIES(SINGLE_TEST -lm -lgcov)

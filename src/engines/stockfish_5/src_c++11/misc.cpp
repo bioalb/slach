@@ -28,8 +28,6 @@
 using namespace std;
 using namespace std::chrono;
 
-std::stringstream global_stream; //added by slach
-
 /// Version number. If Version is left empty, then compile date in the format
 /// DD-MM-YY and show in engine_info.
 static const string Version = "5";

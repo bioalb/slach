@@ -2,7 +2,6 @@
 #define ENGINEINTERFACE_HPP_
 
 #include <limits>
-#include "position.h"//within stockfish
 #include "Game.hpp"
 #include "ChessBoard.hpp"
 
@@ -34,8 +33,6 @@ class EngineInterface
     /**Cache the latest suggested lines of engine output when we tried to collect it, as big as mNumberOfLinesToBeShown*/
     std::vector<std::string> mLatestLines;
     std::vector<std::string> mLatestRootMoves;
-    /**pointer to a position object within the stockfish engine*/
-    ::Position* mpStockfishPosition;
 
     /**we create a chessboard as we need squares with pieces to translate engine moves to SAN*/
     ChessBoard* mpChessBoard;

@@ -1,10 +1,10 @@
-#Compiling stockfish as a library
+#Compiling stockfish executable
 
 ADD_DEFINITIONS(-I${stockfishdir} 
                 -Wall -Wcast-qual -fno-exceptions -fno-rtti -std=c++11 -pedantic -Wno-long-long -Wextra -Wshadow -DNDEBUG -O3 -DNO_PREFETCH -flto
                 -Wl,--no-as-needed -lpthread )
 
-add_library(stockfish  ${stockfishdir}/benchmark.cpp 
+add_executable(stockfish  ${stockfishdir}/benchmark.cpp 
                        ${stockfishdir}/bitbase.cpp 
                        ${stockfishdir}/bitboard.cpp 
                        ${stockfishdir}/book.cpp 
@@ -28,7 +28,7 @@ add_library(stockfish  ${stockfishdir}/benchmark.cpp
 link_directories (/usr/lib/i386-linux-gnu) 
 
 #
-TARGET_LINK_LIBRARIES(stockfish  -lm)
+#TARGET_LINK_LIBRARIES(stockfish  -lm)
 
 
 

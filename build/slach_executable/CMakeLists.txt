@@ -4,13 +4,11 @@
 ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 
                 -D_LARGE_FILES 
                 -D__WXGTK__ 
-                 -O0 -std=c++11 -g3 -Wall -Wextra -pedantic -fmessage-length=0 -finstrument-functions)
+                 -O0 -Wl,--no-as-needed -pthread -std=c++11 -g3 -Wall -Wextra -pedantic -fmessage-length=0 -finstrument-functions)
                            
 include_directories(/usr/lib/i386-linux-gnu/wx/include/${GTK_VER}-unicode-3.0
                     /usr/include/wx-3.0 
-                    ${srcdir} 
-                    ${stockfishdir} )
-link_directories (${CMAKE_SOURCE_DIR}/build/lib) 
+                    ${srcdir})
 
 
 ADD_EXECUTABLE(slach   ${srcdir}/Exception.cpp
@@ -42,8 +40,7 @@ TARGET_LINK_LIBRARIES(slach   -lwx_${GTK_VER}u_richtext-3.0
                               -lwx_${GTK_VER}u_core-3.0 
                               -lwx_baseu_xml-3.0
                               -lwx_baseu_net-3.0 
-                              -lwx_baseu-3.0
-                              -lstockfish)
+                              -lwx_baseu-3.0)
 
 
 

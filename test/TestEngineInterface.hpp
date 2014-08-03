@@ -5,8 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <ctime>
-#include "evaluate.h"
-#include "thread.h"
+#include <cassert>
 #include "EngineInterface.hpp"
 #include "ChessBoard.hpp"
 
@@ -31,6 +30,7 @@ public:
 
         std::cout<<std::endl<<"*******"<<"Starting analysis. I will start with infinite analysis"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(p_position);
+
         std::time_t time_now = 0;
         std::time_t start_time = 0;
         std::time(&start_time);
@@ -45,7 +45,7 @@ public:
         delete p_position;
     }
 
-    void TestStartAndStopAfterthreeseconds()
+    void xTestStartAndStopAfterthreeseconds()
     {
         slach::ChessBoard* p_board = new slach::ChessBoard();
         p_board->SetupChessBoard();
@@ -66,7 +66,7 @@ public:
 
 
 
-    void TestStopMakeAMoveAndRestart()
+    void xTestStopMakeAMoveAndRestart()
     {
         slach::ChessBoard* p_board = new slach::ChessBoard();
         p_board->SetupChessBoard();
@@ -77,7 +77,7 @@ public:
 
         slach::EngineInterface interface;
 
-        std::cout<<std::endl<<"*******"<<"Starting analysis for 3 seconds"<<"*******"<<std::endl;
+        std::cout<<std::endl<<"*******"<<"Starting analysis for 3 seconds, stop make a move and restart"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(p_position, 3.0);
         std::cout<<std::endl<<"Done analysing for 3 seconds, now making a move"<<std::endl;
         slach::Move test_move("f5d3",p_board->GetSquares() );
@@ -89,12 +89,12 @@ public:
         std::cout<<std::endl<<"*******"<<"Starting analysis after Bxd3"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(p_position, 3.0);
         std::cout<<std::endl<<"Done analysing for 3 seconds, after Bxd3 engine output follows"<<std::endl;
-        std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
+        //std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
         delete p_board;
         delete p_position;
     }
 
-    void TestStartInfiniteMultiplePV()
+    void xTestStartInfiniteMultiplePV()
     {
         slach::ChessBoard* p_board = new slach::ChessBoard();
         p_board->SetupChessBoard();
@@ -127,7 +127,7 @@ public:
 
     }
 
-    void TestMateInOneThreePlysOutput()
+    void xTestMateInOneThreePlysOutput()
     {
         slach::ChessBoard* p_board = new slach::ChessBoard();
         p_board->SetupChessBoard();
@@ -151,7 +151,7 @@ public:
         delete p_position;
     }
 
-    void TestCheckMate()
+    void xTestCheckMate()
     {
         slach::ChessBoard* p_board = new slach::ChessBoard();
         p_board->SetupChessBoard();
@@ -173,7 +173,7 @@ public:
         delete p_position;
     }
 
-    void TestCheckMateMultplepv()
+    void xTestCheckMateMultplepv()
     {
         slach::ChessBoard* p_board = new slach::ChessBoard();
         p_board->SetupChessBoard();
@@ -196,7 +196,7 @@ public:
         delete p_position;
     }
 
-    void TestParseStockfishMoveList()
+    void xTestParseStockfishMoveList()
     {
         std::string test_string = "info depth 1 seldepth 1 score cp 6 nodes 251 nps 62750 time 4 multipv 1 pv f6e4 c3e4 d5e4";
 
@@ -215,7 +215,7 @@ public:
         TS_ASSERT_DELTA(score, -0.06, 1e-3);
     }
 
-    void TestParseStockfishMoveListWithEndline()
+    void xTestParseStockfishMoveListWithEndline()
     {
         std::string test_string = "info depth 1 seldepth 1 score cp 6 nodes 251 nps 62750 time 4 multipv 1 pv f6e4 c3e4 d5e4\n";
 
@@ -234,7 +234,7 @@ public:
         TS_ASSERT_DELTA(score, -0.06, 1e-3);
     }
 
-    void TestParseStockfishMoveListWithSpaces()
+    void xTestParseStockfishMoveListWithSpaces()
     {
         std::string test_string = "       info depth 1 seldepth 1 score cp 6 nodes 251 nps 62750 time 4 multipv 1 pv f6e4 c3e4 d5e4        ";
 
@@ -253,7 +253,7 @@ public:
         TS_ASSERT_DELTA(score, -0.06, 1e-3);
     }
 
-    void TestParseStockfishMoveListWithSpaces2()
+    void xTestParseStockfishMoveListWithSpaces2()
     {
         std::string test_string = "   info depth 1 seldepth 1 score cp 6 nodes 251 nps 62750 time 4 multipv 1 pv f6e4 c3e4 d5e4    \n";
 
@@ -272,7 +272,7 @@ public:
         TS_ASSERT_DELTA(score, -0.06, 1e-3);
     }
 
-    void TestParseEngineOutputSingleLine()
+    void xTestParseEngineOutputSingleLine()
     {
         std::string test_string =   std::string("info depth 1 seldepth 1 score cp 6 nodes 251 nps 62750 time 4 multipv 1 pv f6e4 c3e4 d5e4") +
 												"\ninfo depth 2 seldepth 2 score cp 6 nodes 372 nps 74400 time 5 multipv 1 pv f6e4 c3e4 d5e4"+
@@ -344,7 +344,7 @@ public:
         TS_ASSERT_EQUALS(interface.mLatestLines[0], "Bxd3 Qxd3 e6 O-O-O Bd6 h3 O-O a3 h6 Ne5 Qe8 Kb1 Bxe5 Bxe5 Nxe5 dxe5 Nd7 f4 ");
     }
 
-    void TestParseEngineOutputMultipleLines()
+    void xTestParseEngineOutputMultipleLines()
     {
 
         std::string test_string = std::string("info depth 1 seldepth 1 score cp 6 nodes 522 nps 130500 time 4 multipv 1 pv f6e4 c3e4 d5e4")
@@ -602,7 +602,7 @@ public:
         TS_ASSERT_EQUALS(best_move, "Bxd3");
     }
 
-    void TestParseEngineOutputMultipleLinesWhiteToMove()
+    void xTestParseEngineOutputMultipleLinesWhiteToMove()
     {
 
         std::string test_string = std::string("info depth 1 seldepth 2 score cp 24 nodes 494 nps 123500 time 4 multipv 2 pv h2h3")

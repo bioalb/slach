@@ -1,17 +1,10 @@
+#include <algorithm>
 #include <limits>
 #include <sstream>
 #include <streambuf>
+#include <cassert>
 #include <pthread.h>
 #include "EngineInterface.hpp"
-#include "bitboard.h"
-#include "evaluate.h"
-#include "position.h"
-#include "search.h"
-#include "thread.h"
-#include "tt.h"
-#include "ucioption.h"
-#include "misc.h"
-
 
 slach::EngineInterface::EngineInterface()
   : mNumberOfLinesToBeShown(1u),
@@ -20,7 +13,6 @@ slach::EngineInterface::EngineInterface()
     mLatestScores(mNumberOfLinesToBeShown, std::numeric_limits<double>::max()),
     mLatestLines(mNumberOfLinesToBeShown, ""),
     mLatestRootMoves (mNumberOfLinesToBeShown, ""),
-    mpStockfishPosition (new ::Position()),
     mpChessBoard( new slach::ChessBoard() )
 {
     mpChessBoard->SetupChessBoard();
@@ -29,21 +21,12 @@ slach::EngineInterface::EngineInterface()
 
 slach::EngineInterface::~EngineInterface()
 {
-    delete mpStockfishPosition;
     delete mpChessBoard;
 }
 
 void slach::EngineInterface::InitialiseEngine()
 {
-    ::UCI::init(::Options);
-    ::Bitboards::init();
-    ::Position::init();
-    ::Bitbases::init_kpk();
-    ::Search::init();
-    ::Eval::init();
-    ::Threads.init();
-    //::TT.set_size(::Options["Hash"]);
-    ::Options["MultiPV"] = ::UCI::Option(mNumberOfLinesToBeShown, 1, 500);
+	system("build/stockfish/stockfish");
 }
 
 void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)
@@ -53,57 +36,37 @@ void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)
     mLatestScores.resize(mNumberOfLinesToBeShown);
     mLatestLines.resize(mNumberOfLinesToBeShown);
     mLatestRootMoves.resize(mNumberOfLinesToBeShown);
-    ::Options["MultiPV"] = ::UCI::Option(mNumberOfLinesToBeShown, 1, 500);
 }
 
 void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, double seconds)
 {
-    ::Position::init();//this makes tests passing...
-    ::Search::StateStackPtr SetupStates = ::Search::StateStackPtr(new std::stack<StateInfo>());
-    ::Search::Signals.stop = false;
-    ::Search::LimitsType limits;
-    assert(pPosition != NULL);
-
-    //critically important to clear the stream.
-    ::global_stream.str(std::string());
-    ::global_stream.clear();
-
-    std::vector< ::Move > searchMoves;
-    mpStockfishPosition->set(pPosition->GetPositionAsFen(), false /*not chess960*/, ::Threads.main());
-    mpChessBoard->SetFenPosition(pPosition->GetPositionAsFen()); //set the helper board with this position
-    mCachedFenPositiontoBeanalysed = pPosition->GetPositionAsFen();
-
-    if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
-    {
-        limits.movetime = 1000*seconds;//converts milliseconds to seconds...
-        limits.infinite = false;
-        ::Threads.start_thinking(*mpStockfishPosition, limits, ::Search::SetupStates);
-        ::Threads.wait_for_think_finished();
-    }
-    else
-    {
-        limits.infinite = true;
-        ::Threads.start_thinking(*mpStockfishPosition, limits, ::Search::SetupStates);
-        //assert(0);
+    std::string fen_position = pPosition->GetPositionAsFen();
+    mpChessBoard->SetFenPosition(fen_position); //set the helper board with this position
+    mCachedFenPositiontoBeanalysed = fen_position;
+    std::string position_command = "position fen "+fen_position;
+    system(position_command.c_str());
+	if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
+	{
+		system("go movetime 5000");
+	}
+	else
+	{
+		system("go infinite");
     }
 
 }
 
 void slach::EngineInterface::StopEngine()
 {
-	::Search::Signals.stop = true;
-	::Threads.main()->notify_one();
-	::Threads.wait_for_think_finished();
-    //::Threads.exit();
+	system("quit");
 }
 
 
 std::vector<std::string> slach::EngineInterface::GetLatestEngineOutput()
 {
-    std::string raw_string = ::global_stream.str();
     std::vector<std::string> pv_lines;
     pv_lines.resize(mNumberOfLinesToBeShown);
-    ParseWholeEngineOutput(raw_string);
+    //ParseWholeEngineOutput(raw_string);
     for (unsigned pv = 0; pv <  pv_lines.size(); pv++)
     {
         std::stringstream ss;
