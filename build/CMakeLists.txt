@@ -9,13 +9,18 @@ if(CMAKE_SIZEOF_VOID_P EQUAL 8)
   set(os_bit_number 64)
 endif()
 
+set(DETECTEDARCH x86-32)
+if (os_bit_number EQUAL 64)
+	set(DETECTEDARCH x86-64)
+endif()
+
 # if gtk3 is present all the include and libraries will be in different directories...
 set (GTK_VER gtk2)
 if (EXISTS "/usr/lib/i-386-linux-gnu/wx/include/gtk3-unicode-3.0/")
     set (GTK_VER gtk3)
 endif()
 #to build the stockfish executable
-add_subdirectory (stockfish)
+# add_subdirectory (stockfish)
 #to build the executable
 add_subdirectory (slach_executable)
 #to build the executable that runs unit tests

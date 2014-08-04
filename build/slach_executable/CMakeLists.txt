@@ -41,6 +41,14 @@ TARGET_LINK_LIBRARIES(slach   -lwx_${GTK_VER}u_richtext-3.0
                               -lwx_baseu_xml-3.0
                               -lwx_baseu_net-3.0 
                               -lwx_baseu-3.0)
+                              
+set (sf_build_command  make -B build ARCH=${DETECTEDARCH})
 
+add_custom_command (TARGET slach
+					PRE_BUILD 
+                    COMMAND ${sf_build_command}             
+                    WORKING_DIRECTORY ../stockfish/src_c++11                                             
+                    COMMENT "building stockfish..."
+                    VERBATIM)
 
 
