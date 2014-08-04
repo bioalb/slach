@@ -19,8 +19,7 @@ set (GTK_VER gtk2)
 if (EXISTS "/usr/lib/i-386-linux-gnu/wx/include/gtk3-unicode-3.0/")
     set (GTK_VER gtk3)
 endif()
-#to build the stockfish executable
-# add_subdirectory (stockfish)
+
 #to build the executable
 add_subdirectory (slach_executable)
 #to build the executable that runs unit tests
