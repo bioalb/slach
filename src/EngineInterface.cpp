@@ -26,7 +26,7 @@ slach::EngineInterface::~EngineInterface()
 
 void slach::EngineInterface::InitialiseEngine()
 {
-	system("build/stockfish/stockfish");
+	system("build/stockfish/src_c++11/stockfish");
 }
 
 void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)

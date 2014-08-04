@@ -76,15 +76,6 @@
 			<target name="single_test" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments>SINGLE_TEST</buildArguments>
-				<buildTarget/>
-				<stopOnError>true</stopOnError>
-				<useDefaultCommand>false</useDefaultCommand>
-				<runAllBuilders>false</runAllBuilders>
-			</target>
-			<target name="build stockfish" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-				<buildCommand>make</buildCommand>
-				<buildArguments>stockfish</buildArguments>
-				<buildTarget/>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>false</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>

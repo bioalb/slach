@@ -49,6 +49,22 @@ add_custom_command(OUTPUT ${testfiledir}/single_test_runner.cpp
                    COMMENT "running cxxtestgen now for single file..."
                    VERBATIM)              
 
+set (sf_build_command make build ARCH=${DETECTEDARCH})
+
+add_custom_command (TARGET ALL_TESTS
+					PRE_BUILD 
+                    COMMAND ${sf_build_command}             
+                    WORKING_DIRECTORY ../stockfish/src_c++11                                             
+                    COMMENT "building stockfish..."
+                    VERBATIM)
+                    
+add_custom_command (TARGET SINGLE_TEST
+					PRE_BUILD 
+                    COMMAND ${sf_build_command}             
+                    WORKING_DIRECTORY ../stockfish/src_c++11                                             
+                    COMMENT "building stockfish..."
+                    VERBATIM)
+                    
 set(CMAKE_EXE_LINKER_FLAGS "-pg")
 TARGET_LINK_LIBRARIES(ALL_TESTS -lm  -lgcov)
 TARGET_LINK_LIBRARIES(SINGLE_TEST -lm -lgcov)

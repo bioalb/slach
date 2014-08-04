@@ -2,7 +2,6 @@
 set( CMAKE_VERBOSE_MAKEFILE on )
 SET(srcdir ${CMAKE_SOURCE_DIR}/src)
 SET(testfiledir ${CMAKE_SOURCE_DIR}/test)
-SET(stockfishdir ${CMAKE_SOURCE_DIR}/src/engines/stockfish_5/src_c++11)
 
 set(os_bit_number 32)
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
