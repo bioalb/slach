@@ -2,6 +2,7 @@
 #define ENGINEINTERFACE_HPP_
 
 #include <limits>
+#include <thread>
 #include "Game.hpp"
 #include "ChessBoard.hpp"
 
@@ -20,6 +21,8 @@ class EngineInterface
 
     /**this is the number of different lines to be shown. it is MultiPV in stockfish, defaults to 1*/
     unsigned mNumberOfLinesToBeShown;
+
+    std::shared_ptr<std::thread> mpEngineThread;
 
   protected:
     std::string mCachedFenPositiontoBeanalysed;

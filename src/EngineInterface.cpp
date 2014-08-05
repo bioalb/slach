@@ -3,7 +3,6 @@
 #include <sstream>
 #include <streambuf>
 #include <cassert>
-#include <pthread.h>
 #include "EngineInterface.hpp"
 
 slach::EngineInterface::EngineInterface()
@@ -16,7 +15,8 @@ slach::EngineInterface::EngineInterface()
     mpChessBoard( new slach::ChessBoard() )
 {
     mpChessBoard->SetupChessBoard();
-    InitialiseEngine();
+    mpEngineThread =  std::make_shared<std::thread>(&slach::EngineInterface::InitialiseEngine, this);
+
 }
 
 slach::EngineInterface::~EngineInterface()
