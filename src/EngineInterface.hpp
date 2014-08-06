@@ -3,6 +3,7 @@
 
 #include <limits>
 #include <thread>
+#include <atomic>
 #include "Game.hpp"
 #include "ChessBoard.hpp"
 
@@ -23,6 +24,13 @@ class EngineInterface
     unsigned mNumberOfLinesToBeShown;
 
     std::shared_ptr<std::thread> mpEngineThread;
+
+    std::string mEngineString;
+
+    /**Initialised to false*/
+    std::atomic<bool> mEngineIsrunning;
+
+    void DoAnalysePosition(slach::Position* pPosition, double seconds);
 
   protected:
     std::string mCachedFenPositiontoBeanalysed;

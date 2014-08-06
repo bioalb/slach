@@ -14,9 +14,8 @@ slach::EngineInterface::EngineInterface()
     mLatestRootMoves (mNumberOfLinesToBeShown, ""),
     mpChessBoard( new slach::ChessBoard() )
 {
+	mEngineIsrunning.store(false,std::memory_order_relaxed);
     mpChessBoard->SetupChessBoard();
-    mpEngineThread =  std::make_shared<std::thread>(&slach::EngineInterface::InitialiseEngine, this);
-
 }
 
 slach::EngineInterface::~EngineInterface()
@@ -26,6 +25,7 @@ slach::EngineInterface::~EngineInterface()
 
 void slach::EngineInterface::InitialiseEngine()
 {
+	mEngineIsrunning.store(true,std::memory_order_relaxed);
 	system("build/stockfish/src_c++11/stockfish");
 }
 
@@ -40,6 +40,18 @@ void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)
 
 void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, double seconds)
 {
+	if (!mpEngineThread)
+	{
+	    mpEngineThread =  std::make_shared<std::thread>(&slach::EngineInterface::DoAnalysePosition, this, pPosition, seconds);
+	}
+}
+
+void slach::EngineInterface::DoAnalysePosition(slach::Position* pPosition, double seconds)
+{
+	if (mEngineIsrunning.load(std::memory_order_relaxed) == false)
+	{
+		InitialiseEngine();
+	}
     std::string fen_position = pPosition->GetPositionAsFen();
     mpChessBoard->SetFenPosition(fen_position); //set the helper board with this position
     mCachedFenPositiontoBeanalysed = fen_position;
