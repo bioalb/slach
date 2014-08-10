@@ -2,6 +2,7 @@
 set( CMAKE_VERBOSE_MAKEFILE on )
 SET(srcdir ${CMAKE_SOURCE_DIR}/src)
 SET(testfiledir ${CMAKE_SOURCE_DIR}/test)
+SET(stockfishdir ${CMAKE_SOURCE_DIR}/build/stockfish/src_c++11)
 
 set(os_bit_number 32)
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -19,6 +20,7 @@ if (EXISTS "/usr/lib/i-386-linux-gnu/wx/include/gtk3-unicode-3.0/")
     set (GTK_VER gtk3)
 endif()
 
+add_subdirectory (stockfish)
 #to build the executable
 add_subdirectory (slach_executable)
 #to build the executable that runs unit tests

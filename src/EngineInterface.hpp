@@ -27,11 +27,11 @@ class EngineInterface
 
     std::string mEngineString;
 
-    /**Initialised to false*/
-    std::atomic<bool> mEngineIsrunning;
-
     void DoAnalysePosition(slach::Position* pPosition, double seconds);
 
+    void IssueCommandtoStockfish(const std::string& command);
+
+    void InitEngine();
   protected:
     std::string mCachedFenPositiontoBeanalysed;
 
@@ -63,8 +63,6 @@ class EngineInterface
     void ParseALineofStockfishOutput(const std::string& stockfishLine, int & depth, double & score, std::string &  move_list, std::string& rootMove);
 
     void ParseWholeEngineOutput(const std::string& rawOutput);
-
-    void InitialiseEngine();
 
   public :
     /**

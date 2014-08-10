@@ -8,7 +8,8 @@ ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64
                            
 include_directories(/usr/lib/i386-linux-gnu/wx/include/${GTK_VER}-unicode-3.0
                     /usr/include/wx-3.0 
-                    ${srcdir})
+                    ${srcdir}
+                    ${stockfishdir})
 
 
 ADD_EXECUTABLE(slach   ${srcdir}/Exception.cpp
@@ -30,6 +31,8 @@ ADD_EXECUTABLE(slach   ${srcdir}/Exception.cpp
                        ${srcdir}/GUI/BottomPanel.cpp 
                        ${srcdir}/GUI/slach_main.cpp)
 
+
+FIND_LIBRARY(STOCKFISH_LIB NAMES stockfish PATHS ${stockfishdir})
 #most of this from the wx widgets documentation
 TARGET_LINK_LIBRARIES(slach   -lwx_${GTK_VER}u_richtext-3.0 
                               -lwx_${GTK_VER}u_aui-3.0 
@@ -40,15 +43,7 @@ TARGET_LINK_LIBRARIES(slach   -lwx_${GTK_VER}u_richtext-3.0
                               -lwx_${GTK_VER}u_core-3.0 
                               -lwx_baseu_xml-3.0
                               -lwx_baseu_net-3.0 
-                              -lwx_baseu-3.0)
-                              
-set (sf_build_command  make build ARCH=${DETECTEDARCH})
-
-add_custom_command (TARGET slach
-					PRE_BUILD 
-                    COMMAND ${sf_build_command}             
-                    WORKING_DIRECTORY ../stockfish/src_c++11                                             
-                    COMMENT "building stockfish..."
-                    VERBATIM)
+                              -lwx_baseu-3.0
+                               ${STOCKFISH_LIB})
 
 

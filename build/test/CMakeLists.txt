@@ -31,7 +31,7 @@ SET (all_test_files ${testfiledir}/TestChessboardWithBorders.hpp
                     ${testfiledir}/TestHelperGlobalMethod.hpp
                     ${testfiledir}/TestLegalMoveChecker.hpp)
 
-link_directories (/usr/lib/i386-linux-gnu ${CMAKE_SOURCE_DIR}/build/lib) 
+#link_directories (/usr/lib/i386-linux-gnu) 
 
 ADD_EXECUTABLE(ALL_TESTS ${testfiledir}/test_runner.cpp ${source_files})
 
@@ -54,14 +54,14 @@ set (sf_build_command make build ARCH=${DETECTEDARCH})
 add_custom_command (TARGET ALL_TESTS
 					PRE_BUILD 
                     COMMAND ${sf_build_command}             
-                    WORKING_DIRECTORY ../stockfish/src_c++11                                             
+                    WORKING_DIRECTORY ${stockfishdir}                                             
                     COMMENT "building stockfish..."
                     VERBATIM)
                     
 add_custom_command (TARGET SINGLE_TEST
 					PRE_BUILD 
                     COMMAND ${sf_build_command}             
-                    WORKING_DIRECTORY ../stockfish/src_c++11                                             
+                    WORKING_DIRECTORY ${stockfishdir}                                             
                     COMMENT "building stockfish..."
                     VERBATIM)
                     

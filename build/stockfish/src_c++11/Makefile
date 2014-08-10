@@ -38,10 +38,12 @@ BINDIR = $(PREFIX)/bin
 PGOBENCH = ./$(EXE) bench 32 1 1 default time
 
 ### Object files
-OBJS = benchmark.o bitbase.o bitboard.o book.o endgame.o evaluate.o main.o \
+OBJS_MINUS_MAIN = benchmark.o bitbase.o bitboard.o book.o endgame.o evaluate.o \
 	material.o misc.o movegen.o movepick.o notation.o pawns.o position.o \
 	search.o thread.o timeman.o tt.o uci.o ucioption.o
-
+	
+OBJS = $(OBJS_MINUS_MAIN) main.o 
+	
 ### ==========================================================================
 ### Section 2. High-level Configuration
 ### ==========================================================================
@@ -365,7 +367,7 @@ help:
 build:
 	$(MAKE) ARCH=$(ARCH) COMP=$(COMP) config-sanity
 	$(MAKE) ARCH=$(ARCH) COMP=$(COMP) all
-
+	
 profile-build:
 	$(MAKE) ARCH=$(ARCH) COMP=$(COMP) config-sanity
 	@echo ""
@@ -393,9 +395,9 @@ install:
 	-mkdir -p -m 755 $(BINDIR)
 	-cp $(EXE) $(BINDIR)
 	-strip $(BINDIR)/$(EXE)
-
+	
 clean:
-	$(RM) $(EXE) $(EXE).exe *.o .depend *~ core bench.txt *.gcda
+	$(RM) $(EXE) $(EXE).exe *.o .depend *~ core bench.txt *.gcda *.a
 
 default:
 	help
@@ -405,7 +407,7 @@ default:
 ### ==========================================================================
 
 all: $(EXE) .depend
-
+	
 config-sanity:
 	@echo ""
 	@echo "Config:"
@@ -442,7 +444,8 @@ config-sanity:
 
 $(EXE): $(OBJS)
 	$(CXX) -o $@ $(OBJS) $(LDFLAGS)
-
+	@ar rcs libstockfish.a $(OBJS_MINUS_MAIN)
+		
 gcc-profile-prepare:
 	$(MAKE) ARCH=$(ARCH) COMP=$(COMP) gcc-profile-clean
 

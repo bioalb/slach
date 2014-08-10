@@ -4,6 +4,14 @@
 #include <streambuf>
 #include <cassert>
 #include "EngineInterface.hpp"
+//following includes are the same as main.cpp in stockfish exe
+#include "bitboard.h"
+#include "evaluate.h"
+#include "position.h"
+#include "search.h"
+#include "thread.h"
+#include "tt.h"
+#include "ucioption.h"
 
 slach::EngineInterface::EngineInterface()
   : mNumberOfLinesToBeShown(1u),
@@ -14,19 +22,27 @@ slach::EngineInterface::EngineInterface()
     mLatestRootMoves (mNumberOfLinesToBeShown, ""),
     mpChessBoard( new slach::ChessBoard() )
 {
-	mEngineIsrunning.store(false,std::memory_order_relaxed);
     mpChessBoard->SetupChessBoard();
+    InitEngine();
+}
+
+void slach::EngineInterface::InitEngine()
+{
+	  UCI::init(Options);
+	  Bitboards::init();
+	  ::Position::init();
+	  Bitbases::init_kpk();
+	  Search::init();
+	  Pawns::init();
+	  Eval::init();
+	  Threads.init();
+	  TT.resize(Options["Hash"]);
 }
 
 slach::EngineInterface::~EngineInterface()
 {
+	//mpEngineThread->join();
     delete mpChessBoard;
-}
-
-void slach::EngineInterface::InitialiseEngine()
-{
-	mEngineIsrunning.store(true,std::memory_order_relaxed);
-	system("build/stockfish/src_c++11/stockfish");
 }
 
 void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)
@@ -43,27 +59,41 @@ void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, 
 	if (!mpEngineThread)
 	{
 	    mpEngineThread =  std::make_shared<std::thread>(&slach::EngineInterface::DoAnalysePosition, this, pPosition, seconds);
+	    mpEngineThread->detach();
 	}
+}
+
+void slach::EngineInterface::IssueCommandtoStockfish(const std::string& command)
+{
+	  //std::streambuf *backup;
+	  //backup = std::cin.rdbuf();     // back up cin's streambuf
+
+	  std::stringbuf  psbuf(command + "\n");
+	  std::cin.rdbuf(&psbuf);         // assign psbuf to cin
+	  std::cin.sync();
+	  //std::cin.rdbuf(backup);        // restore cin's original streambuf
 }
 
 void slach::EngineInterface::DoAnalysePosition(slach::Position* pPosition, double seconds)
 {
-	if (mEngineIsrunning.load(std::memory_order_relaxed) == false)
-	{
-		InitialiseEngine();
-	}
+	//if (mEngineIsrunning.load(std::memory_order_relaxed) == false)
+	//{
+		//InitialiseEngine();
+	//}
+
     std::string fen_position = pPosition->GetPositionAsFen();
     mpChessBoard->SetFenPosition(fen_position); //set the helper board with this position
     mCachedFenPositiontoBeanalysed = fen_position;
-    std::string position_command = "position fen "+fen_position;
-    system(position_command.c_str());
+    std::string position_command = "position fen "+fen_position+"\n";
+    IssueCommandtoStockfish(position_command);
+
 	if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
 	{
-		system("go movetime 5000");
+		IssueCommandtoStockfish("go movetime 5000");
 	}
 	else
 	{
-		system("go infinite");
+		IssueCommandtoStockfish("go infinite \n");
     }
 
 }
