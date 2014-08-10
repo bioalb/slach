@@ -3,7 +3,8 @@ ADD_DEFINITIONS(-O0 -pthread -std=c++11 -g3 -Wall -Wextra -Wl,--no-as-needed -pe
 
 include_directories(. ${srcdir}
                     ${CMAKE_SOURCE_DIR}/test/cxxtest
-                    ${testfiledir})
+                    ${testfiledir}
+                    ${stockfishdir})
 
 SET (source_files ${srcdir}/Exception.cpp
                   ${srcdir}/HelperGlobalFunctions.cpp
@@ -31,8 +32,6 @@ SET (all_test_files ${testfiledir}/TestChessboardWithBorders.hpp
                     ${testfiledir}/TestHelperGlobalMethod.hpp
                     ${testfiledir}/TestLegalMoveChecker.hpp)
 
-#link_directories (/usr/lib/i386-linux-gnu) 
-
 ADD_EXECUTABLE(ALL_TESTS ${testfiledir}/test_runner.cpp ${source_files})
 
 ADD_EXECUTABLE(SINGLE_TEST ${testfiledir}/single_test_runner.cpp ${source_files})
@@ -48,23 +47,8 @@ add_custom_command(OUTPUT ${testfiledir}/single_test_runner.cpp
                    DEPENDS ${all_test_files}                                                            
                    COMMENT "running cxxtestgen now for single file..."
                    VERBATIM)              
-
-set (sf_build_command make build ARCH=${DETECTEDARCH})
-
-add_custom_command (TARGET ALL_TESTS
-					PRE_BUILD 
-                    COMMAND ${sf_build_command}             
-                    WORKING_DIRECTORY ${stockfishdir}                                             
-                    COMMENT "building stockfish..."
-                    VERBATIM)
                     
-add_custom_command (TARGET SINGLE_TEST
-					PRE_BUILD 
-                    COMMAND ${sf_build_command}             
-                    WORKING_DIRECTORY ${stockfishdir}                                             
-                    COMMENT "building stockfish..."
-                    VERBATIM)
-                    
+FIND_LIBRARY(STOCKFISH_LIB NAMES stockfish PATHS ${stockfishdir})
 set(CMAKE_EXE_LINKER_FLAGS "-pg")
-TARGET_LINK_LIBRARIES(ALL_TESTS -lm  -lgcov)
-TARGET_LINK_LIBRARIES(SINGLE_TEST -lm -lgcov)
+TARGET_LINK_LIBRARIES(ALL_TESTS -lm  -lgcov ${STOCKFISH_LIB})
+TARGET_LINK_LIBRARIES(SINGLE_TEST -lm -lgcov ${STOCKFISH_LIB})
