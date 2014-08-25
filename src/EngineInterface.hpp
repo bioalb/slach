@@ -3,9 +3,16 @@
 
 #include <limits>
 #include <thread>
+#include <mutex>
 #include <atomic>
+#include <ios>
+#include <fstream>
+#include <sstream>
+#include <streambuf>
+
 #include "Game.hpp"
 #include "ChessBoard.hpp"
+
 
 class TestEngineInterface;//forward declaration, for testing and accessing protected methods from the test class
 
@@ -27,7 +34,10 @@ class EngineInterface
 
     std::string mEngineString;
 
-    void DoAnalysePosition(slach::Position* pPosition, double seconds);
+    std::istringstream mCommandBuffer;
+    std::streambuf *mBackupCinBuf;
+    std::mutex mMutex;
+    std::atomic<bool> mEngineIsRunning;
 
     void IssueCommandtoStockfish(const std::string& command);
 

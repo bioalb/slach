@@ -1,20 +1,13 @@
 #include <algorithm>
 #include <limits>
-#include <sstream>
-#include <streambuf>
+
 #include <cassert>
 #include "EngineInterface.hpp"
-//following includes are the same as main.cpp in stockfish exe
-#include "bitboard.h"
-#include "evaluate.h"
-#include "position.h"
-#include "search.h"
-#include "thread.h"
-#include "tt.h"
-#include "ucioption.h"
 
 slach::EngineInterface::EngineInterface()
   : mNumberOfLinesToBeShown(1u),
+    mCommandBuffer(""),
+    mEngineIsRunning(false),
     mCachedFenPositiontoBeanalysed(""),
     mLatestDepths(mNumberOfLinesToBeShown, std::numeric_limits<int>::max()),
     mLatestScores(mNumberOfLinesToBeShown, std::numeric_limits<double>::max()),
@@ -23,25 +16,18 @@ slach::EngineInterface::EngineInterface()
     mpChessBoard( new slach::ChessBoard() )
 {
     mpChessBoard->SetupChessBoard();
-    InitEngine();
+    mpEngineThread =  std::make_shared<std::thread>(&slach::EngineInterface::InitEngine, this);
+    mpEngineThread->detach();
 }
 
 void slach::EngineInterface::InitEngine()
 {
-	  UCI::init(Options);
-	  Bitboards::init();
-	  ::Position::init();
-	  Bitbases::init_kpk();
-	  Search::init();
-	  Pawns::init();
-	  Eval::init();
-	  Threads.init();
-	  TT.resize(Options["Hash"]);
+	system("build/stockfish/src_c++11/stockfish");
 }
 
 slach::EngineInterface::~EngineInterface()
 {
-	//mpEngineThread->join();
+	mpEngineThread->join();
     delete mpChessBoard;
 }
 
@@ -56,36 +42,11 @@ void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)
 
 void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, double seconds)
 {
-	if (!mpEngineThread)
-	{
-	    mpEngineThread =  std::make_shared<std::thread>(&slach::EngineInterface::DoAnalysePosition, this, pPosition, seconds);
-	    mpEngineThread->detach();
-	}
-}
-
-void slach::EngineInterface::IssueCommandtoStockfish(const std::string& command)
-{
-	  //std::streambuf *backup;
-	  //backup = std::cin.rdbuf();     // back up cin's streambuf
-
-	  std::stringbuf  psbuf(command + "\n");
-	  std::cin.rdbuf(&psbuf);         // assign psbuf to cin
-	  std::cin.sync();
-	  //std::cin.rdbuf(backup);        // restore cin's original streambuf
-}
-
-void slach::EngineInterface::DoAnalysePosition(slach::Position* pPosition, double seconds)
-{
-	//if (mEngineIsrunning.load(std::memory_order_relaxed) == false)
-	//{
-		//InitialiseEngine();
-	//}
-
     std::string fen_position = pPosition->GetPositionAsFen();
     mpChessBoard->SetFenPosition(fen_position); //set the helper board with this position
     mCachedFenPositiontoBeanalysed = fen_position;
-    std::string position_command = "position fen "+fen_position+"\n";
-    IssueCommandtoStockfish(position_command);
+    //std::string position_command = "position fen "+fen_position+"\n";
+    //IssueCommandtoStockfish(position_command);
 
 	if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
 	{
@@ -93,9 +54,25 @@ void slach::EngineInterface::DoAnalysePosition(slach::Position* pPosition, doubl
 	}
 	else
 	{
-		IssueCommandtoStockfish("go infinite \n");
+		IssueCommandtoStockfish("d\n");
     }
+}
 
+void slach::EngineInterface::IssueCommandtoStockfish(const std::string& command)
+{
+	mMutex.lock();
+	mCommandBuffer.clear();
+	mCommandBuffer.str(command);
+	std::cin.rdbuf(mCommandBuffer.rdbuf()); // assign
+	mMutex.unlock();
+	//mpEngineThread->join();
+	/*mMutex.lock();
+	mCommandBuffer.sync();
+	mCommandBuffer.clear();
+	std::cin.rdbuf(mBackupCinBuf);
+	mCommandBuffer.sync();
+	mCommandBuffer.clear();
+	mMutex.unlock();*/
 }
 
 void slach::EngineInterface::StopEngine()
