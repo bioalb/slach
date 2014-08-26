@@ -6,7 +6,7 @@ ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64
                 -D__WXGTK__ 
                  -O0 -Wl,--no-as-needed -pthread -std=c++11 -g3 -Wall -Wextra -pedantic -fmessage-length=0 -finstrument-functions)
                            
-include_directories(/usr/lib/i386-linux-gnu/wx/include/${GTK_VER}-unicode-3.0
+include_directories(/usr/lib/${ARCHITECTURE_LIBRARY_DIR}/wx/include/${GTK_VER}-unicode-3.0
                     /usr/include/wx-3.0 
                     ${srcdir}
                     ${stockfishdir})
