@@ -1,16 +1,12 @@
 
 
-#most of this from the wx widgets documentation
-ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 
-                -D_LARGE_FILES 
-                -D__WXGTK__ 
-                 -O0 -Wl,--no-as-needed -pthread -std=c++11 -g3 -Wall -Wextra -pedantic -fmessage-length=0 -finstrument-functions)
-                           
+#these are from the wx widgets documentation
+ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D__WXGTK__)
+
 include_directories(/usr/lib/${ARCHITECTURE_LIBRARY_DIR}/wx/include/${GTK_VER}-unicode-3.0
                     /usr/include/wx-3.0 
                     ${srcdir}
                     ${stockfishdir})
-
 
 ADD_EXECUTABLE(slach   ${srcdir}/Exception.cpp
                        ${srcdir}/HelperGlobalFunctions.cpp
@@ -31,6 +27,7 @@ ADD_EXECUTABLE(slach   ${srcdir}/Exception.cpp
                        ${srcdir}/GUI/BottomPanel.cpp 
                        ${srcdir}/GUI/slach_main.cpp)
 
+LINK_DIRECTORIES(/usr/lib/${ARCHITECTURE_LIBRARY_DIR})
 #most of this from the wx widgets documentation
 TARGET_LINK_LIBRARIES(slach   -lwx_${GTK_VER}u_richtext-3.0 
                               -lwx_${GTK_VER}u_aui-3.0 

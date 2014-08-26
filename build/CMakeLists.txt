@@ -4,6 +4,12 @@ SET(srcdir ${CMAKE_SOURCE_DIR}/src)
 SET(testfiledir ${CMAKE_SOURCE_DIR}/test)
 SET(stockfishdir ${CMAKE_SOURCE_DIR}/build/stockfish/src_c++11)
 
+SET(CMAKE_CXX_FLAGS  "-O0 -Wl,--no-as-needed -pthread -std=c++11 -g3 -Wall -Wextra -pedantic" )
+SET(CMAKE_EXE_LINKER_FLAGS  "-pthread -fmessage-length=0 -finstrument-functions ")
+
+#######################################
+# Architecture-dependent variables
+#######################################
 set(os_bit_number 32)
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
   set(os_bit_number 64)
@@ -24,7 +30,11 @@ endif()
 if (EXISTS "/usr/lib/x86_64-linux-gnu/wx/include/gtk3-unicode-3.0/")
     set (GTK_VER gtk3)
 endif()
+#######################################
 
+#The actual things we will build
+
+#To build the stockfish executable
 add_subdirectory (stockfish)
 #to build the executable
 add_subdirectory (slach_executable)
