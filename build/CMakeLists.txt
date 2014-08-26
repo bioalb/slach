@@ -24,12 +24,10 @@ endif()
 
 # if gtk3 is present all the include and libraries will be in different directories...
 set (GTK_VER gtk2)
-if (EXISTS "/usr/lib/i-386-linux-gnu/wx/include/gtk3-unicode-3.0/")
+if (EXISTS "/usr/lib/${ARCHITECTURE_LIBRARY_DIR}/wx/include/gtk3-unicode-3.0/")
     set (GTK_VER gtk3)
 endif()
-if (EXISTS "/usr/lib/x86_64-linux-gnu/wx/include/gtk3-unicode-3.0/")
-    set (GTK_VER gtk3)
-endif()
+
 #######################################
 
 #The actual things we will build
