@@ -1,13 +1,14 @@
 #include <algorithm>
 #include <limits>
-
 #include <cassert>
+#include <sstream>
 #include "EngineInterface.hpp"
+#include "main_stockfish.hpp"
+std::mutex slach_mutex, slach_mutex2;
 
 slach::EngineInterface::EngineInterface()
   : mNumberOfLinesToBeShown(1u),
-    mCommandBuffer(""),
-    mEngineIsRunning(false),
+    mCommandBuffer(new std::stringbuf("")),
     mCachedFenPositiontoBeanalysed(""),
     mLatestDepths(mNumberOfLinesToBeShown, std::numeric_limits<int>::max()),
     mLatestScores(mNumberOfLinesToBeShown, std::numeric_limits<double>::max()),
@@ -16,13 +17,19 @@ slach::EngineInterface::EngineInterface()
     mpChessBoard( new slach::ChessBoard() )
 {
     mpChessBoard->SetupChessBoard();
+
     mpEngineThread =  std::make_shared<std::thread>(&slach::EngineInterface::InitEngine, this);
-    mpEngineThread->detach();
+    //mpEngineThread->detach();
+
 }
 
 void slach::EngineInterface::InitEngine()
 {
-	system("build/stockfish/src_c++11/stockfish");
+	slach_mutex.lock();
+	mBackupCinBuf = std::cin.rdbuf();
+	std::cin.rdbuf(mCommandBuffer); // assign
+	::main_stockfish(1,nullptr);
+	slach_mutex.unlock();
 }
 
 slach::EngineInterface::~EngineInterface()
@@ -54,30 +61,24 @@ void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, 
 	}
 	else
 	{
-		IssueCommandtoStockfish("d\n");
+		IssueCommandtoStockfish("d");
     }
 }
 
 void slach::EngineInterface::IssueCommandtoStockfish(const std::string& command)
 {
-	mMutex.lock();
-	mCommandBuffer.clear();
-	mCommandBuffer.str(command);
-	std::cin.rdbuf(mCommandBuffer.rdbuf()); // assign
-	mMutex.unlock();
-	//mpEngineThread->join();
-	/*mMutex.lock();
-	mCommandBuffer.sync();
-	mCommandBuffer.clear();
-	std::cin.rdbuf(mBackupCinBuf);
-	mCommandBuffer.sync();
-	mCommandBuffer.clear();
-	mMutex.unlock();*/
+	//slach_mutex2.lock();
+	std::cin.rdbuf(mCommandBuffer); // assign
+	mCommandBuffer->str(command+"\n");
+	mCommandBuffer->pubsync();
+	std::cin.sync();
+	std::cin.rdbuf(mBackupCinBuf); // re-assign
+	//slach_mutex2.unlock();
 }
 
 void slach::EngineInterface::StopEngine()
 {
-	system("quit");
+	IssueCommandtoStockfish("quit");
 }
 
 

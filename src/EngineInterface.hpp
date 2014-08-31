@@ -18,6 +18,7 @@ class TestEngineInterface;//forward declaration, for testing and accessing prote
 
 namespace slach
 {
+
 /**
  * A class that serves as a communicator with one or more engines.
  */
@@ -34,14 +35,15 @@ class EngineInterface
 
     std::string mEngineString;
 
-    std::istringstream mCommandBuffer;
+
+    std::stringbuf *mCommandBuffer;
     std::streambuf *mBackupCinBuf;
-    std::mutex mMutex;
-    std::atomic<bool> mEngineIsRunning;
+
 
     void IssueCommandtoStockfish(const std::string& command);
 
     void InitEngine();
+
   protected:
     std::string mCachedFenPositiontoBeanalysed;
 

@@ -152,11 +152,11 @@ void UCI::loop(int argc, char* argv[]) {
       cmd += std::string(argv[i]) + " ";
 
   do {
-      if (argc == 1 && !getline(cin, cmd)) // Block here waiting for input
-          cmd = "quit";
-
+      /*if (argc == 1 && !getline(cin, cmd)) // Block here waiting for input
+          cmd = "quit";*/
+bool valid = getline(cin, cmd);
       istringstream is(cmd);
-
+std::cout<<"Command is "<<cmd<<std::endl;
       is >> skipws >> token;
 
       if (token == "quit" || token == "stop" || token == "ponderhit")
