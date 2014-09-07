@@ -32,16 +32,15 @@ class EngineInterface
     unsigned mNumberOfLinesToBeShown;
 
     std::shared_ptr<std::thread> mpEngineThread;
+    std::shared_ptr<std::thread> mpCommandThread;
 
     std::string mEngineString;
-
 
     std::stringbuf *mCommandBuffer;
     std::streambuf *mBackupCinBuf;
 
 
     void IssueCommandtoStockfish(const std::string& command);
-
     void InitEngine();
 
   protected:

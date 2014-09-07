@@ -29,10 +29,19 @@
 #include "thread.h"
 #include "tt.h"
 #include "ucioption.h"
+#include "guithreadvars.h"
 
 using namespace std;
 
 extern void benchmark(const Position& pos, istream& is);
+
+std::string GlobalCommandFromGUI;
+bool GuiIssuedNewCommand;
+std::mutex global_mutex_send;
+std::mutex global_mutex_receive;
+std::condition_variable global_cv_send;
+std::condition_variable global_cv_received;
+bool EngineReceievdCommand;
 
 namespace {
 
@@ -152,12 +161,24 @@ void UCI::loop(int argc, char* argv[]) {
       cmd += std::string(argv[i]) + " ";
 
   do {
-      if (argc == 1 && !getline(cin, cmd)) // Block here waiting for input
-          cmd = "quit";
+
+      //if (argc == 1 && !getline(cin, cmd)) {}// Block here waiting for input
+          //cmd = "quit";
+      std::unique_lock<std::mutex> lck(global_mutex_send);
+      GuiIssuedNewCommand = false;
+      while (GuiIssuedNewCommand == false)
+      {
+    	  global_cv_send.wait(lck);
+    	  //idle loop
+      }
+
+      cmd = GlobalCommandFromGUI;
 
       istringstream is(cmd);
 
       is >> skipws >> token;
+
+      sync_cout<<cmd<<sync_endl;
 
       if (token == "quit" || token == "stop" || token == "ponderhit")
       {
@@ -212,6 +233,13 @@ void UCI::loop(int argc, char* argv[]) {
       else if (token == "isready")    sync_cout << "readyok" << sync_endl;
       else
           sync_cout << "Unknown command: " << cmd << sync_endl;
+
+
+  	//std::unique_lock<std::mutex> lck2(global_mutex_receive);
+    /*global_mutex_receive.lock();
+  	EngineReceievdCommand = true;
+  	global_mutex_receive.unlock();
+  	global_cv_received.notify_all();*/
 
   } while (token != "quit" && argc == 1); // Passed args have one-shot behaviour
 

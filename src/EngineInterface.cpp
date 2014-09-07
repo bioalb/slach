@@ -3,12 +3,13 @@
 #include <cassert>
 #include <sstream>
 #include "EngineInterface.hpp"
+#include "guithreadvars.h"
 #include "main_stockfish.hpp"
-std::mutex slach_mutex, slach_mutex2;
+std::mutex slach_mutex, slach_mutex2, slach_mutex3;
 
 slach::EngineInterface::EngineInterface()
   : mNumberOfLinesToBeShown(1u),
-    mCommandBuffer(new std::stringbuf("")),
+    mCommandBuffer(new std::stringbuf("isready")),
     mCachedFenPositiontoBeanalysed(""),
     mLatestDepths(mNumberOfLinesToBeShown, std::numeric_limits<int>::max()),
     mLatestScores(mNumberOfLinesToBeShown, std::numeric_limits<double>::max()),
@@ -19,17 +20,20 @@ slach::EngineInterface::EngineInterface()
     mpChessBoard->SetupChessBoard();
 
     mpEngineThread =  std::make_shared<std::thread>(&slach::EngineInterface::InitEngine, this);
+    GlobalCommandFromGUI = "readoyok";
+    GuiIssuedNewCommand = false;
+    EngineReceievdCommand = false;
     //mpEngineThread->detach();
 
 }
 
 void slach::EngineInterface::InitEngine()
 {
-	slach_mutex.lock();
-	mBackupCinBuf = std::cin.rdbuf();
-	std::cin.rdbuf(mCommandBuffer); // assign
+	//slach_mutex.lock();
+	//mBackupCinBuf = std::cin.rdbuf();
+	//std::cin.rdbuf(mCommandBuffer); // assign
 	::main_stockfish(1,nullptr);
-	slach_mutex.unlock();
+	//slach_mutex.unlock();
 }
 
 slach::EngineInterface::~EngineInterface()
@@ -52,8 +56,8 @@ void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, 
     std::string fen_position = pPosition->GetPositionAsFen();
     mpChessBoard->SetFenPosition(fen_position); //set the helper board with this position
     mCachedFenPositiontoBeanalysed = fen_position;
-    //std::string position_command = "position fen "+fen_position+"\n";
-    //IssueCommandtoStockfish(position_command);
+    std::string position_command = "position fen "+fen_position;
+    IssueCommandtoStockfish(position_command);
 
 	if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
 	{
@@ -61,24 +65,47 @@ void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, 
 	}
 	else
 	{
-		IssueCommandtoStockfish("d");
+		IssueCommandtoStockfish("go infinite");
     }
 }
 
 void slach::EngineInterface::IssueCommandtoStockfish(const std::string& command)
 {
-	//slach_mutex2.lock();
-	std::cin.rdbuf(mCommandBuffer); // assign
-	mCommandBuffer->str(command+"\n");
-	mCommandBuffer->pubsync();
-	std::cin.sync();
-	std::cin.rdbuf(mBackupCinBuf); // re-assign
-	//slach_mutex2.unlock();
+	/*slach_mutex2.lock();
+	GlobalCommandFromGUI = command;
+	slach_mutex2.unlock();*/
+	std::unique_lock<std::mutex> lck(global_mutex_send);
+	GuiIssuedNewCommand = true;
+	GlobalCommandFromGUI = command;
+	global_cv_send.notify_all();
+
+	/*std::unique_lock<std::mutex> lck2(global_mutex_receive);
+    while (EngineReceievdCommand == false)
+    {
+  	  global_cv_received.wait(lck);
+  	  //idle loop
+    }*/
 }
+
+//	slach_mutex2.lock();
+//	GlobalCommandFromGUI = command;
+//	slach_mutex2.unlock();
+//	std::unique_lock<std::mutex> lck(global_mutex);
+//	GuiIssuedNewCommand = true;
+//	global_cv.notify_all();
+
+//std::cin.rdbuf(mCommandBuffer); // assign
+//std::cin.clear();
+//	mCommandBuffer->pubsync();
+//
+//	slach_mutex3.lock();
+//	std::cin.rdbuf(mBackupCinBuf); // re-assign
+//	slach_mutex3.unlock();
+
 
 void slach::EngineInterface::StopEngine()
 {
-	IssueCommandtoStockfish("quit");
+	IssueCommandtoStockfish("stop");
 }
 
 
