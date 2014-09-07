@@ -41,6 +41,7 @@ class EngineInterface
 
 
     void IssueCommandtoStockfish(const std::string& command);
+    void DoIssueCommand(const std::string& command);
     void InitEngine();
 
   protected:

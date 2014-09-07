@@ -36,12 +36,12 @@ using namespace std;
 extern void benchmark(const Position& pos, istream& is);
 
 std::string GlobalCommandFromGUI;
-bool GuiIssuedNewCommand;
+volatile bool GuiIssuedNewCommand;
 std::mutex global_mutex_send;
 std::mutex global_mutex_receive;
 std::condition_variable global_cv_send;
 std::condition_variable global_cv_received;
-bool EngineReceievdCommand;
+volatile bool EngineReceievdCommand;
 
 namespace {
 
@@ -172,13 +172,13 @@ void UCI::loop(int argc, char* argv[]) {
     	  //idle loop
       }
 
+      global_mutex_receive.lock();
       cmd = GlobalCommandFromGUI;
+      global_mutex_receive.unlock();
 
       istringstream is(cmd);
 
       is >> skipws >> token;
-
-      sync_cout<<cmd<<sync_endl;
 
       if (token == "quit" || token == "stop" || token == "ponderhit")
       {
@@ -234,12 +234,6 @@ void UCI::loop(int argc, char* argv[]) {
       else
           sync_cout << "Unknown command: " << cmd << sync_endl;
 
-
-  	//std::unique_lock<std::mutex> lck2(global_mutex_receive);
-    /*global_mutex_receive.lock();
-  	EngineReceievdCommand = true;
-  	global_mutex_receive.unlock();
-  	global_cv_received.notify_all();*/
 
   } while (token != "quit" && argc == 1); // Passed args have one-shot behaviour
 

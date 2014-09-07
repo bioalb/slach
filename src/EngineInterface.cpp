@@ -22,18 +22,11 @@ slach::EngineInterface::EngineInterface()
     mpEngineThread =  std::make_shared<std::thread>(&slach::EngineInterface::InitEngine, this);
     GlobalCommandFromGUI = "readoyok";
     GuiIssuedNewCommand = false;
-    EngineReceievdCommand = false;
-    //mpEngineThread->detach();
-
 }
 
 void slach::EngineInterface::InitEngine()
 {
-	//slach_mutex.lock();
-	//mBackupCinBuf = std::cin.rdbuf();
-	//std::cin.rdbuf(mCommandBuffer); // assign
 	::main_stockfish(1,nullptr);
-	//slach_mutex.unlock();
 }
 
 slach::EngineInterface::~EngineInterface()
@@ -71,37 +64,16 @@ void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, 
 
 void slach::EngineInterface::IssueCommandtoStockfish(const std::string& command)
 {
-	/*slach_mutex2.lock();
-	GlobalCommandFromGUI = command;
-	slach_mutex2.unlock();*/
+	std::shared_ptr<std::thread> command_thread = std::make_shared<std::thread>(&slach::EngineInterface::DoIssueCommand, this, command);
+	command_thread->join();
+}
+void slach::EngineInterface::DoIssueCommand(const std::string& command)
+{
 	std::unique_lock<std::mutex> lck(global_mutex_send);
 	GuiIssuedNewCommand = true;
 	GlobalCommandFromGUI = command;
 	global_cv_send.notify_all();
-
-	/*std::unique_lock<std::mutex> lck2(global_mutex_receive);
-    while (EngineReceievdCommand == false)
-    {
-  	  global_cv_received.wait(lck);
-  	  //idle loop
-    }*/
 }
-
-//	slach_mutex2.lock();
-//	GlobalCommandFromGUI = command;
-//	slach_mutex2.unlock();
-//	std::unique_lock<std::mutex> lck(global_mutex);
-//	GuiIssuedNewCommand = true;
-//	global_cv.notify_all();
-
-//std::cin.rdbuf(mCommandBuffer); // assign
-//std::cin.clear();
-//	mCommandBuffer->pubsync();
-//
-//	slach_mutex3.lock();
-//	std::cin.rdbuf(mBackupCinBuf); // re-assign
-//	slach_mutex3.unlock();
-
 
 void slach::EngineInterface::StopEngine()
 {
