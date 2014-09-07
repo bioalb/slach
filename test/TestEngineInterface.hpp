@@ -40,7 +40,7 @@ public:
             std::time(&time_now);
         }
         interface.StopEngine();
-        std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
+        //std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
         delete p_board;
         delete p_position;
     }

@@ -5,12 +5,12 @@
 #include "EngineInterface.hpp"
 #include "guithreadvars.h"
 #include "main_stockfish.hpp"
-std::mutex slach_mutex, slach_mutex2, slach_mutex3;
+std::mutex slach_mutex;
 
 slach::EngineInterface::EngineInterface()
   : mNumberOfLinesToBeShown(1u),
-    mCommandBuffer(new std::stringbuf("isready")),
     mCachedFenPositiontoBeanalysed(""),
+    mEngineOutputBuffer(new std::stringbuf(" ")),
     mLatestDepths(mNumberOfLinesToBeShown, std::numeric_limits<int>::max()),
     mLatestScores(mNumberOfLinesToBeShown, std::numeric_limits<double>::max()),
     mLatestLines(mNumberOfLinesToBeShown, ""),
@@ -20,12 +20,15 @@ slach::EngineInterface::EngineInterface()
     mpChessBoard->SetupChessBoard();
 
     mpEngineThread =  std::make_shared<std::thread>(&slach::EngineInterface::InitEngine, this);
-    GlobalCommandFromGUI = "readoyok";
+    GlobalCommandFromGUI = "readyok";
     GuiIssuedNewCommand = false;
 }
 
 void slach::EngineInterface::InitEngine()
 {
+	slach_mutex.lock();
+	std::cout.rdbuf(mEngineOutputBuffer);
+	slach_mutex.unlock();
 	::main_stockfish(1,nullptr);
 }
 
@@ -78,6 +81,9 @@ void slach::EngineInterface::DoIssueCommand(const std::string& command)
 void slach::EngineInterface::StopEngine()
 {
 	IssueCommandtoStockfish("stop");
+	slach_mutex.lock();
+	mEngineOutputBuffer->str("");
+	slach_mutex.lock();
 }
 
 
@@ -85,7 +91,8 @@ std::vector<std::string> slach::EngineInterface::GetLatestEngineOutput()
 {
     std::vector<std::string> pv_lines;
     pv_lines.resize(mNumberOfLinesToBeShown);
-    //ParseWholeEngineOutput(raw_string);
+    std::string raw_string = mEngineOutputBuffer->str();
+    ParseWholeEngineOutput(raw_string);
     for (unsigned pv = 0; pv <  pv_lines.size(); pv++)
     {
         std::stringstream ss;
