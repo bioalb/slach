@@ -28,7 +28,7 @@ public:
 
         slach::EngineInterface interface;
 
-        std::cout<<std::endl<<"*******"<<"Starting analysis. I will start with infinite analysis"<<"*******"<<std::endl;
+        std::cout<<std::endl<<"*******"<<"Starting analysis. I will start with infinite analysis and stop after 5 seconds"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(p_position);
 
         std::time_t time_now = 0;

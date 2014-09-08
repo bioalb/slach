@@ -1,4 +1,6 @@
 
+ADD_DEFINITIONS(-DSLACH_TESTING)
+
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage -pg -g")
 
 include_directories(. ${srcdir}

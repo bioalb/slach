@@ -9,8 +9,8 @@ std::mutex slach_mutex;
 
 slach::EngineInterface::EngineInterface()
   : mNumberOfLinesToBeShown(1u),
-    mCachedFenPositiontoBeanalysed(""),
     mEngineOutputBuffer(new std::stringbuf(" ")),
+    mCachedFenPositiontoBeanalysed(""),
     mLatestDepths(mNumberOfLinesToBeShown, std::numeric_limits<int>::max()),
     mLatestScores(mNumberOfLinesToBeShown, std::numeric_limits<double>::max()),
     mLatestLines(mNumberOfLinesToBeShown, ""),
@@ -26,14 +26,17 @@ slach::EngineInterface::EngineInterface()
 
 void slach::EngineInterface::InitEngine()
 {
+#ifndef SLACH_TESTING
 	slach_mutex.lock();
 	std::cout.rdbuf(mEngineOutputBuffer);
 	slach_mutex.unlock();
+#endif
 	::main_stockfish(1,nullptr);
 }
 
 slach::EngineInterface::~EngineInterface()
 {
+	IssueCommandtoStockfish("quit");
 	mpEngineThread->join();
     delete mpChessBoard;
 }
@@ -83,7 +86,7 @@ void slach::EngineInterface::StopEngine()
 	IssueCommandtoStockfish("stop");
 	slach_mutex.lock();
 	mEngineOutputBuffer->str("");
-	slach_mutex.lock();
+	slach_mutex.unlock();
 }
 
 
