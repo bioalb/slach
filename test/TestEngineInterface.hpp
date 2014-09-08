@@ -27,8 +27,9 @@ public:
         p_position->SetFromFen(test_position, squares);
 
         slach::EngineInterface interface;
+        interface.LaunchEngine();
 
-        std::cout<<std::endl<<"*******"<<"Starting analysis. I will start with infinite analysis and stop after 5 seconds"<<"*******"<<std::endl;
+        std::cout<<std::endl<<"*******Starting analysis. I will start with infinite analysis and stop after 5 seconds*******"<<std::endl;
         interface.StartAnalsyingPosition(p_position);
 
         std::time_t time_now = 0;
@@ -55,6 +56,8 @@ public:
         p_position->SetFromFen(test_position, squares);
 
         slach::EngineInterface interface;
+        interface.LaunchEngine();
+
         std::cout<<std::endl<<"*******"<<"Starting analysis. I will analyse for 3 seconds"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(p_position, 3.0);
         std::cout<<std::endl<<"Done analysing for 3 seconds, engine output follows"<<std::endl;
@@ -76,6 +79,7 @@ public:
         p_position->SetFromFen(test_position, squares);
 
         slach::EngineInterface interface;
+        interface.LaunchEngine();
 
         std::cout<<std::endl<<"*******"<<"Starting analysis for 3 seconds, stop make a move and restart"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(p_position, 3.0);
@@ -104,6 +108,7 @@ public:
         p_position->SetFromFen(test_position, squares);
 
         slach::EngineInterface interface;
+        interface.LaunchEngine();
 
         interface.SetNumberOfLinesToBeShown(4);
         std::cout<<std::endl<<"*******"<<"Starting analysis, multiple output"<<"*******"<<std::endl;
@@ -137,6 +142,7 @@ public:
         p_position->SetFromFen(fools_mate_in_one, squares);
 
         slach::EngineInterface interface;
+        interface.LaunchEngine();
         interface.SetNumberOfLinesToBeShown(3);
         std::cout<<std::endl<<"*******"<<"Starting analysis of Mate in one"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(p_position, 3.0);
@@ -161,6 +167,7 @@ public:
         p_position->SetFromFen(fools_mate, squares);
 
         slach::EngineInterface interface;
+        interface.LaunchEngine();
         std::cout<<std::endl<<"*******"<<"Starting analysis of fools mate"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(p_position, 3.0);
         std::cout<<std::endl<<"Done analysing for 3 seconds the fools mate, engine output follows"<<std::endl;
@@ -183,6 +190,7 @@ public:
         p_position->SetFromFen(fools_mate, squares);
 
         slach::EngineInterface interface;
+        interface.LaunchEngine();
         interface.SetNumberOfLinesToBeShown(3);
         std::cout<<std::endl<<"*******"<<"Starting analysis of fools mate, multiple pv"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(p_position, 3.0);
