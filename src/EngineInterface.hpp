@@ -15,9 +15,32 @@
 
 
 class TestEngineInterface;//forward declaration, for testing and accessing protected methods from the test class
+class TestEngineStrings;
 
 namespace slach
 {
+
+struct InfoInEngineLine
+{
+public :
+	int mDepth;
+	double mScore;
+	std::string mMoveList;
+	std::string mRootMove;
+	bool mValid;
+	bool mMateLine;
+	bool mCheckMate;
+
+	InfoInEngineLine() :
+		mDepth(0),
+		mScore(0.0),
+		mMoveList(""),
+		mRootMove(""),
+		mValid(false), //defaults to false!
+		mMateLine(false),
+		mCheckMate(false)
+	{}
+};
 
 /**
  * A class that serves as a communicator with one or more engines.
@@ -25,6 +48,7 @@ namespace slach
 class EngineInterface
 {
     friend class ::TestEngineInterface;// for testing
+    friend class ::TestEngineStrings;// for testing
 
   private:
 
@@ -65,13 +89,10 @@ class EngineInterface
     /**
      * This one parses a single line of the engine output
      *
-     * @param stockfishLine (input) the output of the engine we wish to analyze
-     * @param depth (output) will contain the  depth analyzed by the engine
-     * @param score (output)  will contain the score analyzed by the engine
-     * @param move_list (output) will contain the computer suggested line as a string
-     * @param rootMove teh first move of the suggested move list
+     * @param stockfishLine (input) the output of the engine we wish to analyze, a single line
+     * @return the information contained in this line
      */
-    void ParseALineofStockfishOutput(const std::string& stockfishLine, int & depth, double & score, std::string &  move_list, std::string& rootMove);
+    InfoInEngineLine ParseALineofStockfishOutput(const std::string& stockfishLine);
 
     void ParseWholeEngineOutput(const std::string& rawOutput);
 
@@ -90,6 +111,11 @@ class EngineInterface
     ~EngineInterface();
 
     /**
+     * This method initializes a new thread that will run the engine.
+     */
+    void LaunchEngine();
+
+    /**
      * This method triggers the engine to analyse the position and outputs to std::output the engine analysis.
      * It thinks for the number of seconds specified by the parameter "seconds"
      *
@@ -100,6 +126,8 @@ class EngineInterface
     void StartAnalsyingPosition(slach::Position* pPosition, double seconds = std::numeric_limits<double>::max());
 
     void StopEngine();
+
+    void QuitEngine();
 
     /**
      * When called, this method will parse the engine output and return

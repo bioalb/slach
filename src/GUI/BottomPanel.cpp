@@ -17,7 +17,6 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
     mpEngineTextBox->SetEditable(false);
     wxFont font(12, wxROMAN, wxNORMAL, wxNORMAL);
 
-
     wxBoxSizer *right_side_sizer = new wxBoxSizer( wxVERTICAL );
     right_side_sizer->Add(mpStartEngineButton,1, wxEXPAND);
     right_side_sizer->Add(mpStopEngineButton,1, wxEXPAND);
@@ -28,12 +27,15 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
 
     this->SetSizer(main_sizer, false);
     mTimer.Start(1500);//every 1500 ms
+
+    mpEngineInterface->LaunchEngine();
     mNumberOfEngineLinesShown = 3;
     mpEngineInterface->SetNumberOfLinesToBeShown(mNumberOfEngineLinesShown);
 }
 
 slach_gui::BottomPanel::~BottomPanel()
 {
+	mpEngineInterface->QuitEngine();
     delete mpEngineInterface;
 }
 
