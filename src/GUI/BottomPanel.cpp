@@ -129,8 +129,6 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
         mpEngineTextBox->EndAlignment();
         mpEngineTextBox->EndFontSize();
         mpEngineTextBox->EndTextColour();
-
-
 	}
 	evt.Skip();
 }

@@ -40,6 +40,21 @@ public :
 		mMateLine(false),
 		mCheckMate(false)
 	{}
+
+	bool operator== (const InfoInEngineLine & comp)
+	{
+		return ( mRootMove == comp.mRootMove );
+	}
+
+	bool compare_lesser_than (const InfoInEngineLine& item)
+	{
+		return (mScore < item.mScore );
+	}
+
+	bool compare_greater_than (const InfoInEngineLine& item)
+	{
+		return ( !(compare_lesser_than(item)) );
+	}
 };
 
 /**
@@ -70,18 +85,13 @@ class EngineInterface
   protected:
     std::string mCachedFenPositiontoBeanalysed;
 
-    /**Cache the latest depths of engine output when we tried to collect it, as big as mNumberOfLinesToBeShown*/
-    std::vector<int> mLatestDepths;
-
-    /**Cache the latest scores of engine output when we tried to collect it,as big as mNumberOfLinesToBeShown*/
-    std::vector<double> mLatestScores;
-
-    /**Cache the latest suggested lines of engine output when we tried to collect it, as big as mNumberOfLinesToBeShown*/
-    std::vector<std::string> mLatestLines;
-    std::vector<std::string> mLatestRootMoves;
+    /**Cache the latest engine lines and all associated info*/
+    std::vector<InfoInEngineLine> mLatestEngineLines;
 
     /**we create a chessboard as we need squares with pieces to translate engine moves to SAN*/
     ChessBoard* mpChessBoard;
+
+    FenHandler* mpHelperFenHandler;
 
     /**same as chessboard, we store the pointers to squares*/
     std::vector<Square*> mpSquares;
@@ -94,7 +104,7 @@ class EngineInterface
      */
     InfoInEngineLine ParseALineofStockfishOutput(const std::string& stockfishLine);
 
-    void ParseWholeEngineOutput(const std::string& rawOutput);
+    std::vector<InfoInEngineLine> ParseWholeEngineOutput(const std::string& rawOutput);
 
   public :
     /**

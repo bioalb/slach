@@ -61,7 +61,7 @@ public :
      *   Note that no other legality check is performed.
      * - for pawns: the one-step movement is sought first, if no pawn is found, then two-step move is considered.
      *
-     * If no suitable source is found,the SAN is considered invalid, and the move will have both pointers set tto NULL.
+     * If no suitable source is found,the SAN is considered invalid, and the move will have both pointers set to NULL.
      *
      * Special cases of castling (O-O and O-O-O) are handled.
      *
@@ -81,12 +81,12 @@ public :
      * If the string is not valid, mpOrigin and mpDestination remains NULL
      *
      * NO check is performed to see whether the move is valid or not.
-     * If you sue this constructor, you must note that the move you just built is not yet
+     * If you use this constructor, you must note that the move you just built is not yet
      * ready for proper algebraic output. Ambiguity and checks are not handled here.
-     * This cobstructor simply finds the origin and destinations squares, if any.
+     * This constructor simply finds the origin and destinations squares, if any.
      *
-     * @params originDestMove the string withe move in old notation originDestination
-     * @params pSquares the vector of pointers to squares. Two of these pointers wil be selected as
+     * @params originDestMove the string with move in old notation originDestination
+     * @params pSquares the vector of pointers to squares. Two of these pointers will be selected as
      *          mpOrigin and mpDestination
      */
     Move (const std::string& originDestMove, std::vector<Square* > pSquares);

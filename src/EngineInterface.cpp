@@ -11,11 +11,8 @@ slach::EngineInterface::EngineInterface()
   : mNumberOfLinesToBeShown(1u),
     mEngineOutputBuffer(new std::stringbuf(" ")),
     mCachedFenPositiontoBeanalysed(""),
-    mLatestDepths(mNumberOfLinesToBeShown, std::numeric_limits<int>::max()),
-    mLatestScores(mNumberOfLinesToBeShown, std::numeric_limits<double>::max()),
-    mLatestLines(mNumberOfLinesToBeShown, ""),
-    mLatestRootMoves (mNumberOfLinesToBeShown, ""),
-    mpChessBoard( new slach::ChessBoard() )
+    mpChessBoard( new slach::ChessBoard() ),
+	mpHelperFenHandler( new slach::FenHandler() )
 {
     mpChessBoard->SetupChessBoard();
 
@@ -51,10 +48,6 @@ slach::EngineInterface::~EngineInterface()
 void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)
 {
     mNumberOfLinesToBeShown = num;
-    mLatestDepths.resize(mNumberOfLinesToBeShown);
-    mLatestScores.resize(mNumberOfLinesToBeShown);
-    mLatestLines.resize(mNumberOfLinesToBeShown);
-    mLatestRootMoves.resize(mNumberOfLinesToBeShown);
 }
 
 void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, double seconds)
@@ -101,19 +94,28 @@ void slach::EngineInterface::QuitEngine()
 	IssueCommandtoStockfish("quit");
 }
 
-
 std::vector<std::string> slach::EngineInterface::GetLatestEngineOutput()
 {
-    std::vector<std::string> pv_lines;
-    pv_lines.resize(mNumberOfLinesToBeShown);
-    std::string raw_string = mEngineOutputBuffer->str();
-    ParseWholeEngineOutput(raw_string);
+	std::string raw_string = mEngineOutputBuffer->str();
+	mLatestEngineLines = ParseWholeEngineOutput(raw_string);
+
+	if (mpHelperFenHandler->GetPositionFeaturesFromFen(mCachedFenPositiontoBeanalysed).mTurnToMove == WHITE)
+	{
+		std::sort(mLatestEngineLines.begin(), mLatestEngineLines.end(),std::bind(&InfoInEngineLine::compare_greater_than, mLatestEngineLines));
+	}
+	else
+	{
+		std::sort(mLatestEngineLines.begin(), mLatestEngineLines.end(),std::bind(&InfoInEngineLine::compare_lesser_than, mLatestEngineLines));
+	}
+
+	std::vector<std::string> pv_lines;
+    pv_lines.resize(mLatestEngineLines.size());
     for (unsigned pv = 0; pv <  pv_lines.size(); pv++)
     {
         std::stringstream ss;
         ss.setf( std::ios::fixed, std::ios::floatfield );//for the score
         ss.precision(2);//for the score
-        ss<<"Depth = " << mLatestDepths[pv] << "; score = " << mLatestScores[pv] << "; " << mLatestLines[pv] << std::endl;
+        ss<<"Depth = " << mLatestEngineLines[pv].mDepth << "; score = " << mLatestEngineLines[pv].mScore << "; " << mLatestEngineLines[pv].mMoveList << std::endl;
         pv_lines[pv] = ss.str();
     }
 	return pv_lines;
@@ -125,96 +127,36 @@ void slach::EngineInterface::SetPositionToInternalChessBoard(const std::string& 
     mpChessBoard->SetFenPosition(mCachedFenPositiontoBeanalysed);
 }
 
-void slach::EngineInterface::ParseWholeEngineOutput(const std::string& rawOutput)
+std::vector<slach::InfoInEngineLine> slach::EngineInterface::ParseWholeEngineOutput(const std::string& rawOutput)
 {
+	std::vector<InfoInEngineLine> ret;
     unsigned diverse_lines = 0;
-    size_t previous_mid_of_useful_line = std::string::npos;
-    size_t mid_of_useful_line = 0;
-    mLatestRootMoves.assign(mNumberOfLinesToBeShown, "");
-    while (mid_of_useful_line != std::string::npos)
+    size_t line_begins = 0;
+
+    while (diverse_lines < mNumberOfLinesToBeShown && line_begins != std::string::npos)
     {
-        mid_of_useful_line = rawOutput.rfind("score cp", previous_mid_of_useful_line);
-        size_t line_with_mate =  rawOutput.rfind("score mate", previous_mid_of_useful_line);
-        if ( line_with_mate > mid_of_useful_line && line_with_mate != std::string::npos)
+    	line_begins = rawOutput.rfind("info", line_begins);
+        size_t line_end = rawOutput.find("\n", line_begins);
+
+        if (line_begins != std::string::npos && line_end != std::string::npos)
         {
-            mid_of_useful_line = line_with_mate;
+        	std::string to_be_parsed = rawOutput.substr(line_begins, line_end - line_begins);
+        	InfoInEngineLine info = ParseALineofStockfishOutput(to_be_parsed);
+            if ( std::find (ret.begin(), ret.end(), info) == ret.end() ) //if not found
+			{
+            	ret.push_back(info);
+            	diverse_lines++;
+			}
         }
-        size_t line_begin = rawOutput.rfind("\n", mid_of_useful_line);
-        size_t line_end = rawOutput.find("\n", mid_of_useful_line);
-        std::string to_be_parsed = rawOutput.substr(line_begin, line_end - line_begin);
-        previous_mid_of_useful_line = mid_of_useful_line - 1;
-
-        mpChessBoard->SetFenPosition(mCachedFenPositiontoBeanalysed);
-        InfoInEngineLine info = ParseALineofStockfishOutput(to_be_parsed);
-        if (info.mCheckMate == true)
-        {
-            for (unsigned index = 0; index < mNumberOfLinesToBeShown; ++index)
-            {
-                mLatestDepths[index] = 0;
-                mLatestScores[index] = 0;
-                mLatestLines[index] = "CHECKMATE";
-                mLatestRootMoves[index] = "";
-            }
-            break;
-        }
-        mpChessBoard->SetFenPosition(mCachedFenPositiontoBeanalysed);//reset to initial fen
-
-//        if ( (depth !=  mLatestDepths[diverse_lines] && move_list.length() >= mLatestLines[diverse_lines].length() ) ||
-//             (root_move != mLatestRootMoves[diverse_lines] ) ||
-//             (fabs(score - mLatestScores[diverse_lines]) > 0.01 ) ||
-//             (move_list != mLatestLines[diverse_lines] && move_list.length() >= mLatestLines[diverse_lines].length() ) )
-//        {
-
-            bool found = (std::find(mLatestRootMoves.begin(), mLatestRootMoves.end(), info.mRootMove)!=mLatestRootMoves.end());
-            if (!found)
-            {
-                mLatestDepths[diverse_lines] = info.mDepth;
-                mLatestScores[diverse_lines] = info.mScore;
-                mLatestLines[diverse_lines] = info.mMoveList;
-                mLatestRootMoves[diverse_lines] = info.mRootMove;
-                diverse_lines++;
-            }
-
-            if (diverse_lines >= mNumberOfLinesToBeShown)
-            {
-                break;
-            }
-
     }
+
+    return ret;
 }
 void slach::EngineInterface::GetLatestBestScoreAndDepth(double& bestScore, int& depth, std::string& bestMove)  const
 {
-    double max = -std::numeric_limits<double>::max();
-    double min = std::numeric_limits<double>::max();
-    int max_depth = 0;
-    std::string best_root_move = "";
-    assert(mLatestRootMoves.size() == mLatestDepths.size());
-    assert(mLatestRootMoves.size() == mLatestRootMoves.size());
-    for (unsigned sc = 0; sc < mLatestScores.size(); ++sc)
-    {
-        if (mpChessBoard->WhosTurnIsIt() == WHITE )
-        {
-            if (mLatestScores[sc] > max)
-            {
-                max = mLatestScores[sc];
-                max_depth = mLatestDepths[sc];
-                best_root_move = mLatestRootMoves[sc];
-            }
-        }
-        else //black to move
-        {
-            if (mLatestScores[sc] < min)
-            {
-                min = mLatestScores[sc];
-                max_depth = mLatestDepths[sc];
-                best_root_move = mLatestRootMoves[sc];
-            }
-        }
-    }
-    bestScore = max;
-    if (mpChessBoard->WhosTurnIsIt() == BLACK) bestScore = min;
-    depth = max_depth;
-    bestMove = best_root_move;
+	bestScore = mLatestEngineLines[0].mScore;
+	depth = mLatestEngineLines[0].mDepth;
+	bestMove = mLatestEngineLines[0].mRootMove;
 }
 
 slach::InfoInEngineLine slach::EngineInterface::ParseALineofStockfishOutput(const std::string& stockfishLine)
