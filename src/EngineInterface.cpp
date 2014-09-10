@@ -15,7 +15,7 @@ slach::EngineInterface::EngineInterface()
 	mpHelperFenHandler( new slach::FenHandler() )
 {
     mpChessBoard->SetupChessBoard();
-
+    mLatestEngineLines.resize(mNumberOfLinesToBeShown);
     GlobalCommandFromGUI = "readyok";
     GuiIssuedNewCommand = false;
 }
@@ -48,6 +48,7 @@ slach::EngineInterface::~EngineInterface()
 void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)
 {
     mNumberOfLinesToBeShown = num;
+    mLatestEngineLines.resize(num);
 }
 
 void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, double seconds)
@@ -99,13 +100,10 @@ std::vector<std::string> slach::EngineInterface::GetLatestEngineOutput()
 	std::string raw_string = mEngineOutputBuffer->str();
 	mLatestEngineLines = ParseWholeEngineOutput(raw_string);
 
+	std::sort(mLatestEngineLines.begin(), mLatestEngineLines.end());
 	if (mpHelperFenHandler->GetPositionFeaturesFromFen(mCachedFenPositiontoBeanalysed).mTurnToMove == WHITE)
 	{
-		std::sort(mLatestEngineLines.begin(), mLatestEngineLines.end(),std::bind(&InfoInEngineLine::compare_greater_than, mLatestEngineLines));
-	}
-	else
-	{
-		std::sort(mLatestEngineLines.begin(), mLatestEngineLines.end(),std::bind(&InfoInEngineLine::compare_lesser_than, mLatestEngineLines));
+		std::reverse(mLatestEngineLines.begin(), mLatestEngineLines.end());
 	}
 
 	std::vector<std::string> pv_lines;
@@ -131,18 +129,18 @@ std::vector<slach::InfoInEngineLine> slach::EngineInterface::ParseWholeEngineOut
 {
 	std::vector<InfoInEngineLine> ret;
     unsigned diverse_lines = 0;
-    size_t line_begins = 0;
+    size_t line_begins = std::string::npos-1;
 
     while (diverse_lines < mNumberOfLinesToBeShown && line_begins != std::string::npos)
     {
-    	line_begins = rawOutput.rfind("info", line_begins);
+    	line_begins = rawOutput.rfind("info", line_begins-1);
         size_t line_end = rawOutput.find("\n", line_begins);
 
         if (line_begins != std::string::npos && line_end != std::string::npos)
         {
         	std::string to_be_parsed = rawOutput.substr(line_begins, line_end - line_begins);
-        	InfoInEngineLine info = ParseALineofStockfishOutput(to_be_parsed);
-            if ( std::find (ret.begin(), ret.end(), info) == ret.end() ) //if not found
+        	auto info = ParseALineofStockfishOutput(to_be_parsed);
+            if ( std::find (ret.begin(), ret.end(), info) == ret.end()  && info.mValid == true)  //if not found
 			{
             	ret.push_back(info);
             	diverse_lines++;
@@ -158,6 +156,7 @@ void slach::EngineInterface::GetLatestBestScoreAndDepth(double& bestScore, int& 
 	depth = mLatestEngineLines[0].mDepth;
 	bestMove = mLatestEngineLines[0].mRootMove;
 }
+
 
 slach::InfoInEngineLine slach::EngineInterface::ParseALineofStockfishOutput(const std::string& stockfishLine)
 {
@@ -191,8 +190,7 @@ slach::InfoInEngineLine slach::EngineInterface::ParseALineofStockfishOutput(cons
     pos = stockfishLine.find_first_of(' ', pos);
     double score = atof(&(stockfishLine[pos]))/100.0;
     //fix the score to be positive for white and negative for black
-    Colour to_move = mpChessBoard->WhosTurnIsIt();
-    if (to_move == BLACK) score = (- score);
+    if (mpHelperFenHandler->GetPositionFeaturesFromFen(mCachedFenPositiontoBeanalysed).mTurnToMove == BLACK) score = (- score);
     info.mScore = score;
 
     //line
@@ -202,6 +200,7 @@ slach::InfoInEngineLine slach::EngineInterface::ParseALineofStockfishOutput(cons
     size_t start_of_move = stockfishLine.find_first_not_of(" ", start_of_move_list+2);
     std::string pretty_line = "";
     int i = 0;
+    mpChessBoard->SetFenPosition(mCachedFenPositiontoBeanalysed);
     while (start_of_move != std::string::npos)
     {
         std::size_t end_of_move = stockfishLine.find(' ', start_of_move+1);

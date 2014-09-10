@@ -46,15 +46,27 @@ public :
 		return ( mRootMove == comp.mRootMove );
 	}
 
-	bool compare_lesser_than (const InfoInEngineLine& item)
+	InfoInEngineLine& operator=(const InfoInEngineLine &rhs)
 	{
-		return (mScore < item.mScore );
-	}
+	    // Only do assignment if RHS is a different object from this.
+	    if (this != &rhs)
+	    {
+	    	mDepth = rhs.mDepth;
+	    	mScore = rhs.mScore;
+	    	mMoveList = rhs.mMoveList;
+	    	mValid = rhs.mValid;
+	    	mMateLine = rhs.mMateLine;
+	    	mCheckMate = rhs.mCheckMate;
+	    	mRootMove = rhs.mRootMove;
+	    }
+	    return *this;
+	  }
 
-	bool compare_greater_than (const InfoInEngineLine& item)
-	{
-		return ( !(compare_lesser_than(item)) );
-	}
+    bool operator < (const InfoInEngineLine& rhs) const
+    {
+       return this->mScore < rhs.mScore;
+
+    }
 };
 
 /**
@@ -74,8 +86,7 @@ class EngineInterface
 
     std::string mEngineString;
 
-    std::stringbuf *mEngineOutputBuffer;
-    std::streambuf *mBackupCoutBuf;
+
 
 
     void IssueCommandtoStockfish(const std::string& command);
@@ -83,8 +94,11 @@ class EngineInterface
     void InitEngine();
 
   protected:
-    std::string mCachedFenPositiontoBeanalysed;
 
+
+    std::stringbuf *mEngineOutputBuffer;
+    std::streambuf *mBackupCoutBuf;
+    std::string mCachedFenPositiontoBeanalysed;
     /**Cache the latest engine lines and all associated info*/
     std::vector<InfoInEngineLine> mLatestEngineLines;
 

@@ -16,6 +16,61 @@ class TestEngineStrings : public CxxTest::TestSuite
 {
 public:
 
+    void TestEngineInfoOperators()
+    {
+    	slach::InfoInEngineLine info_default;
+    	slach::InfoInEngineLine info_1;
+    	TS_ASSERT_EQUALS(info_1, info_default);
+
+    	TS_ASSERT_EQUALS(info_1.mCheckMate, false);
+    	TS_ASSERT_EQUALS(info_1.mMateLine, false);
+    	TS_ASSERT_EQUALS(info_1.mValid, false);
+    	TS_ASSERT_EQUALS(info_1.mDepth, 0);
+    	TS_ASSERT_EQUALS(info_1.mRootMove, "");
+    	TS_ASSERT_EQUALS(info_1.mMoveList,"");
+    	TS_ASSERT_DELTA (info_1.mScore, 0,1e-9);
+
+    	info_1.mCheckMate = true;
+    	info_1.mDepth = 25;
+    	info_1.mMateLine = true;
+    	info_1.mRootMove = "Bb4";
+    	info_1.mScore = 3.601;
+    	info_1.mMoveList = "Bb4 Bxb4 ";
+    	info_1.mValid = true;
+
+    	//assignment operator
+    	slach::InfoInEngineLine info_2 = info_1;
+
+    	TS_ASSERT_EQUALS(info_2.mCheckMate, true);
+    	TS_ASSERT_EQUALS(info_2.mMateLine, true);
+    	TS_ASSERT_EQUALS(info_2.mValid, true);
+    	TS_ASSERT_EQUALS(info_2.mDepth, 25);
+    	TS_ASSERT_EQUALS(info_2.mRootMove, "Bb4");
+    	TS_ASSERT_EQUALS(info_2.mMoveList,"Bb4 Bxb4 ");
+    	TS_ASSERT_DELTA (info_2.mScore, 3.601,1e-4);
+    	TS_ASSERT_EQUALS(info_1, info_2);
+
+    	//lesser than operator
+    	if (info_1 < info_default) // 3.6 > 0
+    	{
+    		TS_ASSERT_EQUALS(1+1,1);//fail
+    	}
+    	else
+    	{
+    		TS_ASSERT_EQUALS(1+1,2);//pass
+    	}
+
+    	info_default.mScore = 25.0;
+    	if (info_1 < info_default) // 25.0 > 3.6
+    	{
+    		TS_ASSERT_EQUALS(1+1,2);//pass
+    	}
+    	else
+    	{
+    		TS_ASSERT_EQUALS(1+1,1);//fail
+    	}
+    }
+
 	void TestInvalidStrings()
 	{
 		//extra r in depth
@@ -255,19 +310,13 @@ public:
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
         interface.SetPositionToInternalChessBoard(test_position);
 
-        interface.ParseWholeEngineOutput(test_string);
+        auto info = interface.ParseWholeEngineOutput(test_string);
 
-        TS_ASSERT_EQUALS(interface.mLatestDepths.size(), 1u);
-        TS_ASSERT_EQUALS(interface.mLatestDepths[0], 14u);
-
-        TS_ASSERT_EQUALS(interface.mLatestRootMoves.size(), 1u);
-        TS_ASSERT_EQUALS(interface.mLatestRootMoves[0], "Bxd3");
-
-        TS_ASSERT_EQUALS(interface.mLatestScores.size(), 1u);
-        TS_ASSERT_DELTA(interface.mLatestScores[0], -0.02, 1e-3);
-
-        TS_ASSERT_EQUALS(interface.mLatestLines.size(), 1u);
-        TS_ASSERT_EQUALS(interface.mLatestLines[0], "Bxd3 Qxd3 e6 O-O-O Bd6 h3 O-O a3 h6 Ne5 Qe8 Kb1 Bxe5 Bxe5 Nxe5 dxe5 Nd7 f4 ");
+        TS_ASSERT_EQUALS(info.size(), 1u);
+        TS_ASSERT_EQUALS(info[0].mDepth, 14u);
+        TS_ASSERT_EQUALS(info[0].mRootMove, "Bxd3");
+        TS_ASSERT_DELTA(info[0].mScore, -0.02, 1e-3);
+        TS_ASSERT_EQUALS(info[0].mMoveList, "Bxd3 Qxd3 e6 O-O-O Bd6 h3 O-O a3 h6 Ne5 Qe8 Kb1 Bxe5 Bxe5 Nxe5 dxe5 Nd7 f4 ");
     }
 
     void TestParseEngineOutputMultipleLines()
@@ -494,34 +543,33 @@ public:
         interface.SetPositionToInternalChessBoard(test_position);
 
         interface.SetNumberOfLinesToBeShown(4u);//asking stockfish to display 4 lines
-        interface.ParseWholeEngineOutput(test_string);
-        TS_ASSERT_EQUALS(interface.mLatestDepths.size(), 4u);
-        TS_ASSERT_EQUALS(interface.mLatestDepths[3], 14u);
-        TS_ASSERT_EQUALS(interface.mLatestDepths[2], 14u);
-        TS_ASSERT_EQUALS(interface.mLatestDepths[1], 14u);
-        TS_ASSERT_EQUALS(interface.mLatestDepths[0], 14u);
+        auto info = interface.ParseWholeEngineOutput(test_string);
+        TS_ASSERT_EQUALS(info.size(), 4u);
+        TS_ASSERT_EQUALS(info[3].mDepth, 14u);
+        TS_ASSERT_EQUALS(info[2].mDepth, 14u);
+        TS_ASSERT_EQUALS(info[1].mDepth, 14u);
+        TS_ASSERT_EQUALS(info[0].mDepth, 14u);
 
-        TS_ASSERT_EQUALS(interface.mLatestRootMoves.size(), 4u);
-        TS_ASSERT_EQUALS(interface.mLatestRootMoves[3], "Bxd3");
-        TS_ASSERT_EQUALS(interface.mLatestRootMoves[2], "e6");
-        TS_ASSERT_EQUALS(interface.mLatestRootMoves[1], "Bg6");
-        TS_ASSERT_EQUALS(interface.mLatestRootMoves[0], "Ne4");
+        TS_ASSERT_DELTA(info[3].mScore, 0.02, 1e-3);
+        TS_ASSERT_DELTA(info[2].mScore, 0.34,1e-3);
+        TS_ASSERT_DELTA(info[1].mScore, 0.52, 1e-3);
+        TS_ASSERT_DELTA(info[0].mScore, 0.54, 1e-3);
 
-        TS_ASSERT_EQUALS(interface.mLatestScores.size(), 4u);
-        TS_ASSERT_DELTA(interface.mLatestScores[3], 0.02, 1e-3);
-        TS_ASSERT_DELTA(interface.mLatestScores[2], 0.34,1e-3);
-        TS_ASSERT_DELTA(interface.mLatestScores[1], 0.52, 1e-3);
-        TS_ASSERT_DELTA(interface.mLatestScores[0], 0.54, 1e-3);
+        TS_ASSERT_EQUALS(info[3].mRootMove, "Bxd3");
+        TS_ASSERT_EQUALS(info[2].mRootMove, "e6");
+        TS_ASSERT_EQUALS(info[1].mRootMove, "Bg6");
+        TS_ASSERT_EQUALS(info[0].mRootMove, "Ne4");
 
-        TS_ASSERT_EQUALS(interface.mLatestLines.size(), 4u);
-        TS_ASSERT_EQUALS(interface.mLatestLines[3], "Bxd3 Qxd3 e6 Ne5 Nxe5 dxe5 Nh5 g3 Bc5 O-O-O O-O Kb1 Qe8 h4 Be7 e4 Nxf4 gxf4 Bxh4 exd5 Bxf2 ");
-        TS_ASSERT_EQUALS(interface.mLatestLines[2], "e6 Bxf5 exf5 Ne5 Qe6 O-O-O Bb4 f3 O-O Kb1 Rfe8 h3 Bd6 Rge1 Nxe5 dxe5 Bxe5 Nxd5 c5 ");
-        TS_ASSERT_EQUALS(interface.mLatestLines[1], "Bg6 O-O-O e6 Ne5 Nxe5 dxe5 Nh5 Bg5 f6 exf6 Nxf6 Bxg6+ hxg6 h3 Bd6 Qd3 Kf7 Kb1 ");
-        TS_ASSERT_EQUALS(interface.mLatestLines[0], "Ne4 Bxe4 Bxe4 Nxe4 dxe4 Ne5 Nxe5 dxe5 Qxd2+ Kxd2 e6 Ke2 Be7 Rad1 h5 Rd4 Rd8 Rxe4 ");
+        TS_ASSERT_EQUALS(info[3].mMoveList, "Bxd3 Qxd3 e6 Ne5 Nxe5 dxe5 Nh5 g3 Bc5 O-O-O O-O Kb1 Qe8 h4 Be7 e4 Nxf4 gxf4 Bxh4 exd5 Bxf2 ");
+        TS_ASSERT_EQUALS(info[2].mMoveList, "e6 Bxf5 exf5 Ne5 Qe6 O-O-O Bb4 f3 O-O Kb1 Rfe8 h3 Bd6 Rge1 Nxe5 dxe5 Bxe5 Nxd5 c5 ");
+        TS_ASSERT_EQUALS(info[1].mMoveList, "Bg6 O-O-O e6 Ne5 Nxe5 dxe5 Nh5 Bg5 f6 exf6 Nxf6 Bxg6+ hxg6 h3 Bd6 Qd3 Kf7 Kb1 ");
+        TS_ASSERT_EQUALS(info[0].mMoveList, "Ne4 Bxe4 Bxe4 Nxe4 dxe4 Ne5 Nxe5 dxe5 Qxd2+ Kxd2 e6 Ke2 Be7 Rad1 h5 Rd4 Rd8 Rxe4 ");
 
         int depth;
         double score;
         std::string best_move;
+        interface.mEngineOutputBuffer->str(test_string);
+        auto output = interface.GetLatestEngineOutput();
         interface.GetLatestBestScoreAndDepth(score,depth, best_move);
         TS_ASSERT_EQUALS(depth, 14);
         TS_ASSERT_DELTA(score, 0.02, 0.01);
@@ -720,34 +768,34 @@ public:
         interface.SetPositionToInternalChessBoard(test_position);
 
         interface.SetNumberOfLinesToBeShown(4u);//asking stockfish to display 4 lines
-        interface.ParseWholeEngineOutput(test_string);
-        TS_ASSERT_EQUALS(interface.mLatestDepths.size(), 4u);
-        TS_ASSERT_EQUALS(interface.mLatestDepths[3], 13u);
-        TS_ASSERT_EQUALS(interface.mLatestDepths[2], 13u);
-        TS_ASSERT_EQUALS(interface.mLatestDepths[1], 13u);
-        TS_ASSERT_EQUALS(interface.mLatestDepths[0], 13u);
+        auto info = interface.ParseWholeEngineOutput(test_string);
 
-        TS_ASSERT_EQUALS(interface.mLatestRootMoves.size(), 4u);
-        TS_ASSERT_EQUALS(interface.mLatestRootMoves[3], "Ne5");
-        TS_ASSERT_EQUALS(interface.mLatestRootMoves[2], "O-O-O");
-        TS_ASSERT_EQUALS(interface.mLatestRootMoves[1], "h3");
-        TS_ASSERT_EQUALS(interface.mLatestRootMoves[0], "a3");
+        TS_ASSERT_EQUALS(info.size(), 4u);
+        TS_ASSERT_EQUALS(info[3].mDepth, 13u);
+        TS_ASSERT_EQUALS(info[2].mDepth, 13u);
+        TS_ASSERT_EQUALS(info[1].mDepth, 13u);
+        TS_ASSERT_EQUALS(info[0].mDepth, 13u);
 
-        TS_ASSERT_EQUALS(interface.mLatestScores.size(), 4u);
-        TS_ASSERT_DELTA(interface.mLatestScores[3], 0.88, 1e-3);
-        TS_ASSERT_DELTA(interface.mLatestScores[2], 0.66,1e-3);
-        TS_ASSERT_DELTA(interface.mLatestScores[1], 0.62, 1e-3);
-        TS_ASSERT_DELTA(interface.mLatestScores[0], 0.50, 1e-3);
+        TS_ASSERT_EQUALS(info[3].mRootMove, "Ne5");
+        TS_ASSERT_EQUALS(info[2].mRootMove, "O-O-O");
+        TS_ASSERT_EQUALS(info[1].mRootMove, "h3");
+        TS_ASSERT_EQUALS(info[0].mRootMove, "a3");
 
-        TS_ASSERT_EQUALS(interface.mLatestLines.size(), 4u);
-        TS_ASSERT_EQUALS(interface.mLatestLines[3], "Ne5 Nxe5 dxe5 Ne4 Bxe4 dxe4 Qxd7+ Bxd7 O-O-O e6 Nxe4 Bc6 Rd4 Be7 Rgd1 Bd5 h3 O-O f3 Rfe8 b3 c5 Rxd5 exd5 Rxd5 ");
-        TS_ASSERT_EQUALS(interface.mLatestLines[2], "O-O-O Bxd3 Qxd3 Nh5 Be5 f6 Bg3 e6 Bh4 Nb4 Qd2 c5 Kb1 Bd6 g4 cxd4 Nxd4 ");
-        TS_ASSERT_EQUALS(interface.mLatestLines[1], "h3 Bxd3 Qxd3 e6 Ne5 Nxe5 dxe5 Ne4 Nxe4 dxe4 Qxe4 Rd8 Qxb7 h6 Qxa6 ");
-        TS_ASSERT_EQUALS(interface.mLatestLines[0], "a3 Bxd3 Qxd3 e6 g4 Bd6 Ne5 Bxe5 Bxe5 Nxe5 dxe5 Ng8 O-O-O Ne7 ");
+        TS_ASSERT_DELTA(info[3].mScore, 0.88, 1e-3);
+        TS_ASSERT_DELTA(info[2].mScore, 0.66,1e-3);
+        TS_ASSERT_DELTA(info[1].mScore, 0.62, 1e-3);
+        TS_ASSERT_DELTA(info[0].mScore, 0.50, 1e-3);
+
+        TS_ASSERT_EQUALS(info[3].mMoveList, "Ne5 Nxe5 dxe5 Ne4 Bxe4 dxe4 Qxd7+ Bxd7 O-O-O e6 Nxe4 Bc6 Rd4 Be7 Rgd1 Bd5 h3 O-O f3 Rfe8 b3 c5 Rxd5 exd5 Rxd5 ");
+        TS_ASSERT_EQUALS(info[2].mMoveList, "O-O-O Bxd3 Qxd3 Nh5 Be5 f6 Bg3 e6 Bh4 Nb4 Qd2 c5 Kb1 Bd6 g4 cxd4 Nxd4 ");
+        TS_ASSERT_EQUALS(info[1].mMoveList, "h3 Bxd3 Qxd3 e6 Ne5 Nxe5 dxe5 Ne4 Nxe4 dxe4 Qxe4 Rd8 Qxb7 h6 Qxa6 ");
+        TS_ASSERT_EQUALS(info[0].mMoveList, "a3 Bxd3 Qxd3 e6 g4 Bd6 Ne5 Bxe5 Bxe5 Nxe5 dxe5 Ng8 O-O-O Ne7 ");
 
         int depth;
         double score;
         std::string best_move;
+        interface.mEngineOutputBuffer->str(test_string);
+        auto output = interface.GetLatestEngineOutput();
         interface.GetLatestBestScoreAndDepth(score,depth, best_move);
         TS_ASSERT_EQUALS(depth, 13);
         TS_ASSERT_DELTA(score, 0.88, 0.01);
