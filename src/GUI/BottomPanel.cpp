@@ -28,9 +28,9 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
     this->SetSizer(main_sizer, false);
     mTimer.Start(1500);//every 1500 ms
 
-    mpEngineInterface->LaunchEngine();
     mNumberOfEngineLinesShown = 3;
     mpEngineInterface->SetNumberOfLinesToBeShown(mNumberOfEngineLinesShown);
+    mpEngineInterface->LaunchEngine();
 }
 
 slach_gui::BottomPanel::~BottomPanel()
@@ -122,9 +122,9 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
         mpEngineTextBox->EndTextColour();
         mpEngineTextBox->BeginTextColour(Colours::Instance()->mEngineText);
         mpEngineTextBox->BeginFontSize(13);
-	    for (unsigned pv = mNumberOfEngineLinesShown; pv > 0 ; pv--)
+	    for (unsigned pv = 0; pv < mNumberOfEngineLinesShown; pv++)
 	    {
-            mpEngineTextBox->WriteText( mpEngineInterface->GetLatestEngineOutput()[pv-1] );
+            mpEngineTextBox->WriteText( mpEngineInterface->GetLatestEngineOutput()[pv] );
 	    }
         mpEngineTextBox->EndAlignment();
         mpEngineTextBox->EndFontSize();

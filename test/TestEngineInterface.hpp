@@ -27,9 +27,8 @@ public:
         p_position->SetFromFen(test_position, squares);
 
         slach::EngineInterface interface;
-        interface.LaunchEngine();
-
         std::cout<<std::endl<<"*******Starting analysis. I will start with infinite analysis and stop after 5 seconds*******"<<std::endl;
+        interface.LaunchEngine();
         interface.StartAnalsyingPosition(p_position);
 
         std::time_t time_now = 0;
@@ -41,12 +40,13 @@ public:
             std::time(&time_now);
         }
         interface.StopEngine();
-        //std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
+        interface.QuitEngine();
+        std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
         delete p_board;
         delete p_position;
     }
 
-    void xTestStartAndStopAfterthreeseconds()
+    void TestStartAndStopAfterthreeseconds()
     {
         slach::ChessBoard* p_board = new slach::ChessBoard();
         p_board->SetupChessBoard();
@@ -56,18 +56,16 @@ public:
         p_position->SetFromFen(test_position, squares);
 
         slach::EngineInterface interface;
-        interface.LaunchEngine();
-
         std::cout<<std::endl<<"*******"<<"Starting analysis. I will analyse for 3 seconds"<<"*******"<<std::endl;
+        interface.LaunchEngine();
         interface.StartAnalsyingPosition(p_position, 3.0);
         std::cout<<std::endl<<"Done analysing for 3 seconds, engine output follows"<<std::endl;
         std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
         interface.StopEngine();
+        interface.QuitEngine();
         delete p_board;
         delete p_position;
     }
-
-
 
     void xTestStopMakeAMoveAndRestart()
     {
@@ -93,7 +91,8 @@ public:
         std::cout<<std::endl<<"*******"<<"Starting analysis after Bxd3"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(p_position, 3.0);
         std::cout<<std::endl<<"Done analysing for 3 seconds, after Bxd3 engine output follows"<<std::endl;
-        //std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
+        std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
+        interface.QuitEngine();
         delete p_board;
         delete p_position;
     }

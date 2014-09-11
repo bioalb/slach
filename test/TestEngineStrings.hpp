@@ -124,6 +124,8 @@ public:
         TS_ASSERT_EQUALS(info.mCheckMate, false);
         TS_ASSERT_EQUALS(info.mMateLine, false);
         TS_ASSERT_EQUALS(info.mValid, false);
+
+        TS_ASSERT_EQUALS(interface.GetLatestEngineOutput().size(),1u);
 	}
 
 	void TestInvalidUnwantedEngineString()

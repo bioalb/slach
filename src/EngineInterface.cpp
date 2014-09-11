@@ -53,6 +53,10 @@ void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)
 
 void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, double seconds)
 {
+	std::stringstream multipv_command;
+	multipv_command << "setoption name MultiPV value "<<mNumberOfLinesToBeShown;
+	IssueCommandtoStockfish(multipv_command.str());
+
     std::string fen_position = pPosition->GetPositionAsFen();
     mpChessBoard->SetFenPosition(fen_position); //set the helper board with this position
     mCachedFenPositiontoBeanalysed = fen_position;
@@ -85,9 +89,6 @@ void slach::EngineInterface::DoIssueCommand(const std::string& command)
 void slach::EngineInterface::StopEngine()
 {
 	IssueCommandtoStockfish("stop");
-	slach_mutex.lock();
-	mEngineOutputBuffer->str("");
-	slach_mutex.unlock();
 }
 
 void slach::EngineInterface::QuitEngine()
@@ -99,6 +100,10 @@ std::vector<std::string> slach::EngineInterface::GetLatestEngineOutput()
 {
 	std::string raw_string = mEngineOutputBuffer->str();
 	mLatestEngineLines = ParseWholeEngineOutput(raw_string);
+	if (mLatestEngineLines.size() < mNumberOfLinesToBeShown)
+	{
+		mLatestEngineLines.resize(mNumberOfLinesToBeShown);
+	}
 
 	std::sort(mLatestEngineLines.begin(), mLatestEngineLines.end());
 	if (mpHelperFenHandler->GetPositionFeaturesFromFen(mCachedFenPositiontoBeanalysed).mTurnToMove == WHITE)
