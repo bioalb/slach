@@ -124,8 +124,20 @@ public:
         TS_ASSERT_EQUALS(info.mCheckMate, false);
         TS_ASSERT_EQUALS(info.mMateLine, false);
         TS_ASSERT_EQUALS(info.mValid, false);
+	}
 
-        TS_ASSERT_EQUALS(interface.GetLatestEngineOutput().size(),1u);
+	void TestEmptyStriingToGEtOutputMethod()
+	{
+        std::string empty = "";
+
+        slach::EngineInterface interface;
+        std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
+        interface.SetPositionToInternalChessBoard(test_position);
+
+        interface.mEngineOutputBuffer->str(empty);
+        auto from_engin_output = interface.GetLatestEngineOutput();
+        TS_ASSERT_EQUALS(from_engin_output.size(),1u);
+        TS_ASSERT_EQUALS(from_engin_output[0], "Depth = 0; score = 0.00; \n");
 	}
 
 	void TestInvalidUnwantedEngineString()
@@ -177,7 +189,7 @@ public:
         TS_ASSERT_EQUALS(info.mMoveList, "Qh5+ mate");
         TS_ASSERT_EQUALS(info.mRootMove, "Qh5+");
         TS_ASSERT_EQUALS(info.mDepth, 1);
-        TS_ASSERT_DELTA(info.mScore, 0.0, 1e-3);
+        TS_ASSERT_DELTA(info.mScore, 100.0, 1e-3);
         TS_ASSERT_EQUALS(info.mCheckMate, false);
         TS_ASSERT_EQUALS(info.mMateLine, true);
         TS_ASSERT_EQUALS(info.mValid, true);

@@ -46,7 +46,7 @@ public:
         delete p_position;
     }
 
-    void TestStartAndStopAfterthreeseconds()
+    void xTestStartAndStopAfterthreeseconds()
     {
         slach::ChessBoard* p_board = new slach::ChessBoard();
         p_board->SetupChessBoard();

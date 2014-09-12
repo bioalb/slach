@@ -29,7 +29,7 @@ void slach::EngineInterface::InitEngine()
 {
 #ifndef SLACH_TESTING
 	slach_mutex.lock();
-	mBackupCoutBuf = std::cout.rdbuf();
+	//mBackupCoutBuf = std::cout.rdbuf();
 	std::cout.rdbuf(mEngineOutputBuffer);
 	slach_mutex.unlock();
 #endif
@@ -43,6 +43,7 @@ slach::EngineInterface::~EngineInterface()
 		QuitEngine();
 		mpEngineThread->join();
 	}
+	//if (mBackupCoutBuf) std::cout.rdbuf(mBackupCoutBuf);//restore std::cout
     delete mpChessBoard;
 }
 
