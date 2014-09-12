@@ -29,6 +29,7 @@ void slach::EngineInterface::InitEngine()
 {
 #ifndef SLACH_TESTING
 	slach_mutex.lock();
+	mBackupCoutBuf = std::cout.rdbuf();
 	std::cout.rdbuf(mEngineOutputBuffer);
 	slach_mutex.unlock();
 #endif
@@ -194,6 +195,7 @@ slach::InfoInEngineLine slach::EngineInterface::ParseALineofStockfishOutput(cons
     if ( (pos == std::string::npos) && info.mMateLine == false ) return info;  //with valid as false....
     pos = stockfishLine.find_first_of(' ', pos);
     double score = atof(&(stockfishLine[pos]))/100.0;
+    if (info.mMateLine == true) score = 100;
     //fix the score to be positive for white and negative for black
     if (mpHelperFenHandler->GetPositionFeaturesFromFen(mCachedFenPositiontoBeanalysed).mTurnToMove == BLACK) score = (- score);
     info.mScore = score;
@@ -214,7 +216,8 @@ slach::InfoInEngineLine slach::EngineInterface::ParseALineofStockfishOutput(cons
         Move verbose_move(move_string, mpChessBoard->GetSquares());
         if ( (verbose_move.GetOrigin() != NULL) && (verbose_move.GetDestination() != NULL) )
         {
-            bool valid = mpChessBoard->IsLegalMove(verbose_move);
+            if (! mpChessBoard->IsLegalMove(verbose_move) ) return info; //with valid still as false
+
             std::string pretty_move = verbose_move.GetMoveInAlgebraicFormat();
             pretty_line = pretty_line + pretty_move + " ";
             if (i == 0)
