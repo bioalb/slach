@@ -77,13 +77,14 @@ void slach::EngineInterface::IssueCommandtoStockfish(const std::string& command)
 {
 	std::shared_ptr<std::thread> command_thread = std::make_shared<std::thread>(&slach::EngineInterface::DoIssueCommand, this, command);
 	command_thread->join();
+	GuiIssuedNewCommand = false;
 }
 void slach::EngineInterface::DoIssueCommand(const std::string& command)
 {
 	std::unique_lock<std::mutex> lck(global_mutex_send);
 	GuiIssuedNewCommand = true;
 	GlobalCommandFromGUI = command;
-	global_cv_send.notify_all();
+	GUICmmandCondition.notify_all();
 }
 
 void slach::EngineInterface::StopEngine()

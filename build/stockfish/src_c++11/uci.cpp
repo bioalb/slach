@@ -39,7 +39,7 @@ std::string GlobalCommandFromGUI;
 volatile bool GuiIssuedNewCommand;
 std::mutex global_mutex_send;
 std::mutex global_mutex_receive;
-std::condition_variable global_cv_send;
+std::condition_variable GUICmmandCondition;
 std::condition_variable global_cv_received;
 volatile bool EngineReceievdCommand;
 
@@ -165,12 +165,11 @@ void UCI::loop(int argc, char* argv[]) {
       //if (argc == 1 && !getline(cin, cmd)) {}// Block here waiting for input
           //cmd = "quit";
       std::unique_lock<std::mutex> lck(global_mutex_send);
-      GuiIssuedNewCommand = false;
       while (GuiIssuedNewCommand == false)
       {
-    	  global_cv_send.wait(lck);
-    	  //idle loop
+    	  GUICmmandCondition.wait(lck); //wait here for signal from main thread
       }
+
 
       global_mutex_receive.lock();
       cmd = GlobalCommandFromGUI;

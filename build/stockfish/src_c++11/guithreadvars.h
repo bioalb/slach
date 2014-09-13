@@ -10,7 +10,7 @@ volatile extern bool GuiIssuedNewCommand;
 
 extern std::mutex global_mutex_send;
 extern std::mutex global_mutex_receive;
-extern std::condition_variable global_cv_send;
+extern std::condition_variable GUICmmandCondition;
 
 
 #endif
