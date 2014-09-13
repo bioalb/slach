@@ -27,12 +27,11 @@ void slach::EngineInterface::LaunchEngine()
 
 void slach::EngineInterface::InitEngine()
 {
-#ifndef SLACH_TESTING
 	slach_mutex.lock();
-	//mBackupCoutBuf = std::cout.rdbuf();
+	mBackupCoutBuf = std::cout.rdbuf();
 	std::cout.rdbuf(mEngineOutputBuffer);
 	slach_mutex.unlock();
-#endif
+
 	::main_stockfish(1,nullptr);
 }
 
@@ -43,7 +42,6 @@ slach::EngineInterface::~EngineInterface()
 		QuitEngine();
 		mpEngineThread->join();
 	}
-	//if (mBackupCoutBuf) std::cout.rdbuf(mBackupCoutBuf);//restore std::cout
     delete mpChessBoard;
 }
 
@@ -96,6 +94,9 @@ void slach::EngineInterface::StopEngine()
 void slach::EngineInterface::QuitEngine()
 {
 	IssueCommandtoStockfish("quit");
+	slach_mutex.lock();
+	if (mBackupCoutBuf) std::cout.rdbuf(mBackupCoutBuf);//restore std::cout
+	slach_mutex.unlock();
 }
 
 std::vector<std::string> slach::EngineInterface::GetLatestEngineOutput()
