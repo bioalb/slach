@@ -41,12 +41,13 @@ public:
         }
         interface.StopEngine();
         interface.QuitEngine();
-        std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
+        auto output = interface.GetLatestEngineOutput();
+        TS_ASSERT_EQUALS(output.size(), 1u);
         delete p_board;
         delete p_position;
     }
 
-    void xTestStartAndStopAfterthreeseconds()
+    void TestStartAndStopAfterthreeseconds()
     {
         slach::ChessBoard* p_board = new slach::ChessBoard();
         p_board->SetupChessBoard();
@@ -59,10 +60,11 @@ public:
         std::cout<<std::endl<<"*******"<<"Starting analysis. I will analyse for 3 seconds"<<"*******"<<std::endl;
         interface.LaunchEngine();
         interface.StartAnalsyingPosition(p_position, 3.0);
-        std::cout<<std::endl<<"Done analysing for 3 seconds, engine output follows"<<std::endl;
-        std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
-        interface.StopEngine();
-        interface.QuitEngine();
+
+        auto output = interface.GetLatestEngineOutput();
+        TS_ASSERT_EQUALS(output.size(), 4u);
+        //interface.StopEngine();
+        //interface.QuitEngine();
         delete p_board;
         delete p_position;
     }
@@ -91,7 +93,8 @@ public:
         std::cout<<std::endl<<"*******"<<"Starting analysis after Bxd3"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(p_position, 3.0);
         std::cout<<std::endl<<"Done analysing for 3 seconds, after Bxd3 engine output follows"<<std::endl;
-        std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
+        auto output = interface.GetLatestEngineOutput();
+        TS_ASSERT_EQUALS(output.size(), 4u);
         interface.QuitEngine();
         delete p_board;
         delete p_position;
@@ -122,10 +125,9 @@ public:
             std::time(&time_now);
         }
         interface.StopEngine();
-        std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
-        std::cout<<interface.GetLatestEngineOutput()[1]<<std::endl;
-        std::cout<<interface.GetLatestEngineOutput()[2]<<std::endl;
-        std::cout<<interface.GetLatestEngineOutput()[3]<<std::endl;
+        auto output = interface.GetLatestEngineOutput();
+        TS_ASSERT_EQUALS(output.size(), 4u);
+
         delete p_board;
         delete p_position;
 
@@ -146,12 +148,9 @@ public:
         std::cout<<std::endl<<"*******"<<"Starting analysis of Mate in one"<<"*******"<<std::endl;
         interface.StartAnalsyingPosition(p_position, 3.0);
         std::cout<<std::endl<<"Done analysing for 3 seconds the fools mate, engine output follows"<<std::endl;
-        std::cout<<interface.GetLatestEngineOutput()[0]<<std::endl;
-        std::cout<<interface.GetLatestEngineOutput()[1]<<std::endl;
-        std::string mate_line  = interface.GetLatestEngineOutput()[2];
-        std::cout<<mate_line<<std::endl;
-
-        TS_ASSERT_EQUALS(mate_line, "Depth = 0; score = 100.00; Qh5+ mate\n");
+        auto output = interface.GetLatestEngineOutput();
+        TS_ASSERT_EQUALS(output.size(), 3u);
+        TS_ASSERT_EQUALS(output[0], "Depth = 1; score = 100.00; Qh5+ mate\n");
         delete p_board;
         delete p_position;
     }
@@ -171,9 +170,9 @@ public:
         interface.StartAnalsyingPosition(p_position, 3.0);
         std::cout<<std::endl<<"Done analysing for 3 seconds the fools mate, engine output follows"<<std::endl;
 
-        std::string engine_output = interface.GetLatestEngineOutput()[0];
-        TS_ASSERT_EQUALS(engine_output, "Depth = 0; score = 0.00; CHECKMATE\n");
-        std::cout<<engine_output<<std::endl;
+        auto output = interface.GetLatestEngineOutput();
+        TS_ASSERT_EQUALS(output.size(), 1u);
+        TS_ASSERT_EQUALS(output[0], "Depth = 0; score = 0.00;\n");
 
         delete p_board;
         delete p_position;
@@ -195,9 +194,12 @@ public:
         interface.StartAnalsyingPosition(p_position, 3.0);
         std::cout<<std::endl<<"Done analysing for 3 seconds the fools mate, engine output follows"<<std::endl;
 
-        std::string engine_output = interface.GetLatestEngineOutput()[0];
-        TS_ASSERT_EQUALS(engine_output, "Depth = 0; score = 0.00; CHECKMATE\n");
-        std::cout<<engine_output<<std::endl;
+
+        auto output = interface.GetLatestEngineOutput();
+        TS_ASSERT_EQUALS(output.size(), 3u);
+        TS_ASSERT_EQUALS(output[0], "Depth = 0; score = 0.00;\n");
+        TS_ASSERT_EQUALS(output[1], "Depth = 0; score = 0.00;\n");
+        TS_ASSERT_EQUALS(output[2], "Depth = 0; score = 0.00;\n");
 
         delete p_board;
         delete p_position;
