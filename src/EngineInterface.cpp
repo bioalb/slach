@@ -49,14 +49,16 @@ void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)
 {
     mNumberOfLinesToBeShown = num;
     mLatestEngineLines.resize(num);
+    if (mpEngineThread)
+    {
+    	std::stringstream multipv_command;
+    	multipv_command << "setoption name MultiPV value "<<mNumberOfLinesToBeShown;
+    	IssueCommandtoStockfish(multipv_command.str());
+    }
 }
 
 void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, double seconds)
 {
-	std::stringstream multipv_command;
-	multipv_command << "setoption name MultiPV value "<<mNumberOfLinesToBeShown;
-	IssueCommandtoStockfish(multipv_command.str());
-
     std::string fen_position = pPosition->GetPositionAsFen();
     mpChessBoard->SetFenPosition(fen_position); //set the helper board with this position
     mCachedFenPositiontoBeanalysed = fen_position;
@@ -65,7 +67,10 @@ void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, 
 
 	if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
 	{
-		IssueCommandtoStockfish("go movetime 5000");
+		std::stringstream time_limit_command;
+		int milliseconds = static_cast<int> (seconds * 1000);
+		time_limit_command << "go movetime "<<milliseconds;
+		IssueCommandtoStockfish(time_limit_command.str());
 	}
 	else
 	{
