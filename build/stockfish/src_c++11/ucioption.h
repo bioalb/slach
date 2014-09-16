@@ -62,7 +62,7 @@ private:
 
 void init(OptionsMap&);
 void loop(int argc, char* argv[]);
-
+std::string ReceiveCommandFromGUI();
 } // namespace UCI
 
 extern UCI::OptionsMap Options;

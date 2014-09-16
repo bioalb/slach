@@ -38,7 +38,6 @@ extern void benchmark(const Position& pos, istream& is);
 std::string GlobalCommandFromGUI;
 volatile bool GuiIssuedNewCommand;
 std::mutex global_mutex_send;
-std::mutex global_mutex_receive;
 std::condition_variable GUICmmandCondition;
 std::condition_variable global_cv_received;
 volatile bool EngineReceievdCommand;
@@ -146,7 +145,15 @@ namespace {
 
 } // namespace
 
-
+std::string UCI::ReceiveCommandFromGUI()
+{
+    std::unique_lock<std::mutex> lck(global_mutex_send);
+    while (GuiIssuedNewCommand == false)
+    {
+  	  GUICmmandCondition.wait(lck); //wait here for signal from main thread
+    }
+    return GlobalCommandFromGUI;
+}
 /// Wait for a command from the user, parse this text string as an UCI command,
 /// and call the appropriate functions. Also intercepts EOF from stdin to ensure
 /// that we exit gracefully if the GUI dies unexpectedly. In addition to the UCI
@@ -164,16 +171,8 @@ void UCI::loop(int argc, char* argv[]) {
 
       //if (argc == 1 && !getline(cin, cmd)) {}// Block here waiting for input
           //cmd = "quit";
-      std::unique_lock<std::mutex> lck(global_mutex_send);
-      while (GuiIssuedNewCommand == false)
-      {
-    	  GUICmmandCondition.wait(lck); //wait here for signal from main thread
-      }
 
-
-      global_mutex_receive.lock();
-      cmd = GlobalCommandFromGUI;
-      global_mutex_receive.unlock();
+      cmd = ReceiveCommandFromGUI();
 
       istringstream is(cmd);
 
