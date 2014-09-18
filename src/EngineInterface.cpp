@@ -80,9 +80,11 @@ void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, 
 
 void slach::EngineInterface::IssueCommandtoStockfish(const std::string& command)
 {
+	while (EngineReadyToReceiveNewCommand.load() == false) {} //wait here
+
 	std::shared_ptr<std::thread> command_thread = std::make_shared<std::thread>(&slach::EngineInterface::DoIssueCommand, this, command);
 	command_thread->join();
-	GuiIssuedNewCommand = false;
+	GuiIssuedNewCommand.store(false);
 }
 void slach::EngineInterface::DoIssueCommand(const std::string& command)
 {

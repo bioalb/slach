@@ -21,6 +21,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <atomic>
 
 #include "evaluate.h"
 #include "notation.h"
@@ -36,7 +37,8 @@ using namespace std;
 extern void benchmark(const Position& pos, istream& is);
 
 std::string GlobalCommandFromGUI;
-volatile bool GuiIssuedNewCommand;
+std::atomic<bool> GuiIssuedNewCommand;
+std::atomic<bool> EngineReadyToReceiveNewCommand;
 std::mutex GUICmmandMutex;
 std::condition_variable GUICmmandCondition;
 std::condition_variable global_cv_received;
@@ -147,11 +149,13 @@ namespace {
 
 std::string UCI::ReceiveCommandFromGUI()
 {
+	EngineReadyToReceiveNewCommand.store(true);
     std::unique_lock<std::mutex> lck(GUICmmandMutex);
-    while (GuiIssuedNewCommand == false)
+    while (GuiIssuedNewCommand.load() == false)
     {
   	  GUICmmandCondition.wait(lck); //wait here for signal from main thread
     }
+    EngineReadyToReceiveNewCommand.store(false);
     return GlobalCommandFromGUI;
 }
 /// Wait for a command from the user, parse this text string as an UCI command,

@@ -4,10 +4,11 @@
 #include <string>
 #include <condition_variable>
 #include <mutex>
+#include <atomic>
 
 extern std::string GlobalCommandFromGUI;
-volatile extern bool GuiIssuedNewCommand;
-
+extern std::atomic<bool> GuiIssuedNewCommand;
+extern std::atomic<bool> EngineReadyToReceiveNewCommand;
 extern std::mutex GUICmmandMutex;
 extern std::condition_variable GUICmmandCondition;
 

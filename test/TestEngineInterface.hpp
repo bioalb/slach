@@ -9,7 +9,6 @@
 #include "EngineInterface.hpp"
 #include "ChessBoard.hpp"
 
-
 /**
  * Test suite to test the engine interface class
  */
@@ -17,7 +16,7 @@ class TestEngineInterface : public CxxTest::TestSuite
 {
 public:
 
-    void xTestStartInfiniteAndStop()
+    void TestStartInfiniteAndStop()
     {
         slach::ChessBoard* p_board = new slach::ChessBoard();
         p_board->SetupChessBoard();
@@ -27,7 +26,7 @@ public:
         p_position->SetFromFen(test_position, squares);
 
         slach::EngineInterface interface;
-        std::cout<<std::endl<<"*******Starting analysis. I will start with infinite analysis and stop after 5 seconds*******"<<std::endl;
+        std::cout<<std::endl<<"*******Starting analysis. I will start with infinite analysis and stop after 2 seconds*******"<<std::endl;
         interface.LaunchEngine();
         interface.StartAnalsyingPosition(p_position);
 
@@ -35,7 +34,7 @@ public:
         std::time_t start_time = 0;
         std::time(&start_time);
 
-        while (std::difftime(time_now,start_time) < 5.0)
+        while (std::difftime(time_now,start_time) < 2.0)
         {
             std::time(&time_now);
         }
