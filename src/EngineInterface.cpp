@@ -86,7 +86,7 @@ void slach::EngineInterface::IssueCommandtoStockfish(const std::string& command)
 }
 void slach::EngineInterface::DoIssueCommand(const std::string& command)
 {
-	std::unique_lock<std::mutex> lck(global_mutex_send);
+	std::unique_lock<std::mutex> lck(GUICmmandMutex);
 	GuiIssuedNewCommand = true;
 	GlobalCommandFromGUI = command;
 	GUICmmandCondition.notify_all();

@@ -8,7 +8,7 @@
 extern std::string GlobalCommandFromGUI;
 volatile extern bool GuiIssuedNewCommand;
 
-extern std::mutex global_mutex_send;
+extern std::mutex GUICmmandMutex;
 extern std::condition_variable GUICmmandCondition;
 
 

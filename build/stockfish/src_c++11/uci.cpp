@@ -37,7 +37,7 @@ extern void benchmark(const Position& pos, istream& is);
 
 std::string GlobalCommandFromGUI;
 volatile bool GuiIssuedNewCommand;
-std::mutex global_mutex_send;
+std::mutex GUICmmandMutex;
 std::condition_variable GUICmmandCondition;
 std::condition_variable global_cv_received;
 volatile bool EngineReceievdCommand;
@@ -147,7 +147,7 @@ namespace {
 
 std::string UCI::ReceiveCommandFromGUI()
 {
-    std::unique_lock<std::mutex> lck(global_mutex_send);
+    std::unique_lock<std::mutex> lck(GUICmmandMutex);
     while (GuiIssuedNewCommand == false)
     {
   	  GUICmmandCondition.wait(lck); //wait here for signal from main thread
