@@ -3,9 +3,6 @@
 #include <cassert>
 #include <sstream>
 #include "EngineInterface.hpp"
-#include "guithreadvars.h"
-#include "main_stockfish.hpp"
-std::mutex slach_mutex;
 
 slach::EngineInterface::EngineInterface()
   : mNumberOfLinesToBeShown(1u),
@@ -16,8 +13,6 @@ slach::EngineInterface::EngineInterface()
 {
     mpChessBoard->SetupChessBoard();
     mLatestEngineLines.resize(mNumberOfLinesToBeShown);
-    GlobalCommandFromGUI = "readyok";
-    GuiIssuedNewCommand = false;
 }
 
 void slach::EngineInterface::LaunchEngine()
@@ -27,12 +22,7 @@ void slach::EngineInterface::LaunchEngine()
 
 void slach::EngineInterface::InitEngine()
 {
-	slach_mutex.lock();
-	mBackupCoutBuf = std::cout.rdbuf();
-	std::cout.rdbuf(mEngineOutputBuffer);
-	slach_mutex.unlock();
-
-	::main_stockfish(1,nullptr);
+	system("build/stockfish/src_c++11/stockfish");
 }
 
 slach::EngineInterface::~EngineInterface()
@@ -80,18 +70,12 @@ void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, 
 
 void slach::EngineInterface::IssueCommandtoStockfish(const std::string& command)
 {
-	while (EngineReadyToReceiveNewCommand.load() == false) {} //wait here
-
 	std::shared_ptr<std::thread> command_thread = std::make_shared<std::thread>(&slach::EngineInterface::DoIssueCommand, this, command);
 	command_thread->join();
-	GuiIssuedNewCommand.store(false);
 }
 void slach::EngineInterface::DoIssueCommand(const std::string& command)
 {
-	std::unique_lock<std::mutex> lck(GUICmmandMutex);
-	GuiIssuedNewCommand = true;
-	GlobalCommandFromGUI = command;
-	GUICmmandCondition.notify_all();
+	//do stuff here
 }
 
 void slach::EngineInterface::StopEngine()
@@ -102,9 +86,9 @@ void slach::EngineInterface::StopEngine()
 void slach::EngineInterface::QuitEngine()
 {
 	IssueCommandtoStockfish("quit");
-	slach_mutex.lock();
-	if (mBackupCoutBuf) std::cout.rdbuf(mBackupCoutBuf);//restore std::cout
-	slach_mutex.unlock();
+//	slach_mutex.lock();
+//	if (mBackupCoutBuf) std::cout.rdbuf(mBackupCoutBuf);//restore std::cout
+//	slach_mutex.unlock();
 }
 
 std::vector<std::string> slach::EngineInterface::GetLatestEngineOutput()
