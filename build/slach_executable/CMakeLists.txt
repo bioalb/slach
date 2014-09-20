@@ -28,7 +28,6 @@ ADD_EXECUTABLE(slach   ${srcdir}/Exception.cpp
                        ${srcdir}/GUI/slach_main.cpp)
 
 LINK_DIRECTORIES(/usr/lib/${ARCHITECTURE_LIBRARY_DIR})
-FIND_LIBRARY(STOCKFISH_LIB NAMES stockfish PATHS ${stockfishdir})
 #most of this from the wx widgets documentation
 TARGET_LINK_LIBRARIES(slach   -lwx_${GTK_VER}u_richtext-3.0 
                               -lwx_${GTK_VER}u_aui-3.0 
@@ -39,7 +38,6 @@ TARGET_LINK_LIBRARIES(slach   -lwx_${GTK_VER}u_richtext-3.0
                               -lwx_${GTK_VER}u_core-3.0 
                               -lwx_baseu_xml-3.0
                               -lwx_baseu_net-3.0 
-                              -lwx_baseu-3.0
-                              ${STOCKFISH_LIB})
+                              -lwx_baseu-3.0)
 
 
