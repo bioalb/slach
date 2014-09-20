@@ -16,6 +16,7 @@
 
 class TestEngineInterface;//forward declaration, for testing and accessing protected methods from the test class
 class TestEngineStrings;
+class TestEngineCommands;
 
 namespace slach
 {
@@ -76,6 +77,7 @@ class EngineInterface
 {
     friend class ::TestEngineInterface;// for testing
     friend class ::TestEngineStrings;// for testing
+    friend class ::TestEngineCommands;//for testing
 
   private:
 
@@ -86,10 +88,6 @@ class EngineInterface
 
     std::string mEngineString;
 
-
-
-
-    void IssueCommandtoStockfish(const std::string& command);
     void DoIssueCommand(const std::string& command);
     void InitEngine();
 
@@ -119,6 +117,8 @@ class EngineInterface
     InfoInEngineLine ParseALineofStockfishOutput(const std::string& stockfishLine);
 
     std::vector<InfoInEngineLine> ParseWholeEngineOutput(const std::string& rawOutput);
+
+    void IssueCommandtoStockfish(const std::string& command);
 
   public :
     /**

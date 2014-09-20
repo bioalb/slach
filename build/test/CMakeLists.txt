@@ -20,7 +20,7 @@ SET (source_files ${srcdir}/Exception.cpp
                   ${srcdir}/EngineInterface.cpp
                   ${srcdir}/LegalMoveChecker.cpp)
                  
-SET (single_test_to_run ${testfiledir}/TestEngineInterface.hpp)
+SET (single_test_to_run ${testfiledir}/TestEngineCommands.hpp)
           
 SET (all_test_files ${testfiledir}/TestChessboardWithBorders.hpp 
                     ${testfiledir}/TestChessBoard.hpp
