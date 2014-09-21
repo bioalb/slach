@@ -2,27 +2,37 @@
 #include <limits>
 #include <cassert>
 #include <sstream>
+#include <mutex>
+#include "main_stockfish.h"
 #include "EngineInterface.hpp"
+
+std::mutex slach_mutex;
 
 slach::EngineInterface::EngineInterface()
   : mNumberOfLinesToBeShown(1u),
-    mEngineOutputBuffer(new std::stringbuf(" ")),
+    mEngineOutputBuffer(new std::stringbuf("")),
     mCachedFenPositiontoBeanalysed(""),
     mpChessBoard( new slach::ChessBoard() ),
 	mpHelperFenHandler( new slach::FenHandler() )
 {
     mpChessBoard->SetupChessBoard();
     mLatestEngineLines.resize(mNumberOfLinesToBeShown);
+
+    mBackupCinBuffer = std::cin.rdbuf(); // back up cin's streambuf
+    mPsBuf = mCinRedirectBuffer.rdbuf();
+    std::cin.rdbuf(mPsBuf);
+    IssueCommandtoStockfish("readyok");
 }
 
 void slach::EngineInterface::LaunchEngine()
 {
+	//mpInputThread = std::make_shared<std::thread>(&slach::EngineInterface::TakeOwnershipOfCin, this);
     mpEngineThread =  std::make_shared<std::thread>(&slach::EngineInterface::InitEngine, this);
 }
 
 void slach::EngineInterface::InitEngine()
 {
-	system("build/stockfish/src_c++11/stockfish");
+	::main_stockfish(0,nullptr);
 }
 
 slach::EngineInterface::~EngineInterface()
@@ -49,7 +59,7 @@ void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)
 
 void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, double seconds)
 {
-    std::string fen_position = pPosition->GetPositionAsFen();
+    /*std::string fen_position = pPosition->GetPositionAsFen();
     mpChessBoard->SetFenPosition(fen_position); //set the helper board with this position
     mCachedFenPositiontoBeanalysed = fen_position;
     std::string position_command = "position fen "+fen_position;
@@ -65,18 +75,24 @@ void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, 
 	else
 	{
 		IssueCommandtoStockfish("go infinite");
-    }
+    }*/
+	IssueCommandtoStockfish("d");
 }
 
 void slach::EngineInterface::IssueCommandtoStockfish(const std::string& command)
 {
-	std::shared_ptr<std::thread> command_thread = std::make_shared<std::thread>(&slach::EngineInterface::DoIssueCommand, this, command);
-	command_thread->join();
+	//std::shared_ptr<std::thread> command_thread = std::make_shared<std::thread>(&slach::EngineInterface::DoIssueCommand, this, command);
+	//command_thread->join();
+	mCinRedirectBuffer << command << std::endl;
+	/*mCinRedirectBuffer->str(command);
+	mCinRedirectBuffer->sputc('d');*/
 }
-void slach::EngineInterface::DoIssueCommand(const std::string& command)
-{
-	//do stuff here
-}
+//void slach::EngineInterface::TakeOwnershipOfCin()
+//{
+//	slach_mutex.lock();
+//	std::cin.rdbuf(&mCinRedirectBuffer);
+//	slach_mutex.unlock();
+//}
 
 void slach::EngineInterface::StopEngine()
 {

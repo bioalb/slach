@@ -85,16 +85,23 @@ class EngineInterface
     unsigned mNumberOfLinesToBeShown;
 
     std::shared_ptr<std::thread> mpEngineThread;
+    std::shared_ptr<std::thread> mpInputThread;
 
     std::string mEngineString;
 
-    void DoIssueCommand(const std::string& command);
+    void TakeOwnershipOfCin();
     void InitEngine();
 
   protected:
 
+    std::stringstream mCinRedirectBuffer;
+	std::streambuf *mBackupCinBuffer;
+	std::streambuf *mPsBuf;
 
-    std::stringbuf *mEngineOutputBuffer;
+
+	std::stringstream mCommandStream;
+
+    std::stringbuf* mEngineOutputBuffer;
     std::streambuf *mBackupCoutBuf;
     std::string mCachedFenPositiontoBeanalysed;
     /**Cache the latest engine lines and all associated info*/
