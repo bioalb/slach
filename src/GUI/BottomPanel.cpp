@@ -4,7 +4,7 @@
 
 slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,-1, pos,size),
-      mpEngineInterface  (new slach::EngineInterface() ),
+      mpEngineInterface  (new slach::UCIStringsManipulator() ),
       mNumberOfEngineLinesShown(1),
       mpPosition ( new slach::Position() ),
       mpStartEngineButton ( new wxButton(this, 1, wxT("Start Engine"),wxDefaultPosition, wxDefaultSize) ),
@@ -30,12 +30,10 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
 
     mNumberOfEngineLinesShown = 3;
     mpEngineInterface->SetNumberOfLinesToBeShown(mNumberOfEngineLinesShown);
-    mpEngineInterface->LaunchEngine();
 }
 
 slach_gui::BottomPanel::~BottomPanel()
 {
-	mpEngineInterface->QuitEngine();
     delete mpEngineInterface;
 }
 
@@ -76,14 +74,12 @@ void slach_gui::BottomPanel::StartEngine(wxCommandEvent& event)
 void slach_gui::BottomPanel::DoStopEngine()
 {
 	mEngineIsRunning = false;
-	mpEngineInterface->StopEngine();
 }
 
 void slach_gui::BottomPanel::DoStartEngine()
 {
 	mEngineIsRunning = true;
 	assert(mpPosition!=NULL);
-    mpEngineInterface->StartAnalsyingPosition(mpPosition); //infinite
 }
 
 void slach_gui::BottomPanel::OnClose(wxCloseEvent&)
@@ -124,7 +120,7 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
         mpEngineTextBox->BeginFontSize(13);
 	    for (unsigned pv = 0; pv < mNumberOfEngineLinesShown; pv++)
 	    {
-            mpEngineTextBox->WriteText( mpEngineInterface->GetLatestEngineOutput()[pv] );
+            mpEngineTextBox->WriteText( mpEngineInterface->GetLatestEngineOutput("")[pv] );
 	    }
         mpEngineTextBox->EndAlignment();
         mpEngineTextBox->EndFontSize();

@@ -1,20 +1,11 @@
-#ifndef ENGINEINTERFACE_HPP_
-#define ENGINEINTERFACE_HPP_
-
-#include <limits>
-#include <thread>
-#include <mutex>
-#include <atomic>
-#include <ios>
-#include <fstream>
-#include <sstream>
-#include <streambuf>
+#ifndef UCIStringsManipulator_HPP_
+#define UCIStringsManipulator_HPP_
 
 #include "Game.hpp"
 #include "ChessBoard.hpp"
 
 
-class TestEngineInterface;//forward declaration, for testing and accessing protected methods from the test class
+class TestUCIStringsManipulator;//forward declaration, for testing and accessing protected methods from the test class
 class TestEngineStrings;
 class TestEngineCommands;
 
@@ -73,9 +64,9 @@ public :
 /**
  * A class that serves as a communicator with one or more engines.
  */
-class EngineInterface
+class UCIStringsManipulator
 {
-    friend class ::TestEngineInterface;// for testing
+    friend class ::TestUCIStringsManipulator;// for testing
     friend class ::TestEngineStrings;// for testing
     friend class ::TestEngineCommands;//for testing
 
@@ -84,32 +75,16 @@ class EngineInterface
     /**this is the number of different lines to be shown. it is MultiPV in stockfish, defaults to 1*/
     unsigned mNumberOfLinesToBeShown;
 
-    std::shared_ptr<std::thread> mpEngineThread;
-    std::shared_ptr<std::thread> mpInputThread;
-
-    std::string mEngineString;
-
-    void TakeOwnershipOfCin();
-    void InitEngine();
-
   protected:
 
-    std::stringstream mCinRedirectBuffer;
-	std::streambuf *mBackupCinBuffer;
-	std::streambuf *mPsBuf;
 
-
-	std::stringstream mCommandStream;
-
-    std::stringbuf* mEngineOutputBuffer;
-    std::streambuf *mBackupCoutBuf;
-    std::string mCachedFenPositiontoBeanalysed;
     /**Cache the latest engine lines and all associated info*/
     std::vector<InfoInEngineLine> mLatestEngineLines;
 
     /**we create a chessboard as we need squares with pieces to translate engine moves to SAN*/
     ChessBoard* mpChessBoard;
 
+    std::string mCachedFenPositiontoBeanalysed;
     FenHandler* mpHelperFenHandler;
 
     /**same as chessboard, we store the pointers to squares*/
@@ -138,34 +113,16 @@ class EngineInterface
      *
      * @param pChessBoard the chessboard object we wish the engine to interact with.
      */
-    EngineInterface();
-    ~EngineInterface();
+    UCIStringsManipulator();
+    ~UCIStringsManipulator();
 
-    /**
-     * This method initializes a new thread that will run the engine.
-     */
-    void LaunchEngine();
-
-    /**
-     * This method triggers the engine to analyse the position and outputs to std::output the engine analysis.
-     * It thinks for the number of seconds specified by the parameter "seconds"
-     *
-     * @param pPosition the position to analyse
-     * @param seconds the number of seconds we want the engine to analyse the position for. Iif no parameter is specified,
-     *        the engine will think for an infinite time
-     */
-    void StartAnalsyingPosition(slach::Position* pPosition, double seconds = std::numeric_limits<double>::max());
-
-    void StopEngine();
-
-    void QuitEngine();
 
     /**
      * When called, this method will parse the engine output and return
      * you a vector of strings, as big as the number of lines to be shown (mNumberOfLinesToBeShown)
      * with a polished version of the lines, if different from the preivous time you called this
      */
-    std::vector<std::string> GetLatestEngineOutput();
+    std::vector<std::string> GetLatestEngineOutput(const std::string& rawString);
 
 
     /**

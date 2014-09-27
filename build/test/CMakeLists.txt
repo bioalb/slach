@@ -17,10 +17,10 @@ SET (source_files ${srcdir}/Exception.cpp
                   ${srcdir}/ChessBoardWithBorders.cpp
                   ${srcdir}/Square.cpp
                   ${srcdir}/Move.cpp
-                  ${srcdir}/EngineInterface.cpp
+                  ${srcdir}/UCIStringsManipulator.cpp
                   ${srcdir}/LegalMoveChecker.cpp)
                  
-SET (single_test_to_run ${testfiledir}/TestEngineCommands.hpp)
+SET (single_test_to_run ${testfiledir}/TestEngineStrings.hpp)
           
 SET (all_test_files ${testfiledir}/TestChessboardWithBorders.hpp 
                     ${testfiledir}/TestChessBoard.hpp
@@ -30,7 +30,6 @@ SET (all_test_files ${testfiledir}/TestChessboardWithBorders.hpp
                     ${testfiledir}/TestMove.hpp
                     ${testfiledir}/TestFenHandler.hpp
                     ${testfiledir}/TestGame.hpp
-                    ${testfiledir}/TestEngineInterface.hpp
                     ${testfiledir}/TestEngineStrings.hpp
                     ${testfiledir}/TestHelperGlobalMethod.hpp
                     ${testfiledir}/TestLegalMoveChecker.hpp)

@@ -6,7 +6,7 @@
 #include <sstream>
 #include <ctime>
 #include <cassert>
-#include "EngineInterface.hpp"
+#include "UCIStringsManipulator.hpp"
 #include "ChessBoard.hpp"
 
 /**
@@ -76,7 +76,7 @@ public:
 		//extra r in depth
         std::string test_string = "info derpth 1 seldepth 1 score cp 6 nodes 251 nps 62750 time 4 multipv 1 pv f6e4 c3e4 d5e4";
 
-        slach::EngineInterface interface;
+        slach::UCIStringsManipulator interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
         interface.SetPositionToInternalChessBoard(test_position);
 
@@ -94,7 +94,7 @@ public:
 	{
         std::string rubbish = "rubbish";
 
-        slach::EngineInterface interface;
+        slach::UCIStringsManipulator interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
         interface.SetPositionToInternalChessBoard(test_position);
 
@@ -112,7 +112,7 @@ public:
 	{
         std::string empty = "";
 
-        slach::EngineInterface interface;
+        slach::UCIStringsManipulator interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
         interface.SetPositionToInternalChessBoard(test_position);
 
@@ -130,12 +130,11 @@ public:
 	{
         std::string empty = "";
 
-        slach::EngineInterface interface;
+        slach::UCIStringsManipulator interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
         interface.SetPositionToInternalChessBoard(test_position);
 
-        interface.mEngineOutputBuffer->str(empty);
-        auto from_engin_output = interface.GetLatestEngineOutput();
+        auto from_engin_output = interface.GetLatestEngineOutput(empty);
         TS_ASSERT_EQUALS(from_engin_output.size(),1u);
         TS_ASSERT_EQUALS(from_engin_output[0], "Depth = 0; score = 0.00; \n");
 	}
@@ -144,7 +143,7 @@ public:
 	{
         std::string unwanted = "info depth 20 currmove f2f4 currmovenumber 13";
 
-        slach::EngineInterface interface;
+        slach::UCIStringsManipulator interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
         interface.SetPositionToInternalChessBoard(test_position);
 
@@ -163,7 +162,7 @@ public:
     {
         std::string test_string = "info depth 1 seldepth 1 score cp 6 nodes 251 nps 62750 time 4 multipv 1 pv f6e4 c3e4 d5e4";
 
-        slach::EngineInterface interface;
+        slach::UCIStringsManipulator interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
         interface.SetPositionToInternalChessBoard(test_position);
 
@@ -181,7 +180,7 @@ public:
     {
     	std::string engine_mate_in_one_line = "info depth 120 seldepth 2 score mate 1 nodes 4207 nps 350583 time 12 multipv 1 pv d1h5";
 
-        slach::EngineInterface interface;
+        slach::UCIStringsManipulator interface;
         std::string test_position = "rnbqkbnr/ppppp2p/8/5pp1/4P3/3P4/PPP2PPP/RNBQKBNR w KQkq g6 0 3"; //fool's mate in one
         interface.SetPositionToInternalChessBoard(test_position);
 
@@ -199,7 +198,7 @@ public:
     {
     	std::string engine_checkmate_line = "info depth 0 score mate 0";
 
-        slach::EngineInterface interface;
+        slach::UCIStringsManipulator interface;
         std::string test_position = "rnbqkbnr/ppppp2p/8/5ppQ/4P3/3P4/PPP2PPP/RNB1KBNR b KQkq - 1 3"; //fool's mate, already checkmate
         interface.SetPositionToInternalChessBoard(test_position);
 
@@ -217,7 +216,7 @@ public:
     {
         std::string test_string = "info depth 1 seldepth 1 score cp 6 nodes 251 nps 62750 time 4 multipv 1 pv f6e4 c3e4 d5e4\n";
 
-        slach::EngineInterface interface;
+        slach::UCIStringsManipulator interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
         interface.SetPositionToInternalChessBoard(test_position);
 
@@ -235,7 +234,7 @@ public:
     {
         std::string test_string = "       info depth 1 seldepth 1 score cp 6 nodes 251 nps 62750 time 4 multipv 1 pv f6e4 c3e4 d5e4        ";
 
-        slach::EngineInterface interface;
+        slach::UCIStringsManipulator interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
         interface.SetPositionToInternalChessBoard(test_position);
 
@@ -253,7 +252,7 @@ public:
     {
         std::string test_string = "   info depth 1 seldepth 1 score cp 6 nodes 251 nps 62750 time 4 multipv 1 pv f6e4 c3e4 d5e4    \n";
 
-        slach::EngineInterface interface;
+        slach::UCIStringsManipulator interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
         interface.SetPositionToInternalChessBoard(test_position);
 
@@ -320,7 +319,7 @@ public:
 												"\ninfo nodes 740875 time 4736"+
 												"\nbestmove f5d3 ponder d2d3";
 
-        slach::EngineInterface interface;
+        slach::UCIStringsManipulator interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
         interface.SetPositionToInternalChessBoard(test_position);
 
@@ -552,7 +551,7 @@ public:
                                                 +"\ninfo nodes 990650 time 4473"
                                                 +"\nbestmove f5d3 ponder d2d3";
 
-        slach::EngineInterface interface;
+        slach::UCIStringsManipulator interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8"; //test_position_3
         interface.SetPositionToInternalChessBoard(test_position);
 
@@ -582,8 +581,7 @@ public:
         int depth;
         double score;
         std::string best_move;
-        interface.mEngineOutputBuffer->str(test_string);
-        auto output = interface.GetLatestEngineOutput();
+        auto output = interface.GetLatestEngineOutput(test_string);
         interface.GetLatestBestScoreAndDepth(score,depth, best_move);
         TS_ASSERT_EQUALS(depth, 14);
         TS_ASSERT_DELTA(score, 0.02, 0.01);
@@ -777,7 +775,7 @@ public:
                                             +"\ninfo depth 14 currmove f3e5 currmovenumber 1v"
                                             +"\ninfo nodes 1098339 time 4509"
                                             +"\nbestmove f3e5 ponder c6e5";
-        slach::EngineInterface interface;
+        slach::UCIStringsManipulator interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 w Qk - 3 8";//test_position_3 but white to move
         interface.SetPositionToInternalChessBoard(test_position);
 
@@ -808,8 +806,7 @@ public:
         int depth;
         double score;
         std::string best_move;
-        interface.mEngineOutputBuffer->str(test_string);
-        auto output = interface.GetLatestEngineOutput();
+        auto output = interface.GetLatestEngineOutput(test_string);
         interface.GetLatestBestScoreAndDepth(score,depth, best_move);
         TS_ASSERT_EQUALS(depth, 13);
         TS_ASSERT_DELTA(score, 0.88, 0.01);

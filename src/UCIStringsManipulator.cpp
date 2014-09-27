@@ -1,116 +1,38 @@
 #include <algorithm>
 #include <limits>
-#include <cassert>
+#include <iostream>
 #include <sstream>
+#include <streambuf>
 #include <mutex>
 #include "main_stockfish.h"
-#include "EngineInterface.hpp"
+#include "UCIStringsManipulator.hpp"
 
 std::mutex slach_mutex;
 
-slach::EngineInterface::EngineInterface()
+slach::UCIStringsManipulator::UCIStringsManipulator()
   : mNumberOfLinesToBeShown(1u),
-    mEngineOutputBuffer(new std::stringbuf("")),
-    mCachedFenPositiontoBeanalysed(""),
     mpChessBoard( new slach::ChessBoard() ),
 	mpHelperFenHandler( new slach::FenHandler() )
 {
     mpChessBoard->SetupChessBoard();
     mLatestEngineLines.resize(mNumberOfLinesToBeShown);
-
-    mBackupCinBuffer = std::cin.rdbuf(); // back up cin's streambuf
-    mPsBuf = mCinRedirectBuffer.rdbuf();
-    std::cin.rdbuf(mPsBuf);
-    IssueCommandtoStockfish("readyok");
 }
 
-void slach::EngineInterface::LaunchEngine()
+slach::UCIStringsManipulator::~UCIStringsManipulator()
 {
-	//mpInputThread = std::make_shared<std::thread>(&slach::EngineInterface::TakeOwnershipOfCin, this);
-    mpEngineThread =  std::make_shared<std::thread>(&slach::EngineInterface::InitEngine, this);
-}
-
-void slach::EngineInterface::InitEngine()
-{
-	::main_stockfish(0,nullptr);
-}
-
-slach::EngineInterface::~EngineInterface()
-{
-	if (mpEngineThread)
-	{
-		QuitEngine();
-		mpEngineThread->join();
-	}
     delete mpChessBoard;
+    delete mpHelperFenHandler;
 }
 
-void slach::EngineInterface::SetNumberOfLinesToBeShown(unsigned num)
+void slach::UCIStringsManipulator::SetNumberOfLinesToBeShown(unsigned num)
 {
     mNumberOfLinesToBeShown = num;
-    mLatestEngineLines.resize(num);
-    if (mpEngineThread)
-    {
-    	std::stringstream multipv_command;
-    	multipv_command << "setoption name MultiPV value "<<mNumberOfLinesToBeShown;
-    	IssueCommandtoStockfish(multipv_command.str());
-    }
 }
 
-void slach::EngineInterface::StartAnalsyingPosition(slach::Position* pPosition, double seconds)
-{
-    /*std::string fen_position = pPosition->GetPositionAsFen();
-    mpChessBoard->SetFenPosition(fen_position); //set the helper board with this position
-    mCachedFenPositiontoBeanalysed = fen_position;
-    std::string position_command = "position fen "+fen_position;
-    IssueCommandtoStockfish(position_command);
 
-	if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
-	{
-		std::stringstream time_limit_command;
-		int milliseconds = static_cast<int> (seconds * 1000);
-		time_limit_command << "go movetime "<<milliseconds;
-		IssueCommandtoStockfish(time_limit_command.str());
-	}
-	else
-	{
-		IssueCommandtoStockfish("go infinite");
-    }*/
-	IssueCommandtoStockfish("d");
-}
-
-void slach::EngineInterface::IssueCommandtoStockfish(const std::string& command)
+std::vector<std::string> slach::UCIStringsManipulator::GetLatestEngineOutput(const std::string& rawString)
 {
-	//std::shared_ptr<std::thread> command_thread = std::make_shared<std::thread>(&slach::EngineInterface::DoIssueCommand, this, command);
-	//command_thread->join();
-	mCinRedirectBuffer << command << std::endl;
-	/*mCinRedirectBuffer->str(command);
-	mCinRedirectBuffer->sputc('d');*/
-}
-//void slach::EngineInterface::TakeOwnershipOfCin()
-//{
-//	slach_mutex.lock();
-//	std::cin.rdbuf(&mCinRedirectBuffer);
-//	slach_mutex.unlock();
-//}
-
-void slach::EngineInterface::StopEngine()
-{
-	IssueCommandtoStockfish("stop");
-}
-
-void slach::EngineInterface::QuitEngine()
-{
-	IssueCommandtoStockfish("quit");
-//	slach_mutex.lock();
-//	if (mBackupCoutBuf) std::cout.rdbuf(mBackupCoutBuf);//restore std::cout
-//	slach_mutex.unlock();
-}
-
-std::vector<std::string> slach::EngineInterface::GetLatestEngineOutput()
-{
-	std::string raw_string = mEngineOutputBuffer->str();
-	mLatestEngineLines = ParseWholeEngineOutput(raw_string);
+	mLatestEngineLines = ParseWholeEngineOutput(rawString);
 	if (mLatestEngineLines.size() < mNumberOfLinesToBeShown)
 	{
 		mLatestEngineLines.resize(mNumberOfLinesToBeShown);
@@ -135,13 +57,13 @@ std::vector<std::string> slach::EngineInterface::GetLatestEngineOutput()
 	return pv_lines;
 }
 
-void slach::EngineInterface::SetPositionToInternalChessBoard(const std::string& fenPosition)
+void slach::UCIStringsManipulator::SetPositionToInternalChessBoard(const std::string& fenPosition)
 {
     mCachedFenPositiontoBeanalysed = fenPosition;
     mpChessBoard->SetFenPosition(mCachedFenPositiontoBeanalysed);
 }
 
-std::vector<slach::InfoInEngineLine> slach::EngineInterface::ParseWholeEngineOutput(const std::string& rawOutput)
+std::vector<slach::InfoInEngineLine> slach::UCIStringsManipulator::ParseWholeEngineOutput(const std::string& rawOutput)
 {
 	std::vector<InfoInEngineLine> ret;
     unsigned diverse_lines = 0;
@@ -166,7 +88,7 @@ std::vector<slach::InfoInEngineLine> slach::EngineInterface::ParseWholeEngineOut
 
     return ret;
 }
-void slach::EngineInterface::GetLatestBestScoreAndDepth(double& bestScore, int& depth, std::string& bestMove)  const
+void slach::UCIStringsManipulator::GetLatestBestScoreAndDepth(double& bestScore, int& depth, std::string& bestMove)  const
 {
 	bestScore = mLatestEngineLines[0].mScore;
 	depth = mLatestEngineLines[0].mDepth;
@@ -174,7 +96,7 @@ void slach::EngineInterface::GetLatestBestScoreAndDepth(double& bestScore, int& 
 }
 
 
-slach::InfoInEngineLine slach::EngineInterface::ParseALineofStockfishOutput(const std::string& stockfishLine)
+slach::InfoInEngineLine slach::UCIStringsManipulator::ParseALineofStockfishOutput(const std::string& stockfishLine)
 {
 	InfoInEngineLine info;
 
