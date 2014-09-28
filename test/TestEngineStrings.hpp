@@ -126,7 +126,7 @@ public:
         TS_ASSERT_EQUALS(info.mValid, false);
 	}
 
-	void TestEmptyStriingToGEtOutputMethod()
+	void TestEmptyStriingToGetOutputMethod()
 	{
         std::string empty = "";
 
@@ -134,9 +134,16 @@ public:
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
         interface.SetPositionToInternalChessBoard(test_position);
 
-        auto from_engin_output = interface.GetLatestEngineOutput(empty);
-        TS_ASSERT_EQUALS(from_engin_output.size(),1u);
-        TS_ASSERT_EQUALS(from_engin_output[0], "Depth = 0; score = 0.00; \n");
+        std::vector<std::string> engine_lines;
+        double score = 52.0;
+        int depth = 98;
+        std::string best_move = "blah";
+        interface.GetInfoFromUCIOutput(empty, engine_lines, score, depth, best_move);
+        TS_ASSERT_EQUALS(engine_lines.size(),1u);
+        TS_ASSERT_EQUALS(engine_lines[0], "Depth = 0; score = 0.00; ");
+        TS_ASSERT_EQUALS(depth, 0);
+        TS_ASSERT_DELTA(score, 0.0, 1e-9);
+        TS_ASSERT_EQUALS(best_move, "");
 	}
 
 	void TestInvalidUnwantedEngineString()
@@ -334,7 +341,6 @@ public:
 
     void TestParseEngineOutputMultipleLines()
     {
-
         std::string test_string = std::string("info depth 1 seldepth 1 score cp 6 nodes 522 nps 130500 time 4 multipv 1 pv f6e4 c3e4 d5e4")
                                                 +"\ninfo depth 1 seldepth 1 score cp -2 nodes 522 nps 130500 time 4 multipv 2 pv h7h6 d3f5 d7f5"
                                                 +"\ninfo depth 1 seldepth 1 score cp -6 nodes 522 nps 130500 time 4 multipv 3 pv e7e6 d3f5 e6f5"
@@ -581,16 +587,20 @@ public:
         int depth;
         double score;
         std::string best_move;
-        auto output = interface.GetLatestEngineOutput(test_string);
-        interface.GetLatestBestScoreAndDepth(score,depth, best_move);
+        std::vector<std::string> pretty_lines;
+        interface.GetInfoFromUCIOutput(test_string, pretty_lines, score, depth, best_move);
         TS_ASSERT_EQUALS(depth, 14);
         TS_ASSERT_DELTA(score, 0.02, 0.01);
         TS_ASSERT_EQUALS(best_move, "Bxd3");
+        TS_ASSERT_EQUALS(pretty_lines.size(), 4u);
+        TS_ASSERT_EQUALS(pretty_lines[0], "Depth = 14; score = 0.02; Bxd3 Qxd3 e6 Ne5 Nxe5 dxe5 Nh5 g3 Bc5 O-O-O O-O Kb1 Qe8 h4 Be7 e4 Nxf4 gxf4 Bxh4 exd5 Bxf2 ");
+        TS_ASSERT_EQUALS(pretty_lines[1], "Depth = 14; score = 0.34; e6 Bxf5 exf5 Ne5 Qe6 O-O-O Bb4 f3 O-O Kb1 Rfe8 h3 Bd6 Rge1 Nxe5 dxe5 Bxe5 Nxd5 c5 ");
+        TS_ASSERT_EQUALS(pretty_lines[2], "Depth = 14; score = 0.52; Bg6 O-O-O e6 Ne5 Nxe5 dxe5 Nh5 Bg5 f6 exf6 Nxf6 Bxg6+ hxg6 h3 Bd6 Qd3 Kf7 Kb1 ");
+        TS_ASSERT_EQUALS(pretty_lines[3], "Depth = 14; score = 0.54; Ne4 Bxe4 Bxe4 Nxe4 dxe4 Ne5 Nxe5 dxe5 Qxd2+ Kxd2 e6 Ke2 Be7 Rad1 h5 Rd4 Rd8 Rxe4 ");
     }
 
     void TestParseEngineOutputMultipleLinesWhiteToMove()
     {
-
         std::string test_string = std::string("info depth 1 seldepth 2 score cp 24 nodes 494 nps 123500 time 4 multipv 2 pv h2h3")
                                             +"\ninfo depth 1 seldepth 2 score cp 12 nodes 494 nps 123500 time 4 multipv 3 pv a2a3"
                                             +"\ninfo depth 1 seldepth 2 score cp 12 nodes 494 nps 123500 time 4 multipv 4 pv d3f5 d7f5"
@@ -779,7 +789,7 @@ public:
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 w Qk - 3 8";//test_position_3 but white to move
         interface.SetPositionToInternalChessBoard(test_position);
 
-        interface.SetNumberOfLinesToBeShown(4u);//asking stockfish to display 4 lines
+        interface.SetNumberOfLinesToBeShown(4u);//asking to display 4 lines
         auto info = interface.ParseWholeEngineOutput(test_string);
 
         TS_ASSERT_EQUALS(info.size(), 4u);
@@ -806,11 +816,16 @@ public:
         int depth;
         double score;
         std::string best_move;
-        auto output = interface.GetLatestEngineOutput(test_string);
-        interface.GetLatestBestScoreAndDepth(score,depth, best_move);
+        std::vector<std::string> pretty_lines;
+        interface.GetInfoFromUCIOutput(test_string, pretty_lines, score, depth, best_move);
         TS_ASSERT_EQUALS(depth, 13);
         TS_ASSERT_DELTA(score, 0.88, 0.01);
         TS_ASSERT_EQUALS(best_move, "Ne5");
+        TS_ASSERT_EQUALS(pretty_lines.size(), 4u);
+        TS_ASSERT_EQUALS(pretty_lines[0], "Depth = 13; score = 0.88; Ne5 Nxe5 dxe5 Ne4 Bxe4 dxe4 Qxd7+ Bxd7 O-O-O e6 Nxe4 Bc6 Rd4 Be7 Rgd1 Bd5 h3 O-O f3 Rfe8 b3 c5 Rxd5 exd5 Rxd5 ");
+        TS_ASSERT_EQUALS(pretty_lines[1], "Depth = 13; score = 0.66; O-O-O Bxd3 Qxd3 Nh5 Be5 f6 Bg3 e6 Bh4 Nb4 Qd2 c5 Kb1 Bd6 g4 cxd4 Nxd4 ");
+        TS_ASSERT_EQUALS(pretty_lines[2], "Depth = 13; score = 0.62; h3 Bxd3 Qxd3 e6 Ne5 Nxe5 dxe5 Ne4 Nxe4 dxe4 Qxe4 Rd8 Qxb7 h6 Qxa6 ");
+        TS_ASSERT_EQUALS(pretty_lines[3], "Depth = 13; score = 0.50; a3 Bxd3 Qxd3 e6 g4 Bd6 Ne5 Bxe5 Bxe5 Nxe5 dxe5 Ng8 O-O-O Ne7 ");
     }
 };
 #endif

@@ -7,7 +7,7 @@
 #include <wx/textctrl.h>
 #include <wx/richtext/richtextctrl.h>
 #include <wx/button.h>
-#include "UCIStringsManipulator.hpp"
+#include "UCIEngineInterface.hpp"
 #include "Colours.hpp"
 
 namespace slach_gui
@@ -17,7 +17,7 @@ class BottomPanel : public wxPanel
 {
 protected:
 
-    slach::UCIStringsManipulator* mpEngineInterface;
+    slach::UCIEngineInterface* mpEngineInterface;
     unsigned mNumberOfEngineLinesShown;
     slach::Position* mpPosition;
     wxButton* mpStartEngineButton;
@@ -26,6 +26,12 @@ protected:
 
     wxTimer mTimer;
     bool mEngineIsRunning;
+
+    /**Cache for engine information*/
+    std::vector<std::string> mPrettyLines;
+    double mScore;
+    int mDepth;
+    std::string mBestMove;
 
 
 

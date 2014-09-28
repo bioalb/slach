@@ -62,13 +62,12 @@ public :
 };
 
 /**
- * A class that serves as a communicator with one or more engines.
+ * A helper class with functionalities to parse a UCI output string
+ * and obtain nicely formatted lines, scores and other info.
  */
 class UCIStringsManipulator
 {
-    friend class ::TestUCIStringsManipulator;// for testing
     friend class ::TestEngineStrings;// for testing
-    friend class ::TestEngineCommands;//for testing
 
   private:
 
@@ -77,18 +76,17 @@ class UCIStringsManipulator
 
   protected:
 
-
     /**Cache the latest engine lines and all associated info*/
     std::vector<InfoInEngineLine> mLatestEngineLines;
 
     /**we create a chessboard as we need squares with pieces to translate engine moves to SAN*/
     ChessBoard* mpChessBoard;
 
+    /**Cache of the poistion being analysed*/
     std::string mCachedFenPositiontoBeanalysed;
-    FenHandler* mpHelperFenHandler;
 
-    /**same as chessboard, we store the pointers to squares*/
-    std::vector<Square*> mpSquares;
+    /**Helper class to handle fen strings*/
+    FenHandler* mpHelperFenHandler;
 
     /**
      * This one parses a single line of the engine output
@@ -98,56 +96,51 @@ class UCIStringsManipulator
      */
     InfoInEngineLine ParseALineofStockfishOutput(const std::string& stockfishLine);
 
+    /**
+     * Key helper method that parses the whole output and returns a vector of information for each line
+     */
     std::vector<InfoInEngineLine> ParseWholeEngineOutput(const std::string& rawOutput);
 
-    void IssueCommandtoStockfish(const std::string& command);
+
 
   public :
-    /**
-     * Helper method only used for testing private methods.
-     */
-    void SetPositionToInternalChessBoard(const std::string& fenPosition);
+
 
     /**
      * Constructor
-     *
-     * @param pChessBoard the chessboard object we wish the engine to interact with.
      */
     UCIStringsManipulator();
+
+    /**
+     * Destructor
+     */
     ~UCIStringsManipulator();
 
 
     /**
-     * When called, this method will parse the engine output and return
-     * you a vector of strings, as big as the number of lines to be shown (mNumberOfLinesToBeShown)
-     * with a polished version of the lines, if different from the preivous time you called this
-     */
-    std::vector<std::string> GetLatestEngineOutput(const std::string& rawString);
-
-
-    /**
-     * access to best move, score and depth
-     * These variables is assigned meaningful values upon calling GetLatestEngineOutput()
+     * When called, this method will parse the UCI engine output and gives you useful info about the output.
      *
-     * @param bestScore (output) will contain the best score
-     * @param depth (output) will contain the depth corresponding to the best score
-     * @param bestMove (output) will contain the best move
+     * @param uciOutput (input) string to be parsed
+     * @param prettyEngineLines (output)  a vector of engine lines in algebraic notation
+     * @param score (output) the score in pawns, positive if favourable to white, negative otherwise, the best possible
+     * @param depth (output) the depth of analysis
+     * @param bestMove (output) the best move for the colour to move
      */
-    void GetLatestBestScoreAndDepth(double& bestScore, int& depth, std::string& bestMove) const;
+     void GetInfoFromUCIOutput(const std::string& uciOutput, std::vector<std::string>& prettyEngineLines,
+    		 double& score, int& depth, std::string& bestMove);
+
 
     /**
-     * Sets the number of line to be shown. It sets the member variable here
-     * and also prepares the stockfish option
+     * Sets the number of line to be shown.
      *
      * @param num the number of lines to be shown
      */
     void SetNumberOfLinesToBeShown(unsigned num);
 
-    ChessBoard* GetChessBoard()
-    {
-        return mpChessBoard;
-    }
-
+    /**
+     * Helper method only used for testing private methods.
+     */
+    void SetPositionToInternalChessBoard(const std::string& fenPosition);
 };
 
 }//namespace slach

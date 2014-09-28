@@ -4,14 +4,18 @@
 
 slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,-1, pos,size),
-      mpEngineInterface  (new slach::UCIStringsManipulator() ),
+      mpEngineInterface  (new slach::UCIEngineInterface() ),
       mNumberOfEngineLinesShown(1),
       mpPosition ( new slach::Position() ),
       mpStartEngineButton ( new wxButton(this, 1, wxT("Start Engine"),wxDefaultPosition, wxDefaultSize) ),
       mpStopEngineButton ( new wxButton(this, 2, wxT("Stop Engine"),wxDefaultPosition, wxDefaultSize) ),
       mpEngineTextBox ( new wxRichTextCtrl(this, wxID_ANY, wxT("Engine output"), wxDefaultPosition, wxSize(150,60), wxTE_MULTILINE | wxBORDER_SIMPLE | wxHSCROLL) ),
       mTimer(this, 1),
-      mEngineIsRunning(false)
+      mEngineIsRunning(false),
+      mPrettyLines({}),
+      mScore(0.0),
+      mDepth(0),
+      mBestMove("")
 {
     this->SetBackgroundColour(Colours::Instance()->mBottomPanelBackground);
     mpEngineTextBox->SetEditable(false);
@@ -49,7 +53,7 @@ void slach_gui::BottomPanel::SetPositionToAnalyse(slach::Position* pPosition)
 {
     assert(pPosition != NULL);
     mpPosition = pPosition;
-    mpEngineInterface->SetPositionToInternalChessBoard(mpPosition->GetPositionAsFen());
+    mpEngineInterface->SetFenPosition(mpPosition->GetPositionAsFen());
     mpEngineTextBox->Clear();//clear the box
     if (mEngineIsRunning == true)
     {
@@ -94,6 +98,9 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
 {
 	if (mEngineIsRunning == true)
 	{
+		//obtain info from the interface
+        mpEngineInterface->GetEngineInfo(mPrettyLines, mScore, mDepth, mBestMove);
+
 	    mpEngineTextBox->Clear();//clear the box
 		//wxStreamToTextRedirector redirect(mpEngineTextBox); //not working
         mpEngineTextBox->BeginTextColour(Colours::Instance()->mBottomPanelBackground);
@@ -101,16 +108,12 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
         mpEngineTextBox->BeginFontSize(18);
         mpEngineTextBox->ChangeValue("");
         mpEngineTextBox->BeginAlignment(wxTEXT_ALIGNMENT_LEFT);
-        int depth = 0;
-        double score = 0;
-        std::string best_move = "";
-        mpEngineInterface->GetLatestBestScoreAndDepth(score,depth,best_move);
         mpEngineTextBox->WriteText( wxT("Best Move: "));
-        mpEngineTextBox->WriteText( best_move );
+        mpEngineTextBox->WriteText( mBestMove );
         mpEngineTextBox->WriteText( wxT("   Best Score: "));
-        if (score < DBL_MAX) mpEngineTextBox->WriteText( wxString::Format(wxT("%.2f"), score) );
+        if (mScore < DBL_MAX) mpEngineTextBox->WriteText( wxString::Format(wxT("%.2f"), mScore) );
         mpEngineTextBox->WriteText( wxT("   Depth: "));
-        if (depth < INT_MAX) mpEngineTextBox->WriteText( wxString::Format(wxT("%d"), depth) );
+        if (mDepth < INT_MAX) mpEngineTextBox->WriteText( wxString::Format(wxT("%d"), mDepth) );
 
         mpEngineTextBox->LineBreak();
         mpEngineTextBox->EndFontSize();
@@ -120,7 +123,7 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
         mpEngineTextBox->BeginFontSize(13);
 	    for (unsigned pv = 0; pv < mNumberOfEngineLinesShown; pv++)
 	    {
-            mpEngineTextBox->WriteText( mpEngineInterface->GetLatestEngineOutput("")[pv] );
+            mpEngineTextBox->WriteText( mPrettyLines[pv] );
 	    }
         mpEngineTextBox->EndAlignment();
         mpEngineTextBox->EndFontSize();

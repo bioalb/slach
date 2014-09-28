@@ -3,11 +3,9 @@
 #include <iostream>
 #include <sstream>
 #include <streambuf>
-#include <mutex>
-#include "main_stockfish.h"
+
 #include "UCIStringsManipulator.hpp"
 
-std::mutex slach_mutex;
 
 slach::UCIStringsManipulator::UCIStringsManipulator()
   : mNumberOfLinesToBeShown(1u),
@@ -30,37 +28,39 @@ void slach::UCIStringsManipulator::SetNumberOfLinesToBeShown(unsigned num)
 }
 
 
-std::vector<std::string> slach::UCIStringsManipulator::GetLatestEngineOutput(const std::string& rawString)
+void slach::UCIStringsManipulator::GetInfoFromUCIOutput(const std::string& uciOutput, std::vector<std::string>& prettyEngineLines,
+		 double& score, int& depth, std::string& bestMove)
 {
-	mLatestEngineLines = ParseWholeEngineOutput(rawString);
-	if (mLatestEngineLines.size() < mNumberOfLinesToBeShown)
-	{
-		mLatestEngineLines.resize(mNumberOfLinesToBeShown);
-	}
+	mLatestEngineLines = ParseWholeEngineOutput(uciOutput);
+	// in case the parser didn't find enough good ones...
+	if (mLatestEngineLines.size() < mNumberOfLinesToBeShown) mLatestEngineLines.resize(mNumberOfLinesToBeShown);
 
+	//sort them
 	std::sort(mLatestEngineLines.begin(), mLatestEngineLines.end());
 	if (mpHelperFenHandler->GetPositionFeaturesFromFen(mCachedFenPositiontoBeanalysed).mTurnToMove == WHITE)
 	{
 		std::reverse(mLatestEngineLines.begin(), mLatestEngineLines.end());
 	}
 
-	std::vector<std::string> pv_lines;
-    pv_lines.resize(mLatestEngineLines.size());
-    for (unsigned pv = 0; pv <  pv_lines.size(); pv++)
+	prettyEngineLines.resize( (mLatestEngineLines.size()) );
+    for (unsigned pv = 0; pv <  prettyEngineLines.size(); pv++)
     {
         std::stringstream ss;
         ss.setf( std::ios::fixed, std::ios::floatfield );//for the score
         ss.precision(2);//for the score
-        ss<<"Depth = " << mLatestEngineLines[pv].mDepth << "; score = " << mLatestEngineLines[pv].mScore << "; " << mLatestEngineLines[pv].mMoveList << std::endl;
-        pv_lines[pv] = ss.str();
+        ss<<"Depth = " << mLatestEngineLines[pv].mDepth << "; score = " << mLatestEngineLines[pv].mScore << "; " << mLatestEngineLines[pv].mMoveList;
+        prettyEngineLines[pv] = ss.str();
     }
-	return pv_lines;
+
+	score = mLatestEngineLines[0].mScore;
+	depth = mLatestEngineLines[0].mDepth;
+	bestMove = mLatestEngineLines[0].mRootMove;
 }
 
 void slach::UCIStringsManipulator::SetPositionToInternalChessBoard(const std::string& fenPosition)
 {
     mCachedFenPositiontoBeanalysed = fenPosition;
-    mpChessBoard->SetFenPosition(mCachedFenPositiontoBeanalysed);
+    mpChessBoard->SetFenPosition(mCachedFenPositiontoBeanalysed); // note that this does nothing if fen is invalid.
 }
 
 std::vector<slach::InfoInEngineLine> slach::UCIStringsManipulator::ParseWholeEngineOutput(const std::string& rawOutput)
@@ -88,13 +88,6 @@ std::vector<slach::InfoInEngineLine> slach::UCIStringsManipulator::ParseWholeEng
 
     return ret;
 }
-void slach::UCIStringsManipulator::GetLatestBestScoreAndDepth(double& bestScore, int& depth, std::string& bestMove)  const
-{
-	bestScore = mLatestEngineLines[0].mScore;
-	depth = mLatestEngineLines[0].mDepth;
-	bestMove = mLatestEngineLines[0].mRootMove;
-}
-
 
 slach::InfoInEngineLine slach::UCIStringsManipulator::ParseALineofStockfishOutput(const std::string& stockfishLine)
 {

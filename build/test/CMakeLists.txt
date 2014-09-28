@@ -18,6 +18,7 @@ SET (source_files ${srcdir}/Exception.cpp
                   ${srcdir}/Square.cpp
                   ${srcdir}/Move.cpp
                   ${srcdir}/UCIStringsManipulator.cpp
+                  ${srcdir}/UCIEngineInterface.cpp
                   ${srcdir}/LegalMoveChecker.cpp)
                  
 SET (single_test_to_run ${testfiledir}/TestEngineStrings.hpp)
