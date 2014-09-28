@@ -1,5 +1,5 @@
-#ifndef TESTENGINESTRINGS_HPP_
-#define TESTENGINESTRINGS_HPP_
+#ifndef TESTUCISTRINGMANIPULATOR_HPP_
+#define TESTUCISTRINGMANIPULATOR_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include <iostream>
@@ -12,7 +12,7 @@
 /**
  * Test suite to test some methods of the engine interface class
  */
-class TestEngineStrings : public CxxTest::TestSuite
+class TestUCIStringsManipulator : public CxxTest::TestSuite
 {
 public:
 
@@ -828,5 +828,5 @@ public:
         TS_ASSERT_EQUALS(pretty_lines[3], "Depth = 13; score = 0.50; a3 Bxd3 Qxd3 e6 g4 Bd6 Ne5 Bxe5 Bxe5 Nxe5 dxe5 Ng8 O-O-O Ne7 ");
     }
 };
-#endif
+#endif // TESTUCISTRINGMANIPULATOR_HPP_
 
