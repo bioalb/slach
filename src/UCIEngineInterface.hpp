@@ -1,5 +1,6 @@
 #include <vector>
 #include <string>
+#include <limits>
 #include "UCIStringsManipulator.hpp"
 
 #ifndef UCIENGINEINTERFACE_HPP_
@@ -17,6 +18,8 @@ private:
 	std::string mLatestEngineOutput;
 	UCIStringsManipulator* mpUCIStringManipulator;
 
+	void IssueCommandtoStockfish(const std::string& command);
+
 public:
 	UCIEngineInterface();
 	~UCIEngineInterface();
@@ -31,6 +34,8 @@ public:
 
 	void GetEngineInfo(std::vector<std::string>& prettyEngineLines,
 			 double& score, int& depth, std::string& bestMove);
+
+	void StartAnalysis(slach::Position* pPosition, double seconds = std::numeric_limits<double>::max());
 };
 
 } // neamespace

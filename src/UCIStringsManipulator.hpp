@@ -6,8 +6,6 @@
 
 
 class TestUCIStringsManipulator;//forward declaration, for testing and accessing protected methods from the test class
-class TestEngineStrings;
-class TestEngineCommands;
 
 namespace slach
 {
@@ -67,7 +65,7 @@ public :
  */
 class UCIStringsManipulator
 {
-    friend class ::TestEngineStrings;// for testing
+    friend class ::TestUCIStringsManipulator;// for testing
 
   private:
 
@@ -100,8 +98,6 @@ class UCIStringsManipulator
      * Key helper method that parses the whole output and returns a vector of information for each line
      */
     std::vector<InfoInEngineLine> ParseWholeEngineOutput(const std::string& rawOutput);
-
-
 
   public :
 

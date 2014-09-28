@@ -21,7 +21,7 @@ SET (source_files ${srcdir}/Exception.cpp
                   ${srcdir}/UCIEngineInterface.cpp
                   ${srcdir}/LegalMoveChecker.cpp)
                  
-SET (single_test_to_run ${testfiledir}/TestEngineStrings.hpp)
+SET (single_test_to_run ${testfiledir}/TestUCIStringsManipulator.hpp)
           
 SET (all_test_files ${testfiledir}/TestChessboardWithBorders.hpp 
                     ${testfiledir}/TestChessBoard.hpp
@@ -31,7 +31,7 @@ SET (all_test_files ${testfiledir}/TestChessboardWithBorders.hpp
                     ${testfiledir}/TestMove.hpp
                     ${testfiledir}/TestFenHandler.hpp
                     ${testfiledir}/TestGame.hpp
-                    ${testfiledir}/TestEngineStrings.hpp
+                    ${testfiledir}/TestUCIStringsManipulator.hpp
                     ${testfiledir}/TestHelperGlobalMethod.hpp
                     ${testfiledir}/TestLegalMoveChecker.hpp)
 

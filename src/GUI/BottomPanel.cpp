@@ -84,6 +84,7 @@ void slach_gui::BottomPanel::DoStartEngine()
 {
 	mEngineIsRunning = true;
 	assert(mpPosition!=NULL);
+	mpEngineInterface->StartAnalysis(mpPosition);
 }
 
 void slach_gui::BottomPanel::OnClose(wxCloseEvent&)
