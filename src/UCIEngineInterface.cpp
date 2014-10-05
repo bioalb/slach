@@ -1,10 +1,13 @@
 
 #include <sstream>
 #include <mutex>
+#include <atomic>
 #include "UCIEngineInterface.hpp"
 #include "main_stockfish.h"
 
 std::mutex slach_mutex;
+extern std::string GlobalCommandFromGui;
+extern std::atomic<bool> GlobalCommandFromGuiWasIssued;
 
 slach::UCIEngineInterface::UCIEngineInterface()
 	: mLatestEngineOutput(""),
@@ -20,9 +23,7 @@ slach::UCIEngineInterface::~UCIEngineInterface()
 
 void slach::UCIEngineInterface::InitEngine()
 {
-	std::streambuf *backup = std::cin.rdbuf(); // back up cin's streambuf
 	::main_stockfish(1,nullptr);
-	std::cin.rdbuf(backup); // Restore old situation
 }
 
 void slach::UCIEngineInterface::GetEngineInfo(std::vector<std::string>& prettyEngineLines,
@@ -39,6 +40,11 @@ void slach::UCIEngineInterface::SetNumberOfLinesToBeShown(unsigned num)
 void slach::UCIEngineInterface::SetFenPosition(const std::string& fenPosition)
 {
 	mpUCIStringManipulator->SetPositionToInternalChessBoard(fenPosition);
+}
+
+void slach::UCIEngineInterface::StopAnalysis()
+{
+	IssueCommandtoStockfish("stop");
 }
 
 void slach::UCIEngineInterface::StartAnalysis(slach::Position* pPosition, double seconds)
@@ -62,12 +68,16 @@ void slach::UCIEngineInterface::StartAnalysis(slach::Position* pPosition, double
 void slach::UCIEngineInterface::DoIssueCommand(const std::string& command)
 {
 	slach_mutex.lock();
-	std::streambuf *psbuf = mCinRedirect.rdbuf();
-//	std::cin.ignore();
-	std::cin.rdbuf(psbuf);
-	mCinRedirect<<command<<std::endl;
-	std::cin.sync();
+//	std::streambuf *backup = std::cin.rdbuf(); // back up cin's streambuf
+//	std::streambuf *psbuf = mCinRedirect.rdbuf();
+//	std::cin.rdbuf(psbuf);
+//	mCinRedirect<<command<<std::endl;
+//	std::cin.sync();
+//	std::cin.rdbuf(backup); // Restore old situation
+	GlobalCommandFromGui = command;
 	slach_mutex.unlock();
+	GlobalCommandFromGuiWasIssued.store(true);
+
 }
 
 void slach::UCIEngineInterface::IssueCommandtoStockfish(const std::string& command)

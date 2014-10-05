@@ -77,6 +77,7 @@ void slach_gui::BottomPanel::StartEngine(wxCommandEvent& event)
 
 void slach_gui::BottomPanel::DoStopEngine()
 {
+	mpEngineInterface->StopAnalysis();
 	mEngineIsRunning = false;
 }
 

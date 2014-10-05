@@ -27,6 +27,8 @@
 #include "tt.h"
 #include "ucioption.h"
 
+
+
 int main_stockfish(int argc, char* argv[]) {
 
   std::cout << engine_info() << std::endl;

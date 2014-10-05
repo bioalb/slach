@@ -41,6 +41,7 @@ public:
 	void GetEngineInfo(std::vector<std::string>& prettyEngineLines,
 			 double& score, int& depth, std::string& bestMove);
 
+	void StopAnalysis();
 	void StartAnalysis(slach::Position* pPosition, double seconds = std::numeric_limits<double>::max());
 };
 
