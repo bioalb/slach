@@ -39,7 +39,7 @@ void slach::ChessBoard::ResetToMoveNumber(int moveNumber, slach::Colour colour)
     mpPosition->SetFromFen(mpGame->FetchFromFenList(moveNumber, colour) , mSquares);
 }
 
-void slach::ChessBoard::ResetToPreviousMove()
+bool slach::ChessBoard::ResetToPreviousMove()
 {
 	unsigned move_number  = GetCurrentMoveNumber();
 	slach::Colour to_move =  WhosTurnIsIt();
@@ -53,13 +53,17 @@ void slach::ChessBoard::ResetToPreviousMove()
 		req_index = (move_number)*2 -2;
 	}
 
-	if (req_index < 0) req_index = 0;
-
-	std::string prev_fen = mpGame->GetFenList()[req_index];
-    mpPosition->SetFromFen(prev_fen, mSquares);
+	bool ret = false;
+	if ( (req_index < (int) mpGame->GetFenList().size()) && req_index >= 0 )
+	{
+		std::string prev_fen = mpGame->GetFenList()[req_index];
+		mpPosition->SetFromFen(prev_fen, mSquares);
+		ret = true;
+	}
+	return ret;
 }
 
-void slach::ChessBoard::ResetToNextMove()
+bool slach::ChessBoard::ResetToNextMove()
 {
 	unsigned move_number  = GetCurrentMoveNumber();
 	slach::Colour to_move =  WhosTurnIsIt();
@@ -72,11 +76,14 @@ void slach::ChessBoard::ResetToNextMove()
 	{
 		req_index = (move_number+1)*2-2;
 	}
-
-	if (req_index >= (int) (mpGame->GetFenList().size())) req_index = mpGame->GetFenList().size() - 1;
-
-	std::string next_fen = mpGame->GetFenList()[req_index];
-    mpPosition->SetFromFen(next_fen, mSquares);
+	bool ret = false;
+	if ( (req_index < (int) mpGame->GetFenList().size()) && req_index >= 0 )
+	{
+		std::string next_fen = mpGame->GetFenList()[req_index];
+		mpPosition->SetFromFen(next_fen, mSquares);
+		ret = true;
+	}
+	return ret;
 }
 
 void slach::ChessBoard::SetupInitialChessPosition()

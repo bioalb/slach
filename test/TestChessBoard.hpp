@@ -701,19 +701,20 @@ public:
         my_cb.ResetToPreviousMove();
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), initial);
 
-        my_cb.ResetToNextMove();
+
+        TS_ASSERT_EQUALS(my_cb.ResetToNextMove(), true);
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_d2_d4);
-        my_cb.ResetToNextMove();
+        TS_ASSERT_EQUALS(my_cb.ResetToNextMove(), true);
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_e7_e5);
-        my_cb.ResetToNextMove();
+        TS_ASSERT_EQUALS(my_cb.ResetToNextMove(), true);
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_d4_takes_e5);
-        my_cb.ResetToNextMove();
+        TS_ASSERT_EQUALS(my_cb.ResetToNextMove(), true);
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_bishop_b4_check);
-        my_cb.ResetToNextMove();
+        TS_ASSERT_EQUALS(my_cb.ResetToNextMove(), true);
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_c2c3);
-        my_cb.ResetToNextMove();
+        TS_ASSERT_EQUALS(my_cb.ResetToNextMove(), false);
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_c2c3);
-        my_cb.ResetToNextMove();
+        TS_ASSERT_EQUALS(my_cb.ResetToNextMove(), false);
         TS_ASSERT_EQUALS(my_cb.GetCurrentFenPosition(), after_c2c3);
 
         ////// Trying to reset to move 2 (white to move).
@@ -986,6 +987,15 @@ public:
         slach::Move queen_takes_b5_check(squares[34], squares[33]);//c5-b5
 
         TS_ASSERT_EQUALS(true, my_cb.IsLegalMove(queen_takes_b5_check));
+    }
+
+    void TestMovesWithNoGame()
+    {
+        slach::ChessBoard my_cb;
+        my_cb.SetupChessBoard();
+
+        TS_ASSERT_EQUALS(my_cb.ResetToNextMove(), false);
+        TS_ASSERT_EQUALS(my_cb.ResetToPreviousMove(), false);
     }
 };
 

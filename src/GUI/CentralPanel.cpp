@@ -235,22 +235,21 @@ void slach_gui::CentralPanel::HighlightMoveListRange(int ID)
 {
     if (ID >= 0 )
     {
-        unsigned to_be_highlighted = UINT_MAX;
-        if (ID >= (int) mMoveListRanges.size() )
+        unsigned to_be_highlighted = (unsigned) ID;
+        if (to_be_highlighted >= mMoveListRanges.size() )
         {
             to_be_highlighted = mMoveListRanges.size() - 1;
         }
-        else
-        {
-            to_be_highlighted = (unsigned) ID;
-        }
+        if (to_be_highlighted >= mMoveListRanges.size() ) to_be_highlighted = 0u;
+
         //delete highlitghting of current move
         if (mIndexOfHighlightedMove >=0 && mIndexOfHighlightedMove < (int) mMoveListRanges.size())
         {
             mpSpaceForMoveList->SetStyleEx(mMoveListRanges[mIndexOfHighlightedMove], mTextAttributesMoveList,wxRICHTEXT_SETSTYLE_RESET);
+
+            //highlight new move
+            mpSpaceForMoveList->SetStyle(mMoveListRanges[to_be_highlighted], mTextAttributesMoveListHighlighted);
         }
-        //highlight new move
-        mpSpaceForMoveList->SetStyle(mMoveListRanges[to_be_highlighted], mTextAttributesMoveListHighlighted);
         mIndexOfHighlightedMove = (int) to_be_highlighted;
     }
     else

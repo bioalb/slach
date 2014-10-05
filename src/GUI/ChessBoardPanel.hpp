@@ -39,6 +39,8 @@ private:
     slach::ChessBoardWithBorders* mpChessBoardWithBorders;
     /** Stores the playable part of the underlying chessboard */
     slach::ChessBoard* mpChessBoard;
+    /**this is the number of half moves that the "fast forward" arrow will move (also fast backward arrow)*/
+    unsigned mNumberOfMovesFastForward;
     /** cache of the gridsizer that organizes the board*/
     wxFlexGridSizer* mpBoardGridSizer;
     /**cache for the main sizer, arranges space for board and arrows*/

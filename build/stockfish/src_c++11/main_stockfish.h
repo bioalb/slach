@@ -44,4 +44,6 @@ int main_stockfish(int argc, char* argv[]) {
   UCI::loop(argc, argv);
 
   Threads.exit();
+
+  return 0;
 }

@@ -68,8 +68,8 @@ OBJS = $(OBJS_MINUS_MAIN) main.o
 # at the end of the line for flag values.
 
 ### 2.1. General and architecture defaults
-optimize = yes
-debug = no
+optimize = no
+debug = yes
 os = any
 bits = 32
 prefetch = no

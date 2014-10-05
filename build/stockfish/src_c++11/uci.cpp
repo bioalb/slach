@@ -156,7 +156,7 @@ void UCI::loop(int argc, char* argv[]) {
           cmd = "quit";
 
       istringstream is(cmd);
-
+      sync_cout<<"command is "<<cmd<<sync_endl;
       is >> skipws >> token;
 
       if (token == "quit" || token == "stop" || token == "ponderhit")

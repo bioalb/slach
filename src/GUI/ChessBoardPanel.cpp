@@ -19,6 +19,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
       mPngPieceDirectory("src/GUI/bitmaps/pieces/png/"),
       mpChessBoardWithBorders ( new slach::ChessBoardWithBorders() ),
       mpChessBoard(NULL),
+      mNumberOfMovesFastForward(5u),
       mpBoardGridSizer ( new wxFlexGridSizer(slach::gBoardRowSize+2,slach::gBoardColumnSize+2,0,0) ),
       mpPrincipalSizer ( new wxBoxSizer(wxVERTICAL) ),
       mpSizerForArrows ( new wxBoxSizer(wxHORIZONTAL) ),
@@ -352,28 +353,35 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
 
 void slach_gui::ChessBoardPanel::DoAdvanceOneMove()
 {
-    mpChessBoard->ResetToNextMove();
-    std::string fen_to_set = mpChessBoard->GetCurrentFenPosition();
-    if (mIamTheMainBoard == true)
+    if (mpChessBoard->ResetToNextMove())
     {
-        (static_cast<CentralPanel*> (mpParent))->HighlightNextMove();
+		std::string fen_to_set = mpChessBoard->GetCurrentFenPosition();
+		if (mIamTheMainBoard == true)
+		{
+			(static_cast<CentralPanel*> (mpParent))->HighlightNextMove();
+		}
+		DrawAndSetFenPositionOnBoard(fen_to_set);
     }
-    DrawAndSetFenPositionOnBoard(fen_to_set);
 }
 
 void slach_gui::ChessBoardPanel::DoAdvanceSeveralMoves()
 {
-    mpChessBoard->ResetToNextMove();
-    mpChessBoard->ResetToNextMove();
-    mpChessBoard->ResetToNextMove();
-    mpChessBoard->ResetToNextMove();
-    mpChessBoard->ResetToNextMove();
-    std::string fen_to_set = mpChessBoard->GetCurrentFenPosition();
-    if (mIamTheMainBoard == true)
-    {
-        (static_cast<CentralPanel*> (mpParent))->HighlightSeveralMovesAhead();
-    }
-    DrawAndSetFenPositionOnBoard(fen_to_set);
+	bool ok = true;
+	for (unsigned i = 0; i < mNumberOfMovesFastForward; ++i)
+	{
+		ok = mpChessBoard->ResetToNextMove();
+		if (ok == false) break;
+	}
+
+	if (ok)
+	{
+		std::string fen_to_set = mpChessBoard->GetCurrentFenPosition();
+		if (mIamTheMainBoard == true)
+		{
+			(static_cast<CentralPanel*> (mpParent))->HighlightSeveralMovesAhead();
+		}
+		DrawAndSetFenPositionOnBoard(fen_to_set);
+	}
 }
 
 void slach_gui::ChessBoardPanel::DoAdvanceUntilEnd()

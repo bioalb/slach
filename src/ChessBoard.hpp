@@ -176,14 +176,16 @@ public:
     Position* GetCurrentPosition() const;
 
     /**
-     * Moves back one move. If no previous move exists, it will return the first position
+     * Moves back one move. If no previous move exists, it will return the first position, it will do nothing and return false
+     * returns true otherwise
      */
-    void ResetToPreviousMove();
+    bool ResetToPreviousMove();
 
     /**
-     * Moves one move forward. If no move exists, it will return the last position
+     * Moves one move forward. If no move exists, it will do nothing and return false
+     * returns true otherwise
      */
-    void ResetToNextMove();
+    bool ResetToNextMove();
 };
 
 }//namespace slach

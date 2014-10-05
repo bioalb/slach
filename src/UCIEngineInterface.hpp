@@ -1,6 +1,8 @@
 #include <vector>
 #include <string>
 #include <limits>
+#include <sstream>
+#include <thread>
 #include "UCIStringsManipulator.hpp"
 
 #ifndef UCIENGINEINTERFACE_HPP_
@@ -14,12 +16,16 @@ namespace slach
 class UCIEngineInterface {
 
 private:
-
+	std::stringstream mCinRedirect;
 	std::string mLatestEngineOutput;
 	UCIStringsManipulator* mpUCIStringManipulator;
+	std::shared_ptr<std::thread> mpMainEngineThread;
+	std::shared_ptr<std::thread> mpCommandThread;
 
 	void IssueCommandtoStockfish(const std::string& command);
 
+	void InitEngine();
+	void DoIssueCommand(const std::string& command);
 public:
 	UCIEngineInterface();
 	~UCIEngineInterface();
