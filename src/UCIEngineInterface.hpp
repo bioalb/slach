@@ -16,7 +16,7 @@ namespace slach
 class UCIEngineInterface {
 
 private:
-	std::stringstream mCinRedirect;
+	std::stringstream mCoutRedirect;
 	std::string mLatestEngineOutput;
 	UCIStringsManipulator* mpUCIStringManipulator;
 	std::shared_ptr<std::thread> mpMainEngineThread;

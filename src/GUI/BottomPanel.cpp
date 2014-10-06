@@ -112,9 +112,9 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
         mpEngineTextBox->BeginAlignment(wxTEXT_ALIGNMENT_LEFT);
         mpEngineTextBox->WriteText( wxT("Best Move: "));
         mpEngineTextBox->WriteText( mBestMove );
-        mpEngineTextBox->WriteText( wxT("   Best Score: "));
+        mpEngineTextBox->WriteText( wxT(" ("));
         if (mScore < DBL_MAX) mpEngineTextBox->WriteText( wxString::Format(wxT("%.2f"), mScore) );
-        mpEngineTextBox->WriteText( wxT("   Depth: "));
+        mpEngineTextBox->WriteText( wxT(") Depth: "));
         if (mDepth < INT_MAX) mpEngineTextBox->WriteText( wxString::Format(wxT("%d"), mDepth) );
 
         mpEngineTextBox->LineBreak();
@@ -126,6 +126,7 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
 	    for (unsigned pv = 0; pv < mNumberOfEngineLinesShown; pv++)
 	    {
             mpEngineTextBox->WriteText( mPrettyLines[pv] );
+            mpEngineTextBox->LineBreak();
 	    }
         mpEngineTextBox->EndAlignment();
         mpEngineTextBox->EndFontSize();

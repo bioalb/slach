@@ -38,7 +38,7 @@ extern void benchmark(const Position& pos, istream& is);
 
 std::string GlobalCommandFromGui;
 std::atomic<bool> GlobalCommandFromGuiWasIssued;
-
+std::atomic<bool> GlobalEngineReadyToRecievCommand;
 namespace {
 
   // FEN string of the initial position, normal chess
@@ -155,15 +155,17 @@ void UCI::loop(int argc, char* argv[]) {
 
   for (int i = 1; i < argc; ++i)
       cmd += std::string(argv[i]) + " ";
-
+  GlobalEngineReadyToRecievCommand.store(false);
   do {
       //if (argc == 1 && !getline(cin, cmd)) // Block here waiting for input
       //    cmd = "quit";
 	  GlobalCommandFromGuiWasIssued.store(false);
+	  GlobalEngineReadyToRecievCommand.store(true);
 	  while (GlobalCommandFromGuiWasIssued.load() == false) //block here waiting for input
 	  {}
 
 	  cmd = GlobalCommandFromGui;
+	  GlobalEngineReadyToRecievCommand.store(false);
 
       istringstream is(cmd);
 

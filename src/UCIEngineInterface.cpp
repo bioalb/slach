@@ -5,9 +5,12 @@
 #include "UCIEngineInterface.hpp"
 #include "main_stockfish.h"
 
-std::mutex slach_mutex;
+std::mutex command_mutex;
+std::mutex cout_mutex;
+
 extern std::string GlobalCommandFromGui;
 extern std::atomic<bool> GlobalCommandFromGuiWasIssued;
+extern std::atomic<bool> GlobalEngineReadyToRecievCommand;
 
 slach::UCIEngineInterface::UCIEngineInterface()
 	: mLatestEngineOutput(""),
@@ -23,17 +26,25 @@ slach::UCIEngineInterface::~UCIEngineInterface()
 
 void slach::UCIEngineInterface::InitEngine()
 {
+	cout_mutex.lock();
+	std::cout.rdbuf(mCoutRedirect.rdbuf());
+	cout_mutex.unlock();
 	::main_stockfish(1,nullptr);
 }
 
 void slach::UCIEngineInterface::GetEngineInfo(std::vector<std::string>& prettyEngineLines,
 		 double& score, int& depth, std::string& bestMove)
 {
+	mLatestEngineOutput = mCoutRedirect.str();
 	mpUCIStringManipulator->GetInfoFromUCIOutput(mLatestEngineOutput, prettyEngineLines, score, depth, bestMove);
 }
 
 void slach::UCIEngineInterface::SetNumberOfLinesToBeShown(unsigned num)
 {
+	std::stringstream multi_pv_vommand;
+	multi_pv_vommand << "setoption name MultiPV value "<<num;
+	IssueCommandtoStockfish(multi_pv_vommand.str());
+
 	mpUCIStringManipulator->SetNumberOfLinesToBeShown(num);
 }
 
@@ -50,7 +61,7 @@ void slach::UCIEngineInterface::StopAnalysis()
 void slach::UCIEngineInterface::StartAnalysis(slach::Position* pPosition, double seconds)
 {
     SetFenPosition(pPosition->GetPositionAsFen());
-    std::string position_command = "position fen" + pPosition->GetPositionAsFen();
+    std::string position_command = "position fen " + pPosition->GetPositionAsFen();
     IssueCommandtoStockfish(position_command);
 	if (seconds < (std::numeric_limits<double>::max() - 1e-1)) // magic number! just want to be sure ...
 	{
@@ -67,16 +78,12 @@ void slach::UCIEngineInterface::StartAnalysis(slach::Position* pPosition, double
 
 void slach::UCIEngineInterface::DoIssueCommand(const std::string& command)
 {
-	slach_mutex.lock();
-//	std::streambuf *backup = std::cin.rdbuf(); // back up cin's streambuf
-//	std::streambuf *psbuf = mCinRedirect.rdbuf();
-//	std::cin.rdbuf(psbuf);
-//	mCinRedirect<<command<<std::endl;
-//	std::cin.sync();
-//	std::cin.rdbuf(backup); // Restore old situation
-	GlobalCommandFromGui = command;
-	slach_mutex.unlock();
-	GlobalCommandFromGuiWasIssued.store(true);
+	while(GlobalEngineReadyToRecievCommand.load() == false)
+	{}//wait for engine to be ready.
+	command_mutex.lock();
+	GlobalCommandFromGui = command; // issue command
+	command_mutex.unlock();
+	GlobalCommandFromGuiWasIssued.store(true);//tell engine command was issued
 
 }
 
