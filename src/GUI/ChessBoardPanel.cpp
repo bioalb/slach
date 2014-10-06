@@ -191,23 +191,26 @@ bool slach_gui::ChessBoardPanel::IsItFromWhitePerspective() const
 void slach_gui::ChessBoardPanel::LeftMouseClick(wxMouseEvent& event)
 {
 	int square_index_int = (static_cast<wxWindow*> (event.GetEventObject()))->GetId();
-
-	//prepare the cursor
-	wxImage curs_image = GetImageFromPiece(mpAllSquares[square_index_int]->GetPieceOnThisSquare());
-    int width = mSquarePanels[square_index_int]->GetClientSize().GetWidth();
-    int height = mSquarePanels[square_index_int]->GetClientSize().GetHeight();
-    curs_image.Rescale(width, height);
-	curs_image.SetOption(wxIMAGE_OPTION_CUR_HOTSPOT_X, width/2);
-	curs_image.SetOption(wxIMAGE_OPTION_CUR_HOTSPOT_Y, height/2);
-	wxCursor piece_cursor( curs_image );
-	//set if it is dragging....
-	if (event.Dragging())
+	//when one clicks on a square, we assume drag starts
+	//here we manually delete the piece from origin and "move" the piece to be the cursor
+	if (event.LeftDown())
 	{
+		//prepare the cursor
+		wxImage curs_image = GetImageFromPiece(mpAllSquares[square_index_int]->GetPieceOnThisSquare());
+		int width = mSquarePanels[square_index_int]->GetClientSize().GetWidth();
+		int height = mSquarePanels[square_index_int]->GetClientSize().GetHeight();
+		curs_image.Rescale(width, height);
+		curs_image.SetOption(wxIMAGE_OPTION_CUR_HOTSPOT_X, width/2);
+		curs_image.SetOption(wxIMAGE_OPTION_CUR_HOTSPOT_Y, height/2);
+		wxCursor piece_cursor( curs_image );
+
 		wxSetCursor(piece_cursor);
 		mSourceIndex = (unsigned) square_index_int;
+		//important, remove piece while dragging
 		mDrawPiece = false;
 		mSquarePanels[mSourceIndex]->Refresh();///remove the source piece while dragging...
 	}
+
 	event.Skip();
 }
 

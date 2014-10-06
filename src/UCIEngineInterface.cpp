@@ -21,6 +21,8 @@ slach::UCIEngineInterface::UCIEngineInterface()
 
 slach::UCIEngineInterface::~UCIEngineInterface()
 {
+	IssueCommandtoStockfish("quit");
+	mpMainEngineThread->join();
 	delete mpUCIStringManipulator;
 }
 

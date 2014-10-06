@@ -57,7 +57,6 @@ void slach_gui::BottomPanel::SetPositionToAnalyse(slach::Position* pPosition)
     mpEngineTextBox->Clear();//clear the box
     if (mEngineIsRunning == true)
     {
-    	DoStopEngine();
     	DoStartEngine();
     }
 }
@@ -123,7 +122,7 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
         mpEngineTextBox->EndTextColour();
         mpEngineTextBox->BeginTextColour(Colours::Instance()->mEngineText);
         mpEngineTextBox->BeginFontSize(13);
-	    for (unsigned pv = 0; pv < mNumberOfEngineLinesShown; pv++)
+	    for (unsigned pv = 0; pv < mPrettyLines.size(); pv++)
 	    {
             mpEngineTextBox->WriteText( mPrettyLines[pv] );
             mpEngineTextBox->LineBreak();
