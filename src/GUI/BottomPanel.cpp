@@ -57,6 +57,7 @@ void slach_gui::BottomPanel::SetPositionToAnalyse(slach::Position* pPosition)
     mpEngineTextBox->Clear();//clear the box
     if (mEngineIsRunning == true)
     {
+	DoStopEngine();
     	DoStartEngine();
     }
 }
