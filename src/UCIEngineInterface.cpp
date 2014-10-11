@@ -28,9 +28,11 @@ slach::UCIEngineInterface::~UCIEngineInterface()
 
 void slach::UCIEngineInterface::InitEngine()
 {
+#ifndef SLACH_TESTING
 	cout_mutex.lock();
 	std::cout.rdbuf(mCoutRedirect.rdbuf());
 	cout_mutex.unlock();
+#endif
 	::main_stockfish(1,nullptr);
 }
 

@@ -21,14 +21,14 @@ private:
 	UCIStringsManipulator* mpUCIStringManipulator;
 	std::shared_ptr<std::thread> mpMainEngineThread;
 	std::shared_ptr<std::thread> mpCommandThread;
-
-	void IssueCommandtoStockfish(const std::string& command);
-
 	void InitEngine();
 	void DoIssueCommand(const std::string& command);
+
 public:
 	UCIEngineInterface();
 	~UCIEngineInterface();
+
+	void IssueCommandtoStockfish(const std::string& command);
 
 	void SetNumberOfLinesToBeShown(unsigned num);
 
