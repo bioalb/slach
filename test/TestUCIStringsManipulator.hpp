@@ -584,6 +584,11 @@ public:
         TS_ASSERT_EQUALS(info[1].mMoveList, "Bg6 O-O-O e6 Ne5 Nxe5 dxe5 Nh5 Bg5 f6 exf6 Nxf6 Bxg6+ hxg6 h3 Bd6 Qd3 Kf7 Kb1 ");
         TS_ASSERT_EQUALS(info[0].mMoveList, "Ne4 Bxe4 Bxe4 Nxe4 dxe4 Ne5 Nxe5 dxe5 Qxd2+ Kxd2 e6 Ke2 Be7 Rad1 h5 Rd4 Rd8 Rxe4 ");
 
+//        TS_ASSERT_EQUALS(info[3].mMoveList, "Bxd3 Qxd3 e6 Ne5 Nxe5 dxe5 Nh5 g3 Bc5 O-O-O O-O Kb1 Qe8 h4 Be7 e4 Nxf4 gxf4 Bxh4 exd5 Bxf2 ");
+//        TS_ASSERT_EQUALS(info[2].mMoveList, "e6 Bxf5 exf5 Ne5 Qe6 O-O-O Bb4 f3 O-O Kb1 Rfe8 h3 Bd6 Rge1 Nxe5 dxe5 Bxe5 Nxd5 c5 ");
+//        TS_ASSERT_EQUALS(info[1].mMoveList, "Bg6 O-O-O e6 Ne5 Nxe5 dxe5 Nh5 Bg5 f6 exf6 Nxf6 Bxg6+ hxg6 h3 Bd6 Qd3 Kf7 Kb1 ");
+//        TS_ASSERT_EQUALS(info[0].mMoveList, "Ne4 Bxe4 Bxe4 Nxe4 dxe4 Ne5 Nxe5 dxe5 Qxd2+ Kxd2 e6 Ke2 Be7 Rad1 h5 Rd4 Rd8 Rxe4 ");
+
         int depth;
         double score;
         std::string best_move;
@@ -812,6 +817,11 @@ public:
         TS_ASSERT_EQUALS(info[2].mMoveList, "O-O-O Bxd3 Qxd3 Nh5 Be5 f6 Bg3 e6 Bh4 Nb4 Qd2 c5 Kb1 Bd6 g4 cxd4 Nxd4 ");
         TS_ASSERT_EQUALS(info[1].mMoveList, "h3 Bxd3 Qxd3 e6 Ne5 Nxe5 dxe5 Ne4 Nxe4 dxe4 Qxe4 Rd8 Qxb7 h6 Qxa6 ");
         TS_ASSERT_EQUALS(info[0].mMoveList, "a3 Bxd3 Qxd3 e6 g4 Bd6 Ne5 Bxe5 Bxe5 Nxe5 dxe5 Ng8 O-O-O Ne7 ");
+
+        TS_ASSERT_EQUALS(info[3].mRawMoveList, "f3e5 c6e5 d4e5 f6e4 d3e4 d5e4 d2d7 f5d7 e1c1 e7e6 c3e4 d7c6 d1d4 f8e7 g1d1 c6d5 h2h3 e8g8 f2f3 f8e8 b2b3 c7c5 d4d5 e6d5 d1d5 ");
+        TS_ASSERT_EQUALS(info[2].mRawMoveList, "e1c1 f5d3 d2d3 f6h5 f4e5 f7f6 e5g3 e7e6 g3h4 c6b4 d3d2 c7c5 c1b1 f8d6 g2g4 c5d4 f3d4 ");
+        TS_ASSERT_EQUALS(info[1].mRawMoveList, "h2h3 f5d3 d2d3 e7e6 f3e5 c6e5 d4e5 f6e4 c3e4 d5e4 d3e4 c8d8 e4b7 h7h6 b7a6 ");
+        TS_ASSERT_EQUALS(info[0].mRawMoveList, "a2a3 f5d3 d2d3 e7e6 g2g4 f8d6 f3e5 d6e5 f4e5 c6e5 d4e5 f6g8 e1c1 g8e7 ");
 
         int depth;
         double score;

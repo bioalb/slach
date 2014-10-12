@@ -152,6 +152,7 @@ slach::InfoInEngineLine slach::UCIStringsManipulator::ParseALineofStockfishOutpu
     if ( (start_of_move_list == std::string::npos) && info.mCheckMate == false ) return info;  //with valid as false....
     size_t start_of_move = stockfishLine.find_first_not_of(" ", start_of_move_list+2);
     std::string pretty_line = "";
+    std::string raw_line = "";
     int i = 0;
     mpChessBoard->SetFenPosition(mCachedFenPositiontoBeanalysed);
     while (start_of_move != std::string::npos)
@@ -160,12 +161,13 @@ slach::InfoInEngineLine slach::UCIStringsManipulator::ParseALineofStockfishOutpu
 
         std::string move_string = stockfishLine.substr(start_of_move, end_of_move - start_of_move );
         Move verbose_move(move_string, mpChessBoard->GetSquares());
-        if ( (verbose_move.GetOrigin() != nullptr) && (verbose_move.GetDestination() != nullptr) )
+        if (verbose_move.OriginAndDestinationOK() == true)
         {
             if (! mpChessBoard->IsLegalMove(verbose_move) ) return info; //with valid still as false
 
             std::string pretty_move = verbose_move.GetMoveInAlgebraicFormat();
             pretty_line = pretty_line + pretty_move + " ";
+            raw_line = raw_line + move_string + " ";
             if (i == 0)
             {
                 info.mRootMove = pretty_move;
@@ -179,6 +181,7 @@ slach::InfoInEngineLine slach::UCIStringsManipulator::ParseALineofStockfishOutpu
     if (pretty_line.length() > 0)
     {
         info.mMoveList = pretty_line;
+        info.mRawMoveList = raw_line;
 
         if (info.mMateLine == true) info.mMoveList += "mate";
     }

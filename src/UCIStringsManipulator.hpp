@@ -15,7 +15,8 @@ struct InfoInEngineLine
 public :
 	int mDepth;
 	double mScore;
-	std::string mMoveList;
+	std::string mMoveList;/** Algebraic notation movelist*/
+	std::string mRawMoveList;/** Move list with source-destination format*/
 	std::string mRootMove;
 	bool mValid;
 	bool mMateLine;
@@ -25,6 +26,7 @@ public :
 		mDepth(0),
 		mScore(0.0),
 		mMoveList(""),
+		mRawMoveList(""),
 		mRootMove(""),
 		mValid(false), //defaults to false!
 		mMateLine(false),
