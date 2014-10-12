@@ -16,12 +16,10 @@ class TestUCIEngineInterface : public CxxTest::TestSuite
 {
 public:
 
-	void TestBasic()
+	void TestInfiniteAndStopImmediately()
 	{
 		slach::UCIEngineInterface interface;
-		interface.SetFenPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-		//interface.IssueCommandtoStockfish("quit");
-		//assert(0);
+		interface.IssueCommandtoStockfish("go infinite");
 	}
 };
 #endif

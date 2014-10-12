@@ -28,6 +28,8 @@ public:
 	UCIEngineInterface();
 	~UCIEngineInterface();
 
+	void QuitEngine();
+
 	void IssueCommandtoStockfish(const std::string& command);
 
 	void SetNumberOfLinesToBeShown(unsigned num);

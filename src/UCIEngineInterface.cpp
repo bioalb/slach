@@ -21,19 +21,28 @@ slach::UCIEngineInterface::UCIEngineInterface()
 
 slach::UCIEngineInterface::~UCIEngineInterface()
 {
-	IssueCommandtoStockfish("quit");
-	mpMainEngineThread->join();
+	QuitEngine();
 	delete mpUCIStringManipulator;
 }
 
 void slach::UCIEngineInterface::InitEngine()
 {
-#ifndef SLACH_TESTING
+#ifndef SLACH_TESTING //show output in console when unit testing, otherwise redirect
 	cout_mutex.lock();
 	std::cout.rdbuf(mCoutRedirect.rdbuf());
 	cout_mutex.unlock();
 #endif
 	::main_stockfish(1,nullptr);
+}
+
+void slach::UCIEngineInterface::QuitEngine()
+{
+	if (mpMainEngineThread)
+	{
+		IssueCommandtoStockfish("quit");
+		mpMainEngineThread->join();
+	}
+	mpMainEngineThread = nullptr;
 }
 
 void slach::UCIEngineInterface::GetEngineInfo(std::vector<std::string>& prettyEngineLines,
