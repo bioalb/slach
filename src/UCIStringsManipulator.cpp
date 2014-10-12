@@ -97,6 +97,10 @@ slach::Move slach::UCIStringsManipulator::FindEngineFinalMove(const std::string&
 	Move invalid_dummy;//origin and dest are nullptr.
 	std::size_t position = rawOutput.rfind("bestmove");
 	if (position == std::string::npos) return invalid_dummy;
+
+	//case where there is a "bestmove" but the engine is thinking the next move and has not finished...
+	if (rawOutput.find("info", position) != std::string::npos) return invalid_dummy;
+
 	std::size_t end_of_bestmove = rawOutput.find_first_of(" ", position);
 	if (end_of_bestmove == std::string::npos) return invalid_dummy;
 	std::size_t real_start_of_move = rawOutput.find_first_not_of(" ", end_of_bestmove);

@@ -139,12 +139,16 @@ class UCIStringsManipulator
     void SetPositionToInternalChessBoard(const std::string& fenPosition);
 
     /**
-     * This is the methoid to find, from raw output, the final engine move,
-     * that is, the latest "bestmove" from the UCI output.
+     * This is the method to find, from raw output, the final engine move.
+     * That is, the latest "bestmove" from the UCI output.
      *
-     * The move that is returned has both pointers (origin and dstination) set to nullptr if no such putput is found
+     * The move that is returned has one of the pointers (origin or destination) set to nullptr if any of these happen:
+     * - "bestmove" not found
+     * - invalid things after "bestmove", e.g., "bestmove r4e3" or other rubbish stuff
+     * - "bestmove" is found, but the engine has emitted other lines ("info") afterwards and has not shown the newest "bestmove" yet.
+     *    this means that the engine is thinking and the latest bestmove is not available (the one we found was the old one).
      *
-     * @param rawOutput the raw UCI engine ouput
+     * @param rawOutput the raw UCI engine output
      * @return the move that engine wants to play
      */
     Move FindEngineFinalMove(const std::string& rawOutput);

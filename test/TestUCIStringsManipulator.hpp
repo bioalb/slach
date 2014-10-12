@@ -828,7 +828,36 @@ public:
         TS_ASSERT_EQUALS(pretty_lines[3], "Depth = 13; score = 0.50; a3 Bxd3 Qxd3 e6 g4 Bd6 Ne5 Bxe5 Bxe5 Nxe5 dxe5 Ng8 O-O-O Ne7 ");
     }
 
-    void TestGetFinalMoveWithMultipleFinalMoves()
+    void TestGetFinalMove()
+    {
+    	std::string raw_output = std::string("info depth 1 seldepth 1 score cp 82 nodes 27 nps 6750 time 4 multipv 1 pv e2e4")
+											+ "info depth 2 seldepth 2 score cp 9 nodes 155 nps 31000 time 5 multipv 1 pv d2d4 d7d5"
+											+ "info depth 3 seldepth 3 score cp 56 nodes 278 nps 55600 time 5 multipv 1 pv d2d4 d7d5 g1f3"
+											+ "info depth 4 seldepth 4 score cp 8 nodes 749 nps 149800 time 5 multipv 1 pv d2d4 g8f6 g1f3 d7d6"
+											+ "info depth 5 seldepth 5 score cp 51 nodes 1840 nps 306666 time 6 multipv 1 pv d2d4 g8f6 g1f3 d7d5 b1c3"
+											+ "info depth 6 seldepth 6 score cp 9 nodes 3535 nps 505000 time 7 multipv 1 pv d2d4 g8f6 g1f3 d7d5 b1c3 b8c6"
+											+ "info depth 7 seldepth 7 score cp 44 nodes 4957 nps 619625 time 8 multipv 1 pv d2d4 g8f6 g1f3 d7d5 b1c3 b8c6 e2e3"
+											+ "info depth 8 seldepth 8 score cp 9 nodes 9089 nps 826272 time 11 multipv 1 pv d2d4 g8f6 g1f3 d7d5 b1c3 b8c6 e2e3 e7e6"
+											+ "info depth 9 seldepth 10 score cp 46 nodes 15699 nps 981187 time 16 multipv 1 pv d2d4 g8f6 g1f3 d7d5 b1c3 b8c6 e2e3 a7a6 b2b3"
+											+ "info depth 10 seldepth 14 score cp 29 nodes 37880 nps 1052222 time 36 multipv 1 pv e2e4 d7d5 e4d5 g8f6 g1f3 d8d5 b1c3 d5e6 d1e2 b8c6 d2d4 a7a6"
+											+ "info depth 11 seldepth 17 score cp 54 nodes 103182 nps 1052877 time 98 multipv 1 pv e2e4 e7e5 b1c3 g8f6 g1f3 d7d5 e4d5 f6d5 d2d4 f8b4 d4e5 d5c3 d1d8 e8d8 b2c3 b4c3 c1d2"
+											+ "info depth 12 seldepth 17 score cp 39 nodes 189449 nps 1082565 time 175 multipv 1 pv e2e4 d7d5 e4d5 g8f6 g1f3 e7e6 d5e6 c8e6 b1c3 b8c6 d2d4 f8b4 f1b5 e8g8"
+											+ "info depth 13 seldepth 20 score cp 33 nodes 573485 nps 1142400 time 502 multipv 1 pv e2e4 e7e6 d2d4 d7d5 e4e5 c7c5 g1f3"
+											+ "info nodes 573485 time 502"
+											+"bestmove e2e4 ponder e7e6";
+        slach::UCIStringsManipulator interface;
+        std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 w Qk - 3 8";//test_position_3 but white to move
+        interface.SetPositionToInternalChessBoard(test_position);
+
+        slach::Move best_move_final = interface.FindEngineFinalMove(raw_output);
+        TS_ASSERT_EQUALS(best_move_final.OriginAndDestinationOK(), true);
+        TS_ASSERT_EQUALS(best_move_final.GetOrigin()->GetFile(), 'e');
+        TS_ASSERT_EQUALS(best_move_final.GetOrigin()->GetRank(), '2');
+        TS_ASSERT_EQUALS(best_move_final.GetDestination()->GetFile(), 'e');
+        TS_ASSERT_EQUALS(best_move_final.GetDestination()->GetRank(), '4');
+    }
+
+    void TestGetFinalMoveWithMultipleFinalMoves() //here we make sure we get the last one...
     {
     	std::string raw_output = std::string("info depth 1 seldepth 1 score cp 82 nodes 27 nps 6750 time 4 multipv 1 pv e2e4")
 											+ "info depth 2 seldepth 2 score cp 9 nodes 155 nps 31000 time 5 multipv 1 pv d2d4 d7d5"
@@ -873,6 +902,37 @@ public:
         TS_ASSERT_EQUALS(best_move_final.GetOrigin()->GetRank(), '3');
         TS_ASSERT_EQUALS(best_move_final.GetDestination()->GetFile(), 'e');
         TS_ASSERT_EQUALS(best_move_final.GetDestination()->GetRank(), '5');
+    }
+
+    void TestGetFinalMoveBestMoveButOutputLater() //here we must return a non-valid move...
+    {
+    	//not finished thinking the next move...
+    	std::string raw_output = std::string("info depth 1 seldepth 1 score cp 82 nodes 27 nps 6750 time 4 multipv 1 pv e2e4")
+											+ "info depth 2 seldepth 2 score cp 9 nodes 155 nps 31000 time 5 multipv 1 pv d2d4 d7d5"
+											+ "info depth 3 seldepth 3 score cp 56 nodes 278 nps 55600 time 5 multipv 1 pv d2d4 d7d5 g1f3"
+											+ "info depth 4 seldepth 4 score cp 8 nodes 749 nps 149800 time 5 multipv 1 pv d2d4 g8f6 g1f3 d7d6"
+											+ "info depth 5 seldepth 5 score cp 51 nodes 1840 nps 306666 time 6 multipv 1 pv d2d4 g8f6 g1f3 d7d5 b1c3"
+											+ "info depth 6 seldepth 6 score cp 9 nodes 3535 nps 505000 time 7 multipv 1 pv d2d4 g8f6 g1f3 d7d5 b1c3 b8c6"
+											+ "info depth 7 seldepth 7 score cp 44 nodes 4957 nps 619625 time 8 multipv 1 pv d2d4 g8f6 g1f3 d7d5 b1c3 b8c6 e2e3"
+											+ "info depth 8 seldepth 8 score cp 9 nodes 9089 nps 826272 time 11 multipv 1 pv d2d4 g8f6 g1f3 d7d5 b1c3 b8c6 e2e3 e7e6"
+											+ "info depth 9 seldepth 10 score cp 46 nodes 15699 nps 981187 time 16 multipv 1 pv d2d4 g8f6 g1f3 d7d5 b1c3 b8c6 e2e3 a7a6 b2b3"
+											+ "info depth 10 seldepth 14 score cp 29 nodes 37880 nps 1052222 time 36 multipv 1 pv e2e4 d7d5 e4d5 g8f6 g1f3 d8d5 b1c3 d5e6 d1e2 b8c6 d2d4 a7a6"
+											+ "info depth 11 seldepth 17 score cp 54 nodes 103182 nps 1052877 time 98 multipv 1 pv e2e4 e7e5 b1c3 g8f6 g1f3 d7d5 e4d5 f6d5 d2d4 f8b4 d4e5 d5c3 d1d8 e8d8 b2c3 b4c3 c1d2"
+											+ "info depth 12 seldepth 17 score cp 39 nodes 189449 nps 1082565 time 175 multipv 1 pv e2e4 d7d5 e4d5 g8f6 g1f3 e7e6 d5e6 c8e6 b1c3 b8c6 d2d4 f8b4 f1b5 e8g8"
+											+ "info depth 13 seldepth 20 score cp 33 nodes 573485 nps 1142400 time 502 multipv 1 pv e2e4 e7e6 d2d4 d7d5 e4e5 c7c5 g1f3"
+											+ "info nodes 573485 time 502"
+											+"bestmove e2e4 ponder e7e6"
+											+ "info depth 1 seldepth 1 score cp 86 nodes 140 nps 140000 time 1 multipv 1 pv e1c1"
+											+ "info depth 2 seldepth 3 score cp 68 nodes 350 nps 350000 time 1 multipv 1 pv e1c1 e7e6 d3f5 e6f5"
+											+ "info depth 3 seldepth 3 score cp 82 nodes 701 nps 350500 time 2 multipv 1 pv d3f5 d7f5 e1c1"
+											+ "info depth 4 seldepth 4 score cp 46 nodes 1397 nps 698500 time 2 multipv 1 pv e1c1 f5d3 d2d3 e7e6"
+											+ "info depth 5 seldepth 5 score cp 64 nodes 1941 nps 970500 time 2 multipv 1 pv d3f5 d7f5 e1c1 e7e6 c1b1";
+        slach::UCIStringsManipulator interface;
+        std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 w Qk - 3 8";//test_position_3 but white to move
+        interface.SetPositionToInternalChessBoard(test_position);
+
+        slach::Move best_move_final = interface.FindEngineFinalMove(raw_output);
+        TS_ASSERT_EQUALS(best_move_final.OriginAndDestinationOK(), false);
     }
 
     void TestGetFinalMoveWithRubbish()
