@@ -46,6 +46,7 @@ public :
 	    	mDepth = rhs.mDepth;
 	    	mScore = rhs.mScore;
 	    	mMoveList = rhs.mMoveList;
+	    	mRawMoveList = rhs.mRawMoveList;
 	    	mValid = rhs.mValid;
 	    	mMateLine = rhs.mMateLine;
 	    	mCheckMate = rhs.mCheckMate;

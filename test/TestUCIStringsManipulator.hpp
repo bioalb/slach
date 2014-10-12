@@ -27,6 +27,7 @@ public:
     	TS_ASSERT_EQUALS(info_1.mValid, false);
     	TS_ASSERT_EQUALS(info_1.mDepth, 0);
     	TS_ASSERT_EQUALS(info_1.mRootMove, "");
+    	TS_ASSERT_EQUALS(info_1.mRawMoveList, "");
     	TS_ASSERT_EQUALS(info_1.mMoveList,"");
     	TS_ASSERT_DELTA (info_1.mScore, 0,1e-9);
 
@@ -36,6 +37,7 @@ public:
     	info_1.mRootMove = "Bb4";
     	info_1.mScore = 3.601;
     	info_1.mMoveList = "Bb4 Bxb4 ";
+    	info_1.mRawMoveList = "b3b4 d2b4 ";
     	info_1.mValid = true;
 
     	//assignment operator
@@ -47,6 +49,7 @@ public:
     	TS_ASSERT_EQUALS(info_2.mDepth, 25);
     	TS_ASSERT_EQUALS(info_2.mRootMove, "Bb4");
     	TS_ASSERT_EQUALS(info_2.mMoveList,"Bb4 Bxb4 ");
+    	TS_ASSERT_EQUALS(info_2.mRawMoveList,"b3b4 d2b4 ");
     	TS_ASSERT_DELTA (info_2.mScore, 3.601,1e-4);
     	TS_ASSERT_EQUALS(info_1, info_2);
 
@@ -82,6 +85,7 @@ public:
 
         slach::InfoInEngineLine info = interface.ParseALineofStockfishOutput(test_string);
         TS_ASSERT_EQUALS(info.mMoveList, "");
+        TS_ASSERT_EQUALS(info.mRawMoveList, "");
         TS_ASSERT_EQUALS(info.mRootMove, "");
         TS_ASSERT_EQUALS(info.mDepth, 0);
         TS_ASSERT_DELTA(info.mScore, 0.0, 1e-3);
@@ -100,6 +104,7 @@ public:
 
         slach::InfoInEngineLine info = interface.ParseALineofStockfishOutput(rubbish);
         TS_ASSERT_EQUALS(info.mMoveList, "");
+        TS_ASSERT_EQUALS(info.mRawMoveList, "");
         TS_ASSERT_EQUALS(info.mRootMove, "");
         TS_ASSERT_EQUALS(info.mDepth, 0);
         TS_ASSERT_DELTA(info.mScore, 0.0, 1e-3);
@@ -118,6 +123,7 @@ public:
 
         slach::InfoInEngineLine info = interface.ParseALineofStockfishOutput(empty);
         TS_ASSERT_EQUALS(info.mMoveList, "");
+        TS_ASSERT_EQUALS(info.mRawMoveList, "");
         TS_ASSERT_EQUALS(info.mRootMove, "");
         TS_ASSERT_EQUALS(info.mDepth, 0);
         TS_ASSERT_DELTA(info.mScore, 0.0, 1e-3);
@@ -126,7 +132,7 @@ public:
         TS_ASSERT_EQUALS(info.mValid, false);
 	}
 
-	void TestEmptyStriingToGetOutputMethod()
+	void TestEmptyStringToGetOutputMethod()
 	{
         std::string empty = "";
 
@@ -157,6 +163,7 @@ public:
         slach::InfoInEngineLine info = interface.ParseALineofStockfishOutput(unwanted);
         TS_ASSERT_EQUALS(info.mMoveList, "");
         TS_ASSERT_EQUALS(info.mRootMove, "");
+        TS_ASSERT_EQUALS(info.mRawMoveList, "");
         TS_ASSERT_EQUALS(info.mDepth, 20);
         TS_ASSERT_DELTA(info.mScore, 0.0, 1e-3);
         TS_ASSERT_EQUALS(info.mCheckMate, false);
@@ -175,6 +182,7 @@ public:
 
         slach::InfoInEngineLine info = interface.ParseALineofStockfishOutput(test_string);
         TS_ASSERT_EQUALS(info.mMoveList, "Ne4 Nxe4 dxe4 ");
+        TS_ASSERT_EQUALS(info.mRawMoveList, "f6e4 c3e4 d5e4 ");
         TS_ASSERT_EQUALS(info.mRootMove, "Ne4");
         TS_ASSERT_EQUALS(info.mDepth, 1);
         TS_ASSERT_DELTA(info.mScore, -0.06, 1e-3);
@@ -193,6 +201,7 @@ public:
 
         slach::InfoInEngineLine info = interface.ParseALineofStockfishOutput(engine_mate_in_one_line);
         TS_ASSERT_EQUALS(info.mMoveList, "Qh5+ mate");
+        TS_ASSERT_EQUALS(info.mRawMoveList, "d1h5 ");
         TS_ASSERT_EQUALS(info.mRootMove, "Qh5+");
         TS_ASSERT_EQUALS(info.mDepth, 1);
         TS_ASSERT_DELTA(info.mScore, 100.0, 1e-3);
@@ -211,6 +220,7 @@ public:
 
         slach::InfoInEngineLine info = interface.ParseALineofStockfishOutput(engine_checkmate_line);
         TS_ASSERT_EQUALS(info.mMoveList, "");
+        TS_ASSERT_EQUALS(info.mRawMoveList, "");
         TS_ASSERT_EQUALS(info.mRootMove, "checkmate");
         TS_ASSERT_EQUALS(info.mDepth, 0);
         TS_ASSERT_DELTA(info.mScore, 0.0, 1e-3);
@@ -221,7 +231,7 @@ public:
 
     void TestParseStockfishMoveListWithEndline()
     {
-        std::string test_string = "info depth 1 seldepth 1 score cp 6 nodes 251 nps 62750 time 4 multipv 1 pv f6e4 c3e4 d5e4\n";
+        std::string test_string = "info depth 1 seldepth 1 score cp 6 nodes 251 nps 62750 time 4 multipv 1 pv f6e4 c3e4 d5e4 \n";
 
         slach::UCIStringsManipulator interface;
         std::string test_position = "2r1kb1r/1ppqpppp/p1n2n2/3p1b2/3P1B2/2NBPN2/PPPQ1PPP/R3K1R1 b Qk - 3 8";
@@ -229,6 +239,7 @@ public:
 
         slach::InfoInEngineLine info = interface.ParseALineofStockfishOutput(test_string);
         TS_ASSERT_EQUALS(info.mMoveList, "Ne4 Nxe4 dxe4 ");
+        TS_ASSERT_EQUALS(info.mRawMoveList, "f6e4 c3e4 d5e4 ");
         TS_ASSERT_EQUALS(info.mRootMove, "Ne4");
         TS_ASSERT_EQUALS(info.mDepth, 1);
         TS_ASSERT_DELTA(info.mScore, -0.06, 1e-3);
@@ -247,6 +258,7 @@ public:
 
         slach::InfoInEngineLine info = interface.ParseALineofStockfishOutput(test_string);
         TS_ASSERT_EQUALS(info.mMoveList, "Ne4 Nxe4 dxe4 ");
+        TS_ASSERT_EQUALS(info.mRawMoveList, "f6e4 c3e4 d5e4 ");
         TS_ASSERT_EQUALS(info.mRootMove, "Ne4");
         TS_ASSERT_EQUALS(info.mDepth, 1);
         TS_ASSERT_DELTA(info.mScore, -0.06, 1e-3);
@@ -265,6 +277,7 @@ public:
 
         slach::InfoInEngineLine info = interface.ParseALineofStockfishOutput(test_string);
         TS_ASSERT_EQUALS(info.mMoveList, "Ne4 Nxe4 dxe4 ");
+        TS_ASSERT_EQUALS(info.mRawMoveList, "f6e4 c3e4 d5e4 ");
         TS_ASSERT_EQUALS(info.mRootMove, "Ne4");
         TS_ASSERT_EQUALS(info.mDepth, 1);
         TS_ASSERT_DELTA(info.mScore, -0.06, 1e-3);
@@ -337,6 +350,7 @@ public:
         TS_ASSERT_EQUALS(info[0].mRootMove, "Bxd3");
         TS_ASSERT_DELTA(info[0].mScore, -0.02, 1e-3);
         TS_ASSERT_EQUALS(info[0].mMoveList, "Bxd3 Qxd3 e6 O-O-O Bd6 h3 O-O a3 h6 Ne5 Qe8 Kb1 Bxe5 Bxe5 Nxe5 dxe5 Nd7 f4 ");
+        TS_ASSERT_EQUALS(info[0].mRawMoveList, "f5d3 d2d3 e7e6 e1c1 f8d6 h2h3 e8g8 a2a3 h7h6 f3e5 d7e8 c1b1 d6e5 f4e5 c6e5 d4e5 f6d7 f2f4 ");
     }
 
     void TestParseEngineOutputMultipleLines()
