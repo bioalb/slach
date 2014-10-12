@@ -184,7 +184,7 @@ slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString
 
         mMoveListMainLineAlgFormat.push_back(move_san);
         Move white_move(move_san, squares, WHITE);
-        if ( (white_move.GetOrigin()==NULL) || (white_move.GetDestination() == NULL) )
+        if ( (white_move.GetOrigin()==nullptr) || (white_move.GetDestination() == nullptr) )
         {
             ClearAllLists();
             return INVALID_PGN;
@@ -198,7 +198,7 @@ slach::PgnValidity slach::Game::LoadFromPgnString(const std::string& rGameString
 
         mMoveListMainLineAlgFormat.push_back(move_san_black);
         Move black_move(move_san_black, squares, BLACK);
-        if ( (black_move.GetOrigin()==NULL) || (black_move.GetDestination() == NULL) )
+        if ( (black_move.GetOrigin()==nullptr) || (black_move.GetDestination() == nullptr) )
         {
             ClearAllLists();
             return INVALID_PGN;

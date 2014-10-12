@@ -91,7 +91,7 @@ class FenHandler
      * of pieces. This method ONLY changes the piece that is set on the square, not any other feature of the square.
      * (See documentation of the Square class for more info).
      * The vector of squares is intended as from a1 (first element) to h8 (last element).
-     * It must have 64 non-NULL pointer as its elements. If one of these two conditions is not met,
+     * It must have 64 non-nullptr pointer as its elements. If one of these two conditions is not met,
      * this method will return one and do nothing.
      * No re-sizing of vector or creating of objects is done in this method. It's either 64 pointers to Square objects
      * (already "newed") or this method will just do nothing and return 1.
@@ -107,7 +107,7 @@ class FenHandler
     /**
      * Returns the Fen string corresponding to the vector of squares that is passed in
      *
-     * @param pEnPassantSquare the en-passant square. Pass NULL (default) if there is none (- will be printed)
+     * @param pEnPassantSquare the en-passant square. Pass nullptr (default) if there is none (- will be printed)
      */
     std::string GetFenFromPosition(const std::vector<Square* > &rSquares, const FenPositionFeatures& positionFeatures) const;
 

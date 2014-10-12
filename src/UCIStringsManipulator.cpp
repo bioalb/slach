@@ -89,6 +89,23 @@ std::vector<slach::InfoInEngineLine> slach::UCIStringsManipulator::ParseWholeEng
     return ret;
 }
 
+slach::Move slach::UCIStringsManipulator::FindEngineFinalMove(const std::string& rawOutput)
+{
+	mpChessBoard->SetFenPosition(mCachedFenPositiontoBeanalysed);
+	std::vector<Square*> p_squares = mpChessBoard->GetSquares();
+	std::string orig_dest;
+	Move invalid_dummy;//origin and dest are nullptr.
+	std::size_t position = rawOutput.rfind("bestmove");
+	if (position == std::string::npos) return invalid_dummy;
+	std::size_t end_of_bestmove = rawOutput.find_first_of(" ", position);
+	if (end_of_bestmove == std::string::npos) return invalid_dummy;
+	std::size_t real_start_of_move = rawOutput.find_first_not_of(" ", end_of_bestmove);
+	if (rawOutput.length() < (real_start_of_move + 4)) return invalid_dummy; // too short
+	orig_dest = rawOutput.substr(real_start_of_move, 4);
+	Move ret(orig_dest,p_squares);
+	return ret;
+}
+
 slach::InfoInEngineLine slach::UCIStringsManipulator::ParseALineofStockfishOutput(const std::string& stockfishLine)
 {
 	InfoInEngineLine info;
@@ -139,7 +156,7 @@ slach::InfoInEngineLine slach::UCIStringsManipulator::ParseALineofStockfishOutpu
 
         std::string move_string = stockfishLine.substr(start_of_move, end_of_move - start_of_move );
         Move verbose_move(move_string, mpChessBoard->GetSquares());
-        if ( (verbose_move.GetOrigin() != NULL) && (verbose_move.GetDestination() != NULL) )
+        if ( (verbose_move.GetOrigin() != nullptr) && (verbose_move.GetDestination() != nullptr) )
         {
             if (! mpChessBoard->IsLegalMove(verbose_move) ) return info; //with valid still as false
 

@@ -51,7 +51,7 @@ void slach_gui::BottomPanel::OnSize(wxSizeEvent& event)
 
 void slach_gui::BottomPanel::SetPositionToAnalyse(slach::Position* pPosition)
 {
-    assert(pPosition != NULL);
+    assert(pPosition != nullptr);
     mpPosition = pPosition;
     mpEngineInterface->SetFenPosition(mpPosition->GetPositionAsFen());
     mpEngineTextBox->Clear();//clear the box
@@ -84,7 +84,7 @@ void slach_gui::BottomPanel::DoStopEngine()
 void slach_gui::BottomPanel::DoStartEngine()
 {
 	mEngineIsRunning = true;
-	assert(mpPosition!=NULL);
+	assert(mpPosition!=nullptr);
 	mpEngineInterface->StartAnalysis(mpPosition);
 }
 

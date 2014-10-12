@@ -137,6 +137,17 @@ class UCIStringsManipulator
      * Helper method only used for testing private methods.
      */
     void SetPositionToInternalChessBoard(const std::string& fenPosition);
+
+    /**
+     * This is the methoid to find, from raw output, the final engine move,
+     * that is, the latest "bestmove" from the UCI output.
+     *
+     * The move that is returned has both pointers (origin and dstination) set to nullptr if no such putput is found
+     *
+     * @param rawOutput the raw UCI engine ouput
+     * @return the move that engine wants to play
+     */
+    Move FindEngineFinalMove(const std::string& rawOutput);
 };
 
 }//namespace slach

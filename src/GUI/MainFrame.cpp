@@ -3,7 +3,7 @@
 
 
 slach_gui::MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
-  : wxFrame(NULL, wxID_ANY, title, pos, size)
+  : wxFrame(nullptr, wxID_ANY, title, pos, size)
 {
     //the File menu
     wxMenu *menuFile = new wxMenu;

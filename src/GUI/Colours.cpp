@@ -1,6 +1,6 @@
 #include "Colours.hpp"
 
-slach_gui::Colours* slach_gui::Colours::mpInstance = NULL;
+slach_gui::Colours* slach_gui::Colours::mpInstance = nullptr;
 
 slach_gui::Colours* slach_gui::Colours::Instance()
 {

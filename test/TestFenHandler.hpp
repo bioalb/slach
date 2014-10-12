@@ -570,13 +570,13 @@ public:
             TS_ASSERT_EQUALS( squares[i]->GetPieceOnThisSquare(), slach::BLACK_BISHOP);
         }
 
-        //now check the case of a vector of NULL pointers (should not segfault, it should simply return 1)
+        //now check the case of a vector of nullptr pointers (should not segfault, it should simply return 1)
 
         //create a vector of squares for testing purposes...
         std::vector<slach::Square* > null_squares;
         null_squares.resize(64u);
 
-        //check that the method returns 1 as error code as the pointers point to NULL...
+        //check that the method returns 1 as error code as the pointers point to nullptr...
         rc = handler.SetPositionFromFen(endgame, null_squares,pos_features);
         TS_ASSERT_EQUALS(rc,1);
 

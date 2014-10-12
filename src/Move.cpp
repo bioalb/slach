@@ -7,8 +7,8 @@
 #include "HelperGlobalFunctions.hpp"
 
 slach::Move::Move()
-    : mpOrigin(NULL),
-      mpDestination(NULL),
+    : mpOrigin(nullptr),
+      mpDestination(nullptr),
       mGivesCheck(false),
       mAmbiguityPrefix(""),
       mPromotionPieceCode("Q")
@@ -34,8 +34,8 @@ slach::Move::Move (const Move& move)
 }
 
 slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Colour movingColour)
-  : mpOrigin(NULL),
-    mpDestination(NULL),
+  : mpOrigin(nullptr),
+    mpDestination(nullptr),
     mGivesCheck(false),
     mAmbiguityPrefix(""),
     mPromotionPieceCode("Q")
@@ -167,9 +167,9 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
                 }
             }
 
-            if (mpDestination == NULL) return;//destination not found, invalid SAN, out of here, both pointers still NULL
+            if (mpDestination == nullptr) return;//destination not found, invalid SAN, out of here, both pointers still nullptr
 
-            assert(mpDestination != NULL);//if we are here, it means we found the destination. We will be using this pointer
+            assert(mpDestination != nullptr);//if we are here, it means we found the destination. We will be using this pointer
 
             PieceType moving_piece  = GetPieceFromCode(SanMove[pos], movingColour);
 
@@ -229,8 +229,8 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
                         break;
                     }
                 }
-                if (mpDestination == NULL) return;//destination not found, invalid SAN, out of here, both pointers still NULL
-                assert(mpDestination != NULL);//if we are here, it means we found the destination. We will be using this pointer
+                if (mpDestination == nullptr) return;//destination not found, invalid SAN, out of here, both pointers still nullptr
+                assert(mpDestination != nullptr);//if we are here, it means we found the destination. We will be using this pointer
 
                 char origin_file = SanMove[0];
                 LegalMoveChecker move_checker;
@@ -266,8 +266,8 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
                     }
                 }
 
-                if (mpDestination == NULL) return;//destination not found, invalid SAN, out of here, both pointers still NULL
-                assert(mpDestination != NULL);//if we are here, it means we found the destination. We will be using this pointer
+                if (mpDestination == nullptr) return;//destination not found, invalid SAN, out of here, both pointers still nullptr
+                assert(mpDestination != nullptr);//if we are here, it means we found the destination. We will be using this pointer
 
                 unsigned  poss_origin_1 = 0;
                 unsigned  poss_origin_2 = 0;
@@ -275,7 +275,7 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
                 {
                     if ( (mpDestination->GetIndexFromA1() < 16) )
                     {
-                        mpDestination = NULL;
+                        mpDestination = nullptr;
                         return; //destination at least third row
                     }
                     poss_origin_1 = mpDestination->GetIndexFromA1() - 8;
@@ -285,7 +285,7 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
                 {
                     if ( (mpDestination->GetIndexFromA1() > 47) )
                     {
-                        mpDestination = NULL;
+                        mpDestination = nullptr;
                         return; //destination at least 6th row
                     }
                     poss_origin_1 = mpDestination->GetIndexFromA1() + 8;
@@ -308,18 +308,18 @@ slach::Move::Move(const std::string& SanMove, std::vector<Square* > pSquares, Co
         }//end of pawn move
 
 
-        //if we have not found the origin piece, it means something is amiss, put everything back to NULL to signal that
+        //if we have not found the origin piece, it means something is amiss, put everything back to nullptr to signal that
         //the move was not created
-        if (mpOrigin == NULL)
+        if (mpOrigin == nullptr)
         {
-            mpDestination = NULL;
+            mpDestination = nullptr;
         }
     }//end of the else for "not castling move
 }
 
 slach::Move::Move (const std::string& originDestMove, std::vector<Square* > pSquares)
-    : mpOrigin(NULL),
-     mpDestination(NULL),
+    : mpOrigin(nullptr),
+     mpDestination(nullptr),
      mGivesCheck(false),
      mAmbiguityPrefix(""),
      mPromotionPieceCode("Q")
@@ -334,7 +334,7 @@ slach::Move::Move (const std::string& originDestMove, std::vector<Square* > pSqu
 
     for (unsigned i = 0; i < pSquares.size(); ++i)
     {
-        assert(pSquares[i] != NULL);
+        assert(pSquares[i] != nullptr);
         if ( (pSquares[i]->GetFile() == origin_file) && (pSquares[i]->GetRank() == origin_rank))
         {
             mpOrigin = pSquares[i];
@@ -345,6 +345,12 @@ slach::Move::Move (const std::string& originDestMove, std::vector<Square* > pSqu
         }
     }
 }
+bool slach::Move::OriginAndDestinationOK() const
+{
+	if (mpOrigin == nullptr || mpDestination == nullptr) return false;
+	return true;
+}
+
 slach::Move& slach::Move::operator=(const Move& from)
 {
     if (this != &from)

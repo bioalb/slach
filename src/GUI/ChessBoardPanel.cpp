@@ -18,7 +18,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
       mIamTheMainBoard(true),
       mPngPieceDirectory("src/GUI/bitmaps/pieces/png/"),
       mpChessBoardWithBorders ( new slach::ChessBoardWithBorders() ),
-      mpChessBoard(NULL),
+      mpChessBoard(nullptr),
       mNumberOfMovesFastForward(5u),
       mpBoardGridSizer ( new wxFlexGridSizer(slach::gBoardRowSize+2,slach::gBoardColumnSize+2,0,0) ),
       mpPrincipalSizer ( new wxBoxSizer(wxVERTICAL) ),
@@ -621,8 +621,8 @@ void slach_gui::ChessBoardPanel::DrawAndSetFenPositionOnBoard(const std::string&
     {
         ClearCurrentHighlighting();
         slach::Move last_move_played = mpChessBoard->GetGame()->GetMoveList()[index_of_last_played_move-1];
-        assert(last_move_played.GetDestination() != NULL);
-        assert(last_move_played.GetOrigin() != NULL);
+        assert(last_move_played.GetDestination() != nullptr);
+        assert(last_move_played.GetOrigin() != nullptr);
 
         unsigned source_index;
         unsigned destination_index;
@@ -648,7 +648,7 @@ void slach_gui::ChessBoardPanel::DrawAndSetFenPositionOnBoard(const std::string&
 void slach_gui::ChessBoardPanel::DoCommunicateTheCurrentPositionForEngine()
 {
 	//engine is driven only by events on main board
-    if ( (mIamTheMainBoard == true) && GetGrandParent() != NULL)
+    if ( (mIamTheMainBoard == true) && GetGrandParent() != nullptr)
     {
     	(static_cast<MainFrame*> (GetGrandParent()))->UpdateChessPositionForEngine(mpChessBoard->GetCurrentPosition());
     }

@@ -24,6 +24,7 @@ class TestMove : public CxxTest::TestSuite
         TS_ASSERT_EQUALS(squares.size(), 64u);
 
         slach::Move b1_c3(squares[1],squares[18]);//b1-c3
+        TS_ASSERT_EQUALS(b1_c3.OriginAndDestinationOK(), true);
         TS_ASSERT_EQUALS(b1_c3.GetOrigin()->GetIndexFromA1(), 1u);
         TS_ASSERT_EQUALS(b1_c3.GetDestination()->GetIndexFromA1(), 18u);
 
@@ -47,6 +48,7 @@ class TestMove : public CxxTest::TestSuite
 
         //cover the default constructor
         slach::Move def_constr;
+        TS_ASSERT_EQUALS(def_constr.OriginAndDestinationOK(), false);
     }
 
     void TestCastling()
@@ -1322,8 +1324,8 @@ class TestMove : public CxxTest::TestSuite
 
         slach::Move rubbish_bishop_move("BT4", squares, slach::WHITE);
 
-        //TS_ASSERT_EQUALS(rubbish_bishop_move.GetDestination(), NULL); this doesn't compile
-        if (rubbish_bishop_move.GetOrigin() == NULL)
+        //TS_ASSERT_EQUALS(rubbish_bishop_move.GetDestination(), nullptr); this doesn't compile
+        if (rubbish_bishop_move.GetOrigin() == nullptr)
         {
             TS_ASSERT_EQUALS(1,1);//pass
         }
@@ -1331,7 +1333,7 @@ class TestMove : public CxxTest::TestSuite
         {
             TS_ASSERT_EQUALS(0,1);//fail
         }
-        if (rubbish_bishop_move.GetDestination() == NULL)
+        if (rubbish_bishop_move.GetDestination() == nullptr)
         {
             TS_ASSERT_EQUALS(1,1);//pass
         }
@@ -1343,8 +1345,8 @@ class TestMove : public CxxTest::TestSuite
         //correct syntax, but no white bishop can go there to h8
         slach::Move invalid_bishop_move("Bh8", squares, slach::WHITE);
 
-        //TS_ASSERT_EQUALS(invalid_bishop_move.GetDestination(), NULL); this doesn't compile
-        if (invalid_bishop_move.GetOrigin() == NULL)
+        //TS_ASSERT_EQUALS(invalid_bishop_move.GetDestination(), nullptr); this doesn't compile
+        if (invalid_bishop_move.GetOrigin() == nullptr)
         {
             TS_ASSERT_EQUALS(1,1);//pass
         }
@@ -1352,7 +1354,7 @@ class TestMove : public CxxTest::TestSuite
         {
             TS_ASSERT_EQUALS(0,1);//fail
         }
-        if (invalid_bishop_move.GetDestination() == NULL)
+        if (invalid_bishop_move.GetDestination() == nullptr)
         {
             TS_ASSERT_EQUALS(1,1);//pass
         }
@@ -1362,7 +1364,7 @@ class TestMove : public CxxTest::TestSuite
         }
 
         slach::Move short_san("B", squares, slach::WHITE);
-        if (short_san.GetOrigin() == NULL)
+        if (short_san.GetOrigin() == nullptr)
         {
             TS_ASSERT_EQUALS(1,1);//pass
         }
@@ -1370,7 +1372,7 @@ class TestMove : public CxxTest::TestSuite
         {
             TS_ASSERT_EQUALS(0,1);//fail
         }
-        if (short_san.GetDestination() == NULL)
+        if (short_san.GetDestination() == nullptr)
         {
             TS_ASSERT_EQUALS(1,1);//pass
         }
@@ -1380,7 +1382,7 @@ class TestMove : public CxxTest::TestSuite
         }
 
         slach::Move short_san_2("Bd", squares, slach::WHITE);
-        if (short_san_2.GetOrigin() == NULL)
+        if (short_san_2.GetOrigin() == nullptr)
         {
             TS_ASSERT_EQUALS(1,1);//pass
         }
@@ -1388,7 +1390,7 @@ class TestMove : public CxxTest::TestSuite
         {
             TS_ASSERT_EQUALS(0,1);//fail
         }
-        if (short_san_2.GetDestination() == NULL)
+        if (short_san_2.GetDestination() == nullptr)
         {
             TS_ASSERT_EQUALS(1,1);//pass
         }
@@ -1398,7 +1400,7 @@ class TestMove : public CxxTest::TestSuite
         }
 
         slach::Move short_san_3("Bxd", squares, slach::WHITE);
-        if (short_san_3.GetOrigin() == NULL)
+        if (short_san_3.GetOrigin() == nullptr)
         {
             TS_ASSERT_EQUALS(1,1);//pass
         }
@@ -1406,7 +1408,7 @@ class TestMove : public CxxTest::TestSuite
         {
             TS_ASSERT_EQUALS(0,1);//fail
         }
-        if (short_san_3.GetDestination() == NULL)
+        if (short_san_3.GetDestination() == nullptr)
         {
             TS_ASSERT_EQUALS(1,1);//pass
         }
@@ -1416,7 +1418,7 @@ class TestMove : public CxxTest::TestSuite
         }
 
         slach::Move wrong_pawn("a2", squares, slach::WHITE);
-        if (wrong_pawn.GetOrigin() == NULL)
+        if (wrong_pawn.GetOrigin() == nullptr)
         {
             TS_ASSERT_EQUALS(1,1);//pass
         }
@@ -1424,7 +1426,7 @@ class TestMove : public CxxTest::TestSuite
         {
             TS_ASSERT_EQUALS(0,1);//fail
         }
-        if (wrong_pawn.GetDestination() == NULL)
+        if (wrong_pawn.GetDestination() == nullptr)
         {
             TS_ASSERT_EQUALS(1,1);//pass
         }
@@ -1434,7 +1436,7 @@ class TestMove : public CxxTest::TestSuite
         }
 
         slach::Move wrong_pawn_black("a7", squares, slach::BLACK);
-        if (wrong_pawn_black.GetOrigin() == NULL)
+        if (wrong_pawn_black.GetOrigin() == nullptr)
         {
             TS_ASSERT_EQUALS(1,1);//pass
         }
@@ -1442,7 +1444,7 @@ class TestMove : public CxxTest::TestSuite
         {
             TS_ASSERT_EQUALS(0,1);//fail
         }
-        if (wrong_pawn_black.GetDestination() == NULL)
+        if (wrong_pawn_black.GetDestination() == nullptr)
         {
             TS_ASSERT_EQUALS(1,1);//pass
         }

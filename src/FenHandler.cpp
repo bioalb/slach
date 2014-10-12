@@ -203,11 +203,11 @@ int slach::FenHandler::SetPositionFromFen(const std::string &rFenString, std::ve
 {
     int rc = 0;//return code, initialise at 0
 
-    //check the vector of squares is properly initialised (no NULL pointers allowed)
+    //check the vector of squares is properly initialised (no nullptr pointers allowed)
     bool null_pointer = false;
     for (unsigned i = 0; i < rSquares.size(); ++i)
     {
-        if (rSquares[i] == NULL)
+        if (rSquares[i] == nullptr)
         {
             null_pointer = true;
             break;

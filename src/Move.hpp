@@ -34,7 +34,7 @@ public :
 
     /**
      * Default constructor. Initializes
-     * the two pointers to NULL
+     * the two pointers to nullptr
      */
     Move();
 
@@ -54,14 +54,14 @@ public :
      *
      * It tries to locate a destination square by analysing the SAN string.
      * If it can't be found (i.e., invalid SAN), the internal variable mpOrigin and mpDestination
-     * will remain NULL. Hence this can be tested for SAN validity as well.
+     * will remain nullptr. Hence this can be tested for SAN validity as well.
      *
      * If the destination is found, a search for the origin piece is performed:
      * - for pieces (Q,N,K,R,B): the LegalMoveChecker is used. If a PSEUSO-legal move is found, then the origin square is found.
      *   Note that no other legality check is performed.
      * - for pawns: the one-step movement is sought first, if no pawn is found, then two-step move is considered.
      *
-     * If no suitable source is found,the SAN is considered invalid, and the move will have both pointers set to NULL.
+     * If no suitable source is found,the SAN is considered invalid, and the move will have both pointers set to nullptr.
      *
      * Special cases of castling (O-O and O-O-O) are handled.
      *
@@ -78,9 +78,9 @@ public :
      *
      * If the string is valid, the pointer to origin and destination are set to the squares
      * of the vector pSquares.
-     * If the string is not valid, mpOrigin and mpDestination remains NULL
+     * If the string is not valid, mpOrigin and mpDestination remains nullptr
      *
-     * NO check is performed to see whether the move is valid or not.
+     * NO check is performed to see whether the move is legal or not.
      * If you use this constructor, you must note that the move you just built is not yet
      * ready for proper algebraic output. Ambiguity and checks are not handled here.
      * This constructor simply finds the origin and destinations squares, if any.
@@ -122,6 +122,12 @@ public :
      * Access method for the destination square
      */
     Square* GetDestination() const;
+
+    /**
+     * Simple convenience method that checks whether pointers to origin and destination squares are null or not
+     * @return true if both origin and destination pointers are not null.
+     */
+    bool OriginAndDestinationOK() const;
 
     /**
      * Returns true if the move indicates that white
