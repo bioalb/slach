@@ -193,7 +193,7 @@ public:
 
     void TestParseMateInOne()
     {
-    	std::string engine_mate_in_one_line = "info depth 120 seldepth 2 score mate 1 nodes 4207 nps 350583 time 12 multipv 1 pv d1h5";
+    	std::string engine_mate_in_one_line = "info depth 120 seldepth 2 score mate 1 nodes 4207 nps 350583 time 12 multipv 1 pv d1h5 \n";
 
         slach::UCIStringsManipulator interface;
         std::string test_position = "rnbqkbnr/ppppp2p/8/5pp1/4P3/3P4/PPP2PPP/RNBQKBNR w KQkq g6 0 3"; //fool's mate in one
@@ -204,10 +204,21 @@ public:
         TS_ASSERT_EQUALS(info.mRawMoveList, "d1h5 ");
         TS_ASSERT_EQUALS(info.mRootMove, "Qh5+");
         TS_ASSERT_EQUALS(info.mDepth, 1);
-        TS_ASSERT_DELTA(info.mScore, 100.0, 1e-3);
+        TS_ASSERT_DELTA(info.mScore, 999.0, 1e-3);
         TS_ASSERT_EQUALS(info.mCheckMate, false);
         TS_ASSERT_EQUALS(info.mMateLine, true);
         TS_ASSERT_EQUALS(info.mValid, true);
+        interface.SetNumberOfLinesToBeShown(1u);
+		int depth;
+		double score;
+		std::string best_move;
+		std::vector<std::string> pretty_lines;
+		interface.GetInfoFromUCIOutput(engine_mate_in_one_line, pretty_lines, score, depth, best_move);
+		TS_ASSERT_EQUALS(depth, 1);
+		TS_ASSERT_DELTA(score, 999.0, 0.01);
+		TS_ASSERT_EQUALS(best_move, "Qh5+");
+		TS_ASSERT_EQUALS(pretty_lines.size(), 1u);
+		TS_ASSERT_EQUALS(pretty_lines[0], "Depth = 1; white mates Qh5+ mate");
     }
 
     void TestParseChewckMate()
@@ -247,6 +258,160 @@ public:
         TS_ASSERT_EQUALS(info.mMateLine, false);
         TS_ASSERT_EQUALS(info.mValid, true);
     }
+
+    void TestMateMultiplePv()
+    {
+    //position from game in test/data/white_win.pgn. FEN: 1b6/1b1p2pk/4p1p1/6q1/2P5/R2Q1r1P/1P2NB2/5R1K w - - 1 25
+    std::string mate_mult_pv = std::string("\ninfo depth 23 currmove a3a4 currmovenumber 47") +
+											"\ninfo depth 23 currmove a3a2 currmovenumber 48"+
+											"\ninfo depth 23 currmove d3g6 currmovenumber 49"+
+											"\ninfo depth 23 seldepth 41 score cp 190 nodes 13814769 nps 1998664 time 6912 multipv 1 pv d3f3 b7f3 a3f3 g5e5 f2g3 e5b2 g3b8 b2b8 h1g1 b8e5 f1f2 g6g5 f3g3 e5a1 g1g2 a1a8 f2f3 a8e4 g2f2 e4c4 g3g5 c4c2 f3f7 c2b2 h3h4 d7d5 f7d7 h7g8 f2e3"+
+											"\ninfo depth 23 seldepth 41 score cp -8151 upperbound nodes 13814769 nps 1998664 time 6912 multipv 2 pv d3d5 f3a3 b2a3 e6d5 f1b1 g5f5 h1g2 f5b1 f2d4"+
+											"\ninfo depth 22 seldepth 41 score mate -4 nodes 13814769 nps 1998664 time 6912 multipv 3 pv e2g3 g5g3 d3g6 g3g6 f2g3 f3f1 h1h2 f1h1"+
+											"\ninfo depth 23 currmove d3d5 currmovenumber 2"+
+											"\ninfo depth 23 currmove d3d7 currmovenumber 3"+
+											"\ninfo depth 23 currmove d3b1 currmovenumber 4"+
+											"\ninfo depth 23 currmove d3e3 currmovenumber 5"+
+											"\ninfo depth 23 currmove b2b3 currmovenumber 6"+
+											"\ninfo depth 23 currmove f1b1 currmovenumber 7"+
+											"\ninfo depth 23 currmove e2g3 currmovenumber 8"+
+											"\ninfo depth 23 currmove e2c3 currmovenumber 9"+
+											"\ninfo depth 23 currmove f1e1 currmovenumber 10"+
+											"\ninfo depth 23 currmove a3c3 currmovenumber 11"+
+											"\ninfo depth 23 currmove c4c5 currmovenumber 12"+
+											"\ninfo depth 23 currmove e2f4 currmovenumber 13"+
+											"\ninfo depth 23 currmove b2b4 currmovenumber 14"+
+											"\ninfo depth 23 currmove f2g3 currmovenumber 15"+
+											"\ninfo depth 23 currmove e2d4 currmovenumber 16"+
+											"\ninfo depth 23 currmove d3f5 currmovenumber 17"+
+											"\ninfo depth 23 currmove d3c2 currmovenumber 18"+
+											"\ninfo depth 23 currmove d3b3 currmovenumber 19"+
+											"\ninfo depth 23 currmove d3c3 currmovenumber 20"+
+											"\ninfo depth 23 currmove d3d6 currmovenumber 21"+
+											"\ninfo depth 23 currmove d3d1 currmovenumber 22"+
+											"\ninfo depth 23 currmove d3d2 currmovenumber 23"+
+											"\ninfo depth 23 currmove d3d4 currmovenumber 24"+
+											"\ninfo depth 23 currmove f2h4 currmovenumber 25"+
+											"\ninfo depth 23 currmove d3e4 currmovenumber 26"+
+											"\ninfo depth 23 currmove f1d1 currmovenumber 27"+
+											"\ninfo depth 23 currmove f1c1 currmovenumber 28"+
+											"\ninfo depth 23 currmove e2g1 currmovenumber 29"+
+											"\ninfo depth 23 currmove f2g1 currmovenumber 30"+
+											"\ninfo depth 23 currmove h3h4 currmovenumber 31"+
+											"\ninfo depth 23 currmove a3a8 currmovenumber 32"+
+											"\ninfo depth 23 currmove f2a7 currmovenumber 33"+
+											"\ninfo depth 23 currmove f2b6 currmovenumber 34"+
+											"\ninfo depth 23 currmove f1g1 currmovenumber 35"+
+											"\ninfo depth 23 currmove f2d4 currmovenumber 36"+
+											"\ninfo depth 23 currmove a3b3 currmovenumber 37"+
+											"\ninfo depth 23 currmove a3a6 currmovenumber 38"+
+											"\ninfo depth 23 currmove f1a1 currmovenumber 39"+
+											"\ninfo depth 23 currmove a3a1 currmovenumber 40"+
+											"\ninfo depth 23 currmove f2e3 currmovenumber 41"+
+											"\ninfo depth 23 currmove e2c1 currmovenumber 42"+
+											"\ninfo depth 23 currmove f2e1 currmovenumber 43"+
+											"\ninfo depth 23 currmove a3a7 currmovenumber 44"+
+											"\ninfo depth 23 currmove a3a5 currmovenumber 45"+
+											"\ninfo depth 23 currmove f2c5 currmovenumber 46"+
+											"\ninfo depth 23 currmove a3a4 currmovenumber 47"+
+											"\ninfo depth 23 currmove a3a2 currmovenumber 48"+
+											"\ninfo depth 23 currmove d3g6 currmovenumber 49+"
+											"\ninfo depth 23 seldepth 41 score cp 190 nodes 13816110 nps 1998569 time 6913 multipv 1 pv d3f3 b7f3 a3f3 g5e5 f2g3 e5b2 g3b8 b2b8 h1g1 b8e5 f1f2 g6g5 f3g3 e5a1 g1g2 a1a8 f2f3 a8e4 g2f2 e4c4 g3g5 c4c2 f3f7 c2b2 h3h4 d7d5 f7d7 h7g8 f2e3"+
+											"\ninfo depth 23 seldepth 41 score cp -9344 upperbound nodes 13816110 nps 1998569 time 6913 multipv 2 pv d3d5 f3a3 b2a3 e6d5 f1b1 g5f5 h1g2 f5b1 f2d4"+
+											"\ninfo depth 22 seldepth 41 score mate -4 nodes 13816110 nps 1998569 time 6913 multipv 3 pv e2g3 g5g3 d3g6 g3g6 f2g3 f3f1 h1h2 f1h1"+
+											"\ninfo depth 23 currmove d3d5 currmovenumber 2"+
+											"\ninfo depth 23 currmove d3d7 currmovenumber 3"+
+											"\ninfo depth 23 currmove d3b1 currmovenumber 4"+
+											"\ninfo depth 23 currmove d3e3 currmovenumber 5"+
+											"\ninfo depth 23 currmove b2b3 currmovenumber 6"+
+											"\ninfo depth 23 currmove f1b1 currmovenumber 7"+
+											"\ninfo depth 23 currmove e2g3 currmovenumber 8"+
+											"\ninfo depth 23 currmove e2c3 currmovenumber 9"+
+											"\ninfo depth 23 currmove f1e1 currmovenumber 10"+
+											"\ninfo depth 23 currmove a3c3 currmovenumber 11"+
+											"\ninfo depth 23 currmove c4c5 currmovenumber 12"+
+											"\ninfo depth 23 currmove e2f4 currmovenumber 13"+
+											"\ninfo depth 23 currmove b2b4 currmovenumber 14"+
+											"\ninfo depth 23 currmove f2g3 currmovenumber 15"+
+											"\ninfo depth 23 currmove e2d4 currmovenumber 16"+
+											"\ninfo depth 23 currmove d3f5 currmovenumber 17"+
+											"\ninfo depth 23 currmove d3c2 currmovenumber 18"+
+											"\ninfo depth 23 currmove d3b3 currmovenumber 19"+
+											"\ninfo depth 23 currmove d3c3 currmovenumber 20"+
+											"\ninfo depth 23 currmove d3d6 currmovenumber 21"+
+											"\ninfo depth 23 currmove d3d1 currmovenumber 22"+
+											"\ninfo depth 23 currmove d3d2 currmovenumber 23"+
+											"\ninfo depth 23 currmove d3d4 currmovenumber 24"+
+											"\ninfo depth 23 currmove f2h4 currmovenumber 25"+
+											"\ninfo depth 23 currmove d3e4 currmovenumber 26"+
+											"\ninfo depth 23 currmove f1d1 currmovenumber 27"+
+											"\ninfo depth 23 currmove f1c1 currmovenumber 28"+
+											"\ninfo depth 23 currmove e2g1 currmovenumber 29"+
+											"\ninfo depth 23 currmove f2g1 currmovenumber 30"+
+											"\ninfo depth 23 currmove h3h4 currmovenumber 31"+
+											"\ninfo depth 23 currmove a3a8 currmovenumber 32"+
+											"\ninfo depth 23 currmove f2a7 currmovenumber 33"+
+											"\ninfo depth 23 currmove f2b6 currmovenumber 34"+
+											"\ninfo depth 23 currmove f1g1 currmovenumber 35"+
+											"\ninfo depth 23 currmove f2d4 currmovenumber 36"+
+											"\ninfo depth 23 currmove a3b3 currmovenumber 37"+
+											"\ninfo depth 23 currmove a3a6 currmovenumber 38"+
+											"\ninfo depth 23 currmove f1a1 currmovenumber 39"+
+											"\ninfo depth 23 currmove a3a1 currmovenumber 40"+
+											"\ninfo depth 23 currmove f2e3 currmovenumber 41"+
+											"\ninfo depth 23 currmove e2c1 currmovenumber 42"+
+											"\ninfo depth 23 currmove f2e1 currmovenumber 43"+
+											"\ninfo depth 23 currmove a3a7 currmovenumber 44"+
+											"\ninfo depth 23 currmove a3a5 currmovenumber 45"+
+											"\ninfo depth 23 currmove f2c5 currmovenumber 46"+
+											"\ninfo depth 23 currmove a3a4 currmovenumber 47"+
+											"\ninfo depth 23 currmove a3a2 currmovenumber 48"+
+											"\ninfo depth 23 currmove d3g6 currmovenumber 49"+
+											"\ninfo depth 23 seldepth 41 score cp 190 nodes 13817451 nps 1998763 time 6913 multipv 1 pv d3f3 b7f3 a3f3 g5e5 f2g3 e5b2 g3b8 b2b8 h1g1 b8e5 f1f2 g6g5 f3g3 e5a1 g1g2 a1a8 f2f3 a8e4 g2f2 e4c4 g3g5 c4c2 f3f7 c2b2 h3h4 d7d5 f7d7 h7g8 f2e3"+
+											"\ninfo depth 23 seldepth 41 score cp -11134 upperbound nodes 13817451 nps 1998763 time 6913 multipv 2 pv d3d5 f3a3 b2a3 e6d5 f1b1 g5f5 h1g2 f5b1 f2d4"+
+											"\ninfo depth 22 seldepth 41 score mate -4 nodes 13817451 nps 1998763 time 6913 multipv 3 pv e2g3 g5g3 d3g6 g3g6 f2g3 f3f1 h1h2 f1h1"+
+											"\ninfo depth 23 currmove d3d5 currmovenumber 2";
+			slach::UCIStringsManipulator interface;
+			std::string test_position = "1b6/1b1p2pk/4p1p1/6q1/2P5/R2Q1r1P/1P2NB2/5R1K w - - 1 25";
+			interface.SetPositionToInternalChessBoard(test_position);
+
+			interface.SetNumberOfLinesToBeShown(3u);//asking stockfish to display 3 lines
+			auto info = interface.ParseWholeEngineOutput(mate_mult_pv);
+			TS_ASSERT_EQUALS(info.size(), 3u);
+			TS_ASSERT_EQUALS(info[2].mDepth, 23u);
+			TS_ASSERT_EQUALS(info[1].mDepth, 23u);
+			TS_ASSERT_EQUALS(info[0].mDepth, 4);
+
+			TS_ASSERT_DELTA(info[2].mScore, 1.90,1e-3);
+			TS_ASSERT_DELTA(info[1].mScore, -111.34, 1e-3);
+			TS_ASSERT_DELTA(info[0].mScore, -999.0, 1e-3);
+
+			TS_ASSERT_EQUALS(info[2].mRootMove, "Qxf3");
+			TS_ASSERT_EQUALS(info[1].mRootMove, "Qd5");
+			TS_ASSERT_EQUALS(info[0].mRootMove, "Ng3");
+
+			TS_ASSERT_EQUALS(info[2].mMateLine, false);
+			TS_ASSERT_EQUALS(info[1].mMateLine, false);
+			TS_ASSERT_EQUALS(info[0].mMateLine, true);
+
+			TS_ASSERT_EQUALS(info[2].mMoveList, "Qxf3 Bxf3+ Rxf3 Qe5 Bg3 Qxb2 Bxb8 Qxb8 Kg1 Qe5 R1f2 g5 Rg3 Qa1+ Kg2 Qa8+ Rff3 Qe4 Kf2 Qxc4 Rxg5 Qc2 Rf7 Qb2 h4 d5 Rd7 Kg8 Ke3 ");
+			TS_ASSERT_EQUALS(info[1].mMoveList, "Qd5 Rxa3 bxa3 exd5 Rb1 Qf5 Kg2 Qxb1 Bd4 ");
+			TS_ASSERT_EQUALS(info[0].mMoveList, "Ng3 Qxg3 Qxg6+ Qxg6 Bg3 Rxf1+ Kh2 Rh1+ mate");
+
+			int depth;
+			double score;
+			std::string best_move;
+			std::vector<std::string> pretty_lines;
+			interface.GetInfoFromUCIOutput(mate_mult_pv, pretty_lines, score, depth, best_move);
+			TS_ASSERT_EQUALS(depth, 23);
+			TS_ASSERT_DELTA(score, 1.90, 0.01);
+			TS_ASSERT_EQUALS(best_move, "Qxf3");
+			TS_ASSERT_EQUALS(pretty_lines.size(), 3u);
+			TS_ASSERT_EQUALS(pretty_lines[0], "Depth = 23; score = 1.90; Qxf3 Bxf3+ Rxf3 Qe5 Bg3 Qxb2 Bxb8 Qxb8 Kg1 Qe5 R1f2 g5 Rg3 Qa1+ Kg2 Qa8+ Rff3 Qe4 Kf2 Qxc4 Rxg5 Qc2 Rf7 Qb2 h4 d5 Rd7 Kg8 Ke3 ");
+			TS_ASSERT_EQUALS(pretty_lines[1], "Depth = 23; score = -111.34; Qd5 Rxa3 bxa3 exd5 Rb1 Qf5 Kg2 Qxb1 Bd4 ");
+			TS_ASSERT_EQUALS(pretty_lines[2], "Depth = 4; black mates Ng3 Qxg3 Qxg6+ Qxg6 Bg3 Rxf1+ Kh2 Rh1+ mate");
+
+	}
 
     void TestParseStockfishMoveListWithSpaces()
     {

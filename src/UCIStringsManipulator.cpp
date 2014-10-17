@@ -35,9 +35,10 @@ void slach::UCIStringsManipulator::GetInfoFromUCIOutput(const std::string& uciOu
 	// in case the parser didn't find enough good ones...
 	if (mLatestEngineLines.size() < mNumberOfLinesToBeShown) mLatestEngineLines.resize(mNumberOfLinesToBeShown);
 
+	auto to_move = mpHelperFenHandler->GetPositionFeaturesFromFen(mCachedFenPositiontoBeanalysed).mTurnToMove;
 	//sort them
 	std::sort(mLatestEngineLines.begin(), mLatestEngineLines.end());
-	if (mpHelperFenHandler->GetPositionFeaturesFromFen(mCachedFenPositiontoBeanalysed).mTurnToMove == WHITE)
+	if (to_move == WHITE)
 	{
 		std::reverse(mLatestEngineLines.begin(), mLatestEngineLines.end());
 	}
@@ -48,7 +49,17 @@ void slach::UCIStringsManipulator::GetInfoFromUCIOutput(const std::string& uciOu
         std::stringstream ss;
         ss.setf( std::ios::fixed, std::ios::floatfield );//for the score
         ss.precision(2);//for the score
-        ss<<"Depth = " << mLatestEngineLines[pv].mDepth << "; score = " << mLatestEngineLines[pv].mScore << "; " << mLatestEngineLines[pv].mMoveList;
+
+        ss<<"score = " << mLatestEngineLines[pv].mScore<<"; ";
+        std::string score_string = ss.str();
+        if (mLatestEngineLines[pv].mMateLine == true)
+        {
+        	score_string = "white mates ";
+        	if (mLatestEngineLines[pv].mScore < 0) score_string = "black mates ";
+        }
+
+        ss.str("");//clear, it will be used again
+        ss<<"Depth = " << mLatestEngineLines[pv].mDepth << "; "<<score_string<< mLatestEngineLines[pv].mMoveList;
         prettyEngineLines[pv] = ss.str();
     }
 
@@ -125,7 +136,8 @@ slach::InfoInEngineLine slach::UCIStringsManipulator::ParseALineofStockfishOutpu
     if (pos != std::string::npos)
     {
     	pos = stockfishLine.find_first_not_of(' ', pos+4);
-    	info.mDepth = atoi(&(stockfishLine[pos]));
+    	info.mDepth = atoi(&(stockfishLine[pos])); //if negative, it means opposite colour is mating...
+
     	if (info.mDepth == 0)
     	{
     		info.mCheckMate = true;
@@ -141,7 +153,16 @@ slach::InfoInEngineLine slach::UCIStringsManipulator::ParseALineofStockfishOutpu
     if ( (pos == std::string::npos) && info.mMateLine == false ) return info;  //with valid as false....
     pos = stockfishLine.find_first_of(' ', pos);
     double score = atof(&(stockfishLine[pos]))/100.0;
-    if (info.mMateLine == true) score = 100;
+    if ( (info.mMateLine == true))
+    {
+    	score = 999;
+    	if (info.mDepth < 0)
+    	{
+    		info.mDepth = - (info.mDepth);
+    		//if opposite colour is mating, score should be negative if it is white's turn
+    		if (mpHelperFenHandler->GetPositionFeaturesFromFen(mCachedFenPositiontoBeanalysed).mTurnToMove == WHITE) score = - 999;
+    	}
+    }
     //fix the score to be positive for white and negative for black
     if (mpHelperFenHandler->GetPositionFeaturesFromFen(mCachedFenPositiontoBeanalysed).mTurnToMove == BLACK) score = (- score);
     info.mScore = score;

@@ -16,7 +16,6 @@ class TestGame : public CxxTest::TestSuite
 {
 public:
 
-
     void TestBasicMove()
     {
         slach::Game gm;
