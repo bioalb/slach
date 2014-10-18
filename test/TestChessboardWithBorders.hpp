@@ -27,6 +27,8 @@ public:
 
         std::vector<unsigned> corner_indices = {0,9,90,99};
 
+        std::vector<unsigned> arrows_indices = {100,101,102,103,104,105,106,107,108,109};
+
         //check all borders
         for (unsigned  i = 0; i < border_indices_no_corners.size(); ++i)
         {
@@ -34,6 +36,7 @@ public:
             TS_ASSERT_EQUALS(squares[index]->IsBorderSquare(), true);
             TS_ASSERT_EQUALS(squares[index]->IsCornerSquare(), false);
             TS_ASSERT_EQUALS(squares[index]->IstheBottomRightCorner(), false);
+            TS_ASSERT_EQUALS(squares[index]->IsSquareForArrows(), false);
         }
         //check corners
         for (unsigned  i = 0; i < corner_indices.size(); ++i)
@@ -43,6 +46,13 @@ public:
             TS_ASSERT_EQUALS(squares[index]->IsCornerSquare(), true);
         }
         TS_ASSERT_EQUALS(squares[99]->IstheBottomRightCorner(), true);
+
+        //check arrows
+        for (unsigned  i = 0; i < arrows_indices.size(); ++i)
+        {
+            unsigned index = arrows_indices[i];
+            TS_ASSERT_EQUALS(squares[index]->IsSquareForArrows(), true);
+        }
     }
 
     void testBoardWithBorders(void)
@@ -123,7 +133,7 @@ public:
         TS_ASSERT_EQUALS(squares[14]->GetFile(), 'd');
         TS_ASSERT_EQUALS(squares[14]->GetRank(), '8');
         TS_ASSERT_EQUALS(squares[14]->GetIndexFromTopLeft(), 14u);
-        TS_ASSERT_EQUALS(squares[14]->GetIndexFromBottomRight(), 85u);
+        TS_ASSERT_EQUALS(squares[14]->GetIndexFromBottomRight(), 95u);
 
         //e8
         TS_ASSERT_EQUALS(squares[15]->IsCornerSquare(), false);
@@ -362,6 +372,24 @@ public:
         TS_ASSERT_EQUALS(squares[99]->IsCoordinatePrintable(), false);
         TS_ASSERT_EQUALS(squares[99]->IstheBottomRightCorner(), true);
 
+        //check arrows row
+        TS_ASSERT_EQUALS(squares[100]->IsSquareForArrows(), true);
+        TS_ASSERT_EQUALS(squares[100]->GetFile(), 'r');
+        TS_ASSERT_EQUALS(squares[100]->GetRank(), 'r');
+        file_index = 1;
+        for (unsigned i=101; i < 109; ++i)
+        {
+            TS_ASSERT_EQUALS(squares[i]->IsCornerSquare(), false);
+            TS_ASSERT_EQUALS(squares[i]->IsBorderSquare(), false);
+            TS_ASSERT_EQUALS(squares[i]->GetFile(),files[file_index] );
+            TS_ASSERT_EQUALS(squares[i]->GetRank(),'r');
+            TS_ASSERT_EQUALS(squares[i]->IsSquareForArrows(), true);
+            file_index++;
+        }
+        TS_ASSERT_EQUALS(squares[109]->IsSquareForArrows(), true);
+        TS_ASSERT_EQUALS(squares[109]->GetFile(), 'r');
+        TS_ASSERT_EQUALS(squares[109]->GetRank(), 'r');
+
         //check indices setting
         for (unsigned i = 0; i < squares.size(); ++i)
         {
@@ -434,7 +462,7 @@ public:
         TS_ASSERT_EQUALS(squares[12]->GetRank(), '1');
         TS_ASSERT_EQUALS(squares[12]->IsCoordinatePrintable(), false);
         TS_ASSERT_EQUALS(squares[12]->GetIndexFromTopLeft(),87u);
-        TS_ASSERT_EQUALS(squares[12]->GetIndexFromBottomRight(), 12u);
+        TS_ASSERT_EQUALS(squares[12]->GetIndexFromBottomRight(), 22u);
 
 
         //f1
@@ -692,6 +720,24 @@ public:
         TS_ASSERT_EQUALS(squares[99]->GetRank(), '0');
         TS_ASSERT_EQUALS(squares[99]->IsCoordinatePrintable(), false);
         TS_ASSERT_EQUALS(squares[99]->IstheBottomRightCorner(), false);
+
+        //check arrows row, same as white's perspective
+        TS_ASSERT_EQUALS(squares[100]->IsSquareForArrows(), true);
+        TS_ASSERT_EQUALS(squares[100]->GetFile(), 'r');
+        TS_ASSERT_EQUALS(squares[100]->GetRank(), 'r');
+        file_index = 1;
+        for (unsigned i=101; i < 109; ++i)
+        {
+            TS_ASSERT_EQUALS(squares[i]->IsCornerSquare(), false);
+            TS_ASSERT_EQUALS(squares[i]->IsBorderSquare(), false);
+            TS_ASSERT_EQUALS(squares[i]->GetFile(),files[file_index] );
+            TS_ASSERT_EQUALS(squares[i]->GetRank(),'r');
+            TS_ASSERT_EQUALS(squares[i]->IsSquareForArrows(), true);
+            file_index++;
+        }
+        TS_ASSERT_EQUALS(squares[109]->IsSquareForArrows(), true);
+        TS_ASSERT_EQUALS(squares[109]->GetFile(), 'r');
+        TS_ASSERT_EQUALS(squares[109]->GetRank(), 'r');
     }
 };
 #endif

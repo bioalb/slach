@@ -28,6 +28,9 @@ private:
     /**True if the square belongs to the border. False by  default*/
     bool mIsBorderSquare;
 
+    /**True if the square is intended to have the arrows and not being playable. False by default*/
+    bool mIsSquareForArrows;
+
     /**True if it is a square in the corner. False by default*/
     bool mIsCornerSquare;
 
@@ -50,7 +53,7 @@ private:
     unsigned mIndexFromA1;
     /**
      * The index of this square on a chessboard counting from top left of the board
-     * INCLUDING borders.
+     * INCLUDING borders and arrows
      * Meaning that this index is zero in the border square top left of A8
      *
      * it is initialised to UINT_MAX in the constructor
@@ -59,7 +62,7 @@ private:
 
     /**
      * The index of this square on a chessboard counting from bottom right of the board
-     * INCLUDING borders.
+     * INCLUDING borders and arrows
      * Meaning that this index is zero in the border square bottom right of H1
      *
      * it is initialised to UINT_MAX in the constructor
@@ -69,7 +72,7 @@ private:
     /**Utility flag that tells whether this square is the bottom right corner of the border. False by default*/
     bool IsTheBottomRightCorner;
 
-    /**flag that stores whether this suqare can be highlighted or not. False by default*/
+    /**flag that stores whether this square can be highlighted or not. False by default*/
     bool mIshighlightable;
 
 public:
@@ -146,6 +149,14 @@ public:
     std::string GetRankAsString() const;
 
     /**
+     * Sets whether the square is intended for the movement arrows, outside the board
+     * access and modifies  mIsSquareForArrows
+     *
+     * @param forArrows whether or not the square is intended for the movement arrows
+     */
+    void SetAsSquareForArrows(bool forArrows = true);
+
+    /**
      * Sets this square as light (also puts the flag for dark square to false)
      *
      * @param light true if you want this square to be a light square
@@ -201,6 +212,18 @@ public:
      * @return true if the square is a corner square
      */
     bool IsCornerSquare() const;
+
+    /**
+     * Access method for mIsSquareForArrows
+     *
+     * @return true if the square is intended for the movement arrows
+     */
+    bool IsSquareForArrows() const;
+
+    /**
+     * Returns true if the square is not a border, not a corner and not for arrows
+     */
+    bool IsPlayableSquare() const;
 
     /**
      * Access method for the variable mIsLightSquare

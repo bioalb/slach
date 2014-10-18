@@ -6,7 +6,7 @@
 namespace slach
 {
 
-static const unsigned gChessBoardSizeWB = 100u;
+static const unsigned gChessBoardSizeWB = 110u;
 static const unsigned gChessBoardSize = 64u;
 static const unsigned gBoardRowSize = 8u;
 static const unsigned gBoardColumnSize = 8u;

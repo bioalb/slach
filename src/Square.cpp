@@ -1,5 +1,7 @@
 #include <climits>
 #include <cstdlib> //std div
+#include <cassert>
+#include <iostream>
 #include "Square.hpp"
 #include "Exception.hpp"
 
@@ -7,6 +9,7 @@ slach::Square::Square()
   : mFile('0'),
     mRank('0'),
     mIsBorderSquare(false),
+    mIsSquareForArrows(false),
 	mIsCornerSquare(false),
     mIsLightSquare(false),
     mIsDarkSquare(false),
@@ -68,9 +71,25 @@ bool slach::Square::IsDarkSquare() const
     return mIsDarkSquare;
 }
 
+void slach::Square::SetAsSquareForArrows(bool forArrows)
+{
+	mIsSquareForArrows = forArrows;
+}
+
+bool slach::Square::IsSquareForArrows() const
+{
+	return mIsSquareForArrows;
+}
+
+bool slach::Square::IsPlayableSquare() const
+{
+	bool ret = true;
+	if (mIsSquareForArrows || IsTheBottomRightCorner || mIsBorderSquare || mIsCornerSquare) ret = false;
+	return ret;
+}
 void slach::Square::SetFile(char file)
 {
-    if ( (file < 'a' || file >'h') && !(file=='0'))
+    if ( (file < 'a' || file >'h') && !(file=='0') && !(file=='r'))
     {
         EXCEPTION("slach::Square::SetFile: you must set one of a,b,c,d,e,f,g,h or 0 as character");
     }
@@ -80,8 +99,7 @@ void slach::Square::SetFile(char file)
 
 void slach::Square::SetRank(char rank)
 {
-
-    if ( (rank < '1' || rank >'8') && !(rank=='0'))
+    if ( (rank < '1' || rank >'8') && !(rank=='0') && !(rank=='r'))
     {
         EXCEPTION("slach::Square::SetRank: you must set one of 1,2,3,4,5,6,7,8 or 0 as character");
     }

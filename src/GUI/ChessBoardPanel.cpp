@@ -20,7 +20,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
       mpChessBoardWithBorders ( std::make_shared<slach::ChessBoardWithBorders>() ),
       mpChessBoard(nullptr),
       mNumberOfMovesFastForward(5u),
-      mpBoardGridSizer ( new wxFlexGridSizer(slach::gBoardRowSize+2,slach::gBoardColumnSize+2,0,0) ),
+      mpBoardGridSizer ( new wxFlexGridSizer(slach::gBoardRowSize+3,slach::gBoardColumnSize+2,0,0) ),
       mpPrincipalSizer ( new wxBoxSizer(wxVERTICAL) ),
       mpSizerForArrows ( new wxBoxSizer(wxHORIZONTAL) ),
       mpSpaceForArrows ( new wxPanel(this, ID_OF_ARROW_SPACE) ),
@@ -63,6 +63,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
     mpBoardGridSizer->AddGrowableRow(7,square_to_border_prop);
     mpBoardGridSizer->AddGrowableRow(8,square_to_border_prop);
     mpBoardGridSizer->AddGrowableRow(9,1);//border
+    mpBoardGridSizer->AddGrowableRow(10,1);//arrows
 
     LoadBoardImages();
 
@@ -325,28 +326,28 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
     int min_size;
 
     //which side is longer...
-    wxPoint central_point;
+    wxPoint cb_top_left;
     wxPoint start_of_arrows(0,0);
     if (panel_x > panel_y)
     {
-        min_size=panel_y - arrows_y;
-        central_point.x = 0.0;//*(panel_x - min_size)/2;
-        central_point.y = 0.0;
+        min_size=panel_y;// - arrows_y;
+        cb_top_left.x = 0.0;//*(panel_x - min_size)/2;
+        cb_top_left.y = 0.0;
 
-        start_of_arrows.x = central_point.x;
+        start_of_arrows.x = cb_top_left.x;
         start_of_arrows.y = 0.0;
         arrow_space_size.x = min_size;
     }
     else
     {
         min_size=panel_x;
-        central_point.x = 0.0;
-        central_point.y = panel_y - min_size - arrows_y;
+        cb_top_left.x = 0.0;
+        cb_top_left.y = panel_y - min_size - arrows_y;
     }
     //...now resize the chess board accordingly
     wxSize chessboard_size(min_size,min_size);
 
-    mpBoardGridSizer->SetDimension(central_point, chessboard_size);
+    mpBoardGridSizer->SetDimension(cb_top_left, chessboard_size);
     mpSizerForArrows->SetDimension(start_of_arrows, arrow_space_size);
 
     mCachedArrowsStartPoint = start_of_arrows;

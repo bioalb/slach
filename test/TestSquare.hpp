@@ -33,6 +33,8 @@ public:
         TS_ASSERT_EQUALS(sq1.GetIndexFromTopLeft(), UINT_MAX);
         TS_ASSERT_EQUALS(sq1.IsHighlightable(), false);
         TS_ASSERT_EQUALS(sq1.IstheBottomRightCorner(), false);
+        TS_ASSERT_EQUALS(sq1.IsSquareForArrows(), false);
+        TS_ASSERT_EQUALS(sq1.IsPlayableSquare(), true);
         TS_ASSERT_THROWS_THIS(sq1.GetRankAsInt(),
                 "slach::Square::GetRankAsInt the square index must be initialised before calling this method");
         TS_ASSERT_THROWS_THIS(sq1.GetFileAsInt(),
@@ -120,6 +122,9 @@ public:
         TS_ASSERT_EQUALS(sq1.IsCornerSquare(), true);
         sq1.SetAsPrintableCoordinates();
         TS_ASSERT_EQUALS(sq1.IsCoordinatePrintable(), true);
+        sq1.SetAsSquareForArrows(true);
+        TS_ASSERT_EQUALS(sq1.IsSquareForArrows(), true);
+        TS_ASSERT_EQUALS(sq1.IsPlayableSquare(), false);
 
         //coverage
         TS_ASSERT_THROWS_THIS(sq1.SetFile('p'),
@@ -132,6 +137,7 @@ public:
                 "slach::Square::SetRank: you must set one of 1,2,3,4,5,6,7,8 or 0 as character");
         TS_ASSERT_THROWS_NOTHING(sq1.SetRank('0'));
         TS_ASSERT_THROWS_NOTHING(sq1.SetFile('0'));
+        TS_ASSERT_THROWS_NOTHING(sq1.SetFile('r'));//for the arrows
     }
 
     void testSameSquare(void)

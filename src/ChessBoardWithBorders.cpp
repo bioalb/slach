@@ -8,9 +8,9 @@
 slach::ChessBoardWithBorders::ChessBoardWithBorders()
 	: mpChessBoard(std::make_shared<ChessBoard>())
 {
-    mChessBoardSizeWithBorders = 100u;//with border
+    mChessBoardSizeWithBorders = gChessBoardSizeWB;//with border
     std::vector<char> files = {'0' , 'a', 'b', 'c', 'd', 'e','f', 'g',  'h', '0'};
-    std::vector<char> ranks = {'0' , '1', '2', '3', '4', '5','6', '7',  '8', '0'};
+    std::vector<char> ranks = {'0' , '8', '7', '6', '5', '4', '3', '2', '1', '0'};
     unsigned file_size = files.size();
     unsigned rank_size = ranks.size();
 
@@ -30,28 +30,24 @@ slach::ChessBoardWithBorders::ChessBoardWithBorders()
     mpChessBoard->SetupChessBoard();
     mPlayableSquares = mpChessBoard->GetSquares();
 
-    unsigned row=rank_size-1;//row counter, start from the max as the loop starts from top left
-    unsigned column=0;//column counter
-    unsigned playable_sq_counter = 63 - file_size - 2;
+    unsigned playable_sq_counter = 56;//A8
     for (unsigned index = 0; index < mChessBoardSizeWithBorders; ++index)
     {
-        assert(row<ranks.size());
-        assert(column<files.size());
-        mSquares[index]->SetFile(files[column]);
-        mSquares[index]->SetRank(ranks[row]);
+    	std::div_t result = std::div(index,10);
+    	int col_index =  result.rem;
+    	int row_index = result.quot;
+    	//std::cout<<row_index<<std::endl;
+    	bool right_border = false;
+    	if (col_index > 8)
+    	{
+    		col_index = 0;
+    		right_border = true;
+    	}
 
-        column++;
-
-        if ( (column%file_size==0) )
-        {
-            row--;
-            column=0;
-            playable_sq_counter = 63 - (file_size - 2)*(9-row) + 1;
-        }
-
-        //first row at the top, a border
-        if (index < file_size)
-        {
+    	if (index < 10u) //top border
+    	{
+            mSquares[index]->SetFile(files[col_index]);
+            mSquares[index]->SetRank(ranks.back());
             if (index==0 || index == file_size-1)
             {
                 //corner square
@@ -64,21 +60,18 @@ slach::ChessBoardWithBorders::ChessBoardWithBorders()
                 mSquares[index]->SetAsBorderSquare(true);
                 mSquares[index]->SetAsCornerSquare(false);
             }
-        }
-        //all the other rows (ranks) before we hit to bottom border
-        else if (index < (gChessBoardSizeWB - (rank_size)))
-        {
-            //left border
-            if ( (index%(rank_size)==0)  )
+    	}
+    	else  if (index < 90u)//main board
+    	{
+    		mSquares[index]->SetFile(files[col_index]);
+    		mSquares[index]->SetRank(ranks[row_index]);
+            //borders
+            if ( col_index == 0)
             {
                 mSquares[index]->SetAsBorderSquare(true);
                 mSquares[index]->SetAsPrintableCoordinates(true);
-            }
-            //right borders
-            else if ( (index+1)%(rank_size)==0 )
-            {
-                mSquares[index]->SetAsBorderSquare(true);
-                mSquares[index]->SetAsPrintableCoordinates(false);
+				//right borders
+				if ( right_border ) mSquares[index]->SetAsPrintableCoordinates(false);
             }
             else //playable square
             {
@@ -88,17 +81,19 @@ slach::ChessBoardWithBorders::ChessBoardWithBorders()
                 delete mSquares[index];
                 mSquares[index] = mPlayableSquares[playable_sq_counter];
                 playable_sq_counter++;
+                if (std::div(playable_sq_counter,8).rem == 0)  playable_sq_counter -= 16;
             }
-
-        }
-        //last row at the bottom, a border
-        else
-        {
-            if (index==mChessBoardSizeWithBorders-rank_size || index == mChessBoardSizeWithBorders-1)
+    	}
+    	else if(index < 100) //bottom border
+    	{
+            mSquares[index]->SetFile(files[col_index]);
+            mSquares[index]->SetRank(ranks.back());
+            if (index==90u || index == 99u)
             {
                 //corner square
                 mSquares[index]->SetAsCornerSquare(true);
                 mSquares[index]->SetAsBorderSquare(true);
+                if (index == 99u) mSquares[index]->SetAsBottomRightCorner(true);
             }
             else
             {
@@ -107,8 +102,16 @@ slach::ChessBoardWithBorders::ChessBoardWithBorders()
                 mSquares[index]->SetAsCornerSquare(false);
                 mSquares[index]->SetAsPrintableCoordinates(true);
             }
-        }
+    	}
+    	else //bottom row with arrows
+    	{
+            mSquares[index]->SetFile(files[col_index]);
+            if ((index == 100) || (index == 109)) mSquares[index]->SetFile('r');
+            mSquares[index]->SetRank('r');
+            mSquares[index]->SetAsSquareForArrows(true);
+    	}
     }
+
 
     for (unsigned i = 0; i <mSquares.size(); ++i )
     {
@@ -116,15 +119,18 @@ slach::ChessBoardWithBorders::ChessBoardWithBorders()
         mSquares[i]->SetIndexFromBottomRight(mSquares.size() - 1 - i);
     }
 
-    unsigned index_from_white = mSquares.size() - 1;
-    for (unsigned i = 0; i < mSquaresFromBlackPerspective.size(); ++i)
+    unsigned index_from_white = 99u;
+    for (unsigned i = 0; i < 100; ++i)
     {
         assert(index_from_white <  mSquares.size());
         mSquaresFromBlackPerspective[i] = mSquares[index_from_white];
         index_from_white--;
     }
+    for (unsigned i = 100; i < 110; ++i)
+    {
+    	mSquaresFromBlackPerspective[i] = mSquares[i];
+    }
 
-    mSquares.back()->SetAsBottomRightCorner(true);
 }
 
 slach::ChessBoardWithBorders::~ChessBoardWithBorders()

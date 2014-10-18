@@ -9,13 +9,13 @@
 
 /**
  *
- * The class represents a chessboard with all the borders around.
+ * The class represents a chessboard with all the borders around it and an additional row at the bottom (intended for arrows).
  * The purpose of this class is to arrange squares and borders ready to be pushed into
  * gridsizers in the GUI.
  *
  * The data structure is one standard vector of squares objects.
  *
- * The indices go from 0 to 99. (64 playable squares plus 16 of borders).
+ * The indices go from 0 to 109. (64 playable squares plus 16 of borders plus 10 at the bottom for arrows).
  * A visual representation of the indices is as follows
  *
  * 0    1   2   3   4   5   6   7   8   9
@@ -28,6 +28,7 @@
  * 70   71  72  73  74  75  76  77  78  79
  * 80   81  82  83  84  85  86  87  88  89
  * 90   91  92  93  94  95  96  97  98  99
+ * 100  101 102 103 104 105 106 107 108 109
  *
  * with corresponding coordinates of squares (from white perspective):
  *
@@ -41,13 +42,16 @@
  * 02   A2  B2  C2  D2  E2  F2  G2  H2  02
  * 01   A1  B1  C1  D1  E1  F1  G1  H1  01
  * 00   A0  B0  C0  D0  E0  F0  G0  H0  00
+ * rr   Ar  Br  Cr  Dr  Er  Fr  Gr  Hr  rr
  *
- * where the coordinates are given as FILERANK.
+ * From black Perspective, everything is reversed except for the arrows.
+ *
+ * where the coordinates are given as FILERANK and  r is for arrows.
  * Note that the border squares have a "0" coordinate for their "meaningless"
  * coordinate, i.e, for the left and right borders, the file is meaningless
  * (it's out of the chessboard) but the rank is meaningful. Conversely,
  * for top and bottom borders, the rank is meaningless (0) but the file is meaningful.
- *
+ * For the arrows, the file may be meaningful (r is meaningless).
  *
  */
 
