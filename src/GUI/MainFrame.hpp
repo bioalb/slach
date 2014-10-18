@@ -52,7 +52,6 @@ private:
      */
     void OnAbout(wxCommandEvent& event);
 
-    wxDECLARE_EVENT_TABLE();
 };
 
 }//namespace slach_gui

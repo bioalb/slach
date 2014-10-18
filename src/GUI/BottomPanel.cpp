@@ -30,10 +30,17 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
     main_sizer->Add(right_side_sizer, 1, wxEXPAND );
 
     this->SetSizer(main_sizer, false);
-    mTimer.Start(1500);//every 1500 ms
+
 
     mNumberOfEngineLinesShown = 3;
     mpEngineInterface->SetNumberOfLinesToBeShown(mNumberOfEngineLinesShown);
+
+    this->Bind(wxEVT_CLOSE_WINDOW, &BottomPanel::OnClose, this);
+    this->Bind(wxEVT_SIZE, &BottomPanel::OnSize, this);
+    mpStartEngineButton->Bind(wxEVT_BUTTON, &BottomPanel::StartEngine, this);
+    mpStopEngineButton->Bind(wxEVT_BUTTON, &BottomPanel::StopEngine, this);
+    this->Connect(mTimer.GetId(),wxEVT_TIMER,wxTimerEventHandler( BottomPanel::UpdateEngineOutput ), NULL, this );
+    mTimer.Start(1500);//every 1500 ms
 }
 
 slach_gui::BottomPanel::~BottomPanel()
@@ -134,11 +141,3 @@ void slach_gui::BottomPanel::UpdateEngineOutput(wxTimerEvent& evt)
 	}
 	evt.Skip();
 }
-
-wxBEGIN_EVENT_TABLE(slach_gui::BottomPanel, wxPanel)
-    EVT_CLOSE(slach_gui::BottomPanel::OnClose)
-    EVT_SIZE(slach_gui::BottomPanel::OnSize)
-    EVT_BUTTON(1, slach_gui::BottomPanel::StartEngine)
-    EVT_BUTTON(2, slach_gui::BottomPanel::StopEngine)
-    EVT_TIMER(1, slach_gui::BottomPanel::UpdateEngineOutput)
-wxEND_EVENT_TABLE()

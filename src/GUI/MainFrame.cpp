@@ -33,6 +33,10 @@ slach_gui::MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const
     v_sizer->Add(mpCentralPanel, 7, wxEXPAND);
     v_sizer->Add(mpBottomPanel, 1, wxEXPAND);
     this->SetSizer(v_sizer);
+
+    //Bind menu events
+    this->Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnExit, this, wxID_EXIT);
+    this->Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::OnAbout, this, wxID_ABOUT);
 }
 
 void slach_gui::MainFrame::UpdateChessPositionForEngine(slach::Position* pPosition)
@@ -57,7 +61,3 @@ void slach_gui::MainFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
     wxT("About Slach"), wxOK | wxICON_INFORMATION );
 }
 
-wxBEGIN_EVENT_TABLE(slach_gui::MainFrame, wxFrame)
-    EVT_MENU(wxID_EXIT,  slach_gui::MainFrame::OnExit)
-    EVT_MENU(wxID_ABOUT, slach_gui::MainFrame::OnAbout)
-wxEND_EVENT_TABLE()

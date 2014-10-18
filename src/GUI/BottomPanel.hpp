@@ -58,7 +58,6 @@ public:
     void DoStartEngine();
     //public as main frame will call this
     void DoStopEngine();
-    wxDECLARE_EVENT_TABLE();
 };
 
 } //namespace slach_gui
