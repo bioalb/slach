@@ -6,7 +6,6 @@
 #include <wx/wx.h>
 #endif
 #include "BottomPanel.hpp"
-#include "RightPanel.hpp"
 #include "CentralPanel.hpp"
 #include "Colours.hpp"
 
@@ -29,7 +28,6 @@ public:
 
     ~MainFrame();
 
-    RightPanel* mpRightPanel;
     BottomPanel* mpBottomPanel;
     CentralPanel* mpCentralPanel;
 

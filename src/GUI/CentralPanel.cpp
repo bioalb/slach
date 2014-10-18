@@ -30,7 +30,7 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     mpChessBoard = mpChessBoardPanel->GetChessBoard();
 
     //Arrange the panels
-    mpPrincipalSizer->Add(mpChessBoardPanel, 4, wxEXPAND | wxALL);
+    mpPrincipalSizer->Add(mpChessBoardPanel, 1.2, wxEXPAND | wxALL);
     mpPrincipalSizer->Add(mpRightOfChessBoard, 1, wxEXPAND | wxALL);
     this->SetSizer(mpPrincipalSizer, false);
 
@@ -90,6 +90,12 @@ slach_gui::CentralPanel::~CentralPanel()
 
 }
 
+void slach_gui::CentralPanel::OnSize(wxSizeEvent& event)
+{
+    Refresh();
+    //skip the event. Needed as per wxWdigets documentation
+    event.Skip();
+}
 
 void slach_gui::CentralPanel::LoadFen (wxCommandEvent& WXUNUSED(event))
 {
@@ -191,12 +197,7 @@ void slach_gui::CentralPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
 }
 
 
-void slach_gui::CentralPanel::OnSize(wxSizeEvent& event)
-{
-    Refresh();
-    //skip the event. Needed as per wxWdigets documentation
-    event.Skip();
-}
+
 
 void slach_gui::CentralPanel::ArrowKeyMovement(wxKeyEvent& event)
 {

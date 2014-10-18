@@ -25,19 +25,14 @@ slach_gui::MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const
 
     this->SetBackgroundColour(wxT("red"));
 
-    mpRightPanel = new RightPanel(this);
     mpBottomPanel = new BottomPanel(this);
     mpCentralPanel = new CentralPanel(this);
     mpBottomPanel->SetMinSize(wxSize(50, 20));
-    wxBoxSizer* h_sizer = new wxBoxSizer(wxHORIZONTAL);
 
     wxBoxSizer* v_sizer = new wxBoxSizer(wxVERTICAL);
-    v_sizer->Add(mpCentralPanel, 5, wxEXPAND);
+    v_sizer->Add(mpCentralPanel, 7, wxEXPAND);
     v_sizer->Add(mpBottomPanel, 1, wxEXPAND);
-
-    h_sizer->Add(v_sizer,4,wxEXPAND);
-    h_sizer->Add(mpRightPanel, 1, wxEXPAND);
-    this->SetSizer(h_sizer);
+    this->SetSizer(v_sizer);
 }
 
 void slach_gui::MainFrame::UpdateChessPositionForEngine(slach::Position* pPosition)

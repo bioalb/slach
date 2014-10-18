@@ -330,7 +330,7 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
     if (panel_x > panel_y)
     {
         min_size=panel_y - arrows_y;
-        central_point.x = (panel_x - min_size)/2;
+        central_point.x = 0.0;//*(panel_x - min_size)/2;
         central_point.y = 0.0;
 
         start_of_arrows.x = central_point.x;
@@ -351,6 +351,7 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
 
     mCachedArrowsStartPoint = start_of_arrows;
     mCachedArrowSpace = arrow_space_size;
+
     event.Skip();
 }
 
