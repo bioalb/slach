@@ -8,6 +8,7 @@
 #include <wx/textctrl.h>
 #include <wx/richtext/richtextctrl.h>
 #include <vector>
+#include <memory>
 #include "IDContainer.hpp"
 #include "ChessBoardWithBorders.hpp"
 
@@ -35,10 +36,10 @@ private:
     std::vector<wxPanel* > mSquarePanels;
     /** Stores the square objects of the chessboard*/
     std::vector<slach::Square* > mpAllSquares;
-    /** stores the underlying chessbpard */
-    slach::ChessBoardWithBorders* mpChessBoardWithBorders;
+    /** stores the underlying chessboard */
+    std::shared_ptr<slach::ChessBoardWithBorders> mpChessBoardWithBorders;
     /** Stores the playable part of the underlying chessboard */
-    slach::ChessBoard* mpChessBoard;
+    std::shared_ptr<slach::ChessBoard> mpChessBoard;
     /**this is the number of half moves that the "fast forward" arrow will move (also fast backward arrow)*/
     unsigned mNumberOfMovesFastForward;
     /** cache of the gridsizer that organizes the board*/
@@ -245,7 +246,7 @@ public:
     /**
      * Provide access to the underlying playable chessboard object.
      */
-    slach::ChessBoard* GetChessBoard();
+    std::shared_ptr<slach::ChessBoard> GetChessBoard();
 
     /**
      * Resizing method. It figures out the new size and resize everything accordingly.

@@ -8,6 +8,7 @@
 #include <wx/textctrl.h>
 #include <wx/richtext/richtextctrl.h>
 #include <vector>
+#include <memory>
 #include "IDContainer.hpp"
 #include "Colours.hpp"
 #include "ChessBoardPanel.hpp"
@@ -35,7 +36,7 @@ private:
     wxPanel* mpRightOfChessBoard;
 
 
-    slach::ChessBoard* mpChessBoard;
+    std::shared_ptr<slach::ChessBoard> mpChessBoard;
 
     /**Panels on the RHS of the board*/
     wxRichTextCtrl* mpSpaceForMoveList;

@@ -17,7 +17,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
       mpParent(parent),
       mIamTheMainBoard(true),
       mPngPieceDirectory("src/GUI/bitmaps/pieces/png/"),
-      mpChessBoardWithBorders ( new slach::ChessBoardWithBorders() ),
+      mpChessBoardWithBorders ( std::make_shared<slach::ChessBoardWithBorders>() ),
       mpChessBoard(nullptr),
       mNumberOfMovesFastForward(5u),
       mpBoardGridSizer ( new wxFlexGridSizer(slach::gBoardRowSize+2,slach::gBoardColumnSize+2,0,0) ),
@@ -150,7 +150,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
 
 slach_gui::ChessBoardPanel::~ChessBoardPanel()
 {
-    delete mpChessBoardWithBorders;
+
 }
 
 void slach_gui::ChessBoardPanel::SetAsMainBoard(bool flag)
@@ -811,7 +811,7 @@ void slach_gui::ChessBoardPanel::PaintOnBorder(wxPaintDC& dc, unsigned squareInd
     }
 }
 
-slach::ChessBoard* slach_gui::ChessBoardPanel::GetChessBoard()
+std::shared_ptr<slach::ChessBoard> slach_gui::ChessBoardPanel::GetChessBoard()
 {
     return mpChessBoard;
 }

@@ -6,6 +6,7 @@
 #include "ChessBoardWithBorders.hpp"
 
 slach::ChessBoardWithBorders::ChessBoardWithBorders()
+	: mpChessBoard(std::make_shared<ChessBoard>())
 {
     mChessBoardSizeWithBorders = 100u;//with border
     std::vector<char> files = {'0' , 'a', 'b', 'c', 'd', 'e','f', 'g',  'h', '0'};
@@ -14,7 +15,6 @@ slach::ChessBoardWithBorders::ChessBoardWithBorders()
     unsigned rank_size = ranks.size();
 
     //create the 64 squares playable chessboard
-    mpChessBoard = new ChessBoard();
     mpChessBoard->SetupChessBoard();
 
     //allocate memory for the vectors
@@ -136,7 +136,6 @@ slach::ChessBoardWithBorders::~ChessBoardWithBorders()
             delete mSquares[i];
         }
     }
-    delete mpChessBoard;
 }
 
 std::vector<slach::Square* > slach::ChessBoardWithBorders::GetSquares() const
@@ -149,7 +148,7 @@ std::vector<slach::Square* > slach::ChessBoardWithBorders::GetSquaresBlackPerspe
     return mSquaresFromBlackPerspective;
 }
 
-slach::ChessBoard* slach::ChessBoardWithBorders::GetPlayableChessBoard() const
+std::shared_ptr<slach::ChessBoard> slach::ChessBoardWithBorders::GetPlayableChessBoard() const
 {
     return mpChessBoard;
 }

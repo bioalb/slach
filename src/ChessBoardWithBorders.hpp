@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 #include "Square.hpp"
 #include "ChessBoard.hpp"
 
@@ -69,7 +70,7 @@ private:
     std::vector<Square* > mPlayableSquares;
 
     /**the underlying playable chassboard (64 squares, no borders)*/
-    ChessBoard* mpChessBoard;
+    std::shared_ptr<ChessBoard> mpChessBoard;
 
 public:
 
@@ -106,7 +107,7 @@ public:
      * Access method for the underlying playable (no border) square
      * (mpChessBoard)
      */
-    ChessBoard* GetPlayableChessBoard() const;
+    std::shared_ptr<ChessBoard> GetPlayableChessBoard() const;
 
 
 };
