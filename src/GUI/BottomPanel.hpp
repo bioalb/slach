@@ -7,6 +7,7 @@
 #include <wx/textctrl.h>
 #include <wx/richtext/richtextctrl.h>
 #include <wx/button.h>
+#include <memory>
 #include "UCIEngineInterface.hpp"
 #include "Colours.hpp"
 
@@ -17,7 +18,7 @@ class BottomPanel : public wxPanel
 {
 protected:
 
-    slach::UCIEngineInterface* mpEngineInterface;
+    std::shared_ptr<slach::UCIEngineInterface> mpEngineInterface;
     unsigned mNumberOfEngineLinesShown;
     slach::Position* mpPosition;
     wxButton* mpStartEngineButton;

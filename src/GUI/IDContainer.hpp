@@ -13,7 +13,6 @@ static const int ID_BACKWARD_MORE_BUTTON = 58;
 static const int ID_FORWARD_END_BUTTON = 59;
 static const int ID_BACKWARD_END_BUTTON = 60;
 static const int ID_DUMMY_AFTER_LAST_ARROW = 61;
-static const int ID_OF_GAME_INFO_BOX = 62;
 static const int ID_OF_MOVE_LIST_SPACE = 64;
 static const int OFFSET_OF_MOVE_LIST_ID = 1100;
 static const int OFFSET_OF_MOVE_NUMBER_ID = 1300;

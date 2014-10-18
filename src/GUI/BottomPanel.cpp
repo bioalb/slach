@@ -4,7 +4,7 @@
 
 slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent,-1, pos,size),
-      mpEngineInterface  (new slach::UCIEngineInterface() ),
+      mpEngineInterface  (std::make_shared<slach::UCIEngineInterface>() ),
       mNumberOfEngineLinesShown(1),
       mpPosition ( new slach::Position() ),
       mpStartEngineButton ( new wxButton(this, 1, wxT("Start Engine"),wxDefaultPosition, wxDefaultSize) ),
@@ -45,7 +45,6 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
 
 slach_gui::BottomPanel::~BottomPanel()
 {
-    delete mpEngineInterface;
 }
 
 void slach_gui::BottomPanel::OnSize(wxSizeEvent& event)

@@ -47,10 +47,7 @@ private:
 
     wxPanel* mpButtonsBelowMoveList;
 
-    /**Text control for the players' names*/
-    wxTextCtrl * mpGameInfoBox;
-
-    wxTextAttr mTextAttributesPlayerNames;
+    wxRichTextAttr mTextAttributesPlayerNames;
     wxTextAttr mTextAttributesMoveList;
     wxTextAttr mTextAttributeMoveNumber;
     wxTextAttr mTextAttributesMoveListHighlighted;

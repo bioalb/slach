@@ -35,18 +35,16 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     this->SetSizer(mpPrincipalSizer, false);
 
     //divide the section on the RHS of the board
-    mpGameInfoBox = new wxTextCtrl(mpRightOfChessBoard, ID_OF_GAME_INFO_BOX, wxT(""), wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxTE_MULTILINE);
     mpButtonsBelowMoveList =  new wxPanel(mpRightOfChessBoard, ID_RIGHT_OF_BOARD_BUTTONS);
 	mpSpaceForMoveList->SetBackgroundColour(*wxWHITE);
 
-    mpRightSideSizer->Add(mpGameInfoBox, 2, wxEXPAND);
-    mpRightSideSizer->Add(mpSpaceForMoveList, 7, wxALL|wxGROW);
+    mpRightSideSizer->Add(mpSpaceForMoveList, 9, wxALL|wxGROW);
     mpRightSideSizer->Add(mpButtonsBelowMoveList,1,wxEXPAND);
     mpRightOfChessBoard->SetSizer(mpRightSideSizer, true);
 
     //Bind the size event
     mpRightOfChessBoard->Bind(wxEVT_SIZE, &CentralPanel::OnSize, this);
-    //bind teh functionalities in the move list area
+    //bind the functionalities in the move list area
     mpSpaceForMoveList->Bind(wxEVT_RICHTEXT_LEFT_CLICK, &CentralPanel::OnClickOnMoveList, this);
 
     wxButton* pgn_button  = new wxButton(mpButtonsBelowMoveList, 1, wxT("Pgn..."),wxDefaultPosition, wxDefaultSize);
@@ -54,8 +52,10 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     wxButton* fen_button  = new wxButton(mpButtonsBelowMoveList, 3, wxT("Fen..."),wxDefaultPosition, wxDefaultSize);
     fen_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &CentralPanel::LoadFen, this);
     wxBoxSizer* sizer_for_buttons = new wxBoxSizer(wxHORIZONTAL);
+    wxPanel* filler = new wxPanel(mpButtonsBelowMoveList,4);
     sizer_for_buttons->Add(pgn_button, 1, wxEXPAND);
     sizer_for_buttons->Add(fen_button, 1, wxEXPAND);
+    sizer_for_buttons->Add(filler, 7, wxEXPAND);
     mpButtonsBelowMoveList->SetSizer(sizer_for_buttons);
 
 
@@ -74,14 +74,9 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
                                           Colours::Instance()->mHighlightedMove,
                                           wxFont(wxFontInfo(14).FaceName("Helvetica").Bold()));
 
-    mTextAttributeMoveNumber = wxTextAttr(Colours::Instance()->mMoveListTextColour,
-                                         wxNullColour,
-                                         wxFont(wxFontInfo(14).FaceName("Helvetica")));
-
-    mpGameInfoBox->SetDefaultStyle(mTextAttributesPlayerNames);
 
     mpSpaceForMoveList->SetEditable(false);
-    mpSpaceForMoveList->SetDefaultStyle(mTextAttributeMoveNumber);
+    //mpSpaceForMoveList->SetDefaultStyle(mTextAttributeMoveNumber);
     mpSpaceForMoveList->SetTextCursor(*wxSTANDARD_CURSOR);
 }
 
@@ -141,16 +136,20 @@ void slach_gui::CentralPanel::LoadPgnFile(wxCommandEvent& WXUNUSED(event))
         {
             mMoveListRanges.clear();
             mpSpaceForMoveList->Clear();
-            mpGameInfoBox->Clear();
             mIndexOfHighlightedMove = -1;
             wxString name_of_white_player_wx(name_of_white_player);
             wxString name_of_black_player_wx(name_of_black_player);
             mWhitePlayerName = name_of_white_player_wx;
             mBlackPlayerName = name_of_black_player_wx;
-            mpGameInfoBox->AppendText(wxT("White: "));
-            mpGameInfoBox->AppendText(mWhitePlayerName);
-            mpGameInfoBox->AppendText(wxT("\nBlack: "));
-            mpGameInfoBox->AppendText(mBlackPlayerName);
+            long before_players = mpSpaceForMoveList->GetInsertionPoint();
+            mpSpaceForMoveList->AppendText(wxT("White: "));
+            mpSpaceForMoveList->AppendText(mWhitePlayerName);
+            mpSpaceForMoveList->LineBreak();
+            mpSpaceForMoveList->AppendText(wxT("Black: "));
+            mpSpaceForMoveList->AppendText(mBlackPlayerName);
+            mpSpaceForMoveList->LineBreak();
+            wxRichTextRange range(before_players, mpSpaceForMoveList->GetInsertionPoint());
+            mpSpaceForMoveList->SetStyleEx(range, mTextAttributesPlayerNames,wxRICHTEXT_SETSTYLE_RESET);
 
             std::vector<slach::Move> move_list = mpChessBoard->GetGame()->GetMoveList();
             std::vector<std::string > move_list_san = mpChessBoard->GetGame()->GetMoveListAlgebraicFormat();
