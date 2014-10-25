@@ -356,9 +356,9 @@ public:
 
     /**
      * Sets the member variable mIsTheBottomRightCorner.
-     * Use this method to flag this square as the btoom right corner
+     * Use this method to flag this square as the bottom right corner
      *
-     * @param brsc true if you want this squarte to be the bottom right corner.
+     * @param brc true if you want this square to be the bottom right corner.
      */
     void SetAsBottomRightCorner(bool brc = true);
 

@@ -130,7 +130,6 @@ slach::ChessBoardWithBorders::ChessBoardWithBorders()
     {
     	mSquaresFromBlackPerspective[i] = mSquares[i];
     }
-
 }
 
 slach::ChessBoardWithBorders::~ChessBoardWithBorders()
@@ -146,11 +145,15 @@ slach::ChessBoardWithBorders::~ChessBoardWithBorders()
 
 std::vector<slach::Square* > slach::ChessBoardWithBorders::GetSquares() const
 {
+	mSquares[0]->SetAsBottomRightCorner(false);
+	mSquares[99]->SetAsBottomRightCorner(true);
     return mSquares;
 }
 
 std::vector<slach::Square* > slach::ChessBoardWithBorders::GetSquaresBlackPerspective() const
 {
+	mSquaresFromBlackPerspective[0]->SetAsBottomRightCorner(false);
+	mSquaresFromBlackPerspective[99]->SetAsBottomRightCorner(true);
     return mSquaresFromBlackPerspective;
 }
 

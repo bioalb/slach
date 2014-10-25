@@ -414,6 +414,7 @@ public:
         TS_ASSERT_EQUALS(squares[0]->GetFile(), '0');
         TS_ASSERT_EQUALS(squares[0]->GetRank(), '0');
         TS_ASSERT_EQUALS(squares[0]->IsCoordinatePrintable(), false);
+        TS_ASSERT_EQUALS(squares[0]->IstheBottomRightCorner(), false);
 
         //check the top border
         std::vector<char> files = {'0' , 'a', 'b', 'c', 'd', 'e','f', 'g',  'h', '0'};
@@ -519,9 +520,6 @@ public:
         TS_ASSERT_EQUALS(squares[19]->GetFile(), '0');
         TS_ASSERT_EQUALS(squares[19]->GetRank(), '1');
         TS_ASSERT_EQUALS(squares[19]->IsCoordinatePrintable(), true);
-
-
-
 
         //////
         // 2nd rank, from top
@@ -719,7 +717,7 @@ public:
         TS_ASSERT_EQUALS(squares[99]->GetFile(), '0');
         TS_ASSERT_EQUALS(squares[99]->GetRank(), '0');
         TS_ASSERT_EQUALS(squares[99]->IsCoordinatePrintable(), false);
-        TS_ASSERT_EQUALS(squares[99]->IstheBottomRightCorner(), false);
+        TS_ASSERT_EQUALS(squares[99]->IstheBottomRightCorner(), true);
 
         //check arrows row, same as white's perspective
         TS_ASSERT_EQUALS(squares[100]->IsSquareForArrows(), true);

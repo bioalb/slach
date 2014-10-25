@@ -22,7 +22,6 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
       mNumberOfMovesFastForward(5u),
       mpBoardGridSizer ( new wxFlexGridSizer(slach::gBoardRowSize+3,slach::gBoardColumnSize+2,0,0) ),
       mpPrincipalSizer ( new wxBoxSizer(wxVERTICAL) ),
-      mpSizerForArrows ( new wxBoxSizer(wxHORIZONTAL) ),
       mpSpaceForArrows ( new wxPanel(this, ID_OF_ARROW_SPACE) ),
       mpSpaceForActualBoard (  new wxPanel(this, ID_OF_BOARD_SPACE) ),
       mDrawPiece(true),
@@ -73,80 +72,40 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
     mpAllSquares = mpChessBoardWithBorders->GetSquares();
 
     assert(mpAllSquares.size() == mSquarePanels.size());
+
     for (unsigned i = 0; i < mpAllSquares.size(); ++i)
     {
         mSquarePanels[i] = new wxPanel( mpSpaceForActualBoard, /*ID*/ (int) i );
         mpBoardGridSizer->Add(mSquarePanels[i], 0, wxEXPAND | wxALL);
-        //bind the paint event
-        mSquarePanels[i]->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnSquare, this);
-        if (mpAllSquares[i]->IsBorderSquare() == false)
+
+        if (mpAllSquares[i]->IsSquareForArrows() == false)
         {
-        	mSquarePanels[i]->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::LeftMouseClick, this);
-        	mSquarePanels[i]->Bind(wxEVT_MOTION, &ChessBoardPanel::LeftMouseClick, this);
-        	mSquarePanels[i]->Bind(wxEVT_LEFT_UP, &ChessBoardPanel::LeftMouseRelease, this);
+			//bind the paint event
+			mSquarePanels[i]->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnSquare, this);
+			if (mpAllSquares[i]->IsPlayableSquare() == true)
+			{
+				mSquarePanels[i]->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::LeftMouseClick, this);
+				mSquarePanels[i]->Bind(wxEVT_MOTION, &ChessBoardPanel::LeftMouseClick, this);
+				mSquarePanels[i]->Bind(wxEVT_LEFT_UP, &ChessBoardPanel::LeftMouseRelease, this);
+			}
+			if (mpAllSquares[i]->IstheBottomRightCorner())
+			{
+				mSquarePanels[i]->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::FlipView, this);
+				mSquarePanels[i] -> SetBackgroundColour(Colours::Instance()->mFlipViewBoxBackground);
+			}
         }
-        if (mpAllSquares[i]->IstheBottomRightCorner())
+        else //arrows
         {
-            mSquarePanels[i]->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::FlipView, this);
-            mSquarePanels[i] -> SetBackgroundColour(Colours::Instance()->mFlipViewBoxBackground);
+        	mSquarePanels[i]->Bind(wxEVT_PAINT,&ChessBoardPanel::PaintArrows, this);
+        	mSquarePanels[i]->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
+            //Bind the colouring of the arrows as mouse enters or leave
+        	mSquarePanels[i]->Bind(wxEVT_ENTER_WINDOW, &ChessBoardPanel::OnMouseEnteringArrowPanel, this);
+        	mSquarePanels[i]->Bind(wxEVT_LEAVE_WINDOW, &ChessBoardPanel::OnMouseLeavingArrowPanel, this);
+        	mSquarePanels[i]->SetBackgroundColour (Colours::Instance()->mArrowBackground);
         }
     }
     mpSpaceForActualBoard->SetSizer(mpBoardGridSizer);
-
-    mpForwardArrowPanel  = new wxPanel(mpSpaceForArrows, ID_FORWARD_BUTTON);
-    mpForwardArrowPanelMore  = new wxPanel(mpSpaceForArrows, ID_FORWARD_MORE_BUTTON);
-    mpForwardArrowPanelEnd  = new wxPanel(mpSpaceForArrows, ID_FORWARD_END_BUTTON);
-    mpBackwardArrowPanel  = new wxPanel(mpSpaceForArrows, ID_BACKWARD_BUTTON);
-    mpBackwardArrowPanelMore  = new wxPanel(mpSpaceForArrows, ID_BACKWARD_MORE_BUTTON);
-    mpBackwardArrowPanelEnd  = new wxPanel(mpSpaceForArrows, ID_BACKWARD_END_BUTTON);
-    mpDummyPanelAfterLastArrow = new wxPanel(mpSpaceForArrows, ID_DUMMY_AFTER_LAST_ARROW);
-    mpDummyPanelAfterLastArrow->SetBackgroundColour(*wxWHITE);
-    mpSizerForArrows->Add(mpBackwardArrowPanelEnd,1.0, wxEXPAND | wxALL);
-    mpSizerForArrows->Add(mpBackwardArrowPanelMore,1.0, wxEXPAND | wxALL);
-    mpSizerForArrows->Add(mpBackwardArrowPanel,1.0, wxEXPAND | wxALL);
-    mpSizerForArrows->Add(mpForwardArrowPanel,1.0, wxEXPAND | wxALL);
-    mpSizerForArrows->Add(mpForwardArrowPanelMore,1.0, wxEXPAND | wxALL);
-    mpSizerForArrows->Add(mpForwardArrowPanelEnd,1.0, wxEXPAND | wxALL);
-    mpSizerForArrows->Add(mpDummyPanelAfterLastArrow,4.0, wxEXPAND | wxALL);
-    mpSpaceForArrows->SetSizer(mpSizerForArrows);
-
-    //BIND THE CLICKS ON THE ARROWS and the keys
-    mpForwardArrowPanel->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
-    mpForwardArrowPanelMore->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
-    mpForwardArrowPanelEnd->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
-    mpBackwardArrowPanel->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
-    mpBackwardArrowPanelMore->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
-    mpBackwardArrowPanelEnd->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
-
-    //Bind the colouring of the arrows as mouse enters or leave
-    mpForwardArrowPanel->Bind(wxEVT_ENTER_WINDOW, &ChessBoardPanel::OnMouseEnteringArrowPanel, this);
-    mpForwardArrowPanel->Bind(wxEVT_LEAVE_WINDOW, &ChessBoardPanel::OnMouseLeavingArrowPanel, this);
-    mpForwardArrowPanelMore->Bind(wxEVT_ENTER_WINDOW, &ChessBoardPanel::OnMouseEnteringArrowPanel, this);
-    mpForwardArrowPanelMore->Bind(wxEVT_LEAVE_WINDOW, &ChessBoardPanel::OnMouseLeavingArrowPanel, this);
-    mpForwardArrowPanelEnd->Bind(wxEVT_ENTER_WINDOW, &ChessBoardPanel::OnMouseEnteringArrowPanel, this);
-    mpForwardArrowPanelEnd->Bind(wxEVT_LEAVE_WINDOW, &ChessBoardPanel::OnMouseLeavingArrowPanel, this);
-    mpBackwardArrowPanel->Bind(wxEVT_ENTER_WINDOW, &ChessBoardPanel::OnMouseEnteringArrowPanel, this);
-    mpBackwardArrowPanel->Bind(wxEVT_LEAVE_WINDOW, &ChessBoardPanel::OnMouseLeavingArrowPanel, this);
-    mpBackwardArrowPanelMore->Bind(wxEVT_ENTER_WINDOW, &ChessBoardPanel::OnMouseEnteringArrowPanel, this);
-    mpBackwardArrowPanelMore->Bind(wxEVT_LEAVE_WINDOW, &ChessBoardPanel::OnMouseLeavingArrowPanel, this);
-    mpBackwardArrowPanelEnd->Bind(wxEVT_ENTER_WINDOW, &ChessBoardPanel::OnMouseEnteringArrowPanel, this);
-    mpBackwardArrowPanelEnd->Bind(wxEVT_LEAVE_WINDOW, &ChessBoardPanel::OnMouseLeavingArrowPanel, this);
-
     mpSpaceForActualBoard->Bind(wxEVT_SIZE, &ChessBoardPanel::OnSize, this);
-    mpSpaceForArrows->Bind(wxEVT_SIZE, &ChessBoardPanel::OnSize, this);
-    mpForwardArrowPanel->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintArrows, this);
-    mpForwardArrowPanelMore->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintArrows, this);
-    mpForwardArrowPanelEnd->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintArrows, this);
-    mpBackwardArrowPanel->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintArrows, this);
-    mpBackwardArrowPanelMore->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintArrows, this);
-    mpBackwardArrowPanelEnd->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintArrows, this);
-
-    mpBackwardArrowPanelEnd->SetBackgroundColour (Colours::Instance()->mArrowBackground);
-    mpBackwardArrowPanelMore->SetBackgroundColour (Colours::Instance()->mArrowBackground);
-    mpBackwardArrowPanel->SetBackgroundColour (Colours::Instance()->mArrowBackground);
-    mpForwardArrowPanel->SetBackgroundColour (Colours::Instance()->mArrowBackground);
-    mpForwardArrowPanelMore->SetBackgroundColour (Colours::Instance()->mArrowBackground);
-    mpForwardArrowPanelEnd->SetBackgroundColour (Colours::Instance()->mArrowBackground);
 }
 
 slach_gui::ChessBoardPanel::~ChessBoardPanel()
@@ -178,8 +137,6 @@ void slach_gui::ChessBoardPanel::DoFlipView()
         mPerspectiveIsFromWhite = true;
     }
 
-    mpAllSquares.back()->SetAsBottomRightCorner(true);
-    mpAllSquares.front()->SetAsBottomRightCorner(false);
     mpBoardGridSizer->Layout();
     this->Refresh();
 }
@@ -348,7 +305,6 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
     wxSize chessboard_size(min_size,min_size);
 
     mpBoardGridSizer->SetDimension(cb_top_left, chessboard_size);
-    mpSizerForArrows->SetDimension(start_of_arrows, arrow_space_size);
 
     mCachedArrowsStartPoint = start_of_arrows;
     mCachedArrowSpace = arrow_space_size;
@@ -451,16 +407,13 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
 {
     int generating_id = ((wxPanel*) event.GetEventObject())->GetId();
 
-    mpSizerForArrows->SetDimension(mCachedArrowsStartPoint, mCachedArrowSpace);
-    mpSizerForArrows->Layout();
-
     double margin_x_dir = 0.3;//fractional margin between arrow and border of panel, x direction
     double margin_y_dir = 0.1;//fractional margin between arrow and border of panel, y direction
-    double double_arrow_offset = 0.5;//fractional offset for doublw arrows
+    double double_arrow_offset = 0.5;//fractional offset for double arrows
     if (generating_id == ID_BACKWARD_END_BUTTON)
     {
-        wxPaintDC dcBE(mpBackwardArrowPanelEnd);
-        wxSize panel_size = mpSizerForArrows->GetItem(mpBackwardArrowPanelEnd)->GetSize();
+        wxPaintDC dcBE(mSquarePanels[ID_BACKWARD_END_BUTTON]);
+        wxSize panel_size = mpBoardGridSizer->GetItem(mSquarePanels[ID_BACKWARD_END_BUTTON])->GetSize();
         int origin_y = panel_size.y*0.5;
         int origin_x = panel_size.x*margin_x_dir;
 
@@ -477,8 +430,8 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
     }
     else if (generating_id == ID_BACKWARD_MORE_BUTTON)
     {
-        wxPaintDC dcBM(mpBackwardArrowPanelMore);
-        wxSize panel_size = mpSizerForArrows->GetItem(mpBackwardArrowPanelMore)->GetSize();
+        wxPaintDC dcBM(mSquarePanels[ID_BACKWARD_MORE_BUTTON]);
+        wxSize panel_size = mpBoardGridSizer->GetItem(mSquarePanels[ID_BACKWARD_MORE_BUTTON])->GetSize();
         int origin_y = panel_size.y/2;
         int origin_x = panel_size.x*margin_x_dir;
 
@@ -495,8 +448,8 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
     }
     else if (generating_id == ID_BACKWARD_BUTTON)
     {
-        wxPaintDC dcBACK(mpBackwardArrowPanel);
-        wxSize panel_size = mpSizerForArrows->GetItem(mpBackwardArrowPanel)->GetSize();
+        wxPaintDC dcBACK(mSquarePanels[ID_BACKWARD_BUTTON]);
+        wxSize panel_size = mpBoardGridSizer->GetItem(mSquarePanels[ID_BACKWARD_BUTTON])->GetSize();
         int origin_y = panel_size.y/2;
         int origin_x = panel_size.x*margin_x_dir;
 
@@ -509,8 +462,8 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
     }
     else if (generating_id == ID_FORWARD_BUTTON)
     {
-        wxPaintDC dcFOR(mpForwardArrowPanel);
-        wxSize panel_size = mpSizerForArrows->GetItem(mpForwardArrowPanel)->GetSize();
+        wxPaintDC dcFOR(mSquarePanels[ID_FORWARD_BUTTON]);
+        wxSize panel_size = mpBoardGridSizer->GetItem(mSquarePanels[ID_FORWARD_BUTTON])->GetSize();
         int origin_y = panel_size.y/2;
         int origin_x = panel_size.x*margin_x_dir;
 
@@ -523,8 +476,8 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
     }
     else if (generating_id == ID_FORWARD_MORE_BUTTON)
     {
-        wxPaintDC dcFM(mpForwardArrowPanelMore);
-        wxSize panel_size = mpSizerForArrows->GetItem(mpForwardArrowPanelMore)->GetSize();
+        wxPaintDC dcFM(mSquarePanels[ID_FORWARD_MORE_BUTTON]);
+        wxSize panel_size = mpBoardGridSizer->GetItem(mSquarePanels[ID_FORWARD_MORE_BUTTON])->GetSize();
         int origin_y = panel_size.y/2;
         int origin_x = panel_size.x*margin_x_dir;
 
@@ -541,8 +494,8 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
     }
     else if ( generating_id == ID_FORWARD_END_BUTTON)
     {
-        wxPaintDC dcFE(mpForwardArrowPanelEnd);
-        wxSize panel_size = mpSizerForArrows->GetItem(mpForwardArrowPanelEnd)->GetSize();
+        wxPaintDC dcFE(mSquarePanels[ID_FORWARD_END_BUTTON]);
+        wxSize panel_size = mpBoardGridSizer->GetItem(mSquarePanels[ID_FORWARD_END_BUTTON])->GetSize();
         int origin_y = panel_size.y/2;
         int origin_x = panel_size.x*margin_x_dir;
 
@@ -563,22 +516,14 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
 void slach_gui::ChessBoardPanel::OnMouseEnteringArrowPanel(wxMouseEvent& event)
 {
     int generating_id = ((wxPanel*) event.GetEventObject())->GetId();
-    if (generating_id == ID_BACKWARD_END_BUTTON) mpBackwardArrowPanelEnd->SetBackgroundColour (Colours::Instance()->mArrowBackgroundMouseOn);
-    else if (generating_id == ID_BACKWARD_MORE_BUTTON) mpBackwardArrowPanelMore->SetBackgroundColour (Colours::Instance()->mArrowBackgroundMouseOn);
-    else if (generating_id == ID_BACKWARD_BUTTON) mpBackwardArrowPanel->SetBackgroundColour (Colours::Instance()->mArrowBackgroundMouseOn);
-    else if (generating_id == ID_FORWARD_BUTTON) mpForwardArrowPanel->SetBackgroundColour (Colours::Instance()->mArrowBackgroundMouseOn);
-    else if (generating_id == ID_FORWARD_MORE_BUTTON) mpForwardArrowPanelMore->SetBackgroundColour (Colours::Instance()->mArrowBackgroundMouseOn);
-    else if ( generating_id == ID_FORWARD_END_BUTTON) mpForwardArrowPanelEnd->SetBackgroundColour (Colours::Instance()->mArrowBackgroundMouseOn);
+    assert(generating_id < (int) mSquarePanels.size());
+    mSquarePanels[generating_id]->SetBackgroundColour (Colours::Instance()->mArrowBackgroundMouseOn);
 }
 void slach_gui::ChessBoardPanel::OnMouseLeavingArrowPanel(wxMouseEvent& event)
 {
     int generating_id = ((wxPanel*) event.GetEventObject())->GetId();
-    if (generating_id == ID_BACKWARD_END_BUTTON) mpBackwardArrowPanelEnd->SetBackgroundColour (Colours::Instance()->mArrowBackground);
-    else if (generating_id == ID_BACKWARD_MORE_BUTTON) mpBackwardArrowPanelMore->SetBackgroundColour (Colours::Instance()->mArrowBackground);
-    else if (generating_id == ID_BACKWARD_BUTTON) mpBackwardArrowPanel->SetBackgroundColour (Colours::Instance()->mArrowBackground);
-    else if (generating_id == ID_FORWARD_BUTTON) mpForwardArrowPanel->SetBackgroundColour (Colours::Instance()->mArrowBackground);
-    else if (generating_id == ID_FORWARD_MORE_BUTTON) mpForwardArrowPanelMore->SetBackgroundColour (Colours::Instance()->mArrowBackground);
-    else if ( generating_id == ID_FORWARD_END_BUTTON) mpForwardArrowPanelEnd->SetBackgroundColour (Colours::Instance()->mArrowBackground);
+    assert(generating_id< (int) mSquarePanels.size());
+    mSquarePanels[generating_id]->SetBackgroundColour (Colours::Instance()->mArrowBackground);
 }
 
 void slach_gui::ChessBoardPanel::PaintOnSquare(wxPaintEvent& event)

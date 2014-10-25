@@ -46,19 +46,10 @@ private:
     wxFlexGridSizer* mpBoardGridSizer;
     /**cache for the main sizer, arranges space for board and arrows*/
     wxBoxSizer *mpPrincipalSizer;
-    /** cache for the sizer of the arrows buttons*/
-    wxBoxSizer* mpSizerForArrows;
 
     /**Panels for each arrows*/
     wxPanel* mpSpaceForArrows;
     wxPanel* mpSpaceForActualBoard;
-    wxPanel* mpForwardArrowPanel;
-    wxPanel* mpForwardArrowPanelMore;
-    wxPanel* mpForwardArrowPanelEnd;
-    wxPanel* mpBackwardArrowPanel;
-    wxPanel* mpBackwardArrowPanelMore;
-    wxPanel* mpBackwardArrowPanelEnd;
-    wxPanel* mpDummyPanelAfterLastArrow;
 
     /**
      * when refreshing a square of the board, sometimes you need to draw the piece
