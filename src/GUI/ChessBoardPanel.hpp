@@ -44,12 +44,7 @@ private:
     unsigned mNumberOfMovesFastForward;
     /** cache of the gridsizer that organizes the board*/
     wxFlexGridSizer* mpBoardGridSizer;
-    /**cache for the main sizer, arranges space for board and arrows*/
-    wxBoxSizer *mpPrincipalSizer;
 
-    /**Panels for each arrows*/
-    wxPanel* mpSpaceForArrows;
-    wxPanel* mpSpaceForActualBoard;
 
     /**
      * when refreshing a square of the board, sometimes you need to draw the piece
@@ -79,8 +74,6 @@ private:
      */
     unsigned mDestinationIndex;
 
-    wxPoint mCachedArrowsStartPoint;
-    wxSize mCachedArrowSpace;
 
     /**
      * Helper method to load all the images (backgrounds, pieces and coordinates)

@@ -30,9 +30,9 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     mpChessBoard = mpChessBoardPanel->GetChessBoard();
 
     //Arrange the panels
-    mpPrincipalSizer->Add(mpChessBoardPanel, 1.2, wxEXPAND | wxALL);
-    mpPrincipalSizer->Add(mpRightOfChessBoard, 1, wxEXPAND | wxALL);
-    this->SetSizer(mpPrincipalSizer, false);
+    mpPrincipalSizer->Add(mpChessBoardPanel, 1.2, wxEXPAND);
+    mpPrincipalSizer->Add(mpRightOfChessBoard, 1, wxEXPAND );
+    this->SetSizer(mpPrincipalSizer);
 
     //divide the section on the RHS of the board
     mpButtonsBelowMoveList =  new wxPanel(mpRightOfChessBoard, ID_RIGHT_OF_BOARD_BUTTONS);

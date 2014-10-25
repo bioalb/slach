@@ -21,22 +21,13 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
       mpChessBoard(nullptr),
       mNumberOfMovesFastForward(5u),
       mpBoardGridSizer ( new wxFlexGridSizer(slach::gBoardRowSize+3,slach::gBoardColumnSize+2,0,0) ),
-      mpPrincipalSizer ( new wxBoxSizer(wxVERTICAL) ),
-      mpSpaceForArrows ( new wxPanel(this, ID_OF_ARROW_SPACE) ),
-      mpSpaceForActualBoard (  new wxPanel(this, ID_OF_BOARD_SPACE) ),
       mDrawPiece(true),
       mGameIsLoaded(false),
       mPerspectiveIsFromWhite(true),
       mSourceIndex(0u),
-      mDestinationIndex(0u),
-      mCachedArrowsStartPoint (wxPoint(0,0)),
-      mCachedArrowSpace (wxSize(10,10))
+      mDestinationIndex(0u)
 {
-    mpSpaceForActualBoard->SetBackgroundColour(*wxWHITE);
-    mpSpaceForArrows->SetBackgroundColour(*wxWHITE);
-    mpPrincipalSizer->Add(mpSpaceForActualBoard,15, wxGROW | wxALL);
-    mpPrincipalSizer->Add(mpSpaceForArrows, 1, wxGROW | wxALL);
-    this->SetSizer(mpPrincipalSizer);
+    this->SetBackgroundColour(*wxWHITE);
 
     mSquarePanels.resize(slach::gChessBoardSizeWB);
     //now the grid sizer.
@@ -75,8 +66,8 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
 
     for (unsigned i = 0; i < mpAllSquares.size(); ++i)
     {
-        mSquarePanels[i] = new wxPanel( mpSpaceForActualBoard, /*ID*/ (int) i );
-        mpBoardGridSizer->Add(mSquarePanels[i], 0, wxEXPAND | wxALL);
+        mSquarePanels[i] = new wxPanel( this, /*ID*/ (int) i );
+        mpBoardGridSizer->Add(mSquarePanels[i], 0, wxEXPAND);
 
         if (mpAllSquares[i]->IsSquareForArrows() == false)
         {
@@ -104,8 +95,8 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
         	mSquarePanels[i]->SetBackgroundColour (Colours::Instance()->mArrowBackground);
         }
     }
-    mpSpaceForActualBoard->SetSizer(mpBoardGridSizer);
-    mpSpaceForActualBoard->Bind(wxEVT_SIZE, &ChessBoardPanel::OnSize, this);
+    this->SetSizer(mpBoardGridSizer);
+    this->Bind(wxEVT_SIZE, &ChessBoardPanel::OnSize, this);
 }
 
 slach_gui::ChessBoardPanel::~ChessBoardPanel()
@@ -276,38 +267,30 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
     int panel_x = total_panel_size.GetWidth();
     int panel_y = total_panel_size.GetHeight();
 
-    wxSize arrow_space_size = mpSpaceForArrows->GetSize();
-    //int arrows_x = arrow_space_size.GetWidth();
-    int arrows_y = arrow_space_size.GetHeight();
-
-    int min_size;
+    int final_size_x, final_size_y;
+    wxPoint cb_top_left;
 
     //which side is longer...
-    wxPoint cb_top_left;
-    wxPoint start_of_arrows(0,0);
     if (panel_x > panel_y)
     {
-        min_size=panel_y;// - arrows_y;
-        cb_top_left.x = 0.0;//*(panel_x - min_size)/2;
-        cb_top_left.y = 0.0;
-
-        start_of_arrows.x = cb_top_left.x;
-        start_of_arrows.y = 0.0;
-        arrow_space_size.x = min_size;
-    }
-    else
-    {
-        min_size=panel_x;
+    	auto height_of_arrow_row = mpBoardGridSizer->GetRowHeights().Last();
+    	final_size_x = panel_y ;
+    	final_size_y = panel_y - height_of_arrow_row;
         cb_top_left.x = 0.0;
-        cb_top_left.y = panel_y - min_size - arrows_y;
+        cb_top_left.y = 0.0;
     }
+    else //vertical longer than horizontal
+    {
+    	final_size_x = panel_x;
+    	final_size_y = panel_x;
+        cb_top_left.x = 0.0;
+        cb_top_left.y = panel_y - final_size_y;
+    }
+
     //...now resize the chess board accordingly
-    wxSize chessboard_size(min_size,min_size);
-
+    wxSize chessboard_size(final_size_x, final_size_y);
     mpBoardGridSizer->SetDimension(cb_top_left, chessboard_size);
-
-    mCachedArrowsStartPoint = start_of_arrows;
-    mCachedArrowSpace = arrow_space_size;
+    //mpBoardGridSizer->Layout();
 
     event.Skip();
 }
