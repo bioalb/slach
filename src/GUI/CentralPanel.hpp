@@ -40,12 +40,13 @@ private:
 
     /**Panels on the RHS of the board*/
     wxRichTextCtrl* mpSpaceForMoveList;
+    wxPanel* mpButtonsBelowMoveList;
     /**Each element is a range of a move in the move list*/
     std::vector<wxRichTextRange> mMoveListRanges;
     /**Stores the index of the currently highlighted move. -1 if no move is highlighted*/
     int mIndexOfHighlightedMove;
 
-    wxPanel* mpButtonsBelowMoveList;
+
 
     wxRichTextAttr mTextAttributesPlayerNames;
     wxTextAttr mTextAttributesMoveList;

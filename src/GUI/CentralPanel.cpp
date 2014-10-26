@@ -18,6 +18,7 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
       mpChessBoardPanel( new ChessBoardPanel(this, ID_ACTUAL_BOARD) ),
       mpRightOfChessBoard( new wxPanel(this, ID_RIGHT_OF_BOARD) ),
       mpSpaceForMoveList ( new wxRichTextCtrl(mpRightOfChessBoard, ID_OF_MOVE_LIST_SPACE,wxT(""), wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxTE_MULTILINE) ),
+      mpButtonsBelowMoveList ( new wxPanel(mpRightOfChessBoard, ID_RIGHT_OF_BOARD_BUTTONS) ),
       mMoveListRanges ({}),
       mIndexOfHighlightedMove(-1),
       mpParent(parent),
@@ -29,15 +30,12 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     mpChessBoardPanel->SetAsMainBoard(true);
     mpChessBoard = mpChessBoardPanel->GetChessBoard();
 
+	mpSpaceForMoveList->SetBackgroundColour(*wxWHITE);
     //Arrange the panels
     mpPrincipalSizer->Add(mpChessBoardPanel, 2, wxEXPAND );
     mpPrincipalSizer->Add(mpRightOfChessBoard, 1, wxEXPAND);
     mpPrincipalSizer->SetSizeHints(this);
     this->SetSizer(mpPrincipalSizer);
-
-    //divide the section on the RHS of the board
-    mpButtonsBelowMoveList =  new wxPanel(mpRightOfChessBoard, ID_RIGHT_OF_BOARD_BUTTONS);
-	mpSpaceForMoveList->SetBackgroundColour(*wxWHITE);
 
     mpRightSideSizer->Add(mpSpaceForMoveList, 9, wxEXPAND);
     mpRightSideSizer->Add(mpButtonsBelowMoveList,1,wxEXPAND);
@@ -51,12 +49,9 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     wxButton* fen_button  = new wxButton(mpButtonsBelowMoveList, 3, wxT("Fen..."),wxDefaultPosition, wxDefaultSize);
     fen_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &CentralPanel::LoadFen, this);
     wxBoxSizer* sizer_for_buttons = new wxBoxSizer(wxHORIZONTAL);
-    wxPanel* filler = new wxPanel(mpButtonsBelowMoveList,4);
     sizer_for_buttons->Add(pgn_button, 1, wxEXPAND);
     sizer_for_buttons->Add(fen_button, 1, wxEXPAND);
-    sizer_for_buttons->Add(filler, 7, wxEXPAND);
     mpButtonsBelowMoveList->SetSizer(sizer_for_buttons);
-
 
     this->Bind(wxEVT_CHAR_HOOK, &CentralPanel::ArrowKeyMovement, this);//char hook needed for it to work
 

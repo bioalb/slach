@@ -273,19 +273,21 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
 
     int final_size_x, final_size_y;
     wxPoint cb_top_left(0,0);
-
+	auto height_of_arrow_row = 0;
     //which side is longer...
     if (panel_x > panel_y)
     {
-    	auto height_of_arrow_row = mpBoardGridSizer->GetRowHeights().Last();
+
+    	if (!mpBoardGridSizer->GetRowHeights().IsEmpty()) height_of_arrow_row = mpBoardGridSizer->GetRowHeights().Last();
+
     	final_size_x = panel_y - height_of_arrow_row;
     	final_size_y = panel_y ;
     }
     else //vertical longer than horizontal
     {
-    	//auto height_of_arrow_row = mpBoardGridSizer->GetRowHeights().Last();
+    	if (!mpBoardGridSizer->GetRowHeights().IsEmpty())  height_of_arrow_row = mpBoardGridSizer->GetRowHeights().Last();
     	final_size_x = panel_x;
-    	final_size_y = panel_x;// + height_of_arrow_row;
+    	final_size_y = panel_x + height_of_arrow_row;
     }
 
     //...now resize the chess board accordingly
