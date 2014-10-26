@@ -36,7 +36,7 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
     mpEngineInterface->SetNumberOfLinesToBeShown(mNumberOfEngineLinesShown);
 
     this->Bind(wxEVT_CLOSE_WINDOW, &BottomPanel::OnClose, this);
-    this->Bind(wxEVT_SIZE, &BottomPanel::OnSize, this);
+
     mpStartEngineButton->Bind(wxEVT_BUTTON, &BottomPanel::StartEngine, this);
     mpStopEngineButton->Bind(wxEVT_BUTTON, &BottomPanel::StopEngine, this);
     this->Connect(mTimer.GetId(),wxEVT_TIMER,wxTimerEventHandler( BottomPanel::UpdateEngineOutput ), NULL, this );
@@ -45,14 +45,6 @@ slach_gui::BottomPanel::BottomPanel(wxFrame* parent, const wxPoint& pos, const w
 
 slach_gui::BottomPanel::~BottomPanel()
 {
-}
-
-void slach_gui::BottomPanel::OnSize(wxSizeEvent& event)
-{
-    Refresh();
-
-    //skip the event.
-    event.Skip();
 }
 
 void slach_gui::BottomPanel::SetPositionToAnalyse(slach::Position* pPosition)

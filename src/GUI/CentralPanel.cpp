@@ -30,20 +30,19 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
     mpChessBoard = mpChessBoardPanel->GetChessBoard();
 
     //Arrange the panels
-    mpPrincipalSizer->Add(mpChessBoardPanel, 1.2, wxEXPAND);
-    mpPrincipalSizer->Add(mpRightOfChessBoard, 1, wxEXPAND );
+    mpPrincipalSizer->Add(mpChessBoardPanel, 2, wxEXPAND );
+    mpPrincipalSizer->Add(mpRightOfChessBoard, 1, wxEXPAND);
+    mpPrincipalSizer->SetSizeHints(this);
     this->SetSizer(mpPrincipalSizer);
 
     //divide the section on the RHS of the board
     mpButtonsBelowMoveList =  new wxPanel(mpRightOfChessBoard, ID_RIGHT_OF_BOARD_BUTTONS);
 	mpSpaceForMoveList->SetBackgroundColour(*wxWHITE);
 
-    mpRightSideSizer->Add(mpSpaceForMoveList, 9, wxALL|wxGROW);
+    mpRightSideSizer->Add(mpSpaceForMoveList, 9, wxEXPAND);
     mpRightSideSizer->Add(mpButtonsBelowMoveList,1,wxEXPAND);
-    mpRightOfChessBoard->SetSizer(mpRightSideSizer, true);
+    mpRightOfChessBoard->SetSizer(mpRightSideSizer);
 
-    //Bind the size event
-    mpRightOfChessBoard->Bind(wxEVT_SIZE, &CentralPanel::OnSize, this);
     //bind the functionalities in the move list area
     mpSpaceForMoveList->Bind(wxEVT_RICHTEXT_LEFT_CLICK, &CentralPanel::OnClickOnMoveList, this);
 
@@ -83,13 +82,6 @@ slach_gui::CentralPanel::CentralPanel(wxFrame* parent, wxWindowID WXUNUSED(id), 
 slach_gui::CentralPanel::~CentralPanel()
 {
 
-}
-
-void slach_gui::CentralPanel::OnSize(wxSizeEvent& event)
-{
-    Refresh();
-    //skip the event. Needed as per wxWdigets documentation
-    event.Skip();
 }
 
 void slach_gui::CentralPanel::LoadFen (wxCommandEvent& WXUNUSED(event))

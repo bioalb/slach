@@ -40,12 +40,6 @@ public:
     BottomPanel(wxFrame* parent, const wxPoint& pos= wxDefaultPosition, const wxSize& size= wxDefaultSize);
     ~BottomPanel();
 
-    /*
-     * Here we call refresh to tell the panel to draw itself again.
-     * So when the user resizes the image panel the image should be resized too.
-     */
-    void OnSize(wxSizeEvent& event);
-
     void OnClose(wxCloseEvent& evt);
 
     /**

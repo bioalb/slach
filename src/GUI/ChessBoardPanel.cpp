@@ -19,6 +19,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
       mPngPieceDirectory("src/GUI/bitmaps/pieces/png/"),
       mpChessBoardWithBorders ( std::make_shared<slach::ChessBoardWithBorders>() ),
       mpChessBoard(nullptr),
+      mpBoardContainer(new wxPanel(this,wxID_ANY)),
       mNumberOfMovesFastForward(5u),
       mpBoardGridSizer ( new wxFlexGridSizer(slach::gBoardRowSize+3,slach::gBoardColumnSize+2,0,0) ),
       mDrawPiece(true),
@@ -27,7 +28,9 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
       mSourceIndex(0u),
       mDestinationIndex(0u)
 {
-    this->SetBackgroundColour(*wxWHITE);
+    this->SetBackgroundColour(*wxYELLOW);
+
+
 
     mSquarePanels.resize(slach::gChessBoardSizeWB);
     //now the grid sizer.
@@ -66,7 +69,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
 
     for (unsigned i = 0; i < mpAllSquares.size(); ++i)
     {
-        mSquarePanels[i] = new wxPanel( this, /*ID*/ (int) i );
+        mSquarePanels[i] = new wxPanel( mpBoardContainer, /*ID*/ (int) i );
         mpBoardGridSizer->Add(mSquarePanels[i], 0, wxEXPAND);
 
         if (mpAllSquares[i]->IsSquareForArrows() == false)
@@ -95,7 +98,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
         	mSquarePanels[i]->SetBackgroundColour (Colours::Instance()->mArrowBackground);
         }
     }
-    this->SetSizer(mpBoardGridSizer);
+    mpBoardContainer->SetSizer(mpBoardGridSizer);
     this->Bind(wxEVT_SIZE, &ChessBoardPanel::OnSize, this);
 }
 
@@ -263,34 +266,30 @@ void slach_gui::ChessBoardPanel::ProcessMoveInGui(slach::Move & move)
 void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
 {
     //figure out the new dimensions
+	this->Refresh();
     wxSize total_panel_size = this->GetSize();
     int panel_x = total_panel_size.GetWidth();
     int panel_y = total_panel_size.GetHeight();
 
     int final_size_x, final_size_y;
-    wxPoint cb_top_left;
+    wxPoint cb_top_left(0,0);
 
     //which side is longer...
     if (panel_x > panel_y)
     {
     	auto height_of_arrow_row = mpBoardGridSizer->GetRowHeights().Last();
-    	final_size_x = panel_y ;
-    	final_size_y = panel_y - height_of_arrow_row;
-        cb_top_left.x = 0.0;
-        cb_top_left.y = 0.0;
+    	final_size_x = panel_y - height_of_arrow_row;
+    	final_size_y = panel_y ;
     }
     else //vertical longer than horizontal
     {
+    	//auto height_of_arrow_row = mpBoardGridSizer->GetRowHeights().Last();
     	final_size_x = panel_x;
-    	final_size_y = panel_x;
-        cb_top_left.x = 0.0;
-        cb_top_left.y = panel_y - final_size_y;
+    	final_size_y = panel_x;// + height_of_arrow_row;
     }
 
     //...now resize the chess board accordingly
-    wxSize chessboard_size(final_size_x, final_size_y);
-    mpBoardGridSizer->SetDimension(cb_top_left, chessboard_size);
-    //mpBoardGridSizer->Layout();
+    mpBoardContainer->SetSize(cb_top_left.x,cb_top_left.y, final_size_x, final_size_y);
 
     event.Skip();
 }

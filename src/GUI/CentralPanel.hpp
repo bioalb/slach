@@ -141,12 +141,6 @@ public:
      */
     void OnClickOnMoveList(wxRichTextEvent& event);
 
-    /**
-     * Resizing method. It figures out the new size and resize everything accordingly.
-     *
-     * @param event the size event
-     */
-    void OnSize(wxSizeEvent& event);
 
     /**
      * Highlights the move in the move list with the specified index.

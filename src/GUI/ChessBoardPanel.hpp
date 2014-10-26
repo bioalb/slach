@@ -40,6 +40,9 @@ private:
     std::shared_ptr<slach::ChessBoardWithBorders> mpChessBoardWithBorders;
     /** Stores the playable part of the underlying chessboard */
     std::shared_ptr<slach::ChessBoard> mpChessBoard;
+
+    wxPanel* mpBoardContainer;
+
     /**this is the number of half moves that the "fast forward" arrow will move (also fast backward arrow)*/
     unsigned mNumberOfMovesFastForward;
     /** cache of the gridsizer that organizes the board*/
