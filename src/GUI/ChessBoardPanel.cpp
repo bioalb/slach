@@ -28,9 +28,7 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
       mSourceIndex(0u),
       mDestinationIndex(0u)
 {
-    this->SetBackgroundColour(*wxYELLOW);
-
-
+    this->SetBackgroundColour(*wxWHITE);
 
     mSquarePanels.resize(slach::gChessBoardSizeWB);
     //now the grid sizer.
@@ -277,9 +275,7 @@ void slach_gui::ChessBoardPanel::OnSize(wxSizeEvent& event)
     //which side is longer...
     if (panel_x > panel_y)
     {
-
     	if (!mpBoardGridSizer->GetRowHeights().IsEmpty()) height_of_arrow_row = mpBoardGridSizer->GetRowHeights().Last();
-
     	final_size_x = panel_y - height_of_arrow_row;
     	final_size_y = panel_y ;
     }

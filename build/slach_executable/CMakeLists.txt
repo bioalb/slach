@@ -3,6 +3,9 @@
 #these are from the wx widgets documentation
 ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D__WXGTK__)
 
+#Uncomment this for debugging using std cout
+#ADD_DEFINITIONS(-DSLACH_TESTING)
+
 include_directories(/usr/lib/${ARCHITECTURE_LIBRARY_DIR}/wx/include/${GTK_VER}-unicode-3.0
                     /usr/include/wx-3.0 
                     ${srcdir}
