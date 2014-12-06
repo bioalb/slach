@@ -88,12 +88,13 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
         }
         else //arrows
         {
-        	mSquarePanels[i]->Bind(wxEVT_PAINT,&ChessBoardPanel::PaintArrows, this);
-        	mSquarePanels[i]->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
-            //Bind the colouring of the arrows as mouse enters or leave
-        	mSquarePanels[i]->Bind(wxEVT_ENTER_WINDOW, &ChessBoardPanel::OnMouseEnteringArrowPanel, this);
-        	mSquarePanels[i]->Bind(wxEVT_LEAVE_WINDOW, &ChessBoardPanel::OnMouseLeavingArrowPanel, this);
-        	mSquarePanels[i]->SetBackgroundColour (Colours::Instance()->mArrowBackground);
+			mSquarePanels[i]->Bind(wxEVT_PAINT,&ChessBoardPanel::PaintArrows, this);
+			mSquarePanels[i]->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::ArrowButtonMovement, this);
+			//Bind the colouring of the arrows as mouse enters or leave
+			mSquarePanels[i]->Bind(wxEVT_ENTER_WINDOW, &ChessBoardPanel::OnMouseEnteringArrowPanel, this);
+			mSquarePanels[i]->Bind(wxEVT_LEAVE_WINDOW, &ChessBoardPanel::OnMouseLeavingArrowPanel, this);
+			mSquarePanels[i]->SetBackgroundColour (Colours::Instance()->mArrowBackground);
+
         }
     }
     mpBoardContainer->SetSizer(mpBoardGridSizer);
@@ -489,6 +490,10 @@ void slach_gui::ChessBoardPanel::PaintArrows(wxPaintEvent& event)
         dcFE.SetPen( wxPen( Colours::Instance()->mArrowButton, 2 ) ); // 2-pixels-thick outline
         dcFE.DrawLine((1.0 - margin_x_dir)*panel_size.x, margin_y_dir*panel_size.y,
                       (1.0 - margin_x_dir)*panel_size.x, (1.0-margin_y_dir)*panel_size.y);
+    }
+    else // in the arrow row, but not an arrow
+    {
+    	mSquarePanels[generating_id]->SetBackgroundColour(Colours::Instance()->mArrowBackground);
     }
 
 }
