@@ -136,7 +136,7 @@ slach::ChessBoardWithBorders::~ChessBoardWithBorders()
 {
     for (unsigned i = 0; i <mSquares.size(); ++i )
     {
-        if (mSquares[i]->IsBorderSquare()==true)
+        if ((mSquares[i]->IsBorderSquare()==true) || mSquares[i]->IsSquareForArrows() == true)
         {
             delete mSquares[i];
         }
