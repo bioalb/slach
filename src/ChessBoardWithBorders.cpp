@@ -12,7 +12,6 @@ slach::ChessBoardWithBorders::ChessBoardWithBorders()
     std::vector<char> files = {'0' , 'a', 'b', 'c', 'd', 'e','f', 'g',  'h', '0'};
     std::vector<char> ranks = {'0' , '8', '7', '6', '5', '4', '3', '2', '1', '0'};
     unsigned file_size = files.size();
-    unsigned rank_size = ranks.size();
 
     //create the 64 squares playable chessboard
     mpChessBoard->SetupChessBoard();
