@@ -4,6 +4,7 @@
 # Checks the for memory leaks and invalid memory access using valgrind. 
 ######
 
+QUALITY_CHECKS_DIR=build/test
 DIRECTORY=memcheck
 EXECUTABLE=ALL_TESTS
 BROWSE=Yes
@@ -45,15 +46,16 @@ fi
 
 #perform the memory check
 if [ -e ./$EXECUTABLE ]; then
-    #up one level to run the executable as codeblocks does
-    valgrind --leak-check=full --track-origins=yes --log-file=./$DIRECTORY/valgrind.log ./$EXECUTABLE
+    #up two levels
+    cd ../..
+    valgrind --leak-check=full --track-origins=yes --log-file=$QUALITY_CHECKS_DIR/$DIRECTORY/valgrind.log $QUALITY_CHECKS_DIR/$EXECUTABLE
 else
     echo 'CheckMemory->ERROR: Executable does not exist '
     exit
 fi
 
 #back into the checks directory
-#cd $QUALITY_CHECKS_DIR
+cd $QUALITY_CHECKS_DIR
 
 #wrap the output in an html header and footer so we can see it nicely online
 cat $DIRECTORY/HEADER $DIRECTORY/valgrind.log $DIRECTORY/FOOTER > $DIRECTORY/valgrind.html
