@@ -43,6 +43,6 @@ TARGET_LINK_LIBRARIES(slach   -lwx_${GTK_VER}u_richtext-3.0
                               -lwx_baseu_xml-3.0
                               -lwx_baseu_net-3.0 
                               -lwx_baseu-3.0
-                              ${STOCKFISH_LIB})
+                              -l${STOCKFISH_LIB})
 
 
