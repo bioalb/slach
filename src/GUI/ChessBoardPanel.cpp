@@ -144,7 +144,7 @@ void slach_gui::ChessBoardPanel::LeftMouseClick(wxMouseEvent& event)
 	int square_index_int = (static_cast<wxWindow*> (event.GetEventObject()))->GetId();
 	//when one clicks on a square, we assume drag starts
 	//here we manually delete the piece from origin and "move" the piece to be the cursor
-	if (event.LeftDown())
+	if (event.Dragging())
 	{
 		//prepare the cursor
 		wxImage curs_image = GetImageFromPiece(mpAllSquares[square_index_int]->GetPieceOnThisSquare());

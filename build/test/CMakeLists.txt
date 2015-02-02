@@ -52,6 +52,6 @@ add_custom_command(OUTPUT ${testfiledir}/single_test_runner.cpp
                    COMMENT "running cxxtestgen now for single file..."
                    VERBATIM)              
             
-FIND_LIBRARY(STOCKFISH_LIB NAMES stockfish PATHS ${stockfishdir})
-TARGET_LINK_LIBRARIES(ALL_TESTS -lm -lgcov ${STOCKFISH_LIB})
-TARGET_LINK_LIBRARIES(SINGLE_TEST -lm -lgcov ${STOCKFISH_LIB})
+#FIND_LIBRARY(STOCKFISH_LIB NAMES stockfish PATHS ${stockfishdir})
+TARGET_LINK_LIBRARIES(ALL_TESTS -L${stockfishdir} -lm -lgcov -lstockfish)
+TARGET_LINK_LIBRARIES(SINGLE_TEST -L${stockfishdir} -lm -lgcov -lstockfish)
