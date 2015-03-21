@@ -1,0 +1,1 @@
+Interface for the game of chess, currently in the very early development stages.
