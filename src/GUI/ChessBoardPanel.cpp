@@ -74,6 +74,9 @@ slach_gui::ChessBoardPanel::ChessBoardPanel(wxPanel* parent, wxWindowID WXUNUSED
         {
 			//bind the paint event
 			mSquarePanels[i]->Bind(wxEVT_PAINT, &ChessBoardPanel::PaintOnSquare, this);
+
+			//this is supposed to prevent flickering
+			mSquarePanels[i]->SetBackgroundStyle(wxBG_STYLE_PAINT);
 			if (mpAllSquares[i]->IsPlayableSquare() == true)
 			{
 				mSquarePanels[i]->Bind(wxEVT_LEFT_DOWN, &ChessBoardPanel::LeftMouseClick, this);
@@ -144,9 +147,9 @@ void slach_gui::ChessBoardPanel::LeftMouseClick(wxMouseEvent& event)
 	int square_index_int = (static_cast<wxWindow*> (event.GetEventObject()))->GetId();
 	//when one clicks on a square, we assume drag starts
 	//here we manually delete the piece from origin and "move" the piece to be the cursor
+	//prepare the cursor
 	if (event.Dragging())
 	{
-		//prepare the cursor
 		wxImage curs_image = GetImageFromPiece(mpAllSquares[square_index_int]->GetPieceOnThisSquare());
 		int width = mSquarePanels[square_index_int]->GetClientSize().GetWidth();
 		int height = mSquarePanels[square_index_int]->GetClientSize().GetHeight();
@@ -154,7 +157,6 @@ void slach_gui::ChessBoardPanel::LeftMouseClick(wxMouseEvent& event)
 		curs_image.SetOption(wxIMAGE_OPTION_CUR_HOTSPOT_X, width/2);
 		curs_image.SetOption(wxIMAGE_OPTION_CUR_HOTSPOT_Y, height/2);
 		wxCursor piece_cursor( curs_image );
-
 		wxSetCursor(piece_cursor);
 		mSourceIndex = (unsigned) square_index_int;
 		//important, remove piece while dragging
@@ -163,6 +165,8 @@ void slach_gui::ChessBoardPanel::LeftMouseClick(wxMouseEvent& event)
 	}
 
 	event.Skip();
+
+
 }
 
 void slach_gui::ChessBoardPanel::LeftMouseRelease(wxMouseEvent& event)
@@ -516,7 +520,8 @@ void slach_gui::ChessBoardPanel::PaintOnSquare(wxPaintEvent& event)
 	int square_index_int = (static_cast<wxWindow*> (event.GetEventObject()))->GetId();
 	unsigned square_index = (unsigned) square_index_int;
 
-	wxPaintDC dc(mSquarePanels[square_index]);
+	wxBufferedPaintDC dc(mSquarePanels[square_index]);
+	dc.Clear();//this must be here as the BuffeedDC documentation explicitly says to clear everything within the paint handler.
     PaintBackground(dc, square_index);
     if (mDrawPiece == true)
     {
@@ -614,7 +619,7 @@ void slach_gui::ChessBoardPanel::LoadBoardImages()
     mPieceImages[12].LoadFile(wxString((mPngPieceDirectory+"no_piece.png").c_str(), wxConvUTF8),wxBITMAP_TYPE_PNG );
 }
 
-void slach_gui::ChessBoardPanel::PaintPiece(wxPaintDC& dc, unsigned squareIndex)
+void slach_gui::ChessBoardPanel::PaintPiece(wxBufferedPaintDC& dc, unsigned squareIndex)
 {
 	assert(mPieceImages.size() == 13u);
     slach::PieceType piece = mpAllSquares[squareIndex]->GetPieceOnThisSquare();
@@ -627,7 +632,7 @@ void slach_gui::ChessBoardPanel::PaintPiece(wxPaintDC& dc, unsigned squareIndex)
     dc.DrawBitmap( piece_image, 0, 0, true );
 }
 
-void slach_gui::ChessBoardPanel::PaintBackground(wxPaintDC& dc, unsigned squareIndex)
+void slach_gui::ChessBoardPanel::PaintBackground(wxBufferedPaintDC& dc, unsigned squareIndex)
 {
     if ( (mpAllSquares[squareIndex]->IsDarkSquare() == true) && (mpAllSquares[squareIndex]->IsBorderSquare() == false))
     {
@@ -651,7 +656,7 @@ void slach_gui::ChessBoardPanel::PaintBackground(wxPaintDC& dc, unsigned squareI
     }
 }
 
-void slach_gui::ChessBoardPanel::PaintOnBorder(wxPaintDC& dc, unsigned squareIndex)
+void slach_gui::ChessBoardPanel::PaintOnBorder(wxBufferedPaintDC& dc, unsigned squareIndex)
 {
     if ( (mpAllSquares[squareIndex]->IsBorderSquare()==true &&
     	  mpAllSquares[squareIndex]->IsCornerSquare()==false &&

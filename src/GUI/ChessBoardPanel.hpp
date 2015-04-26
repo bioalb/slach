@@ -7,6 +7,7 @@
 #include <wx/vscroll.h>
 #include <wx/textctrl.h>
 #include <wx/richtext/richtextctrl.h>
+#include <wx/dcbuffer.h>
 #include <vector>
 #include <memory>
 #include "IDContainer.hpp"
@@ -96,7 +97,7 @@ private:
      * @param dc the device context used for drawing
      * @param squareIndex the index of the square where to paint
      */
-    void PaintOnBorder(wxPaintDC& dc, unsigned squareIndex);
+    void PaintOnBorder(wxBufferedPaintDC& dc, unsigned squareIndex);
 
     /**
      * Helper method to paint a piece on the chessboard.
@@ -109,7 +110,7 @@ private:
      * @param dc the device context used for drawing
      * @param squareIndex the index of the square where to paint
      */
-    void PaintPiece(wxPaintDC& dc, unsigned squareIndex);
+    void PaintPiece(wxBufferedPaintDC& dc, unsigned squareIndex);
 
     /**
      * Helper method to paint the background of the squares of the chessboard.
@@ -119,7 +120,7 @@ private:
      * @param dc the device context used for drawing
      * @param squareIndex the index of the square where to paint
      */
-    void PaintBackground(wxPaintDC& dc, unsigned squareIndex);
+    void PaintBackground(wxBufferedPaintDC& dc, unsigned squareIndex);
 
     /**
      * Helper method to figure out the image
