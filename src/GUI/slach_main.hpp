@@ -4,6 +4,7 @@
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
 #endif
+#include <wx/app.h>
 #include "MainFrame.hpp"
 
 
@@ -13,7 +14,7 @@ public:
     virtual bool OnInit();
 };
 
-IMPLEMENT_APP(slach_main)
+wxDECLARE_APP(slach_main);
 
 
 

@@ -1,5 +1,6 @@
 #include "slach_main.hpp"
 
+wxIMPLEMENT_APP(slach_main);
 
 bool slach_main::OnInit()
 {
@@ -12,4 +13,5 @@ bool slach_main::OnInit()
     frame->Show( true );
     return true;
 }
+
 
